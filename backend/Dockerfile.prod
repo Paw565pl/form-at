@@ -1,0 +1,25 @@
+FROM bellsoft/liberica-runtime-container:jdk-25-slim-glibc AS builder
+
+WORKDIR /app
+
+COPY gradle gradle
+COPY gradlew build.gradle.kts settings.gradle.kts ./
+
+RUN chmod +x ./gradlew && ./gradlew dependencies --no-daemon
+
+COPY . .
+
+RUN ./gradlew --no-daemon clean bootJar
+
+FROM bellsoft/liberica-runtime-container:jre-25-cds-slim-glibc
+
+WORKDIR /app
+
+RUN addgroup --system spring && \
+    adduser --system --disabled-password --ingroup spring --home /home/spring spring
+
+COPY --from=builder --chown=spring /app/build/libs/*.jar /app/app.jar
+
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-Dspring.aot.enabled=true", "-jar", "app.jar"]

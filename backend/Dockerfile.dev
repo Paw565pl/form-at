@@ -1,0 +1,16 @@
+FROM bellsoft/liberica-runtime-container:jdk-25-slim-glibc
+
+WORKDIR /app
+
+COPY gradle gradle
+COPY gradlew build.gradle.kts settings.gradle.kts ./
+
+RUN chmod u+x ./gradlew && ./gradlew dependencies --no-daemon
+
+COPY . .
+
+EXPOSE 8080
+
+ENTRYPOINT [ "./gradlew", "--no-daemon" ]
+
+CMD [ "bootRun" ]
