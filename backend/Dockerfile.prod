@@ -11,11 +11,12 @@ COPY . .
 
 RUN ./gradlew --no-daemon clean bootJar
 
-FROM bellsoft/liberica-runtime-container:jre-25-cds-slim-glibc
+FROM bellsoft/liberica-runtime-container:jre-25-cds-glibc
 
 WORKDIR /app
 
-RUN addgroup --system spring && \
+RUN apk --no-cache add curl && \
+    addgroup --system spring && \
     adduser --system --disabled-password --ingroup spring --home /home/spring spring
 
 COPY --from=builder --chown=spring /app/build/libs/*.jar /app/app.jar
