@@ -26,3 +26,10 @@ server:
   error:
     include-message: always
     include-path: never
+
+springdoc:
+  api-docs:
+    path: /api/docs
+
+  swagger-ui:
+    path: /swagger-ui.html

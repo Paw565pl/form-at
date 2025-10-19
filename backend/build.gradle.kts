@@ -70,6 +70,7 @@ repositories {
 }
 
 val mapstructVersion = "1.6.3"
+val springdocVersion = "2.8.13"
 val sonarlintVersion = "8.9.3.40165"
 
 dependencies {
@@ -80,6 +81,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
     implementation("org.mapstruct:mapstruct:$mapstructVersion")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdocVersion")
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
