@@ -1,0 +1,38 @@
+services:
+  mongodb:
+    image: 8-noble
+    restart: on-failure
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: format
+    volumes:
+      - mongodb-data:/data/db
+    healthcheck:
+      test: mongosh --eval 'db.adminCommand("ping").ok' --username $MONGO_INITDB_ROOT_USERNAME --password $MONGO_INITDB_ROOT_PASSWORD
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod
+    restart: on-failure
+    ports:
+      - "8000:8000"
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://root:password@mongodb:27017/format?authSource=admin
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  mongodb-data:
