@@ -3,6 +3,7 @@ plugins {
     idea
     id("org.springframework.boot") version "3.5.6"
     id("io.spring.dependency-management") version "1.1.7"
+    id("se.solrike.sonarlint") version "2.2.0"
 }
 
 group = "format"
@@ -32,6 +33,8 @@ repositories {
     mavenCentral()
 }
 
+val sonarlintVersion = "8.9.3.40165"
+
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
@@ -49,6 +52,7 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:mongodb")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    sonarlintPlugins("org.sonarsource.java:sonar-java-plugin:$sonarlintVersion")
 }
 
 tasks.withType<Test> {
