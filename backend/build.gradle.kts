@@ -1,9 +1,12 @@
+import com.diffplug.spotless.LineEnding
+
 plugins {
     java
     idea
     id("org.springframework.boot") version "3.5.6"
     id("io.spring.dependency-management") version "1.1.7"
     id("se.solrike.sonarlint") version "2.2.0"
+    id("com.diffplug.spotless") version "8.0.0"
 }
 
 group = "format"
@@ -20,6 +23,34 @@ idea {
     module {
         isDownloadJavadoc = true
         isDownloadSources = true
+    }
+}
+
+spotless {
+    lineEndings = LineEnding.UNIX
+
+    java {
+        forbidWildcardImports()
+        removeUnusedImports()
+        importOrder()
+        cleanthat()
+        palantirJavaFormat("2.80.0")
+        trimTrailingWhitespace()
+        leadingTabsToSpaces()
+        endWithNewline()
+        formatAnnotations()
+    }
+
+    val prettierVersion = "3.6.2"
+
+    yaml {
+        target("src/**/*.yaml")
+        prettier(prettierVersion)
+    }
+
+    json {
+        target("src/**/*.json")
+        prettier(prettierVersion)
     }
 }
 
