@@ -1,0 +1,16 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://root:password@mongodb:27017/format?authSource=admin
+
+logging:
+  level:
+    data: debug
+    org:
+      springframework:
+        data:
+          mongodb:
+            core:
+              MongoTemplate: debug
+            repository:
+              query: debug

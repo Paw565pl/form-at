@@ -22,6 +22,9 @@ spring:
     virtual:
       enabled: true
 
+  profiles:
+    active: dev
+
 server:
   error:
     include-message: always
