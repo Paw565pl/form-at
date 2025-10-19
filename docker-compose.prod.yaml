@@ -1,6 +1,6 @@
 services:
   mongodb:
-    image: 8-noble
+    image: mongo:8-noble
     restart: on-failure
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
@@ -9,7 +9,7 @@ services:
     volumes:
       - mongodb-data:/data/db
     healthcheck:
-      test: mongosh --eval 'db.adminCommand("ping").ok' --username $MONGO_INITDB_ROOT_USERNAME --password $MONGO_INITDB_ROOT_PASSWORD
+      test: mongosh --eval 'db.adminCommand("ping").ok' --username $$MONGO_INITDB_ROOT_USERNAME --password $$MONGO_INITDB_ROOT_PASSWORD
       interval: 1m30s
       timeout: 30s
       retries: 5
@@ -21,7 +21,7 @@ services:
       dockerfile: Dockerfile.prod
     restart: on-failure
     ports:
-      - "8000:8000"
+      - "8080:8080"
     environment:
       SPRING_DATA_MONGODB_URI: mongodb://root:password@mongodb:27017/format?authSource=admin
     depends_on:

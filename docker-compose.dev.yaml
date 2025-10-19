@@ -1,6 +1,6 @@
 services:
   mongodb:
-    image: 8-noble
+    image: mongo:8-noble
     restart: on-failure
     ports:
       - "27017:27017"
@@ -17,9 +17,9 @@ services:
       dockerfile: Dockerfile.dev
     restart: on-failure
     ports:
-      - "8000:8000"
+      - "8080:8080"
     depends_on:
-      mongodb:
+      - mongodb
     develop:
       watch:
         - action: rebuild
