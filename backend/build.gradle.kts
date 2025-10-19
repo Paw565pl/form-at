@@ -1,5 +1,6 @@
 plugins {
     java
+    idea
     id("org.springframework.boot") version "3.5.6"
     id("io.spring.dependency-management") version "1.1.7"
 }
@@ -11,6 +12,13 @@ description = "backend"
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+idea {
+    module {
+        isDownloadJavadoc = true
+        isDownloadSources = true
     }
 }
 
