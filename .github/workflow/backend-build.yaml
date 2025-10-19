@@ -1,0 +1,31 @@
+name: Build Backend
+run-name: ${{ github.actor }} is building backend
+on: [push]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: ./backend
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          java-version: "25"
+          distribution: liberica
+          cache: gradle
+          cache-dependency-path: |
+            ./backend/*.gradle*
+            ./backend/**/gradle-wrapper.properties
+
+      - run: chmod u+x ./gradlew
+
+      - name: Build project and run tests
+        run: ./gradlew build --no-daemon
+        env:
+          SPRING_PROFILES_ACTIVE: test
