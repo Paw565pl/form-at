@@ -1,0 +1,35 @@
+services:
+  mongodb:
+    image: mongo:8-noble
+    restart: on-failure
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: format
+    volumes:
+      - mongodb-data:/data/db
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    restart: on-failure
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongodb
+    develop:
+      watch:
+        - action: rebuild
+          path: ./backend/build.gradle.kts
+        - action: sync+restart
+          path: ./backend
+          target: /app/
+          ignore:
+            - .gradle/
+            - build/
+
+volumes:
+  mongodb-data:
