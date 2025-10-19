@@ -36,3 +36,7 @@ springdoc:
 
   swagger-ui:
     path: /swagger-ui.html
+
+cors:
+  allowed-headers: "*"
+  allowed-methods: "*"

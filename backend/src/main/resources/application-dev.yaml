@@ -14,3 +14,6 @@ logging:
               MongoTemplate: debug
             repository:
               query: debug
+
+cors:
+  allowed-origins: "*"
