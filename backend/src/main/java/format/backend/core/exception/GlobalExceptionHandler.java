@@ -3,6 +3,7 @@ package format.backend.core.exception;
 import jakarta.validation.ConstraintViolationException;
 import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.val;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.mapping.PropertyReferenceException;
@@ -19,24 +20,24 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponseDto> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        var errors = e.getFieldErrors().stream()
+        val errors = e.getFieldErrors().stream()
                 .filter(fieldError -> fieldError.getDefaultMessage() != null
                         && !fieldError.getDefaultMessage().isBlank())
                 .collect(Collectors.groupingBy(
                         FieldError::getField,
                         Collectors.mapping(DefaultMessageSourceResolvable::getDefaultMessage, Collectors.toList())));
 
-        var status = HttpStatus.BAD_REQUEST;
-        var response = new ErrorResponseDto(status, "validation failed", errors);
+        val status = HttpStatus.BAD_REQUEST;
+        val response = new ErrorResponseDto(status, "validation failed", errors);
 
         return ResponseEntity.status(status).body(response);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ErrorResponseDto> handleConstraintViolationException(ConstraintViolationException e) {
-        var errors = e.getConstraintViolations().stream()
+        val errors = e.getConstraintViolations().stream()
                 .map(error -> {
-                    var propertyPathIterator = error.getPropertyPath().iterator();
+                    val propertyPathIterator = error.getPropertyPath().iterator();
 
                     var fieldName = "";
                     while (propertyPathIterator.hasNext()) {
@@ -51,8 +52,8 @@ public class GlobalExceptionHandler {
                 .collect(Collectors.groupingBy(
                         Map.Entry::getKey, Collectors.mapping(Map.Entry::getValue, Collectors.toList())));
 
-        var status = HttpStatus.BAD_REQUEST;
-        var response = new ErrorResponseDto(status, "validation failed", errors);
+        val status = HttpStatus.BAD_REQUEST;
+        val response = new ErrorResponseDto(status, "validation failed", errors);
 
         return ResponseEntity.status(status).body(response);
     }
@@ -60,24 +61,24 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponseDto> handleHttpMessageNotReadableException(
             HttpMessageNotReadableException ignored) {
-        var status = HttpStatus.BAD_REQUEST;
-        var response = new ErrorResponseDto(status, "required request body is missing");
+        val status = HttpStatus.BAD_REQUEST;
+        val response = new ErrorResponseDto(status, "required request body is missing");
 
         return ResponseEntity.status(status).body(response);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErrorResponseDto> handleIllegalArgumentException(DataIntegrityViolationException e) {
-        var status = HttpStatus.CONFLICT;
-        var response = new ErrorResponseDto(status, e.getMessage());
+        val status = HttpStatus.CONFLICT;
+        val response = new ErrorResponseDto(status, e.getMessage());
 
         return ResponseEntity.status(status).body(response);
     }
 
     @ExceptionHandler(PropertyReferenceException.class)
     public ResponseEntity<ErrorResponseDto> handlePropertyReferenceException(PropertyReferenceException e) {
-        var status = HttpStatus.BAD_REQUEST;
-        var response = new ErrorResponseDto(status, e.getMessage());
+        val status = HttpStatus.BAD_REQUEST;
+        val response = new ErrorResponseDto(status, e.getMessage());
 
         return ResponseEntity.status(status).body(response);
     }
