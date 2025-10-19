@@ -4,9 +4,14 @@ plugins {
     java
     idea
     id("org.springframework.boot") version "3.5.6"
+    id("org.springframework.boot.aot") version "3.5.6" apply false
     id("io.spring.dependency-management") version "1.1.7"
     id("se.solrike.sonarlint") version "2.2.0"
     id("com.diffplug.spotless") version "8.0.0"
+}
+
+if (gradle.startParameter.taskNames.any { it.contains("bootJar") }) {
+    apply(plugin = "org.springframework.boot.aot")
 }
 
 group = "format"
