@@ -71,6 +71,7 @@ repositories {
 
 val mapstructVersion = "1.6.3"
 val springdocVersion = "2.8.13"
+val dataFakerVersion = "2.5.2"
 val sonarlintVersion = "8.9.3.40165"
 
 dependencies {
@@ -92,6 +93,8 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:mongodb")
+    testImplementation("io.rest-assured:rest-assured")
+    testImplementation("net.datafaker:datafaker:$dataFakerVersion")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     sonarlintPlugins("org.sonarsource.java:sonar-java-plugin:$sonarlintVersion")
 }
