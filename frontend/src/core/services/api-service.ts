@@ -1,5 +1,7 @@
-import ky from "ky";
+import axios from "axios";
 
-export const apiService = ky.create({
-  prefixUrl: "",
+export const apiService = axios.create({
+  baseURL: "",
+  timeout: 10_000,
+  adapter: "fetch",
 });
