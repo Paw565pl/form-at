@@ -3,6 +3,7 @@
 import { includeIgnoreFile } from "@eslint/compat";
 import { FlatCompat } from "@eslint/eslintrc";
 import eslint from "@eslint/js";
+import tanstackQueryPlugin from "@tanstack/eslint-plugin-query";
 import eslintConfigPrettier from "eslint-config-prettier/flat";
 import noRelativeImportPaths from "eslint-plugin-no-relative-import-paths";
 import reactHooks from "eslint-plugin-react-hooks";
@@ -27,6 +28,7 @@ export default defineConfig(
   tseslint.configs.strict,
   tseslint.configs.stylistic,
   reactHooks.configs.flat["recommended-latest"],
+  ...tanstackQueryPlugin.configs["flat/recommended"],
   {
     plugins: {
       "no-relative-import-paths": noRelativeImportPaths,
