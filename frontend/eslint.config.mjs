@@ -4,6 +4,7 @@ import { includeIgnoreFile } from "@eslint/compat";
 import { FlatCompat } from "@eslint/eslintrc";
 import eslint from "@eslint/js";
 import noRelativeImportPaths from "eslint-plugin-no-relative-import-paths";
+import reactHooks from "eslint-plugin-react-hooks";
 import { defineConfig } from "eslint/config";
 import { fileURLToPath } from "node:url";
 import { dirname } from "path";
@@ -20,10 +21,11 @@ const gitignorePath = fileURLToPath(new URL(".gitignore", import.meta.url));
 
 export default defineConfig(
   includeIgnoreFile(gitignorePath),
+  ...compat.extends("next/core-web-vitals"),
   eslint.configs.recommended,
   tseslint.configs.strict,
   tseslint.configs.stylistic,
-  ...compat.extends("next/core-web-vitals"),
+  reactHooks.configs.flat["recommended-latest"],
   {
     plugins: {
       "no-relative-import-paths": noRelativeImportPaths,
