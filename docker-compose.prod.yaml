@@ -34,5 +34,24 @@ services:
       retries: 5
       start_period: 30s
 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+    restart: on-failure
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.local
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+
 volumes:
   mongodb-data:

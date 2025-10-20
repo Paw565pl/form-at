@@ -31,5 +31,26 @@ services:
             - .gradle/
             - build/
 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    restart: on-failure
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.local
+    depends_on:
+      - backend
+    develop:
+      watch:
+        - action: rebuild
+          path: ./frontend/package.json
+        - action: sync
+          path: ./frontend
+          target: /app/
+          ignore:
+            - node_modules/
+
 volumes:
   mongodb-data:
