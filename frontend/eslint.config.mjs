@@ -3,6 +3,7 @@
 import { includeIgnoreFile } from "@eslint/compat";
 import { FlatCompat } from "@eslint/eslintrc";
 import eslint from "@eslint/js";
+import eslintConfigPrettier from "eslint-config-prettier/flat";
 import noRelativeImportPaths from "eslint-plugin-no-relative-import-paths";
 import reactHooks from "eslint-plugin-react-hooks";
 import { defineConfig } from "eslint/config";
@@ -36,5 +37,6 @@ export default defineConfig(
         { rootDir: "src", prefix: "@", allowSameFolder: false },
       ],
     },
-  }
+  },
+  eslintConfigPrettier,
 );
