@@ -1,3 +1,7 @@
+import { useTranslations } from "next-intl";
+
 export const RootPage = () => {
-  return <div>Hello world!</div>;
+  const t = useTranslations("RootPage");
+
+  return <div>{t("message")}</div>;
 };
