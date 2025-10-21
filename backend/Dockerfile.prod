@@ -21,6 +21,8 @@ RUN apk --no-cache add curl && \
 
 COPY --from=builder --chown=spring /app/build/libs/*.jar /app/app.jar
 
+USER spring:spring
+
 EXPOSE 8080
 
 ENTRYPOINT ["java", "-Dspring.aot.enabled=true", "-jar", "app.jar"]
