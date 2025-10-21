@@ -25,10 +25,10 @@ const getLocale = async () => {
     .toLowerCase();
   if (!preferredLocale) return defaultLocale;
 
-  const parsedLocale = preferredLocale.includes("-")
+  const primaryLocale = preferredLocale.includes("-")
     ? preferredLocale.split("-").at(0) || ""
     : preferredLocale;
-  return isValidLocale(parsedLocale) ? parsedLocale : defaultLocale;
+  return isValidLocale(primaryLocale) ? primaryLocale : defaultLocale;
 };
 
 export default getRequestConfig(async () => {
