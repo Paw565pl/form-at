@@ -19,7 +19,7 @@ services:
     build:
       context: ./keycloak
       dockerfile: Dockerfile
-    command: [ "start-dev", "--import-realm" ]
+    command: ["start-dev", "--import-realm"]
     restart: on-failure
     ports:
       - "7000:7000"
@@ -29,7 +29,11 @@ services:
       KC_HTTP_PORT: 7000
       KC_HEALTH_ENABLED: true
     healthcheck:
-      test: ["CMD-SHELL", "{ printf 'HEAD /health/ready HTTP/1.0\r\n\r\n' >&0; grep 'HTTP/1.0 200'; } 0<>/dev/tcp/localhost/9000"]
+      test:
+        [
+          "CMD-SHELL",
+          "{ printf 'HEAD /health/ready HTTP/1.0\r\n\r\n' >&0; grep 'HTTP/1.0 200'; } 0<>/dev/tcp/localhost/9000",
+        ]
       interval: 1m30s
       timeout: 30s
       retries: 5
