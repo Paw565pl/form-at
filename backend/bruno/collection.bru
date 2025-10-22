@@ -1,3 +1,26 @@
+auth {
+  mode: oauth2
+}
+
+auth:oauth2 {
+  grant_type: authorization_code
+  callback_url: http://localhost:3000
+  authorization_url: http://localhost:7000/realms/form-at/protocol/openid-connect/auth
+  access_token_url: http://localhost:7000/realms/form-at/protocol/openid-connect/token
+  refresh_token_url: http://localhost:8080/realms/form-at/protocol/openid-connect/token
+  client_id: next-js-frontend
+  client_secret: nextjsfrontendsecret
+  scope: openid profile email
+  state: 
+  pkce: true
+  credentials_placement: body
+  credentials_id: credentials
+  token_placement: header
+  token_header_prefix: Bearer
+  auto_fetch_token: true
+  auto_refresh_token: true
+}
+
 vars:pre-request {
   baseUrl: http://localhost:8080
 }
