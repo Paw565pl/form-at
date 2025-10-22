@@ -1,6 +1,6 @@
 package format.backend.auth.converter;
 
-import format.backend.auth.jwt.KeycloakJwtExtractor;
+import format.backend.auth.jwt.KeycloakJwtClaimsExtractor;
 import format.backend.auth.service.UserService;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -17,12 +17,12 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CustomJwtConverter implements Converter<Jwt, AbstractAuthenticationToken> {
 
-    private final KeycloakJwtExtractor keycloakJwtExtractor;
+    private final KeycloakJwtClaimsExtractor keycloakJwtClaimsExtractor;
     private final UserService userService;
 
     @Override
     public AbstractAuthenticationToken convert(@NonNull Jwt jwt) {
-        val jwtClaims = keycloakJwtExtractor.toClaims(jwt);
+        val jwtClaims = keycloakJwtClaimsExtractor.toClaims(jwt);
         userService.createOrUpdate(jwtClaims);
 
         val authorities = jwtClaims.roles().stream()
