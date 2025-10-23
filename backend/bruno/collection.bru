@@ -4,7 +4,7 @@ auth {
 
 auth:oauth2 {
   grant_type: authorization_code
-  callback_url: http://localhost:3000
+  callback_url: http://localhost:3000/api/auth/callback/keycloak
   authorization_url: http://localhost:7000/realms/form-at/protocol/openid-connect/auth
   access_token_url: http://localhost:7000/realms/form-at/protocol/openid-connect/token
   refresh_token_url: http://localhost:8080/realms/form-at/protocol/openid-connect/token
