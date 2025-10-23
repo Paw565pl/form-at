@@ -3,6 +3,6 @@ export interface Tokens {
   readonly accessTokenExpiresIn: number;
   readonly accessTokenExpiresAt: number;
   readonly refreshToken: string;
-  readonly resfrehTokenExpiresIn: number;
+  readonly refreshTokenExpiresIn: number;
   readonly idToken: string;
 }
