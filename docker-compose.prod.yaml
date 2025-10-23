@@ -26,6 +26,7 @@ services:
     environment:
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_HOSTNAME: localhost
       KC_HTTP_PORT: 7000
       KC_HEALTH_ENABLED: true
     healthcheck:
