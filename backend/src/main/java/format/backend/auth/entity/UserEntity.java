@@ -22,13 +22,13 @@ public class UserEntity {
 
     @MongoId
     @Field(name = "_id")
-    @NonNull public String id;
+    @NonNull private String id;
 
     @Field(name = "username")
-    @NonNull public String username;
+    @NonNull private String username;
 
     @Field(name = "email")
-    @NonNull public String email;
+    @NonNull private String email;
 
     @CreatedDate
     @Field("createdAt")
