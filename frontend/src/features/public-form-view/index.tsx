@@ -1,5 +1,12 @@
 import { Button } from "@/core/components/ui/button";
-import { HatGlasses, ListChecksIcon, MoreHorizontal } from "lucide-react";
+import {
+  BadgeQuestionMark,
+  ClockArrowUp,
+  HatGlasses,
+  ListChecks,
+  MoreHorizontal,
+  PersonStanding,
+} from "lucide-react";
 import Image from "next/image";
 
 export default function PublicFormView() {
@@ -20,7 +27,7 @@ export default function PublicFormView() {
         <div className="absolute bottom-[-25px] left-4 h-[100px] w-[100px] rounded-full border-2 border-black bg-red-500"></div>
         <div className="absolute right-4 bottom-4 flex gap-2">
           <Button size={"sm"}>
-            <ListChecksIcon />
+            <ListChecks />
             Wykonaj Quiz
           </Button>
           <Button size={"sm"}>
@@ -36,9 +43,18 @@ export default function PublicFormView() {
         </div>
       </div>
       <div className="flex gap-6 text-gray-500">
-        <h2>12 pytań</h2>
-        <h2>1020 odpowiedzi</h2>
-        <h2>Szacunkowy czas wykonania: 5 minut</h2>
+        <div className="flex items-center gap-1">
+          <BadgeQuestionMark />
+          <h2>12 pytań</h2>
+        </div>
+        <div className="flex items-center gap-1">
+          <PersonStanding />
+          <h2>1020 odpowiedzi</h2>
+        </div>
+        <div className="flex items-center gap-1">
+          <ClockArrowUp />
+          <h2>Szacunkowy czas wykonania: 5 minut</h2>
+        </div>
       </div>
       <p>
         Fajniutki quiz o kotach z dosyć dłuższym opisem Fajniutki quiz o kotach
