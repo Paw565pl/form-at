@@ -3,11 +3,10 @@
 import { getQueryClient } from "@/core/lib/tanstack-query";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "next-themes";
 import { PropsWithChildren } from "react";
 
-export const Providers = ({ children }: PropsWithChildren) => {
+export const ClientProviders = ({ children }: PropsWithChildren) => {
   const queryClient = getQueryClient();
 
   return (
@@ -17,12 +16,10 @@ export const Providers = ({ children }: PropsWithChildren) => {
       enableSystem
       disableTransitionOnChange
     >
-      <SessionProvider>
-        <QueryClientProvider client={queryClient}>
-          {children}
-          <ReactQueryDevtools initialIsOpen={false} />
-        </QueryClientProvider>
-      </SessionProvider>
+      <QueryClientProvider client={queryClient}>
+        {children}
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
     </ThemeProvider>
   );
 };

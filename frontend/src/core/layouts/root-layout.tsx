@@ -1,7 +1,6 @@
-import { Providers } from "@/core/providers/providers";
-import { NextIntlClientProvider } from "next-intl";
+import { ClientProviders } from "@/core/providers/client-providers";
+import { ServerProviders } from "@/core/providers/server-providers";
 import { getLocale } from "next-intl/server";
-import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { PropsWithChildren } from "react";
 
 export const RootLayout = async ({ children }: PropsWithChildren) => {
@@ -10,11 +9,9 @@ export const RootLayout = async ({ children }: PropsWithChildren) => {
   return (
     <html lang={locale} suppressHydrationWarning>
       <body>
-        <NextIntlClientProvider>
-          <NuqsAdapter>
-            <Providers>{children}</Providers>
-          </NuqsAdapter>
-        </NextIntlClientProvider>
+        <ServerProviders>
+          <ClientProviders>{children}</ClientProviders>
+        </ServerProviders>
       </body>
     </html>
   );
