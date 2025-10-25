@@ -44,8 +44,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           tokens,
         };
       }
-      // Subsequent logins, but the `access_token` is still valid
-      else if (Date.now() < token.tokens.accessTokenExpiresAt * 1000) {
+      // Subsequent logins, but the `access_token` is still valid with 10s buffer
+      else if (Date.now() < (token.tokens.accessTokenExpiresAt - 10) * 1000) {
         return token;
       }
       // Subsequent logins, but the `access_token` has expired, try to refresh it
@@ -90,6 +90,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     session: ({ session, token }) => {
       return { expires: session.expires, ...token };
+    },
+  },
+  events: {
+    signOut: (message) => {
+      if (!("token" in message) || !message.token) return;
+      const { tokens } = message.token;
+
+      axios.get(serverEnv.AUTH_KEYCLOAK_LOGOUT_URL, {
+        params: {
+          id_token_hint: tokens.idToken,
+        },
+      });
     },
   },
 });
