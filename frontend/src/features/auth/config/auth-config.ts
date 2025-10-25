@@ -1,5 +1,5 @@
 import { serverEnv } from "@/core/lib/env/server-env";
-import { RefreshTokenResponseDto } from "@/features/auth/types/refresh-token-response-dto";
+import { RefreshedTokensResponseDto } from "@/features/auth/types/refreshed-tokens-response-dto";
 import { isRole } from "@/features/auth/types/role";
 import { Tokens } from "@/features/auth/types/tokens";
 import { User } from "@/features/auth/types/user";
@@ -51,8 +51,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       // Subsequent logins, but the `access_token` has expired, try to refresh it
       else {
         try {
-          const { data: refreshTokenResponse } =
-            await axios.post<RefreshTokenResponseDto>(
+          const { data: refreshedTokensResponse } =
+            await axios.post<RefreshedTokensResponseDto>(
               serverEnv.AUTH_KEYCLOAK_TOKEN_URL,
               {
                 grant_type: "refresh_token",
@@ -68,14 +68,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             );
 
           const newTokens: Tokens = {
-            accessToken: refreshTokenResponse.access_token,
-            accessTokenExpiresIn: refreshTokenResponse.expires_in,
+            accessToken: refreshedTokensResponse.access_token,
+            accessTokenExpiresIn: refreshedTokensResponse.expires_in,
             accessTokenExpiresAt: Math.floor(
-              Date.now() / 1000 + refreshTokenResponse.expires_in,
+              Date.now() / 1000 + refreshedTokensResponse.expires_in,
             ),
-            refreshToken: refreshTokenResponse.refresh_token,
-            refreshTokenExpiresIn: refreshTokenResponse.refresh_expires_in,
-            idToken: refreshTokenResponse.id_token,
+            refreshToken: refreshedTokensResponse.refresh_token,
+            refreshTokenExpiresIn: refreshedTokensResponse.refresh_expires_in,
+            idToken: refreshedTokensResponse.id_token,
           };
 
           return {
