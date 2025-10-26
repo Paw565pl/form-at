@@ -1,4 +1,4 @@
-import { clientEnv } from "@/core/lib/env/client-env";
+import { getClientEnv } from "@/core/lib/env/client-env";
 import { serverEnv } from "@/core/lib/env/server-env";
 import axios, { CreateAxiosDefaults } from "axios";
 import { Session } from "next-auth";
@@ -8,7 +8,7 @@ const axiosDefaults: CreateAxiosDefaults = {
   baseURL:
     typeof window === "undefined"
       ? serverEnv.API_BASE_URL
-      : clientEnv.NEXT_PUBLIC_API_BASE_URL,
+      : getClientEnv("NEXT_PUBLIC_API_BASE_URL"),
   timeout: 10_000,
   adapter: "fetch",
 } as const;
