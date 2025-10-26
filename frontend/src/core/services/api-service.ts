@@ -11,7 +11,7 @@ const axiosDefaults: CreateAxiosDefaults = {
       : clientEnv.NEXT_PUBLIC_API_BASE_URL,
   timeout: 10_000,
   adapter: "fetch",
-};
+} as const;
 
 export const apiService = axios.create(axiosDefaults);
 
