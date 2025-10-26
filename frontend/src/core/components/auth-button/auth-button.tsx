@@ -1,5 +1,5 @@
 import { Button } from "@/core/components/ui/button";
-import { auth, signIn } from "@/features/auth/config/auth-config";
+import { auth, signIn, signOut } from "@/features/auth/config/auth-config";
 
 export const AuthButton = async () => {
   const session = await auth();
@@ -16,5 +16,14 @@ export const AuthButton = async () => {
       </form>
     );
 
-  return <p>You are logged in !</p>;
+  return (
+    <form
+      action={async () => {
+        "use server";
+        await signOut();
+      }}
+    >
+      <Button type="submit">Sign Out</Button>
+    </form>
+  );
 };
