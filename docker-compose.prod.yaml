@@ -18,8 +18,7 @@ services:
   keycloak:
     build:
       context: ./keycloak
-      dockerfile: Dockerfile
-    command: ["start-dev", "--import-realm"]
+      dockerfile: Dockerfile.dev
     restart: on-failure
     ports:
       - "7000:7000"
