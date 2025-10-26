@@ -32,9 +32,9 @@ public class UserEntity {
 
     @CreatedDate
     @Field("createdAt")
-    private Instant createdAt;
+    private Instant createdAt = Instant.now();
 
     @LastModifiedDate
     @Field("updatedAt")
-    private Instant updatedAt;
+    private Instant updatedAt = Instant.now();
 }
