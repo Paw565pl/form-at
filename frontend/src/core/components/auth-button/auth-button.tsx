@@ -1,29 +1,17 @@
+"use client";
+
 import { Button } from "@/core/components/ui/button";
-import { auth, signIn, signOut } from "@/features/auth/config/auth-config";
+import { signIn, signOut, useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 
-export const AuthButton = async () => {
-  const session = await auth();
+export const AuthButton = () => {
+  const t = useTranslations("navbar.auth");
+  const { data: session } = useSession();
 
-  if (!session?.user)
-    return (
-      <form
-        action={async () => {
-          "use server";
-          await signIn("keycloak");
-        }}
-      >
-        <Button type="submit">Sign In</Button>
-      </form>
-    );
+  if (!session)
+    return <Button onClick={() => signIn("keycloak")}>{t("signIn")}</Button>;
 
   return (
-    <form
-      action={async () => {
-        "use server";
-        await signOut();
-      }}
-    >
-      <Button type="submit">Sign Out</Button>
-    </form>
+    <Button onClick={() => signOut({ redirectTo: "/" })}>{t("signOut")}</Button>
   );
 };
