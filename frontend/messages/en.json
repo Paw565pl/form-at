@@ -1,5 +1,11 @@
 {
-  "RootPage": {
+  "rootPage": {
     "message": "Hello world!"
+  },
+  "navbar": {
+    "auth": {
+      "signIn": "Sign In",
+      "signOut": "Sign Out"
+    }
   }
 }
