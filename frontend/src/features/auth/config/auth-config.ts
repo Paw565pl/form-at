@@ -18,6 +18,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks: {
+    authorized: ({ auth }) => {
+      // Logged in users are authenticated
+      return !!auth;
+    },
     jwt: async ({ token, account, profile }) => {
       // First-time login, save the `access_token`, its expiry and the `refresh_token`
       if (account && profile) {
