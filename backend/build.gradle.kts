@@ -3,8 +3,8 @@ import com.diffplug.spotless.LineEnding
 plugins {
     java
     idea
-    id("org.springframework.boot") version "3.5.6"
-    id("org.springframework.boot.aot") version "3.5.6" apply false
+    id("org.springframework.boot") version "3.5.7"
+    id("org.springframework.boot.aot") version "3.5.7" apply false
     id("io.spring.dependency-management") version "1.1.7"
     id("se.solrike.sonarlint") version "2.2.0"
     id("com.diffplug.spotless") version "8.0.0"
@@ -39,7 +39,7 @@ spotless {
         removeUnusedImports()
         importOrder()
         cleanthat()
-        palantirJavaFormat("2.80.0")
+        palantirJavaFormat("2.81.0")
         trimTrailingWhitespace()
         leadingTabsToSpaces()
         endWithNewline()
