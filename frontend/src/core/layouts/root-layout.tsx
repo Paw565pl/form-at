@@ -15,7 +15,9 @@ export const RootLayout = async ({ children }: PropsWithChildren) => {
       </head>
       <body>
         <ServerProviders>
-          <ClientProviders>{children}</ClientProviders>
+          <ClientProviders>
+            <main className="container mx-auto">{children}</main>
+          </ClientProviders>
         </ServerProviders>
       </body>
     </html>
