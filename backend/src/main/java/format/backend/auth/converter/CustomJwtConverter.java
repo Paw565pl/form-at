@@ -22,7 +22,7 @@ public class CustomJwtConverter implements Converter<Jwt, AbstractAuthentication
 
     @Override
     public AbstractAuthenticationToken convert(@NonNull Jwt jwt) {
-        val jwtClaims = keycloakJwtClaimsExtractor.toClaims(jwt);
+        val jwtClaims = keycloakJwtClaimsExtractor.getClaims(jwt);
         userService.createOrUpdate(jwtClaims);
 
         val authorities = jwtClaims.roles().stream()

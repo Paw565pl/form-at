@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class KeycloakJwtClaimsExtractor {
 
-    public KeycloakJwtClaims toClaims(Jwt jwt) {
+    public KeycloakJwtClaims getClaims(Jwt jwt) {
         val sub = jwt.getSubject();
         val username = jwt.getClaimAsString("preferred_username");
         val email = jwt.getClaimAsString("email");
