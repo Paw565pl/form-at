@@ -2,6 +2,18 @@
 
 import { Button } from "@/core/components/ui/button";
 import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/core/components/ui/dialog";
+import { Input } from "@/core/components/ui/input";
+import { Label } from "@radix-ui/react-label";
+import {
   BadgeQuestionMark,
   ChevronDown,
   ClockArrowUp,
@@ -39,7 +51,7 @@ const questions = [
 ];
 
 export default function PublicFormView() {
-  const [showQuestions, setShowQuestions] = useState(false);
+  const [showQuestions, setShowQuestions] = useState(true);
 
   return (
     <div className="m-auto flex max-w-5xl flex-col">
@@ -57,10 +69,35 @@ export default function PublicFormView() {
         </Button>
         <div className="absolute bottom-[-25px] left-4 h-[100px] w-[100px] rounded-full border-2 border-black bg-red-500"></div>
         <div className="absolute right-4 bottom-4 flex gap-2">
-          <Button size={"sm"}>
-            <ListChecks />
-            Wykonaj Quiz
-          </Button>
+          <Dialog>
+            <form>
+              <DialogTrigger asChild>
+                <Button size={"sm"}>
+                  <ListChecks />
+                  Wykonaj Quiz
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Podaj hasło do quizu</DialogTitle>
+                  <DialogDescription>
+                    Ten quiz jest zabezpieczony hasłem, zapytaj twórcę quizu o
+                    hasło
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-3">
+                  <Label htmlFor="code">Code</Label>
+                  <Input id="code" name="code" placeholder="code" />
+                </div>
+                <DialogFooter>
+                  <DialogClose asChild>
+                    <Button variant="outline">Cancel</Button>
+                  </DialogClose>
+                  <Button type="submit">Save changes</Button>
+                </DialogFooter>
+              </DialogContent>
+            </form>
+          </Dialog>
           <Button size={"sm"}>
             <HatGlasses />
             Wykonaj Anonimowo
