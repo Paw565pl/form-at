@@ -12,6 +12,7 @@ import {
   DialogTrigger,
 } from "@/core/components/ui/dialog";
 import { Input } from "@/core/components/ui/input";
+import { Question } from "@/features/public-form-view/components/question";
 import { Label } from "@radix-ui/react-label";
 import {
   BadgeQuestionMark,
@@ -25,7 +26,6 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
-import { Question } from "./components/question";
 
 const questions = [
   {
