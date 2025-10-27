@@ -8,6 +8,30 @@ import {
   PersonStanding,
 } from "lucide-react";
 import Image from "next/image";
+import { Question } from "./components/question";
+
+const questions = [
+  {
+    name: "Jaka jest rasa tego pięknego kota",
+    imageKey: "",
+    answers: [
+      { content: "Opcja 1" },
+      { content: "Opcja 2" },
+      { content: "Opcja 3" },
+      { content: "Opcja 4" },
+    ],
+  },
+  {
+    name: "Jaka jest rasa tego pięknego kota",
+    imageKey: "1",
+    answers: [
+      { content: "Opcja 1" },
+      { content: "Opcja 2" },
+      { content: "Opcja 3" },
+      { content: "Opcja 4" },
+    ],
+  },
+];
 
 export default function PublicFormView() {
   return (
@@ -67,6 +91,11 @@ export default function PublicFormView() {
         z dosyć dłuższym opisem Fajniutki quiz o kotach z dosyć dłuższym opisem
       </p>
       <p className="w-full text-right text-gray-500">20.10.2025</p>
+      <div className="my-2 flex flex-col gap-2">
+        {questions.map((question, idx) => (
+          <Question key={idx} {...question} />
+        ))}
+      </div>
     </div>
   );
 }
