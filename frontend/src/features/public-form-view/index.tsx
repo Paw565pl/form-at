@@ -1,13 +1,18 @@
+"use client";
+
 import { Button } from "@/core/components/ui/button";
 import {
   BadgeQuestionMark,
+  ChevronDown,
   ClockArrowUp,
   HatGlasses,
   ListChecks,
+  Lock,
   MoreHorizontal,
   PersonStanding,
 } from "lucide-react";
 import Image from "next/image";
+import { useState } from "react";
 import { Question } from "./components/question";
 
 const questions = [
@@ -34,6 +39,8 @@ const questions = [
 ];
 
 export default function PublicFormView() {
+  const [showQuestions, setShowQuestions] = useState(false);
+
   return (
     <div className="m-auto flex max-w-5xl flex-col">
       <div className="relative mb-[25px] flex h-[200px] w-full max-w-5xl items-end">
@@ -61,7 +68,10 @@ export default function PublicFormView() {
         </div>
       </div>
       <div className="my-2 flex justify-between">
-        <h1 className="text-4xl font-extrabold">Quiz o kotach</h1>
+        <div className="flex items-center gap-2">
+          <h1 className="text-4xl font-extrabold">Quiz o kotach</h1>
+          <Lock className="text-gray-500" />
+        </div>
         <div className="inline-flex h-9 w-min items-center justify-center rounded-xl border-2 border-gray-600 bg-blue-500 px-4 py-2 whitespace-nowrap text-white">
           Quiz wykonany: 20.12.2025
         </div>
@@ -92,9 +102,19 @@ export default function PublicFormView() {
       </p>
       <p className="w-full text-right text-gray-500">20.10.2025</p>
       <div className="my-2 flex flex-col gap-2">
-        {questions.map((question, idx) => (
-          <Question key={idx} {...question} />
-        ))}
+        <div className="flex gap-2">
+          <h1 className="text-xl">Pokaż pytania</h1>
+          <Button
+            size={"icon-sm"}
+            onClick={() => setShowQuestions(!showQuestions)}
+          >
+            <ChevronDown />
+          </Button>
+        </div>
+        {showQuestions &&
+          questions.map((question, idx) => (
+            <Question key={idx} {...question} />
+          ))}
       </div>
     </div>
   );
