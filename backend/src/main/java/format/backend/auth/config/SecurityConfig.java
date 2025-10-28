@@ -2,6 +2,7 @@ package format.backend.auth.config;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
+import format.backend.auth.converter.CustomJwtConverter;
 import format.backend.auth.properties.CorsProperties;
 import lombok.val;
 import org.springframework.context.annotation.Bean;
@@ -21,12 +22,14 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, CorsConfigurationSource corsConfigurationSource)
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http, CustomJwtConverter customJwtConverter, CorsConfigurationSource corsConfigurationSource)
             throws Exception {
-        http.authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll());
-
         http.csrf(AbstractHttpConfigurer::disable);
         http.sessionManagement(session -> session.sessionCreationPolicy(STATELESS));
+
+        http.authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll());
+        http.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(customJwtConverter)));
 
         http.cors(cors -> cors.configurationSource(corsConfigurationSource));
 

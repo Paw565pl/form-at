@@ -11,6 +11,19 @@ services:
     volumes:
       - mongodb-data:/data/db
 
+  keycloak:
+    build:
+      context: ./keycloak
+      dockerfile: Dockerfile.dev
+    restart: on-failure
+    ports:
+      - "7000:7000"
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_HOSTNAME: localhost
+      KC_HTTP_PORT: 7000
+
   backend:
     build:
       context: ./backend
@@ -20,6 +33,7 @@ services:
       - "8080:8080"
     depends_on:
       - mongodb
+      - keycloak
     develop:
       watch:
         - action: rebuild
