@@ -31,10 +31,10 @@ public class UserEntity {
     @NonNull private String email;
 
     @CreatedDate
-    @Field("createdAt")
+    @Field(name = "createdAt")
     private Instant createdAt = Instant.now();
 
     @LastModifiedDate
-    @Field("updatedAt")
+    @Field(name = "updatedAt")
     private Instant updatedAt = Instant.now();
 }
