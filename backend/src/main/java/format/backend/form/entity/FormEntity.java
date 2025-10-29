@@ -1,6 +1,7 @@
 package format.backend.form.entity;
 
 import format.backend.auth.entity.UserEntity;
+import format.backend.submission.entity.SubmissionEntity;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.annotation.ReadOnlyProperty;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.index.TextIndexed;
@@ -83,6 +85,10 @@ public class FormEntity {
 
     @Field(name = "questions")
     @NonNull private List<QuestionEntity> questions = new ArrayList<>();
+
+    @ReadOnlyProperty
+    @DocumentReference(lazy = true, lookup = "{'formId':?#{#self._id} }")
+    @NonNull private List<SubmissionEntity> submissions = new ArrayList<>();
 
     @CreatedDate
     @Field(name = "createdAt")
