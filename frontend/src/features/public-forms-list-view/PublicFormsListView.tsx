@@ -15,23 +15,22 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/core/components/ui/tooltip";
-import { FormatDate } from "@/features/public-forms-list-view/FormatDate";
 import {
   forms,
   placeholder_image_url,
 } from "@/features/public-forms-list-view/forms";
 import { LayoutGrid, List } from "lucide-react";
-import { useLocale, useTranslations } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRef, useState } from "react";
 
 export default function PublicFormsListView() {
   // eslint-disable-next-line
   const [loading, setLoading] = useState(false);
-  const [gridLayout, setGridLayout] = useState(false);
+  const [gridLayout, setGridLayout] = useState(true);
   const loader = useRef<HTMLDivElement | null>(null);
   const t = useTranslations("publicFormsList");
-  const locale = useLocale();
+  const format = useFormatter();
 
   return (
     <main
@@ -89,21 +88,6 @@ export default function PublicFormsListView() {
               <TooltipTrigger asChild>
                 <Button
                   size="icon"
-                  variant={gridLayout ? "outline" : "default"}
-                  onClick={() => setGridLayout(false)}
-                >
-                  <List />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom">
-                <p>{t("options.listView")}</p>
-              </TooltipContent>
-            </Tooltip>
-
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  size="icon"
                   variant={gridLayout ? "default" : "outline"}
                   onClick={() => setGridLayout(true)}
                 >
@@ -114,36 +98,24 @@ export default function PublicFormsListView() {
                 <p>{t("options.gridView")}</p>
               </TooltipContent>
             </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  size="icon"
+                  variant={gridLayout ? "outline" : "default"}
+                  onClick={() => setGridLayout(false)}
+                >
+                  <List />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">
+                <p>{t("options.listView")}</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
         </div>
       </header>
-
-      {!gridLayout &&
-        forms.map((form) => (
-          <Link href={{ pathname: `/forms/${form.id}` }} key={form.id}>
-            <Card
-              key={form.title}
-              className="hover:border-primary gap-1 p-3 transition-all"
-            >
-              <header className="flex flex-wrap items-center justify-between gap-1">
-                <h1 className="font-medium">{form.title}</h1>
-                <span className="text-muted-foreground text-sm">
-                  {t("by")} {form.author}
-                </span>
-              </header>
-              <p className="text-sm lg:mr-36">{form.description}</p>
-              <footer className="text-muted-foreground mt-1 flex flex-wrap justify-between text-sm">
-                <span>
-                  {form.questions} {t("questions")} • {form.submissions}{" "}
-                  {t("submissions")} • {form.duration} min
-                </span>
-                <span className="text-muted-foreground text-sm">
-                  {FormatDate(form.date_created, true, false, locale)}
-                </span>
-              </footer>
-            </Card>
-          </Link>
-        ))}
 
       {gridLayout && (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -177,13 +149,48 @@ export default function PublicFormsListView() {
                       {t("submissions")}
                     </span>
                     <span className="text-muted-foreground text-sm">
-                      {FormatDate(form.date_created, true, false, locale)}
+                      {format.dateTime(new Date(form.date_created), {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
                     </span>
                   </footer>
                 </div>
               </Card>
             </Link>
           ))}
+
+          {!gridLayout &&
+            forms.map((form) => (
+              <Link href={{ pathname: `/forms/${form.id}` }} key={form.id}>
+                <Card
+                  key={form.title}
+                  className="hover:border-primary gap-1 p-3 transition-all"
+                >
+                  <header className="flex flex-wrap items-center justify-between gap-1">
+                    <h1 className="font-medium">{form.title}</h1>
+                    <span className="text-muted-foreground text-sm">
+                      {t("by")} {form.author}
+                    </span>
+                  </header>
+                  <p className="text-sm lg:mr-36">{form.description}</p>
+                  <footer className="text-muted-foreground mt-1 flex flex-wrap justify-between text-sm">
+                    <span>
+                      {form.questions} {t("questions")} • {form.submissions}{" "}
+                      {t("submissions")} • {form.duration} min
+                    </span>
+                    <span className="text-muted-foreground text-sm">
+                      {format.dateTime(new Date(form.date_created), {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                    </span>
+                  </footer>
+                </Card>
+              </Link>
+            ))}
         </div>
       )}
 
