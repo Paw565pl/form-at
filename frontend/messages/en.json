@@ -1,5 +1,25 @@
 {
   "RootPage": {
     "message": "Hello world!"
+  },
+  "PublicFormView": {
+    "Banner": {
+      "takeTheQuiz": "Take the Quiz",
+      "enterTheCode": "Enter the Quiz Code",
+      "codeDescription": "This quiz is protected by the code, ask the quiz maker for the code",
+      "code": "Code",
+      "cancel": "Cancel",
+      "saveChanges": "Save changes",
+      "fillAnonymously": "Fill Anonymously"
+    },
+    "Details": {
+      "quizFinished": "The quiz finished at: {finishedAt}",
+      "questionsCount": "{count} question(s)",
+      "submissionsCount": "{count} submission(s)",
+      "estimatedTime": "Estimated time to complete: {time} minute(s)"
+    },
+    "QuestionList": {
+      "showQuestions": "Show Questions"
+    }
   }
 }
