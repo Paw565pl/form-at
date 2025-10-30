@@ -17,13 +17,13 @@ export const placeholder_image_url =
 export const forms: Form[] = [
   {
     id: 1,
-    title: "What is your favorite color?",
+    title: "Quiz o kotach",
     status: "Published",
     questions: 3,
     submissions: 34,
     date_created: new Date("2021-10-25"),
-    author: "John Doe",
-    description: "A form to collect favorite colors from users.",
+    author: "Jan Kowalski",
+    description: "Krótki quiz sprawdzający wiedzę o kotach.",
     image_url:
       "https://media.istockphoto.com/id/1038870630/photo/woman-standing-and-looking-at-lago-di-carezza-in-dolomites.jpg?s=612x612&w=0&k=20&c=sRbpFCJ-odpl2cQetrZaxlxL0oqAmxcjDEGN46kmGJ0=",
     duration: 5,

@@ -1,6 +1,6 @@
 // To-do: Move this to an appropriate folder (core/tools maybe?)
 
-const MONTHS = [
+const MONTHS_ENG = [
   "January",
   "February",
   "March",
@@ -13,6 +13,21 @@ const MONTHS = [
   "October",
   "November",
   "December",
+];
+
+const MONTHS_PL = [
+  "stycznia",
+  "lutego",
+  "marca",
+  "kwietnia",
+  "maja",
+  "czerwca",
+  "lipca",
+  "sierpnia",
+  "września",
+  "października",
+  "listopada",
+  "grudnia",
 ];
 
 function GetSuffix(day: number): string {
@@ -33,6 +48,7 @@ export function FormatDate(
   date: Date,
   show_month = false,
   show_time = false,
+  lang = "en",
 ): string {
   date = new Date(date);
   const year = date.getFullYear();
@@ -40,8 +56,9 @@ export function FormatDate(
   if (show_month) {
     const day = String(date.getDate());
     const suffix = GetSuffix(date.getDate());
-    const month = MONTHS[date.getMonth()];
-    str = `${day}${suffix} ${month} ${year}`;
+    const month =
+      lang === "pl" ? MONTHS_PL[date.getMonth()] : MONTHS_ENG[date.getMonth()];
+    str = `${day}${lang === "en" ? suffix : ""} ${month} ${year}`;
   } else {
     const day = String(date.getDate()).padStart(2, "0");
     const month = String(date.getMonth() + 1).padStart(2, "0");

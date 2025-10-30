@@ -7,5 +7,27 @@
       "signIn": "Sign In",
       "signOut": "Sign Out"
     }
+  },
+  "publicFormsList": {
+    "title": "Showing {count} Forms",
+    "options": {
+      "searchPlaceholder": "Search forms...",
+      "sortBy": "Sort by",
+      "sortOptions": {
+        "newest": "Newest",
+        "oldest": "Oldest",
+        "name": "Name",
+        "questions": "Questions",
+        "submissions": "Submissions",
+        "duration": "Duration"
+      },
+      "listView": "List View",
+      "gridView": "Grid View"
+    },
+    "by": "by",
+    "questions": "questions",
+    "submissions": "submissions",
+    "end": "You have reached the end of the list.",
+    "loading": "Loading forms..."
   }
 }

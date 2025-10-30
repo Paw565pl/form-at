@@ -7,5 +7,27 @@
       "signIn": "Zaloguj",
       "signOut": "Wyloguj"
     }
+  },
+  "publicFormsList": {
+    "title": "Wyświetlanie {count} formularzy",
+    "options": {
+      "searchPlaceholder": "Szukaj formularzy...",
+      "sortBy": "Sortuj według",
+      "sortOptions": {
+        "newest": "Najnowsze",
+        "oldest": "Najstarsze",
+        "name": "Nazwa",
+        "questions": "Pytania",
+        "submissions": "Odpowiedzi",
+        "duration": "Czas trwania"
+      },
+      "listView": "Widok listy",
+      "gridView": "Widok siatki"
+    },
+    "by": "autorstwa",
+    "questions": "pytania",
+    "submissions": "odpowiedzi",
+    "end": "Dotarłeś do końca listy.",
+    "loading": "Ładowanie formularzy..."
   }
 }
