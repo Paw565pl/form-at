@@ -11,7 +11,6 @@ import {
 } from "@/core/components/ui/dialog";
 import { Input } from "@/core/components/ui/input";
 import { Label } from "@/core/components/ui/label";
-
 import { Brain, HatGlasses, ListChecks, MoreHorizontal } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
@@ -19,7 +18,7 @@ import Image from "next/image";
 export const Banner = () => {
   const t = useTranslations("PublicFormView.Banner");
   return (
-    <div className="relative mb-[25px] flex h-[200px] w-full max-w-5xl items-end">
+    <div className="relative mb-7 flex h-48 w-full max-w-5xl items-end">
       <Image
         src="/banner.jpg"
         alt="Background"
@@ -31,7 +30,7 @@ export const Banner = () => {
       <Button size={"icon-sm"} className="absolute top-4 right-4">
         <MoreHorizontal />
       </Button>
-      <div className="bg-muted-foreground absolute bottom-[-25px] left-4 flex h-[100px] w-[100px] items-center justify-center rounded-full border-2 border-black">
+      <div className="bg-muted-foreground absolute -bottom-6 left-4 flex h-24 w-24 items-center justify-center rounded-full border-2 border-black">
         <Brain className="h-16 w-16" />
       </div>
       <div className="absolute right-4 bottom-4 flex gap-2">

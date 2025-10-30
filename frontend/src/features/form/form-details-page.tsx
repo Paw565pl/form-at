@@ -1,8 +1,8 @@
-import { Banner } from "@/features/public-form-view/components/banner";
-import { Details } from "@/features/public-form-view/components/details";
-import { QuestionList } from "@/features/public-form-view/components/question-list";
-import { QuestionResponseDto } from "@/features/public-form-view/types/question-response-dto";
-import { QuestionType } from "@/features/public-form-view/types/question-type";
+import { Banner } from "@/features/form/components/banner";
+import { Details } from "@/features/form/components/details";
+import { QuestionList } from "@/features/form/components/question-list";
+import { QuestionResponseDto } from "@/features/form/types/question-response-dto";
+import { QuestionType } from "@/features/form/types/question-type";
 
 const questions: QuestionResponseDto[] = [
   {
@@ -33,7 +33,7 @@ const questions: QuestionResponseDto[] = [
   },
 ];
 
-export default function PublicFormView() {
+const FormDetailsPage = () => {
   return (
     <div className="m-auto flex max-w-5xl flex-col">
       <Banner />
@@ -41,4 +41,6 @@ export default function PublicFormView() {
       <QuestionList questions={questions} />
     </div>
   );
-}
+};
+
+export default FormDetailsPage;
