@@ -1,12 +1,11 @@
 package format.backend.comment.entity;
 
 import format.backend.auth.entity.UserEntity;
+import java.time.Instant;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.*;
-
-import java.time.Instant;
 
 @Getter
 @Setter
@@ -23,8 +22,7 @@ public class CommentEntity {
     @Field(name = "author")
     private UserEntity author;
 
-    @NonNull
-    @Field(name = "content")
+    @NonNull @Field(name = "content")
     private String content;
 
     @CreatedDate
