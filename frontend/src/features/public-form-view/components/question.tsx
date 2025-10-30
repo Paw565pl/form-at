@@ -1,6 +1,6 @@
 import { Checkbox } from "@/core/components/ui/checkbox";
 import { Label } from "@/core/components/ui/label";
-import { QuestionResponseDto } from "../types/question-response-dto";
+import { QuestionResponseDto } from "@/features/public-form-view/types/question-response-dto";
 
 export const Question = (question: QuestionResponseDto) => {
   return (

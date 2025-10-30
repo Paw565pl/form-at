@@ -1,8 +1,8 @@
-import { Banner } from "./components/banner";
-import { Details } from "./components/details";
-import { QuestionList } from "./components/question-list";
-import { QuestionResponseDto } from "./types/question-response-dto";
-import { QuestionType } from "./types/question-type";
+import { Banner } from "@/features/public-form-view/components/banner";
+import { Details } from "@/features/public-form-view/components/details";
+import { QuestionList } from "@/features/public-form-view/components/question-list";
+import { QuestionResponseDto } from "@/features/public-form-view/types/question-response-dto";
+import { QuestionType } from "@/features/public-form-view/types/question-type";
 
 const questions: QuestionResponseDto[] = [
   {
