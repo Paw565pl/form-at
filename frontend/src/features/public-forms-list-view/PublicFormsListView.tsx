@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/core/components/ui/button";
-import { Card } from "@/core/components/ui/card";
 import { Input } from "@/core/components/ui/input";
 import {
   Select,
@@ -15,22 +14,19 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/core/components/ui/tooltip";
-import {
-  forms,
-  placeholder_image_url,
-} from "@/features/public-forms-list-view/forms";
+import { forms } from "@/features/public-forms-list-view/forms";
 import { LayoutGrid, List } from "lucide-react";
-import { useFormatter, useTranslations } from "next-intl";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { useRef, useState } from "react";
+import { GridView } from "@/features/public-forms-list-view/components/grid-view";
+import { ListView } from "@/features/public-forms-list-view/components/list-view";
 
-export default function PublicFormsListView() {
+export const PublicFormsListView = () => {
   // eslint-disable-next-line
   const [loading, setLoading] = useState(false);
   const [gridLayout, setGridLayout] = useState(true);
   const loader = useRef<HTMLDivElement | null>(null);
   const t = useTranslations("publicFormsList");
-  const format = useFormatter();
 
   return (
     <main
@@ -117,82 +113,7 @@ export default function PublicFormsListView() {
         </div>
       </header>
 
-      {gridLayout && (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {forms.map((form) => (
-            <Link href={{ pathname: `/forms/${form.id}` }} key={form.id}>
-              <Card
-                key={form.title}
-                className="group hover:border-primary h-full overflow-hidden transition-all"
-              >
-                <div
-                  style={{
-                    backgroundImage: `url(${form.image_url || placeholder_image_url})`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                  }}
-                  className="min-h-36 origin-bottom rounded-t-md transition-transform group-hover:scale-105"
-                ></div>
-                <div className="flex h-full flex-col gap-2 p-3">
-                  <header className="bg-card flex flex-wrap items-center justify-between">
-                    <h1 className="font-medium">{form.title}</h1>
-                    <span className="text-muted-foreground text-sm">
-                      {t("by")} {form.author}
-                    </span>
-                  </header>
-                  <p className="line-clamp-4 overflow-hidden text-sm">
-                    {form.description}
-                  </p>
-                  <footer className="text-muted-foreground mt-auto flex flex-wrap justify-between gap-1 text-sm">
-                    <span>
-                      {form.questions} {t("questions")} • {form.submissions}{" "}
-                      {t("submissions")}
-                    </span>
-                    <span className="text-muted-foreground text-sm">
-                      {format.dateTime(new Date(form.date_created), {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}
-                    </span>
-                  </footer>
-                </div>
-              </Card>
-            </Link>
-          ))}
-
-          {!gridLayout &&
-            forms.map((form) => (
-              <Link href={{ pathname: `/forms/${form.id}` }} key={form.id}>
-                <Card
-                  key={form.title}
-                  className="hover:border-primary gap-1 p-3 transition-all"
-                >
-                  <header className="flex flex-wrap items-center justify-between gap-1">
-                    <h1 className="font-medium">{form.title}</h1>
-                    <span className="text-muted-foreground text-sm">
-                      {t("by")} {form.author}
-                    </span>
-                  </header>
-                  <p className="text-sm lg:mr-36">{form.description}</p>
-                  <footer className="text-muted-foreground mt-1 flex flex-wrap justify-between text-sm">
-                    <span>
-                      {form.questions} {t("questions")} • {form.submissions}{" "}
-                      {t("submissions")} • {form.duration} min
-                    </span>
-                    <span className="text-muted-foreground text-sm">
-                      {format.dateTime(new Date(form.date_created), {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}
-                    </span>
-                  </footer>
-                </Card>
-              </Link>
-            ))}
-        </div>
-      )}
+      {gridLayout ? <GridView /> : <ListView />}
 
       <div ref={loader} className="h-px-40" />
 
@@ -203,4 +124,4 @@ export default function PublicFormsListView() {
       </p>
     </main>
   );
-}
+};
