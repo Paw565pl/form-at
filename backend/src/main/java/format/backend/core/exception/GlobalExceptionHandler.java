@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
                         Collectors.mapping(DefaultMessageSourceResolvable::getDefaultMessage, Collectors.toList())));
 
         val status = HttpStatus.BAD_REQUEST;
-        val response = new ErrorResponseDto(status, "validation failed", errors);
+        val response = new ErrorResponseDto(status, "Validation failed", errors);
 
         return ResponseEntity.status(status).body(response);
     }
@@ -53,7 +53,7 @@ public class GlobalExceptionHandler {
                         Map.Entry::getKey, Collectors.mapping(Map.Entry::getValue, Collectors.toList())));
 
         val status = HttpStatus.BAD_REQUEST;
-        val response = new ErrorResponseDto(status, "validation failed", errors);
+        val response = new ErrorResponseDto(status, "Validation failed", errors);
 
         return ResponseEntity.status(status).body(response);
     }
@@ -62,7 +62,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseDto> handleHttpMessageNotReadableException(
             HttpMessageNotReadableException ignored) {
         val status = HttpStatus.BAD_REQUEST;
-        val response = new ErrorResponseDto(status, "required request body is missing");
+        val response = new ErrorResponseDto(status, "Required request body is missing");
 
         return ResponseEntity.status(status).body(response);
     }
@@ -78,6 +78,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(PropertyReferenceException.class)
     public ResponseEntity<ErrorResponseDto> handlePropertyReferenceException(PropertyReferenceException e) {
         val status = HttpStatus.BAD_REQUEST;
+        val response = new ErrorResponseDto(status, e.getMessage());
+
+        return ResponseEntity.status(status).body(response);
+    }
+
+    @ExceptionHandler(ApplicationException.class)
+    public ResponseEntity<ErrorResponseDto> handleApplicationException(ApplicationException e) {
+        val status = e.getStatus();
         val response = new ErrorResponseDto(status, e.getMessage());
 
         return ResponseEntity.status(status).body(response);
