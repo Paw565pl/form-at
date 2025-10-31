@@ -14,7 +14,9 @@ import org.springframework.lang.NonNull;
 public class CommentResponseDto {
     @NonNull private String id;
 
-    @NonNull private String authorId;
+    @NonNull private String authorName;
+
+    @NonNull private String formId;
 
     @NonNull private String content;
 

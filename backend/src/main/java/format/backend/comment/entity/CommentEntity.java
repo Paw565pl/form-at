@@ -1,6 +1,7 @@
 package format.backend.comment.entity;
 
 import format.backend.auth.entity.UserEntity;
+import format.backend.form.entity.FormEntity;
 import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -30,6 +31,11 @@ public class CommentEntity {
     @DocumentReference(lazy = true)
     @Field(name = "author")
     private UserEntity author;
+
+    @DocumentReference(lazy = true)
+    @Field(name = "form")
+    @NonNull
+    private FormEntity form;
 
     @NonNull @Field(name = "content")
     private String content;
