@@ -1,5 +1,6 @@
 package format.backend.form.mapper;
 
+import format.backend.auth.entity.UserEntity;
 import format.backend.form.dto.FormDetailResponseDto;
 import format.backend.form.dto.FormListResponseDto;
 import format.backend.form.dto.FormRequestDto;
@@ -21,11 +22,11 @@ public interface FormMapper {
             FormEntity formEntity, String thumbnail, List<QuestionResponseDto> questions);
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "language", expression = "java(formRequestDto.language().getMongoValue())")
     @Mapping(target = "submissionsCount", ignore = true)
-    @Mapping(target = "author", ignore = true)
     @Mapping(target = "submissions", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "version", ignore = true)
-    FormEntity toEntity(FormRequestDto formRequestDto, String slug, String passwordHash);
+    FormEntity toEntity(FormRequestDto formRequestDto, String slug, String passwordHash, UserEntity author);
 }

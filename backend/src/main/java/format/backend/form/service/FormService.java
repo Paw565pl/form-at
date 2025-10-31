@@ -1,10 +1,17 @@
 package format.backend.form.service;
 
+import com.github.slugify.Slugify;
+import format.backend.auth.jwt.KeycloakJwtClaims;
+import format.backend.auth.repository.UserRepository;
+import format.backend.form.dto.AnswerRequestDto;
 import format.backend.form.dto.FormDetailResponseDto;
 import format.backend.form.dto.FormFilterDto;
 import format.backend.form.dto.FormListResponseDto;
+import format.backend.form.dto.FormRequestDto;
+import format.backend.form.dto.QuestionRequestDto;
 import format.backend.form.entity.FormEntity;
 import format.backend.form.entity.FormStatus;
+import format.backend.form.entity.QuestionEntity;
 import format.backend.form.mapper.FormMapper;
 import format.backend.form.mapper.QuestionMapper;
 import format.backend.form.repository.FormRepository;
@@ -16,6 +23,7 @@ import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.bson.types.ObjectId;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +35,7 @@ import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.data.mongodb.core.query.TextQuery;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -34,7 +43,10 @@ import org.springframework.web.server.ResponseStatusException;
 public class FormService {
 
     private final MongoTemplate mongoTemplate;
+    private final Slugify slugify;
+
     private final FormRepository formRepository;
+    private final UserRepository userRepository;
     private final FormMapper formMapper;
     private final QuestionMapper questionMapper;
 
@@ -91,13 +103,65 @@ public class FormService {
     public FormDetailResponseDto findByIdOrSlug(String idOrSlug) {
         val form = ObjectId.isValid(idOrSlug) ? formRepository.findById(idOrSlug) : formRepository.findBySlug(idOrSlug);
 
-        return form.map(f -> {
-                    val questions = f.getQuestions().stream()
-                            .map(q -> questionMapper.toResponseDto(q, "TODO: generate image urls"))
-                            .toList();
-
-                    return formMapper.toDetailResponseDto(f, "TODO: generate image urls", questions);
-                })
+        return form.map(this::mapToDetailResponseDto)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Form not found"));
+    }
+
+    private FormDetailResponseDto mapToDetailResponseDto(FormEntity formEntity) {
+        val questions = formEntity.getQuestions().stream()
+                .map(q -> questionMapper.toResponseDto(q, "TODO: generate image urls"))
+                .toList();
+
+        return formMapper.toDetailResponseDto(formEntity, "TODO: generate image urls", questions);
+    }
+
+    @Transactional
+    public FormDetailResponseDto create(KeycloakJwtClaims keycloakJwtClaims, FormRequestDto requestDto) {
+        val slug = slugify.slugify(requestDto.name());
+        val passwordHash = "TODO";
+        val validatedQuestions = getValidatedQuestions(requestDto.questions());
+        val author = userRepository
+                .findById(keycloakJwtClaims.sub())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
+
+        val formEntity = formMapper.toEntity(requestDto, slug, passwordHash, author);
+        formEntity.setQuestions(validatedQuestions);
+
+        try {
+            return mapToDetailResponseDto(formRepository.save(formEntity));
+        } catch (DataIntegrityViolationException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Form with this name already exists");
+        }
+    }
+
+    private List<QuestionEntity> getValidatedQuestions(List<QuestionRequestDto> questionRequestDtos) {
+        return questionRequestDtos.stream()
+                .map(q -> {
+                    switch (q.type()) {
+                        case OPEN -> q.answers().clear();
+                        case SINGLE_CHOICE -> {
+                            val validAnswersCount = q.answers().stream()
+                                    .filter(AnswerRequestDto::isCorrect)
+                                    .count();
+                            if (validAnswersCount != 1)
+                                throw new ResponseStatusException(
+                                        HttpStatus.BAD_REQUEST,
+                                        "Single choice questions must have exactly one valid answer");
+                        }
+                        case MULTIPLE_CHOICE -> {
+                            val validAnswersCount = q.answers().stream()
+                                    .filter(AnswerRequestDto::isCorrect)
+                                    .count();
+                            if (1 < validAnswersCount
+                                    && validAnswersCount < q.answers().size())
+                                throw new ResponseStatusException(
+                                        HttpStatus.BAD_REQUEST,
+                                        "Multiple choice questions must have at least one valid answer and at least one invalid answer");
+                        }
+                    }
+
+                    return questionMapper.toEntity(q);
+                })
+                .toList();
     }
 }

@@ -3,6 +3,7 @@ package format.backend.form.dto;
 import format.backend.form.entity.FormShuffleVariant;
 import format.backend.form.entity.FormStatus;
 import format.backend.form.entity.Language;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -37,4 +38,4 @@ public record FormRequestDto(
 
         @NotNull(message = "SaveSubmissions cannot be null") @NonNull Boolean saveSubmissions,
 
-        @Size(min = 3, max = 100, message = "Questions must contain between 3 and 100 items") @NotEmpty(message = "Questions cannot be empty") @NonNull List<QuestionRequestDto> questions) {}
+        @Size(min = 3, max = 100, message = "Questions must contain between 3 and 100 items") @NotEmpty(message = "Questions cannot be empty") @Valid @NonNull List<QuestionRequestDto> questions) {}

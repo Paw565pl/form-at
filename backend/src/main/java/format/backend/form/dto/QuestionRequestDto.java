@@ -1,6 +1,7 @@
 package format.backend.form.dto;
 
 import format.backend.form.entity.QuestionType;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -17,4 +18,4 @@ public record QuestionRequestDto(
 
         @NotNull(message = "IsRequired cannot be null") @NonNull Boolean isRequired,
 
-        @Size(min = 0, max = 6, message = "Answers must contain between 0 and 6 items") @NotNull(message = "Answers cannot be null") @NonNull List<AnswerRequestDto> answers) {}
+        @Size(min = 0, max = 6, message = "Answers must contain between 0 and 6 items") @NotNull(message = "Answers cannot be null") @NonNull @Valid List<AnswerRequestDto> answers) {}
