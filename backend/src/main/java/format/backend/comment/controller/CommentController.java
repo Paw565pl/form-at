@@ -1,8 +1,10 @@
 package format.backend.comment.controller;
 
+import format.backend.comment.dto.CommentRequestDto;
 import format.backend.comment.dto.CommentResponseDto;
 import format.backend.comment.service.CommentService;
 import format.backend.form.validator.ValidFormId;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -28,5 +30,15 @@ public class CommentController {
             @NotBlank @ValidFormId @PathVariable String formId,
             @PageableDefault(size = 10, sort = "createdAt", direction = DESC) Pageable pageable) {
         return commentService.findAll(formId, pageable);
+    }
+
+    @PostMapping
+    public CommentResponseDto create(
+            @AuthenticationPrincipal Jwt jwt,
+            @NotBlank @ValidFormId @PathVariable String formId,
+            @Valid @RequestBody CommentRequestDto commentRequestDto) {
+        String userId = jwt.getClaimAsString("sub");
+
+        return commentService.create(formId, commentRequestDto, userId);
     }
 }

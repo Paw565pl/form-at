@@ -1,6 +1,7 @@
 package format.backend.comment.service;
 
 import format.backend.auth.repository.UserRepository;
+import format.backend.comment.dto.CommentRequestDto;
 import format.backend.comment.dto.CommentResponseDto;
 import format.backend.comment.entity.CommentEntity;
 import format.backend.comment.mapper.CommentMapper;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -34,5 +36,22 @@ public class CommentService {
         }
 
         return comments.map(commentMapper::toResponseDto);
+    }
+
+    @Transactional
+    public CommentResponseDto create(String formId, CommentRequestDto commentRequestDto, String userId) {
+        var form = formRepository.findById(formId)
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Form not found"));
+
+        var user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "User not found"));
+
+        CommentEntity comment = commentMapper.toEntity(commentRequestDto);
+        comment.setForm(form);
+        comment.setAuthor(user);
+
+        CommentEntity saved = commentRepository.save(comment);
+
+        return commentMapper.toResponseDto(saved);
     }
 }
