@@ -9,7 +9,7 @@
     }
   },
   "publicFormsList": {
-    "title": "Showing {count} Forms",
+    "title": "Showing {count, plural, =1 {# form} other {# forms}}",
     "options": {
       "searchPlaceholder": "Search forms...",
       "sortBy": "Sort by",
@@ -25,8 +25,8 @@
       "gridView": "Grid View"
     },
     "by": "by",
-    "questions": "questions",
-    "submissions": "submissions",
+    "questions": "{count, plural, =1 {# question} other {# questions}}",
+    "submissions": "{count, plural, =1 {# submission} other {# submissions}}",
     "end": "You have reached the end of the list.",
     "loading": "Loading forms..."
   }

@@ -14,19 +14,36 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/core/components/ui/tooltip";
+import { GridView } from "@/features/public-forms-list-view/components/grid-view";
+import { ListView } from "@/features/public-forms-list-view/components/list-view";
 import { forms } from "@/features/public-forms-list-view/forms";
 import { LayoutGrid, List } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useQueryState } from "nuqs";
 import { useRef, useState } from "react";
-import { GridView } from "@/features/public-forms-list-view/components/grid-view";
-import { ListView } from "@/features/public-forms-list-view/components/list-view";
+import { sortByParser } from "@/features/public-forms-list-view/search-params/sort-by-parser";
 
 export const PublicFormsListView = () => {
   // eslint-disable-next-line
   const [loading, setLoading] = useState(false);
   const [gridLayout, setGridLayout] = useState(true);
+  const [sortBy, setSortBy] = useQueryState(
+    "sortBy",
+    sortByParser.withDefault("newest"),
+  );
+  const [query, setQuery] = useQueryState("query", { defaultValue: "" });
+  const [queryValue, setQueryValue] = useState(query);
   const loader = useRef<HTMLDivElement | null>(null);
   const t = useTranslations("publicFormsList");
+
+  const sortOptions = [
+    { key: "newest", label: t("options.sortOptions.newest") },
+    { key: "oldest", label: t("options.sortOptions.oldest") },
+    { key: "name", label: t("options.sortOptions.name") },
+    { key: "questions", label: t("options.sortOptions.questions") },
+    { key: "submissions", label: t("options.sortOptions.submissions") },
+    { key: "duration", label: t("options.sortOptions.duration") },
+  ];
 
   return (
     <main
@@ -42,40 +59,29 @@ export const PublicFormsListView = () => {
             className="w-full max-w-70"
             onSubmit={(e) => {
               e.preventDefault();
-              // To-do: Implement search functionality
+              setQuery(queryValue);
             }}
           >
             <Input
               placeholder={t("options.searchPlaceholder")}
               type="text"
               className="md:min-w-60"
+              value={queryValue}
+              onChange={(e) => setQueryValue(e.target.value)}
             />
           </form>
 
-          <Select defaultValue={"newest"}>
+          <Select value={sortBy} onValueChange={(value) => setSortBy(value)}>
             <SelectTrigger className="w-full max-w-70">
               {t("options.sortBy")}
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="newest">
-                {t("options.sortOptions.newest")}
-              </SelectItem>
-              <SelectItem value="oldest">
-                {t("options.sortOptions.oldest")}
-              </SelectItem>
-              <SelectItem value="name">
-                {t("options.sortOptions.name")}
-              </SelectItem>
-              <SelectItem value="questions">
-                {t("options.sortOptions.questions")}
-              </SelectItem>
-              <SelectItem value="submissions">
-                {t("options.sortOptions.submissions")}
-              </SelectItem>
-              <SelectItem value="duration">
-                {t("options.sortOptions.duration")}
-              </SelectItem>
+              {sortOptions.map((opt) => (
+                <SelectItem key={opt.key} value={opt.key}>
+                  {opt.label}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
 

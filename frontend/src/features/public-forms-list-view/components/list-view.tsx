@@ -1,7 +1,7 @@
 import { Card } from "@/core/components/ui/card";
+import { forms } from "@/features/public-forms-list-view/forms";
 import { useFormatter, useTranslations } from "next-intl";
 import Link from "next/link";
-import { forms } from "@/features/public-forms-list-view/forms";
 
 export const ListView = () => {
   const t = useTranslations("publicFormsList");
@@ -24,8 +24,9 @@ export const ListView = () => {
             <p className="text-sm lg:mr-36">{form.description}</p>
             <footer className="text-muted-foreground mt-1 flex flex-wrap justify-between text-sm">
               <span>
-                {form.questionsCount} {t("questions")} • {form.submissionsCount}{" "}
-                {t("submissions")} • {form.estimatedDuration} min
+                {t("questions", { count: form.questionsCount })} •{" "}
+                {t("submissions", { count: form.submissionsCount })} •{" "}
+                {form.estimatedDuration} min
               </span>
               <span className="text-muted-foreground text-sm">
                 {format.dateTime(new Date(form.createdAt), {

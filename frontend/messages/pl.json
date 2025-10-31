@@ -9,7 +9,7 @@
     }
   },
   "publicFormsList": {
-    "title": "Wyświetlanie {count} formularzy",
+    "title": "Wyświetlanie {count, plural, =1 {# formularza} other {# formularzy}}",
     "options": {
       "searchPlaceholder": "Szukaj formularzy...",
       "sortBy": "Sortuj według",
@@ -17,16 +17,16 @@
         "newest": "Najnowsze",
         "oldest": "Najstarsze",
         "name": "Nazwa",
-        "questions": "Pytania",
-        "submissions": "Odpowiedzi",
+        "questions": "Liczba pytań",
+        "submissions": "Liczba odpowiedzi",
         "duration": "Czas trwania"
       },
       "listView": "Widok listy",
       "gridView": "Widok siatki"
     },
     "by": "autorstwa",
-    "questions": "pytania",
-    "submissions": "odpowiedzi",
+    "questions": "{count, plural, =1 {# pytanie} other {# pytań}}",
+    "submissions": "{count, plural, =1 {# odpowiedź} other {# odpowiedzi}}",
     "end": "Dotarłeś do końca listy.",
     "loading": "Ładowanie formularzy..."
   }

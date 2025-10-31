@@ -1,7 +1,10 @@
 import { Card } from "@/core/components/ui/card";
+import {
+  forms,
+  placeholder_image_url,
+} from "@/features/public-forms-list-view/forms";
 import { useFormatter, useTranslations } from "next-intl";
 import Link from "next/link";
-import { forms, placeholder_image_url } from "@/features/public-forms-list-view/forms";
 
 export const GridView = () => {
   const t = useTranslations("publicFormsList");
@@ -35,8 +38,8 @@ export const GridView = () => {
               </p>
               <footer className="text-muted-foreground mt-auto flex flex-wrap justify-between gap-1 text-sm">
                 <span>
-                  {form.questionsCount} {t("questions")} •{" "}
-                  {form.submissionsCount} {t("submissions")}
+                  {t("questions", { count: form.questionsCount })} •{" "}
+                  {t("submissions", { count: form.submissionsCount })}
                 </span>
                 <span className="text-muted-foreground text-sm">
                   {format.dateTime(new Date(form.createdAt), {
