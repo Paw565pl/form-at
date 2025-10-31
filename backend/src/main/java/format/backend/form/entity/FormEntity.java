@@ -17,7 +17,6 @@ import org.springframework.data.annotation.ReadOnlyProperty;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -38,15 +37,13 @@ public class FormEntity {
     private String id;
 
     @Field(name = "name")
-    @TextIndexed(weight = 2.0F)
     @NonNull private String name;
 
-    @Field(name = "slug")
     @Indexed(unique = true)
+    @Field(name = "slug")
     @NonNull private String slug;
 
     @Field(name = "description")
-    @TextIndexed(weight = 1.0F)
     @Nullable private String description;
 
     @Indexed
@@ -55,6 +52,7 @@ public class FormEntity {
     @NonNull private String language;
 
     @Indexed
+    @Field(name = "status")
     @NonNull private FormStatus status;
 
     @Field(name = "passwordHash")
@@ -66,6 +64,7 @@ public class FormEntity {
     @Field(name = "thanksMessage")
     @Nullable private String thanksMessage;
 
+    @Indexed
     @Field(name = "estimatedDuration")
     @NonNull private Duration estimatedDuration;
 
