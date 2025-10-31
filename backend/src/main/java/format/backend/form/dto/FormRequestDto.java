@@ -29,7 +29,7 @@ public record FormRequestDto(
 
         @Size(min = 3, max = 500, message = "ThanksMessage must be between 3 and 500 characters long") @Nullable String thanksMessage,
 
-        @DurationRange(min = "PT1M", max = "PT2H", message = "EstimatedDuration must be between 1 minute and 2 hour")
+        @DurationRange(min = "PT1M", max = "PT2H", message = "EstimatedDuration must be between 1 minute and 2 hours")
         @NotNull(message = "EstimatedDuration cannot be null") @NonNull Duration estimatedDuration,
 
         @Size(min = 10, max = 200, message = "Thumbnail key must be between 10 and 200 characters long") @Nullable String thumbnailKey,
