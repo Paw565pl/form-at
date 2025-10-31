@@ -13,6 +13,7 @@ import format.backend.form.dto.QuestionRequestDto;
 import format.backend.form.entity.FormEntity;
 import format.backend.form.entity.FormStatus;
 import format.backend.form.entity.QuestionEntity;
+import format.backend.form.exception.BlankPasswordException;
 import format.backend.form.exception.FormAlreadyExistsException;
 import format.backend.form.exception.FormNotFoundException;
 import format.backend.form.exception.MultipleChoiceQuestionAnswersValidationException;
@@ -23,6 +24,7 @@ import format.backend.form.mapper.QuestionMapper;
 import format.backend.form.repository.FormRepository;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -40,6 +42,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.data.mongodb.core.query.TextQuery;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -50,6 +53,7 @@ public class FormService {
 
     private final MongoTemplate mongoTemplate;
     private final Slugify slugify;
+    private final PasswordEncoder passwordEncoder;
 
     private final FormRepository formRepository;
     private final UserRepository userRepository;
@@ -151,15 +155,23 @@ public class FormService {
                 .toList();
     }
 
+    private String getPasswordHash(FormRequestDto requestDto) {
+        if (!requestDto.status().equals(FormStatus.PRIVATE)) return null;
+        if (Optional.ofNullable(requestDto.password()).map(String::isBlank).orElse(true))
+            throw new BlankPasswordException();
+
+        return passwordEncoder.encode(requestDto.password());
+    }
+
     @Transactional
     public FormDetailResponseDto create(KeycloakJwtClaims keycloakJwtClaims, FormRequestDto requestDto) {
         val questionEntities = mapQuestionsToEntities(requestDto);
+        val slug = slugify.slugify(requestDto.name());
+        val passwordHash = getPasswordHash(requestDto);
+
         val author = userRepository
                 .findById(keycloakJwtClaims.sub())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
-
-        val slug = slugify.slugify(requestDto.name());
-        val passwordHash = "TODO";
 
         val formEntity = formMapper.toEntity(requestDto, slug, passwordHash, author);
         formEntity.setQuestions(questionEntities);
@@ -182,7 +194,7 @@ public class FormService {
 
         val questionEntities = mapQuestionsToEntities(requestDto);
         val slug = slugify.slugify(requestDto.name());
-        val passwordHash = "TODO";
+        val passwordHash = getPasswordHash(requestDto);
 
         val updatedFormEntity = formMapper.updateEntityFromDto(requestDto, oldFormEntity, slug, passwordHash);
         updatedFormEntity.setQuestions(questionEntities);
