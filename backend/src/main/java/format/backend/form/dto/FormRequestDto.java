@@ -1,5 +1,6 @@
 package format.backend.form.dto;
 
+import format.backend.core.validator.DurationRange;
 import format.backend.form.entity.FormShuffleVariant;
 import format.backend.form.entity.FormStatus;
 import format.backend.form.entity.Language;
@@ -28,7 +29,8 @@ public record FormRequestDto(
 
         @Size(min = 3, max = 500, message = "ThanksMessage must be between 3 and 500 characters long") @Nullable String thanksMessage,
 
-        @NotNull(message = "Estimated duration cannot be null") @NonNull Duration estimatedDuration,
+        @DurationRange(min = "PT1M", max = "PT2H", message = "EstimatedDuration must be between 1 minute and 2 hour")
+        @NotNull(message = "EstimatedDuration cannot be null") @NonNull Duration estimatedDuration,
 
         @Size(min = 10, max = 200, message = "Thumbnail key must be between 10 and 200 characters long") @Nullable String thumbnailKey,
 
