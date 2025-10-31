@@ -2,6 +2,7 @@ package format.backend.form.dto;
 
 import format.backend.form.entity.FormShuffleVariant;
 import format.backend.form.entity.FormStatus;
+import format.backend.form.entity.Language;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -15,6 +16,8 @@ public record FormRequestDto(
         @Size(min = 3, max = 200, message = "Name must be between 3 and 200 characters long") @NotBlank(message = "Name cannot be blank") @NonNull String name,
 
         @Size(min = 20, max = 2000, message = "Description must be between 20 and 2000 characters long") @Nullable String description,
+
+        @NotNull(message = "Language cannot be null") @NonNull Language language,
 
         @NotNull(message = "Status cannot be null") @NonNull FormStatus status,
 

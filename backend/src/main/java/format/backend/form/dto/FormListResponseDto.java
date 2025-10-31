@@ -1,6 +1,7 @@
 package format.backend.form.dto;
 
 import format.backend.form.entity.FormStatus;
+import format.backend.form.entity.Language;
 import java.time.Duration;
 import java.time.Instant;
 import org.springframework.lang.NonNull;
@@ -14,6 +15,8 @@ public record FormListResponseDto(
         @NonNull String slug,
 
         @Nullable String description,
+
+        @NonNull Language language,
 
         @NonNull FormStatus status,
 

@@ -2,6 +2,7 @@ package format.backend.form.dto;
 
 import format.backend.form.entity.FormShuffleVariant;
 import format.backend.form.entity.FormStatus;
+import format.backend.form.entity.Language;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
@@ -16,6 +17,8 @@ public record FormDetailResponseDto(
         @NonNull String slug,
 
         @Nullable String description,
+
+        @NonNull Language language,
 
         @NonNull FormStatus status,
 

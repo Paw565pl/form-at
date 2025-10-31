@@ -14,6 +14,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.annotation.ReadOnlyProperty;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.index.TextIndexed;
@@ -48,7 +49,11 @@ public class FormEntity {
     @TextIndexed(weight = 1.0F)
     @Nullable private String description;
 
-    @Field(name = "status")
+    @Indexed
+    @org.springframework.data.mongodb.core.mapping.Language
+    @Field(name = "language")
+    @NonNull private String language;
+
     @Indexed
     @NonNull private FormStatus status;
 
@@ -101,4 +106,14 @@ public class FormEntity {
     @Version
     @Field(name = "version")
     private Long version;
+
+    @NonNull @Transient
+    public Language getLanguage() {
+        return Language.fromMongoValue(language)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid language mongo name: " + language));
+    }
+
+    public void setLanguage(@NonNull Language language) {
+        this.language = language.getMongoValue();
+    }
 }
