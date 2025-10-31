@@ -1,14 +1,14 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://root:password@mongodb:27017/format?authSource=admin
+      uri: mongodb://root:password@localhost:27017/format?authSource=admin
 
   security:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:7000/realms/form-at
-          jwk-set-uri: http://keycloak:7000/realms/form-at/protocol/openid-connect/certs
+          issuer-uri: http://localhost:7001/realms/form-at
+          jwk-set-uri: http://keycloak:7001/realms/form-at/protocol/openid-connect/certs
           audiences: ["spring-boot-backend"]
 
 logging:
