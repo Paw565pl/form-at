@@ -19,6 +19,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,7 +35,7 @@ public class FormController {
     @GetMapping
     public Page<FormListResponseDto> findAllPublic(
             FormFilterDto filterDto,
-            @PageableDefault(size = 20, sort = "createdAt", direction = DESC) Pageable pageable) {
+            @PageableDefault(size = 20, sort = "updatedAt", direction = DESC) Pageable pageable) {
         return formService.findAllPublic(filterDto, pageable);
     }
 
@@ -48,5 +49,14 @@ public class FormController {
     public FormDetailResponseDto create(
             @AuthenticationPrincipal Jwt jwt, @Valid @RequestBody FormRequestDto requestDto) {
         return formService.create(keycloakJwtClaimsExtractor.getClaims(jwt), requestDto);
+    }
+
+    @IsAuthenticated
+    @PutMapping("/{idOrSlug}")
+    public FormDetailResponseDto update(
+            @AuthenticationPrincipal Jwt jwt,
+            @PathVariable String idOrSlug,
+            @Valid @RequestBody FormRequestDto requestDto) {
+        return formService.update(idOrSlug, keycloakJwtClaimsExtractor.getClaims(jwt), requestDto);
     }
 }

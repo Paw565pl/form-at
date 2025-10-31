@@ -1,7 +1,7 @@
 package format.backend.form.service;
 
 import com.github.slugify.Slugify;
-import format.backend.auth.entity.UserEntity;
+import format.backend.auth.entity.Role;
 import format.backend.auth.jwt.KeycloakJwtClaims;
 import format.backend.auth.repository.UserRepository;
 import format.backend.form.dto.AnswerRequestDto;
@@ -12,6 +12,7 @@ import format.backend.form.dto.FormRequestDto;
 import format.backend.form.dto.QuestionRequestDto;
 import format.backend.form.entity.FormEntity;
 import format.backend.form.entity.FormStatus;
+import format.backend.form.entity.QuestionEntity;
 import format.backend.form.exception.FormAlreadyExistsException;
 import format.backend.form.exception.FormNotFoundException;
 import format.backend.form.exception.MultipleChoiceQuestionAnswersValidationException;
@@ -119,28 +120,28 @@ public class FormService {
         return formMapper.toDetailResponseDto(formEntity, "TODO: generate image urls", questions);
     }
 
-    private FormEntity mapToEntity(FormRequestDto requestDto, UserEntity author) {
+    private List<QuestionEntity> mapQuestionsToEntities(FormRequestDto requestDto) {
         val requiredQuestionsCount = requestDto.questions().stream()
                 .filter(QuestionRequestDto::isRequired)
                 .count();
         if (requiredQuestionsCount < 1) throw new RequiredQuestionCountValidationException();
 
-        val questions = requestDto.questions().stream()
+        return requestDto.questions().stream()
                 .map(q -> {
                     switch (q.type()) {
                         case OPEN -> q.answers().clear();
                         case SINGLE_CHOICE -> {
-                            val validAnswersCount = q.answers().stream()
+                            val correctAnswersCount = q.answers().stream()
                                     .filter(AnswerRequestDto::isCorrect)
                                     .count();
-                            if (validAnswersCount != 1) throw new SingleChoiceQuestionAnswersValidationException();
+                            if (correctAnswersCount != 1) throw new SingleChoiceQuestionAnswersValidationException();
                         }
                         case MULTIPLE_CHOICE -> {
-                            val validAnswersCount = q.answers().stream()
+                            val correctAnswersCount = q.answers().stream()
                                     .filter(AnswerRequestDto::isCorrect)
                                     .count();
-                            if (1 < validAnswersCount
-                                    && validAnswersCount < q.answers().size())
+                            if (!(1 < correctAnswersCount
+                                    && correctAnswersCount < q.answers().size()))
                                 throw new MultipleChoiceQuestionAnswersValidationException();
                         }
                     }
@@ -148,22 +149,43 @@ public class FormService {
                     return questionMapper.toEntity(q);
                 })
                 .toList();
+    }
+
+    @Transactional
+    public FormDetailResponseDto create(KeycloakJwtClaims keycloakJwtClaims, FormRequestDto requestDto) {
+        val questionEntities = mapQuestionsToEntities(requestDto);
+        val author = userRepository
+                .findById(keycloakJwtClaims.sub())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
 
         val slug = slugify.slugify(requestDto.name());
         val passwordHash = "TODO";
 
         val formEntity = formMapper.toEntity(requestDto, slug, passwordHash, author);
-        formEntity.setQuestions(questions);
+        formEntity.setQuestions(questionEntities);
 
-        return formEntity;
+        try {
+            return mapToDetailResponseDto(formRepository.save(formEntity));
+        } catch (DataIntegrityViolationException e) {
+            throw new FormAlreadyExistsException(requestDto.name());
+        }
     }
 
     @Transactional
-    public FormDetailResponseDto create(KeycloakJwtClaims keycloakJwtClaims, FormRequestDto requestDto) {
-        val author = userRepository
-                .findById(keycloakJwtClaims.sub())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
-        val formEntity = mapToEntity(requestDto, author);
+    public FormDetailResponseDto update(
+            String idOrSlug, KeycloakJwtClaims keycloakJwtClaims, FormRequestDto requestDto) {
+        val formEntity = findOrThrow(idOrSlug);
+
+        val canUpdate = formEntity.getAuthor().getId().equals(keycloakJwtClaims.sub())
+                || keycloakJwtClaims.roles().contains(Role.ADMIN);
+        if (!canUpdate) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+
+        val questionEntities = mapQuestionsToEntities(requestDto);
+        val slug = slugify.slugify(requestDto.name());
+        val passwordHash = "TODO";
+
+        formMapper.updateEntityFromDto(requestDto, formEntity, slug, passwordHash);
+        formEntity.setQuestions(questionEntities);
 
         try {
             return mapToDetailResponseDto(formRepository.save(formEntity));

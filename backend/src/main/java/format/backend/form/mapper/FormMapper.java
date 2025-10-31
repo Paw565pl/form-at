@@ -10,6 +10,7 @@ import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
+import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = QuestionMapper.class)
 public interface FormMapper {
@@ -29,4 +30,14 @@ public interface FormMapper {
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "version", ignore = true)
     FormEntity toEntity(FormRequestDto formRequestDto, String slug, String passwordHash, UserEntity author);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "submissionsCount", ignore = true)
+    @Mapping(target = "author", ignore = true)
+    @Mapping(target = "submissions", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "version", ignore = true)
+    void updateEntityFromDto(
+            FormRequestDto formRequestDto, @MappingTarget FormEntity entity, String slug, String passwordHash);
 }
