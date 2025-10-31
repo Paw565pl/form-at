@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
@@ -71,7 +72,7 @@ public class CommentService {
         }
 
         if (comment.getAuthor() == null || !comment.getAuthor().getId().equals(user.getId())) {
-            throw new ResponseStatusException(NOT_FOUND, "You are not the author of this comment");
+            throw new ResponseStatusException(FORBIDDEN, "You are not the author of this comment");
         }
 
         comment.setContent(commentRequestDto.getContent());
@@ -81,4 +82,25 @@ public class CommentService {
         return commentMapper.toResponseDto(updated);
     }
 
+    @Transactional
+    public void delete(String formId, String commentId, String userId) {
+        var form = formRepository.findById(formId)
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Form not found"));
+
+        var user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "User not found"));
+
+        var comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Comment not found"));
+
+        if (!comment.getForm().getId().equals(form.getId())) {
+            throw new ResponseStatusException(NOT_FOUND, "Comment doesn't match given form");
+        }
+
+        if (comment.getAuthor() == null || !comment.getAuthor().getId().equals(user.getId())) {
+            throw new ResponseStatusException(FORBIDDEN, "You are not the author of this comment");
+        }
+
+        commentRepository.delete(comment);
+    }
 }
