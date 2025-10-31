@@ -1,5 +1,6 @@
 package format.backend.form.service;
 
+import format.backend.form.dto.FormDetailResponseDto;
 import format.backend.form.dto.FormFilterDto;
 import format.backend.form.dto.FormListResponseDto;
 import format.backend.form.entity.FormEntity;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +25,9 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.data.mongodb.core.query.TextQuery;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -82,5 +86,18 @@ public class FormService {
                                         validSortFields.get(o.getProperty().toLowerCase()))),
                         Stream.of(Sort.Order.asc("_id")))
                 .toList();
+    }
+
+    public FormDetailResponseDto findByIdOrSlug(String idOrSlug) {
+        val form = ObjectId.isValid(idOrSlug) ? formRepository.findById(idOrSlug) : formRepository.findBySlug(idOrSlug);
+
+        return form.map(f -> {
+                    val questions = f.getQuestions().stream()
+                            .map(q -> questionMapper.toResponseDto(q, "TODO: generate image urls"))
+                            .toList();
+
+                    return formMapper.toDetailResponseDto(f, "TODO: generate image urls", questions);
+                })
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Form not found"));
     }
 }
