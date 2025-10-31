@@ -1,0 +1,26 @@
+meta {
+  name: Find Private By Id or Slug
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/api/v1/forms/:idOrSlug/access
+  body: json
+  auth: inherit
+}
+
+params:path {
+  idOrSlug: 69051cfa4584ea53b750a2af
+}
+
+body:json {
+  {
+    "password": "secretpassword"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -5,6 +5,7 @@ import format.backend.auth.entity.Role;
 import format.backend.auth.jwt.KeycloakJwtClaims;
 import format.backend.auth.repository.UserRepository;
 import format.backend.form.dto.AnswerRequestDto;
+import format.backend.form.dto.FormAccessRequestDto;
 import format.backend.form.dto.FormDetailResponseDto;
 import format.backend.form.dto.FormFilterDto;
 import format.backend.form.dto.FormListResponseDto;
@@ -22,6 +23,7 @@ import format.backend.form.exception.SingleChoiceQuestionAnswersValidationExcept
 import format.backend.form.mapper.FormMapper;
 import format.backend.form.mapper.QuestionMapper;
 import format.backend.form.repository.FormRepository;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -114,6 +116,16 @@ public class FormService {
 
     public FormDetailResponseDto findByIdOrSlug(String idOrSlug) {
         return mapToDetailResponseDto(findOrThrow(idOrSlug));
+    }
+
+    public FormDetailResponseDto findPrivateByIdOrSlug(String idOrSlug, @Valid FormAccessRequestDto accessRequestDto) {
+        val formEntity = findOrThrow(idOrSlug);
+
+        if (!formEntity.getStatus().equals(FormStatus.PRIVATE)) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        if (!passwordEncoder.matches(accessRequestDto.password(), formEntity.getPasswordHash()))
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+
+        return mapToDetailResponseDto(formEntity);
     }
 
     private FormDetailResponseDto mapToDetailResponseDto(FormEntity formEntity) {

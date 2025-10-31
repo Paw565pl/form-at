@@ -4,6 +4,7 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 
 import format.backend.auth.annotation.IsAuthenticated;
 import format.backend.auth.jwt.KeycloakJwtClaimsExtractor;
+import format.backend.form.dto.FormAccessRequestDto;
 import format.backend.form.dto.FormDetailResponseDto;
 import format.backend.form.dto.FormFilterDto;
 import format.backend.form.dto.FormListResponseDto;
@@ -45,6 +46,12 @@ public class FormController {
     @GetMapping("/{idOrSlug}")
     public FormDetailResponseDto findByIdOrSlug(@PathVariable String idOrSlug) {
         return formService.findByIdOrSlug(idOrSlug);
+    }
+
+    @PostMapping("/{idOrSlug}/access")
+    public FormDetailResponseDto findPrivateByIdOrSlug(
+            @PathVariable String idOrSlug, @Valid @RequestBody FormAccessRequestDto accessRequestDto) {
+        return formService.findPrivateByIdOrSlug(idOrSlug, accessRequestDto);
     }
 
     @IsAuthenticated
