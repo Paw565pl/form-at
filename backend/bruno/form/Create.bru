@@ -1,0 +1,65 @@
+meta {
+  name: Create
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/api/v1/forms
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "my example form",
+    "description": null,
+    "language": "EN",
+    "status": "PUBLIC",
+    "password": null,
+    "shuffleVariant": null,
+    "thanksMessage": null,
+    "estimatedDuration": "PT5M",
+    "thumbnailKey": null,
+    "allowsQuestionsPreview": true,
+    "allowsGuestSubmissions": true,
+    "saveSubmissions": false,
+    "questions": [
+      {
+        "content": "first question",
+        "type": "OPEN",
+        "imageKey": null,
+        "isRequired": true,
+        "answers": []
+      },
+      {
+        "content": "second question",
+        "type": "OPEN",
+        "imageKey": null,
+        "isRequired": true,
+        "answers": []
+      },
+      {
+        "content": "third question",
+        "type": "SINGLE_CHOICE",
+        "imageKey": null,
+        "isRequired": true,
+        "answers": [
+          {
+            "content": "true",
+            "isCorrect": true
+          },
+          {
+            "content": "false",
+            "isCorrect": false
+          }
+        ]
+      }
+    ]
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

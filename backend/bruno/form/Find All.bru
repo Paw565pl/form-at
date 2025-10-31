@@ -1,0 +1,23 @@
+meta {
+  name: Find All
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/v1/forms
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~searchQuery: cat
+  ~language: EN
+  ~minEstimatedDuration: PT2M
+  ~maxEstimatedDuration: PT5M
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
