@@ -15,7 +15,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({FIELD, PARAMETER})
 @Constraint(validatedBy = {})
 @ValidObjectId(message = "CommentId must be a valid ObjectId")
-public @interface CommentIdValidator {
+public @interface ValidCommentId {
     String message() default "CommentId must be a valid ObjectId";
 
     Class<?>[] groups() default {};
