@@ -174,9 +174,9 @@ public class FormService {
     @Transactional
     public FormDetailResponseDto update(
             String idOrSlug, KeycloakJwtClaims keycloakJwtClaims, FormRequestDto requestDto) {
-        val formEntity = findOrThrow(idOrSlug);
+        val oldFormEntity = findOrThrow(idOrSlug);
 
-        val canUpdate = formEntity.getAuthor().getId().equals(keycloakJwtClaims.sub())
+        val canUpdate = oldFormEntity.getAuthor().getId().equals(keycloakJwtClaims.sub())
                 || keycloakJwtClaims.roles().contains(Role.ADMIN);
         if (!canUpdate) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 
@@ -184,11 +184,11 @@ public class FormService {
         val slug = slugify.slugify(requestDto.name());
         val passwordHash = "TODO";
 
-        formMapper.updateEntityFromDto(requestDto, formEntity, slug, passwordHash);
-        formEntity.setQuestions(questionEntities);
+        val updatedFormEntity = formMapper.updateEntityFromDto(requestDto, oldFormEntity, slug, passwordHash);
+        updatedFormEntity.setQuestions(questionEntities);
 
         try {
-            return mapToDetailResponseDto(formRepository.save(formEntity));
+            return mapToDetailResponseDto(formRepository.save(updatedFormEntity));
         } catch (DataIntegrityViolationException e) {
             throw new FormAlreadyExistsException(requestDto.name());
         }

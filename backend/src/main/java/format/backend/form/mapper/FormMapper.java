@@ -38,6 +38,6 @@ public interface FormMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "version", ignore = true)
-    void updateEntityFromDto(
+    FormEntity updateEntityFromDto(
             FormRequestDto formRequestDto, @MappingTarget FormEntity entity, String slug, String passwordHash);
 }
