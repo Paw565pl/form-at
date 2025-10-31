@@ -135,6 +135,12 @@ public class FormService {
     }
 
     private List<QuestionEntity> getValidatedQuestions(List<QuestionRequestDto> questionRequestDtos) {
+        val requiredQuestionsCount = questionRequestDtos.stream()
+                .filter(QuestionRequestDto::isRequired)
+                .count();
+        if (requiredQuestionsCount < 1)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Form must have at least one required question");
+
         return questionRequestDtos.stream()
                 .map(q -> {
                     switch (q.type()) {
