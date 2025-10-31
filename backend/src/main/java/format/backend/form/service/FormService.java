@@ -193,4 +193,14 @@ public class FormService {
             throw new FormAlreadyExistsException(requestDto.name());
         }
     }
+
+    public void delete(String idOrSlug, KeycloakJwtClaims keycloakJwtClaims) {
+        val formEntity = findOrThrow(idOrSlug);
+
+        val canUpdate = formEntity.getAuthor().getId().equals(keycloakJwtClaims.sub())
+                || keycloakJwtClaims.roles().contains(Role.ADMIN);
+        if (!canUpdate) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+
+        formRepository.delete(formEntity);
+    }
 }
