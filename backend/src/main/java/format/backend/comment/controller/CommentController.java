@@ -41,4 +41,14 @@ public class CommentController {
 
         return commentService.create(formId, commentRequestDto, userId);
     }
+
+    @PutMapping("/{commentId}")
+    public CommentResponseDto update(
+            @AuthenticationPrincipal Jwt jwt,
+            @NotBlank @ValidFormId @PathVariable String formId,
+            @NotBlank @PathVariable String commentId,
+            @Valid @RequestBody CommentRequestDto commentRequestDto) {
+        String userId = jwt.getClaimAsString("sub");
+        return commentService.update(formId, commentId, commentRequestDto, userId);
+    }
 }

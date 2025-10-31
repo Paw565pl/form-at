@@ -54,4 +54,31 @@ public class CommentService {
 
         return commentMapper.toResponseDto(saved);
     }
+
+    @Transactional
+    public CommentResponseDto update(String formId, String commentId, CommentRequestDto commentRequestDto, String userId) {
+        var form = formRepository.findById(formId)
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Form not found"));
+
+        var user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "User not found"));
+
+        var comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Comment not found"));
+
+        if (!comment.getForm().getId().equals(form.getId())) {
+            throw new ResponseStatusException(NOT_FOUND, "Comment doesn't match given form");
+        }
+
+        if (comment.getAuthor() == null || !comment.getAuthor().getId().equals(user.getId())) {
+            throw new ResponseStatusException(NOT_FOUND, "You are not the author of this comment");
+        }
+
+        comment.setContent(commentRequestDto.getContent());
+
+        CommentEntity updated = commentRepository.save(comment);
+
+        return commentMapper.toResponseDto(updated);
+    }
+
 }
