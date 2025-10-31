@@ -6,7 +6,6 @@ import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
@@ -16,6 +15,8 @@ import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
+import org.springframework.lang.Nullable;
+import org.springframework.lang.NonNull;
 
 @Getter
 @Setter
@@ -29,6 +30,7 @@ public class CommentEntity {
     private String id;
 
     @DocumentReference(lazy = true)
+    @Nullable
     @Field(name = "author")
     private UserEntity author;
 
