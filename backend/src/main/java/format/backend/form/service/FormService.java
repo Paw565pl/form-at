@@ -62,8 +62,9 @@ public class FormService {
     private final FormMapper formMapper;
     private final QuestionMapper questionMapper;
 
+    private static final String ESTIMATED_DURATION_FIELD = "estimatedDuration";
     private static final Map<String, String> validSortFields = Stream.of(
-                    "name", "estimatedDuration", "submissionsCount", "createdAt", "updatedAt")
+                    "name", ESTIMATED_DURATION_FIELD, "submissionsCount", "createdAt", "updatedAt")
             .collect(Collectors.toMap(String::toLowerCase, Function.identity()));
 
     public Page<FormListResponseDto> findAllPublic(FormFilterDto filterDto, Pageable pageable) {
@@ -78,9 +79,9 @@ public class FormService {
         if (filterDto.language() != null)
             query.addCriteria(Criteria.where("language").is(filterDto.language().getMongoValue()));
         if (filterDto.minEstimatedDuration() != null)
-            query.addCriteria(Criteria.where("estimatedDuration").gte(filterDto.minEstimatedDuration()));
+            query.addCriteria(Criteria.where(ESTIMATED_DURATION_FIELD).gte(filterDto.minEstimatedDuration()));
         if (filterDto.maxEstimatedDuration() != null)
-            query.addCriteria(Criteria.where("estimatedDuration").lte(filterDto.maxEstimatedDuration()));
+            query.addCriteria(Criteria.where(ESTIMATED_DURATION_FIELD).lte(filterDto.maxEstimatedDuration()));
 
         var total = mongoTemplate.count(query, FormEntity.class);
         if (total == 0) return Page.empty(pageable);
