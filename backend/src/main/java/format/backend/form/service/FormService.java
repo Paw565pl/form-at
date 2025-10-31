@@ -1,6 +1,7 @@
 package format.backend.form.service;
 
 import com.github.slugify.Slugify;
+import format.backend.auth.entity.UserEntity;
 import format.backend.auth.jwt.KeycloakJwtClaims;
 import format.backend.auth.repository.UserRepository;
 import format.backend.form.dto.AnswerRequestDto;
@@ -11,7 +12,6 @@ import format.backend.form.dto.FormRequestDto;
 import format.backend.form.dto.QuestionRequestDto;
 import format.backend.form.entity.FormEntity;
 import format.backend.form.entity.FormStatus;
-import format.backend.form.entity.QuestionEntity;
 import format.backend.form.mapper.FormMapper;
 import format.backend.form.mapper.QuestionMapper;
 import format.backend.form.repository.FormRepository;
@@ -115,33 +115,14 @@ public class FormService {
         return formMapper.toDetailResponseDto(formEntity, "TODO: generate image urls", questions);
     }
 
-    @Transactional
-    public FormDetailResponseDto create(KeycloakJwtClaims keycloakJwtClaims, FormRequestDto requestDto) {
-        val slug = slugify.slugify(requestDto.name());
-        val passwordHash = "TODO";
-        val validatedQuestions = getValidatedQuestions(requestDto.questions());
-        val author = userRepository
-                .findById(keycloakJwtClaims.sub())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
-
-        val formEntity = formMapper.toEntity(requestDto, slug, passwordHash, author);
-        formEntity.setQuestions(validatedQuestions);
-
-        try {
-            return mapToDetailResponseDto(formRepository.save(formEntity));
-        } catch (DataIntegrityViolationException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Form with this name already exists");
-        }
-    }
-
-    private List<QuestionEntity> getValidatedQuestions(List<QuestionRequestDto> questionRequestDtos) {
-        val requiredQuestionsCount = questionRequestDtos.stream()
+    private FormEntity mapToEntity(FormRequestDto requestDto, UserEntity author) {
+        val requiredQuestionsCount = requestDto.questions().stream()
                 .filter(QuestionRequestDto::isRequired)
                 .count();
         if (requiredQuestionsCount < 1)
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Form must have at least one required question");
 
-        return questionRequestDtos.stream()
+        val questions = requestDto.questions().stream()
                 .map(q -> {
                     switch (q.type()) {
                         case OPEN -> q.answers().clear();
@@ -169,5 +150,27 @@ public class FormService {
                     return questionMapper.toEntity(q);
                 })
                 .toList();
+
+        val slug = slugify.slugify(requestDto.name());
+        val passwordHash = "TODO";
+
+        val formEntity = formMapper.toEntity(requestDto, slug, passwordHash, author);
+        formEntity.setQuestions(questions);
+
+        return formEntity;
+    }
+
+    @Transactional
+    public FormDetailResponseDto create(KeycloakJwtClaims keycloakJwtClaims, FormRequestDto requestDto) {
+        val author = userRepository
+                .findById(keycloakJwtClaims.sub())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
+        val formEntity = mapToEntity(requestDto, author);
+
+        try {
+            return mapToDetailResponseDto(formRepository.save(formEntity));
+        } catch (DataIntegrityViolationException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Form with this name already exists");
+        }
     }
 }
