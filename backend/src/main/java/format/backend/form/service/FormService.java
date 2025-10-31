@@ -12,6 +12,11 @@ import format.backend.form.dto.FormRequestDto;
 import format.backend.form.dto.QuestionRequestDto;
 import format.backend.form.entity.FormEntity;
 import format.backend.form.entity.FormStatus;
+import format.backend.form.exception.FormAlreadyExistsException;
+import format.backend.form.exception.FormNotFoundException;
+import format.backend.form.exception.MultipleChoiceQuestionAnswersValidationException;
+import format.backend.form.exception.RequiredQuestionCountValidationException;
+import format.backend.form.exception.SingleChoiceQuestionAnswersValidationException;
 import format.backend.form.mapper.FormMapper;
 import format.backend.form.mapper.QuestionMapper;
 import format.backend.form.repository.FormRepository;
@@ -63,13 +68,10 @@ public class FormService {
                             .matchingPhrase(filterDto.searchQuery())
                             .caseSensitive(false))
                     .sortByScore();
-
         if (filterDto.language() != null)
             query.addCriteria(Criteria.where("language").is(filterDto.language().getMongoValue()));
-
         if (filterDto.minEstimatedDuration() != null)
             query.addCriteria(Criteria.where("estimatedDuration").gte(filterDto.minEstimatedDuration()));
-
         if (filterDto.maxEstimatedDuration() != null)
             query.addCriteria(Criteria.where("estimatedDuration").lte(filterDto.maxEstimatedDuration()));
 
@@ -100,11 +102,13 @@ public class FormService {
                 .toList();
     }
 
-    public FormDetailResponseDto findByIdOrSlug(String idOrSlug) {
+    private FormEntity findOrThrow(String idOrSlug) {
         val form = ObjectId.isValid(idOrSlug) ? formRepository.findById(idOrSlug) : formRepository.findBySlug(idOrSlug);
+        return form.orElseThrow(() -> new FormNotFoundException(idOrSlug));
+    }
 
-        return form.map(this::mapToDetailResponseDto)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Form not found"));
+    public FormDetailResponseDto findByIdOrSlug(String idOrSlug) {
+        return mapToDetailResponseDto(findOrThrow(idOrSlug));
     }
 
     private FormDetailResponseDto mapToDetailResponseDto(FormEntity formEntity) {
@@ -119,8 +123,7 @@ public class FormService {
         val requiredQuestionsCount = requestDto.questions().stream()
                 .filter(QuestionRequestDto::isRequired)
                 .count();
-        if (requiredQuestionsCount < 1)
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Form must have at least one required question");
+        if (requiredQuestionsCount < 1) throw new RequiredQuestionCountValidationException();
 
         val questions = requestDto.questions().stream()
                 .map(q -> {
@@ -130,10 +133,7 @@ public class FormService {
                             val validAnswersCount = q.answers().stream()
                                     .filter(AnswerRequestDto::isCorrect)
                                     .count();
-                            if (validAnswersCount != 1)
-                                throw new ResponseStatusException(
-                                        HttpStatus.BAD_REQUEST,
-                                        "Single choice questions must have exactly one valid answer");
+                            if (validAnswersCount != 1) throw new SingleChoiceQuestionAnswersValidationException();
                         }
                         case MULTIPLE_CHOICE -> {
                             val validAnswersCount = q.answers().stream()
@@ -141,9 +141,7 @@ public class FormService {
                                     .count();
                             if (1 < validAnswersCount
                                     && validAnswersCount < q.answers().size())
-                                throw new ResponseStatusException(
-                                        HttpStatus.BAD_REQUEST,
-                                        "Multiple choice questions must have at least one valid answer and at least one invalid answer");
+                                throw new MultipleChoiceQuestionAnswersValidationException();
                         }
                     }
 
@@ -170,7 +168,7 @@ public class FormService {
         try {
             return mapToDetailResponseDto(formRepository.save(formEntity));
         } catch (DataIntegrityViolationException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Form with this name already exists");
+            throw new FormAlreadyExistsException(requestDto.name());
         }
     }
 }
