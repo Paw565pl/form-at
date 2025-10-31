@@ -10,7 +10,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 
-@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = QuestionMapper.class)
 public interface FormMapper {
 
     @Mapping(target = "questionsCount", expression = "java(formEntity.getQuestions().size())")
