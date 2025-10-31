@@ -11,7 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -23,7 +22,7 @@ public class FormController {
 
     @GetMapping
     public Page<FormListResponseDto> findAllPublic(
-            @RequestParam(required = false) FormFilterDto filterDto,
+            FormFilterDto filterDto,
             @PageableDefault(size = 20, sort = "createdAt", direction = DESC) Pageable pageable) {
         return formService.findAllPublic(filterDto, pageable);
     }
