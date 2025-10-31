@@ -24,7 +24,7 @@ export const ListView = () => {
             <p className="text-sm lg:mr-36">{form.description}</p>
             <footer className="text-muted-foreground mt-1 flex flex-wrap justify-between text-sm">
               <span>
-                {t("questions", { count: form.questionsCount })} •{" "}
+                {t("questions", { count: form.questionsCount || 0 })} •{" "}
                 {t("submissions", { count: form.submissionsCount })} •{" "}
                 {form.estimatedDuration} min
               </span>

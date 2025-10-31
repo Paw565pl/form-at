@@ -38,7 +38,7 @@ export const GridView = () => {
               </p>
               <footer className="text-muted-foreground mt-auto flex flex-wrap justify-between gap-1 text-sm">
                 <span>
-                  {t("questions", { count: form.questionsCount })} •{" "}
+                  {t("questions", { count: form.questionsCount || 0 })} •{" "}
                   {t("submissions", { count: form.submissionsCount })}
                 </span>
                 <span className="text-muted-foreground text-sm">

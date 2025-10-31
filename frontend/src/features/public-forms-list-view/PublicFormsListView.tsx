@@ -17,11 +17,11 @@ import {
 import { GridView } from "@/features/public-forms-list-view/components/grid-view";
 import { ListView } from "@/features/public-forms-list-view/components/list-view";
 import { forms } from "@/features/public-forms-list-view/forms";
+import { sortByParser } from "@/features/public-forms-list-view/search-params/sort-by-parser";
 import { LayoutGrid, List } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useQueryState } from "nuqs";
 import { useRef, useState } from "react";
-import { sortByParser } from "@/features/public-forms-list-view/search-params/sort-by-parser";
 
 export const PublicFormsListView = () => {
   // eslint-disable-next-line
@@ -52,7 +52,7 @@ export const PublicFormsListView = () => {
     >
       <header className="mb-2 flex flex-wrap items-center justify-between gap-4">
         <h1 className="ml-4 text-xl font-bold">
-          {t("title", { count: forms.length.toString() })}
+          {t("title", { count: forms.length })}
         </h1>
         <div id="FormFilterBar" className="flex flex-wrap gap-2 md:flex-nowrap">
           <form
