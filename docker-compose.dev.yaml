@@ -17,54 +17,54 @@ services:
       dockerfile: Dockerfile.dev
     restart: on-failure
     ports:
-      - "7001:7001"
+      - "7000:7000"
     environment:
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
       KC_HOSTNAME: localhost
-      KC_HTTP_PORT: 7001
+      KC_HTTP_PORT: 7000
 
-  # backend:
-  #   build:
-  #     context: ./backend
-  #     dockerfile: Dockerfile.dev
-  #   restart: on-failure
-  #   ports:
-  #     - "8080:8080"
-  #   depends_on:
-  #     - mongodb
-  #     - keycloak
-  #   develop:
-  #     watch:
-  #       - action: rebuild
-  #         path: ./backend/build.gradle.kts
-  #       - action: sync+restart
-  #         path: ./backend
-  #         target: /app/
-  #         ignore:
-  #           - .gradle/
-  #           - build/
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    restart: on-failure
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongodb
+      - keycloak
+    develop:
+      watch:
+        - action: rebuild
+          path: ./backend/build.gradle.kts
+        - action: sync+restart
+          path: ./backend
+          target: /app/
+          ignore:
+            - .gradle/
+            - build/
 
-  # frontend:
-  #   build:
-  #     context: ./frontend
-  #     dockerfile: Dockerfile.dev
-  #   restart: on-failure
-  #   ports:
-  #     - "3000:3000"
-  #   env_file:
-  #     - ./frontend/.env.local
-  #   depends_on:
-  #     - backend
-  #   develop:
-  #     watch:
-  #       - action: rebuild
-  #         path: ./frontend/package.json
-  #       - action: sync
-  #         path: ./frontend
-  #         target: /app/
-  #         ignore:
-  #           - node_modules/
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    restart: on-failure
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./frontend/.env.local
+    depends_on:
+      - backend
+    develop:
+      watch:
+        - action: rebuild
+          path: ./frontend/package.json
+        - action: sync
+          path: ./frontend
+          target: /app/
+          ignore:
+            - node_modules/
 
 volumes:
   mongodb-data:
