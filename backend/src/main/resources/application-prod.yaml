@@ -17,3 +17,8 @@ springdoc:
 logging:
   level:
     root: error
+
+minio:
+  endpoint: "http://minio:9000"
+  access-key: "root"
+  secret-key: "password"

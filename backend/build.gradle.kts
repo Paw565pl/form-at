@@ -72,6 +72,7 @@ repositories {
 val mapstructVersion = "1.6.3"
 val springdocVersion = "2.8.13"
 val slugifyVersion = "3.0.7"
+val minioVersion = "8.6.0"
 val dataFakerVersion = "2.5.2"
 val sonarlintVersion = "8.9.3.40165"
 
@@ -85,6 +86,7 @@ dependencies {
     implementation("org.mapstruct:mapstruct:$mapstructVersion")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdocVersion")
     implementation("com.github.slugify:slugify:$slugifyVersion")
+    implementation("io.minio:minio:$minioVersion")
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
