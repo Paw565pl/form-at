@@ -106,8 +106,8 @@ public class FormEntity {
     @Field(name = "version")
     private Long version;
 
-    @NonNull @Transient
-    public Language getLanguage() {
+    @Transient
+    @NonNull public Language getLanguage() {
         return Language.fromMongoValue(language)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid language mongo name: " + language));
     }

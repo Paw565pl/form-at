@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -36,14 +37,15 @@ public class PendingUploadEntity {
     @Field(name = "contentType")
     @NonNull private String contentType;
 
-    @Field(name = "authorId")
-    @NonNull private String authorId;
-
-    @Indexed(expireAfter = "0s")
-    @Field(name = "expiresAt")
-    @NonNull private Instant expiresAt = Instant.now().plus(Duration.ofHours(1));
+    @Field(name = "userId")
+    @NonNull private String userId;
 
     @CreatedDate
     @Field(name = "createdAt")
     private Instant createdAt;
+
+    @Transient
+    @NonNull public Instant getExpiresAt() {
+        return createdAt.plus(Duration.ofHours(1));
+    }
 }

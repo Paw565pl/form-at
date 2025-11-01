@@ -6,9 +6,15 @@ import format.backend.storage.entity.PendingUploadEntity;
 import format.backend.storage.exception.InvalidFileExtensionException;
 import format.backend.storage.properties.MinioProperties;
 import format.backend.storage.repository.PendingUploadRepository;
+import io.minio.BucketExistsArgs;
+import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.PostPolicy;
+import io.minio.StatObjectArgs;
 import io.minio.Time;
+import io.minio.errors.ErrorResponseException;
+import jakarta.annotation.PostConstruct;
+import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +40,21 @@ public class UploadService {
     private static final long MAX_FILE_SIZE = 10L * 1024 * 1024; // 10 MB
     private static final Map<String, String> validExtensionsToContentTypeMap = Map.of(
             "png", "image/png", "jpg", "image/jpeg", "jpeg", "image/jpeg", "webp", "image/webp", "avif", "image/avif");
+
+    @PostConstruct
+    private void createMinioBucket() {
+        try {
+            val exists = minioClient.bucketExists(BucketExistsArgs.builder()
+                    .bucket(minioProperties.getBucketName())
+                    .build());
+            if (!exists)
+                minioClient.makeBucket(MakeBucketArgs.builder()
+                        .bucket(minioProperties.getBucketName())
+                        .build());
+        } catch (Exception e) {
+            log.error("Could not create storage bucket", e);
+        }
+    }
 
     @Transactional
     public Map<String, String> getUploadPresignedFormData(
@@ -66,5 +87,35 @@ public class UploadService {
             log.error("Could not create upload request", e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    private boolean isUploaded(String key) {
+        try {
+            minioClient.statObject(StatObjectArgs.builder()
+                    .bucket(minioProperties.getBucketName())
+                    .object(key)
+                    .build());
+            return true;
+        } catch (ErrorResponseException e) {
+            // this is thrown for 404 Not Found
+            return false;
+        } catch (Exception e) {
+            log.error("An unexpected error occurred for stat object with {}", key);
+            return false;
+        }
+    }
+
+    public boolean confirmUpload(String key, String userId) {
+        if (key == null) return true;
+        if (!isUploaded(key)) return false;
+
+        val pendingUploadOpt = pendingUploadRepository.findByKey(key);
+        if (pendingUploadOpt.isEmpty()) return false;
+
+        val pendingUpload = pendingUploadOpt.get();
+        if (!pendingUpload.getUserId().equals(userId)) return false;
+        if (pendingUpload.getExpiresAt().isBefore(Instant.now())) return false;
+
+        return true;
     }
 }

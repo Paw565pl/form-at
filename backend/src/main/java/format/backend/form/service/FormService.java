@@ -16,13 +16,16 @@ import format.backend.form.entity.FormStatus;
 import format.backend.form.entity.QuestionEntity;
 import format.backend.form.exception.BlankPasswordException;
 import format.backend.form.exception.FormAlreadyExistsException;
+import format.backend.form.exception.FormImageNotFound;
 import format.backend.form.exception.FormNotFoundException;
 import format.backend.form.exception.MultipleChoiceQuestionAnswersValidationException;
+import format.backend.form.exception.QuestionImageNotFound;
 import format.backend.form.exception.RequiredQuestionCountValidationException;
 import format.backend.form.exception.SingleChoiceQuestionAnswersValidationException;
 import format.backend.form.mapper.FormMapper;
 import format.backend.form.mapper.QuestionMapper;
 import format.backend.form.repository.FormRepository;
+import format.backend.storage.service.UploadService;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Map;
@@ -61,6 +64,7 @@ public class FormService {
     private final UserRepository userRepository;
     private final FormMapper formMapper;
     private final QuestionMapper questionMapper;
+    private final UploadService uploadService;
 
     private static final String ESTIMATED_DURATION_FIELD = "estimatedDuration";
     private static final Map<String, String> validSortFields = Stream.of(
@@ -137,7 +141,7 @@ public class FormService {
         return formMapper.toDetailResponseDto(formEntity, "TODO: generate image urls", questions);
     }
 
-    private List<QuestionEntity> mapQuestionsToEntities(FormRequestDto requestDto) {
+    private List<QuestionEntity> mapQuestionsToEntities(FormRequestDto requestDto, String userId) {
         val requiredQuestionsCount = requestDto.questions().stream()
                 .filter(QuestionRequestDto::isRequired)
                 .count();
@@ -145,6 +149,9 @@ public class FormService {
 
         return requestDto.questions().stream()
                 .map(q -> {
+                    if (!uploadService.confirmUpload(q.imageKey(), userId))
+                        throw new QuestionImageNotFound(q.imageKey());
+
                     switch (q.type()) {
                         case OPEN -> q.answers().clear();
                         case SINGLE_CHOICE -> {
@@ -178,7 +185,10 @@ public class FormService {
 
     @Transactional
     public FormDetailResponseDto create(KeycloakJwtClaims keycloakJwtClaims, FormRequestDto requestDto) {
-        val questionEntities = mapQuestionsToEntities(requestDto);
+        if (!uploadService.confirmUpload(requestDto.thumbnailKey(), keycloakJwtClaims.sub()))
+            throw new FormImageNotFound(requestDto.thumbnailKey());
+
+        val questionEntities = mapQuestionsToEntities(requestDto, keycloakJwtClaims.sub());
         val slug = slugify.slugify(requestDto.name());
         val passwordHash = getPasswordHash(requestDto);
 
@@ -205,7 +215,10 @@ public class FormService {
                 || keycloakJwtClaims.roles().contains(Role.ADMIN);
         if (!canUpdate) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 
-        val questionEntities = mapQuestionsToEntities(requestDto);
+        if (!uploadService.confirmUpload(requestDto.thumbnailKey(), keycloakJwtClaims.sub()))
+            throw new FormImageNotFound(requestDto.thumbnailKey());
+
+        val questionEntities = mapQuestionsToEntities(requestDto, keycloakJwtClaims.sub());
         val slug = slugify.slugify(requestDto.name());
         val passwordHash = getPasswordHash(requestDto);
 
