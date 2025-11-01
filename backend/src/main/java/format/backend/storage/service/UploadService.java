@@ -2,6 +2,7 @@ package format.backend.storage.service;
 
 import format.backend.auth.jwt.KeycloakJwtClaims;
 import format.backend.storage.dto.UploadRequestDto;
+import format.backend.storage.dto.UploadRequestResponseDto;
 import format.backend.storage.entity.PendingUploadEntity;
 import format.backend.storage.exception.InvalidFileExtensionException;
 import format.backend.storage.properties.MinioProperties;
@@ -57,7 +58,7 @@ public class UploadService {
     }
 
     @Transactional
-    public Map<String, String> getUploadPresignedFormData(
+    public UploadRequestResponseDto getUploadPresignedFormData(
             KeycloakJwtClaims keycloakJwtClaims, UploadRequestDto requestDto) {
         val fileName = requestDto.fileName().replaceAll("[^A-Za-z0-9._-]", "_").trim();
         val fileExtension = List.of(fileName.split("\\.")).getLast();
@@ -79,10 +80,7 @@ public class UploadService {
 
         try {
             val formData = minioClient.getPresignedPostFormData(postPolicy);
-            formData.put("key", key);
-            formData.put("fileName", fileName);
-
-            return formData;
+            return UploadRequestResponseDto.fromFormData(formData, fileName, key, contentType);
         } catch (Exception e) {
             log.error("Could not create upload request", e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);

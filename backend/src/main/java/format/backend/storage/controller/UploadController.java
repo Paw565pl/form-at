@@ -3,9 +3,9 @@ package format.backend.storage.controller;
 import format.backend.auth.annotation.IsAuthenticated;
 import format.backend.auth.jwt.KeycloakJwtClaimsExtractor;
 import format.backend.storage.dto.UploadRequestDto;
+import format.backend.storage.dto.UploadRequestResponseDto;
 import format.backend.storage.service.UploadService;
 import jakarta.validation.Valid;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -24,7 +24,7 @@ public class UploadController {
 
     @IsAuthenticated
     @PostMapping("/request")
-    public Map<String, String> getUploadPresignedFormData(
+    public UploadRequestResponseDto getUploadPresignedFormData(
             @AuthenticationPrincipal Jwt jwt, @Valid @RequestBody UploadRequestDto requestDto) {
         return uploadService.getUploadPresignedFormData(keycloakJwtClaimsExtractor.getClaims(jwt), requestDto);
     }
