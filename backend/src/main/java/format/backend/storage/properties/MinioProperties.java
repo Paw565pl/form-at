@@ -19,4 +19,6 @@ public class MinioProperties {
     @NotBlank private String accessKey;
 
     @NotBlank private String secretKey;
+
+    @NotBlank private String bucketName;
 }
