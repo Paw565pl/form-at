@@ -15,10 +15,10 @@ public enum Language {
 
     private final String mongoValue;
 
-    private static final Map<String, Language> mongoNameToLanguageMap =
+    private static final Map<String, Language> mongoValueToLanguageMap =
             Arrays.stream(values()).collect(Collectors.toMap(l -> l.mongoValue.toLowerCase(), l -> l));
 
-    public static Optional<Language> fromMongoValue(String mongoName) {
-        return Optional.ofNullable(mongoNameToLanguageMap.get(mongoName.toLowerCase()));
+    public static Optional<Language> fromMongoValue(String mongoValue) {
+        return Optional.ofNullable(mongoValueToLanguageMap.get(mongoValue.toLowerCase()));
     }
 }
