@@ -11,6 +11,7 @@ import {
 } from "@/core/components/ui/dialog";
 import { Input } from "@/core/components/ui/input";
 import { Label } from "@/core/components/ui/label";
+import { cn } from "@/core/lib/cn";
 import { Brain, HatGlasses, ListChecks, MoreHorizontal } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
@@ -30,10 +31,15 @@ export const Banner = () => {
       <Button size={"icon-sm"} className="absolute top-4 right-4">
         <MoreHorizontal />
       </Button>
-      <div className="bg-muted-foreground absolute -bottom-6 left-4 flex h-24 w-24 items-center justify-center rounded-full border-2 border-black">
+      <div className="absolute -bottom-6 left-4 flex h-24 w-24 items-center justify-center rounded-full border-2 border-black bg-white">
         <Brain className="h-16 w-16" />
       </div>
-      <div className="absolute right-4 bottom-4 flex gap-2">
+      <div
+        className={cn(
+          "absolute right-4 bottom-4 flex flex-col items-end gap-2",
+          "md:flex-row",
+        )}
+      >
         <Dialog>
           <form>
             <DialogTrigger asChild>
@@ -49,7 +55,7 @@ export const Banner = () => {
               </DialogHeader>
               <div className="grid gap-3">
                 <Label htmlFor="code">{t("code")}</Label>
-                <Input id="code" name="code" placeholder="code" />
+                <Input id="code" name="code" placeholder={t("code")} />
               </div>
               <DialogFooter>
                 <DialogClose asChild>
