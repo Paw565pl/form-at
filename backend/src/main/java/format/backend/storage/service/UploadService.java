@@ -46,8 +46,12 @@ public class UploadService {
     private final PendingUploadRepository pendingUploadRepository;
 
     private static final long MAX_FILE_SIZE = 10L * 1024 * 1024; // 10 MB
-    private static final Map<String, String> validExtensionsToContentTypeMap = Map.of(
-            "png", "image/png", "jpg", "image/jpeg", "jpeg", "image/jpeg", "webp", "image/webp", "avif", "image/avif");
+    private static final Map<String, String> validExtensionsToContentTypeMap = Map.ofEntries(
+            Map.entry("png", "image/png"),
+            Map.entry("jpg", "image/jpeg"),
+            Map.entry("jpeg", "image/jpeg"),
+            Map.entry("webp", "image/webp"),
+            Map.entry("avif", "image/avif"));
 
     @PostConstruct
     private void createMinioBucket() throws MinioException, IOException, NoSuchAlgorithmException, InvalidKeyException {
@@ -89,7 +93,7 @@ public class UploadService {
         try {
             val formData = minioClient.getPresignedPostFormData(postPolicy);
             return UploadRequestResponseDto.fromFormData(formData, fileName, key, contentType);
-        } catch (Exception e) {
+        } catch (MinioException | InvalidKeyException | IOException | NoSuchAlgorithmException e) {
             log.error("Could not create upload request", e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -105,7 +109,7 @@ public class UploadService {
         } catch (ErrorResponseException e) {
             // this is thrown for 404 Not Found
             return false;
-        } catch (Exception e) {
+        } catch (MinioException | InvalidKeyException | IOException | NoSuchAlgorithmException e) {
             log.error("An unexpected error occurred for stat object with key {}", key, e);
             return false;
         }
@@ -137,7 +141,7 @@ public class UploadService {
                     .object(key)
                     .expiry((int) Duration.ofHours(24).getSeconds())
                     .build());
-        } catch (Exception e) {
+        } catch (MinioException | InvalidKeyException | IOException | NoSuchAlgorithmException e) {
             log.error("Could not create GET presigned url for key {}", key, e);
             return null;
         }
