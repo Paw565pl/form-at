@@ -15,8 +15,12 @@ import io.minio.PostPolicy;
 import io.minio.StatObjectArgs;
 import io.minio.Time;
 import io.minio.errors.ErrorResponseException;
+import io.minio.errors.MinioException;
 import io.minio.http.Method;
 import jakarta.annotation.PostConstruct;
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.ZonedDateTime;
@@ -46,7 +50,7 @@ public class UploadService {
             "png", "image/png", "jpg", "image/jpeg", "jpeg", "image/jpeg", "webp", "image/webp", "avif", "image/avif");
 
     @PostConstruct
-    private void createMinioBucket() throws Exception {
+    private void createMinioBucket() throws MinioException, IOException, NoSuchAlgorithmException, InvalidKeyException {
         val exists = minioClient.bucketExists(BucketExistsArgs.builder()
                 .bucket(minioProperties.getBucketName())
                 .build());
@@ -111,9 +115,8 @@ public class UploadService {
 
         val pendingUpload = pendingUploadOpt.get();
         if (!pendingUpload.getUserId().equals(userId)) return false;
-        if (pendingUpload.getExpiresAt().isBefore(Instant.now())) return false;
 
-        return true;
+        return !pendingUpload.getExpiresAt().isBefore(Instant.now());
     }
 
     public String getFileUrl(String key) {
