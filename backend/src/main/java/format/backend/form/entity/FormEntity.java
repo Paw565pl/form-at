@@ -109,7 +109,7 @@ public class FormEntity {
     @Transient
     @NonNull public Language getLanguage() {
         return Language.fromMongoValue(language)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid language mongo name: " + language));
+                .orElseThrow(() -> new IllegalArgumentException("Invalid language mongo value: " + language));
     }
 
     public void setLanguage(@NonNull Language language) {
