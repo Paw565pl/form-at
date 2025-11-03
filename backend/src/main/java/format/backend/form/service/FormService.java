@@ -87,7 +87,7 @@ public class FormService {
         if (filterDto.maxEstimatedDuration() != null)
             query.addCriteria(Criteria.where(ESTIMATED_DURATION_FIELD).lte(filterDto.maxEstimatedDuration()));
 
-        var total = mongoTemplate.count(query, FormEntity.class);
+        val total = mongoTemplate.count(query, FormEntity.class);
         if (total == 0) return Page.empty(pageable);
 
         query.with(Sort.by(getSortOrders(pageable)));
