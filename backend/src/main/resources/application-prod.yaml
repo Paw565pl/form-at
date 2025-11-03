@@ -20,6 +20,7 @@ logging:
 
 minio:
   endpoint: "http://minio:9000"
+  public-endpoint: "http://localhost:9000"
   access-key: "root"
   secret-key: "password"
   bucket-name: "uploads"
