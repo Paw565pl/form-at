@@ -16,7 +16,7 @@
       "quizFinished": "The quiz finished at: {finishedAt}",
       "questionsCount": "{count} question(s)",
       "submissionsCount": "{count} submission(s)",
-      "estimatedTime": "Estimated time to complete: {time} minute(s)"
+      "estimatedTime": "Estimated time to complete: {time}"
     },
     "QuestionList": {
       "showQuestions": "Show Questions"
