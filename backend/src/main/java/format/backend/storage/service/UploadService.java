@@ -8,13 +8,16 @@ import format.backend.storage.exception.InvalidFileExtensionException;
 import format.backend.storage.properties.MinioProperties;
 import format.backend.storage.repository.PendingUploadRepository;
 import io.minio.BucketExistsArgs;
+import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.PostPolicy;
 import io.minio.StatObjectArgs;
 import io.minio.Time;
 import io.minio.errors.ErrorResponseException;
+import io.minio.http.Method;
 import jakarta.annotation.PostConstruct;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -98,7 +101,7 @@ public class UploadService {
             // this is thrown for 404 Not Found
             return false;
         } catch (Exception e) {
-            log.error("An unexpected error occurred for stat object with {}", key);
+            log.error("An unexpected error occurred for stat object with key {}", key, e);
             return false;
         }
     }
@@ -115,5 +118,21 @@ public class UploadService {
         if (pendingUpload.getExpiresAt().isBefore(Instant.now())) return false;
 
         return true;
+    }
+
+    public String getFileUrl(String key) {
+        if (key == null) return null;
+
+        try {
+            return minioClient.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder()
+                    .method(Method.GET)
+                    .bucket(minioProperties.getBucketName())
+                    .object(key)
+                    .expiry((int) Duration.ofHours(24).getSeconds())
+                    .build());
+        } catch (Exception e) {
+            log.error("Could not create GET presigned url for key {}", key, e);
+            return null;
+        }
     }
 }

@@ -96,7 +96,7 @@ public class FormService {
 
         val forms = mongoTemplate.find(query, FormEntity.class);
         val response = forms.stream()
-                .map(f -> formMapper.toListResponseDto(f, "TODO: generate image urls"))
+                .map(f -> formMapper.toListResponseDto(f, uploadService.getFileUrl(f.getThumbnailKey())))
                 .toList();
 
         return new PageImpl<>(response, pageable, total);
@@ -135,10 +135,11 @@ public class FormService {
 
     private FormDetailResponseDto mapToDetailResponseDto(FormEntity formEntity) {
         val questions = formEntity.getQuestions().stream()
-                .map(q -> questionMapper.toResponseDto(q, "TODO: generate image urls"))
+                .map(q -> questionMapper.toResponseDto(q, uploadService.getFileUrl(q.getImageKey())))
                 .toList();
 
-        return formMapper.toDetailResponseDto(formEntity, "TODO: generate image urls", questions);
+        return formMapper.toDetailResponseDto(
+                formEntity, uploadService.getFileUrl(formEntity.getThumbnailKey()), questions);
     }
 
     private List<QuestionEntity> mapQuestionsToEntities(FormRequestDto requestDto, String userId) {
