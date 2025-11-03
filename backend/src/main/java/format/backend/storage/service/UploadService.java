@@ -46,18 +46,14 @@ public class UploadService {
             "png", "image/png", "jpg", "image/jpeg", "jpeg", "image/jpeg", "webp", "image/webp", "avif", "image/avif");
 
     @PostConstruct
-    private void createMinioBucket() {
-        try {
-            val exists = minioClient.bucketExists(BucketExistsArgs.builder()
+    private void createMinioBucket() throws Exception {
+        val exists = minioClient.bucketExists(BucketExistsArgs.builder()
+                .bucket(minioProperties.getBucketName())
+                .build());
+        if (!exists)
+            minioClient.makeBucket(MakeBucketArgs.builder()
                     .bucket(minioProperties.getBucketName())
                     .build());
-            if (!exists)
-                minioClient.makeBucket(MakeBucketArgs.builder()
-                        .bucket(minioProperties.getBucketName())
-                        .build());
-        } catch (Exception e) {
-            log.error("Could not create storage bucket", e);
-        }
     }
 
     @Transactional
