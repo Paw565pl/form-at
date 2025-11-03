@@ -6,11 +6,11 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 import format.backend.auth.repository.UserRepository;
 import format.backend.comment.dto.CommentRequestDto;
 import format.backend.comment.dto.CommentResponseDto;
-import format.backend.comment.entity.CommentEntity;
 import format.backend.comment.mapper.CommentMapper;
 import format.backend.comment.repository.CommentRepository;
 import format.backend.form.repository.FormRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -38,7 +38,7 @@ public class CommentService {
             throw new ResponseStatusException(NOT_FOUND, FORM_NOT_FOUND);
         }
 
-        Page<CommentEntity> comments = commentRepository.findByFormId(formId, pageable);
+        val  comments = commentRepository.findByFormId(formId, pageable);
         if (comments.isEmpty()) {
             return Page.empty(pageable);
         }
@@ -48,19 +48,19 @@ public class CommentService {
 
     @Transactional
     public CommentResponseDto create(String formId, CommentRequestDto commentRequestDto, String userId) {
-        var form = formRepository
+        val form = formRepository
                 .findById(formId)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, FORM_NOT_FOUND));
 
-        var user = userRepository
+        val user = userRepository
                 .findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, USER_NOT_FOUND));
 
-        CommentEntity comment = commentMapper.toEntity(commentRequestDto);
+        val comment = commentMapper.toEntity(commentRequestDto);
         comment.setForm(form);
         comment.setAuthor(user);
 
-        CommentEntity saved = commentRepository.save(comment);
+        val saved = commentRepository.save(comment);
 
         return commentMapper.toResponseDto(saved);
     }
@@ -68,15 +68,15 @@ public class CommentService {
     @Transactional
     public CommentResponseDto update(
             String formId, String commentId, CommentRequestDto commentRequestDto, String userId) {
-        var form = formRepository
+        val form = formRepository
                 .findById(formId)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, FORM_NOT_FOUND));
 
-        var user = userRepository
+        val user = userRepository
                 .findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, USER_NOT_FOUND));
 
-        var comment = commentRepository
+        val comment = commentRepository
                 .findById(commentId)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, COMMENT_NOT_FOUND));
 
@@ -90,22 +90,22 @@ public class CommentService {
 
         comment.setContent(commentRequestDto.getContent());
 
-        CommentEntity updated = commentRepository.save(comment);
+        val updated = commentRepository.save(comment);
 
         return commentMapper.toResponseDto(updated);
     }
 
     @Transactional
     public void delete(String formId, String commentId, String userId) {
-        var form = formRepository
+        val form = formRepository
                 .findById(formId)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, FORM_NOT_FOUND));
 
-        var user = userRepository
+        val user = userRepository
                 .findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, USER_NOT_FOUND));
 
-        var comment = commentRepository
+        val comment = commentRepository
                 .findById(commentId)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, COMMENT_NOT_FOUND));
 

@@ -8,8 +8,6 @@ public class CommentResponseDto {
 
     @NonNull private String authorName;
 
-    @NonNull private String formId;
-
     @NonNull private String content;
 
     @NonNull private Instant createdAt;
