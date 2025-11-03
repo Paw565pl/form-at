@@ -71,7 +71,12 @@ public class UploadService {
         val key = String.format("%s/%s", UUID.randomUUID(), fileName);
         val contentType = validExtensionsToContentTypeMap.get(fileExtension);
 
-        val pendingUpload = new PendingUploadEntity(key, fileName, contentType, keycloakJwtClaims.sub());
+        val pendingUpload = new PendingUploadEntity(
+                key,
+                fileName,
+                contentType,
+                keycloakJwtClaims.sub(),
+                Instant.now().plus(Duration.ofHours(1)));
         pendingUploadRepository.save(pendingUpload);
 
         val postPolicy = new PostPolicy(
@@ -115,8 +120,11 @@ public class UploadService {
 
         val pendingUpload = pendingUploadOpt.get();
         if (!pendingUpload.getUserId().equals(userId)) return false;
+        if (pendingUpload.getExpiresAt().isBefore(Instant.now())) return false;
 
-        return !pendingUpload.getExpiresAt().isBefore(Instant.now());
+        pendingUploadRepository.delete(pendingUpload);
+
+        return true;
     }
 
     public String getFileUrl(String key) {

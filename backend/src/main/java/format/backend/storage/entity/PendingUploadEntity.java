@@ -1,6 +1,5 @@
 package format.backend.storage.entity;
 
-import java.time.Duration;
 import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -8,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -44,8 +42,7 @@ public class PendingUploadEntity {
     @Field(name = "createdAt")
     private Instant createdAt;
 
-    @Transient
-    @NonNull public Instant getExpiresAt() {
-        return createdAt.plus(Duration.ofHours(1));
-    }
+    @Indexed
+    @Field(name = "expiresAt")
+    @NonNull private Instant expiresAt;
 }
