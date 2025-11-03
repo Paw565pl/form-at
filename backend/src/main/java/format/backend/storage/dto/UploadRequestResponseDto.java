@@ -6,7 +6,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.lang.NonNull;
 
 public record UploadRequestResponseDto(
-        @NonNull String fileName,
+        @JsonProperty(fileNameJson) @NonNull String fileName,
         @JsonProperty(xAmzDateJson) @NonNull String xAmzDate,
         @JsonProperty(xAmzSignatureJson) @NonNull String xAmzSignature,
         @JsonProperty(xAmzAlgorithmJson) @NonNull String xAmzAlgorithm,
@@ -14,6 +14,7 @@ public record UploadRequestResponseDto(
         @JsonProperty(xAmzCredentialJson) @NonNull String xAmzCredential,
         @NonNull String policy,
         @JsonProperty(HttpHeaders.CONTENT_TYPE) @NonNull String contentType) {
+    private static final String fileNameJson = "filename";
     private static final String xAmzDateJson = "x-amz-date";
     private static final String xAmzSignatureJson = "x-amz-signature";
     private static final String xAmzAlgorithmJson = "x-amz-algorithm";

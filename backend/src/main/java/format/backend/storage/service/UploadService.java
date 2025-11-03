@@ -78,7 +78,7 @@ public class UploadService {
                 minioProperties.getBucketName(), ZonedDateTime.now(Time.UTC).plusMinutes(10));
         postPolicy.addContentLengthRangeCondition(1, MAX_FILE_SIZE);
         postPolicy.addEqualsCondition("key", key);
-        postPolicy.addEqualsCondition("fileName", fileName);
+        postPolicy.addEqualsCondition("filename", fileName);
         postPolicy.addEqualsCondition(HttpHeaders.CONTENT_TYPE, contentType);
 
         try {
