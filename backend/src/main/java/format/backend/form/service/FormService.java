@@ -142,13 +142,12 @@ public class FormService {
                 formEntity, uploadService.getFileUrl(formEntity.getThumbnailKey()), questions);
     }
 
-    private List<QuestionEntity> mapQuestionsToEntities(FormRequestDto requestDto, String userId) {
-        val requiredQuestionsCount = requestDto.questions().stream()
-                .filter(QuestionRequestDto::isRequired)
-                .count();
+    private List<QuestionEntity> mapQuestionsToEntities(List<QuestionRequestDto> questions, String userId) {
+        val requiredQuestionsCount =
+                questions.stream().filter(QuestionRequestDto::isRequired).count();
         if (requiredQuestionsCount < 1) throw new RequiredQuestionCountValidationException();
 
-        return requestDto.questions().stream()
+        return questions.stream()
                 .map(q -> {
                     if (!uploadService.confirmUpload(q.imageKey(), userId))
                         throw new QuestionImageNotFound(q.imageKey());
@@ -176,7 +175,7 @@ public class FormService {
                 .toList();
     }
 
-    private String getPasswordHash(FormRequestDto requestDto) {
+    private String createPasswordHash(FormRequestDto requestDto) {
         if (!requestDto.status().equals(FormStatus.PRIVATE)) return null;
         if (Optional.ofNullable(requestDto.password()).map(String::isBlank).orElse(true))
             throw new BlankPasswordException();
@@ -189,9 +188,9 @@ public class FormService {
         if (!uploadService.confirmUpload(requestDto.thumbnailKey(), keycloakJwtClaims.sub()))
             throw new FormImageNotFound(requestDto.thumbnailKey());
 
-        val questionEntities = mapQuestionsToEntities(requestDto, keycloakJwtClaims.sub());
+        val questionEntities = mapQuestionsToEntities(requestDto.questions(), keycloakJwtClaims.sub());
         val slug = slugify.slugify(requestDto.name());
-        val passwordHash = getPasswordHash(requestDto);
+        val passwordHash = createPasswordHash(requestDto);
 
         val author = userRepository
                 .findById(keycloakJwtClaims.sub())
@@ -219,9 +218,9 @@ public class FormService {
         if (!uploadService.confirmUpload(requestDto.thumbnailKey(), keycloakJwtClaims.sub()))
             throw new FormImageNotFound(requestDto.thumbnailKey());
 
-        val questionEntities = mapQuestionsToEntities(requestDto, keycloakJwtClaims.sub());
+        val questionEntities = mapQuestionsToEntities(requestDto.questions(), keycloakJwtClaims.sub());
         val slug = slugify.slugify(requestDto.name());
-        val passwordHash = getPasswordHash(requestDto);
+        val passwordHash = createPasswordHash(requestDto);
 
         val updatedFormEntity = formMapper.updateEntityFromDto(requestDto, oldFormEntity, slug, passwordHash);
         updatedFormEntity.setQuestions(questionEntities);
