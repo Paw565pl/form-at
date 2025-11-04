@@ -67,26 +67,34 @@ public class FormService {
     private final QuestionMapper questionMapper;
     private final UploadService uploadService;
 
-    private static final String ESTIMATED_DURATION_FIELD = "estimatedDuration";
     private static final Map<String, String> validSortFields = Stream.of(
-                    ESTIMATED_DURATION_FIELD, "submissionsCount", "createdAt", "updatedAt")
+                    "estimatedDuration", "submissionsCount", "createdAt", "updatedAt")
             .collect(Collectors.toMap(String::toLowerCase, Function.identity()));
 
     public Page<FormListResponseDto> findAllPublic(FormFilterDto filterDto, Pageable pageable) {
         var query = new Query();
-        query.addCriteria(Criteria.where("status").is(FormStatus.PUBLIC.name()));
-
         if (filterDto.searchQuery() != null && !filterDto.searchQuery().isBlank())
             query = TextQuery.queryText(TextCriteria.forDefaultLanguage()
                             .matchingPhrase(filterDto.searchQuery())
                             .caseSensitive(false))
                     .sortByScore();
+
+        query.addCriteria(Criteria.where("status").is(FormStatus.PUBLIC.name()));
+
         if (filterDto.language() != null)
             query.addCriteria(Criteria.where("language").is(filterDto.language().getMongoValue()));
-        if (filterDto.minEstimatedDuration() != null)
-            query.addCriteria(Criteria.where(ESTIMATED_DURATION_FIELD).gte(filterDto.minEstimatedDuration()));
-        if (filterDto.maxEstimatedDuration() != null)
-            query.addCriteria(Criteria.where(ESTIMATED_DURATION_FIELD).lte(filterDto.maxEstimatedDuration()));
+
+        if (filterDto.minEstimatedDuration() != null || filterDto.maxEstimatedDuration() != null) {
+            val estimatedDurationFilterCriteria = Criteria.where("estimatedDuration");
+
+            if (filterDto.minEstimatedDuration() != null)
+                estimatedDurationFilterCriteria.gte(filterDto.minEstimatedDuration());
+            if (filterDto.maxEstimatedDuration() != null)
+                estimatedDurationFilterCriteria.lte(filterDto.maxEstimatedDuration());
+
+            query.addCriteria(estimatedDurationFilterCriteria);
+        }
+
         if (filterDto.allowsGuestSubmissions() != null)
             query.addCriteria(Criteria.where("allowsGuestSubmissions").is(filterDto.allowsGuestSubmissions()));
 
