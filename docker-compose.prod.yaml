@@ -68,6 +68,7 @@ services:
     ports:
       - "8080:8080"
     environment:
+      SPRING_PROFILES_ACTIVE: prod
       SPRING_DATA_MONGODB_URI: mongodb://root:password@mongodb:27017/format?authSource=admin
     depends_on:
       mongodb:
