@@ -67,7 +67,7 @@ public class FormService {
     private final QuestionMapper questionMapper;
     private final UploadService uploadService;
 
-    private static final Map<String, String> validSortFields = Stream.of(
+    private static final Map<String, String> sortFields = Stream.of(
                     "estimatedDuration", "submissionsCount", "createdAt", "updatedAt")
             .collect(Collectors.toMap(String::toLowerCase, Function.identity()));
 
@@ -116,11 +116,11 @@ public class FormService {
     private List<Sort.Order> getSortOrders(Pageable pageable) {
         return Stream.concat(
                         pageable.getSort().stream()
-                                .filter(o -> validSortFields.containsKey(
-                                        o.getProperty().toLowerCase()))
+                                .filter(o ->
+                                        sortFields.containsKey(o.getProperty().toLowerCase()))
                                 .map(o -> new Sort.Order(
                                         o.getDirection(),
-                                        validSortFields.get(o.getProperty().toLowerCase()))),
+                                        sortFields.get(o.getProperty().toLowerCase()))),
                         Stream.of(Sort.Order.asc("_id")))
                 .toList();
     }
