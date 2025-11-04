@@ -29,6 +29,7 @@ import format.backend.storage.service.UploadService;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -222,11 +223,26 @@ public class FormService {
         val slug = slugify.slugify(requestDto.name());
         val passwordHash = createPasswordHash(requestDto);
 
+        val newImageKeys = Stream.concat(
+                        Stream.ofNullable(requestDto.thumbnailKey()),
+                        questionEntities.stream().map(QuestionEntity::getImageKey))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+        val outdatedImageKeys = Stream.concat(
+                        Stream.ofNullable(oldFormEntity.getThumbnailKey()),
+                        oldFormEntity.getQuestions().stream().map(QuestionEntity::getImageKey))
+                .filter(Objects::nonNull)
+                .filter(k -> !newImageKeys.contains(k))
+                .toList();
+
         val updatedFormEntity = formMapper.updateEntityFromDto(requestDto, oldFormEntity, slug, passwordHash);
         updatedFormEntity.setQuestions(questionEntities);
 
         try {
-            return mapToDetailResponseDto(formRepository.save(updatedFormEntity));
+            val response = mapToDetailResponseDto(formRepository.save(updatedFormEntity));
+            if (!outdatedImageKeys.isEmpty()) uploadService.deleteAllByKeys(outdatedImageKeys);
+
+            return response;
         } catch (DataIntegrityViolationException e) {
             throw new FormAlreadyExistsException(requestDto.name());
         }
@@ -239,6 +255,13 @@ public class FormService {
                 || keycloakJwtClaims.roles().contains(Role.ADMIN);
         if (!canUpdate) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 
+        val imageKeys = Stream.concat(
+                        Stream.ofNullable(formEntity.getThumbnailKey()),
+                        formEntity.getQuestions().stream().map(QuestionEntity::getImageKey))
+                .filter(Objects::nonNull)
+                .toList();
+
         formRepository.delete(formEntity);
+        if (!imageKeys.isEmpty()) uploadService.deleteAllByKeys(imageKeys);
     }
 }
