@@ -87,6 +87,8 @@ public class FormService {
             query.addCriteria(Criteria.where(ESTIMATED_DURATION_FIELD).gte(filterDto.minEstimatedDuration()));
         if (filterDto.maxEstimatedDuration() != null)
             query.addCriteria(Criteria.where(ESTIMATED_DURATION_FIELD).lte(filterDto.maxEstimatedDuration()));
+        if (filterDto.allowsGuestSubmissions() != null)
+            query.addCriteria(Criteria.where("allowsGuestSubmissions").is(filterDto.allowsGuestSubmissions()));
 
         val total = mongoTemplate.count(query, FormEntity.class);
         if (total == 0) return Page.empty(pageable);

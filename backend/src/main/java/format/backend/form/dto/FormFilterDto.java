@@ -11,4 +11,6 @@ public record FormFilterDto(
 
         @Nullable Duration minEstimatedDuration,
 
-        @Nullable Duration maxEstimatedDuration) {}
+        @Nullable Duration maxEstimatedDuration,
+
+        @Nullable Boolean allowsGuestSubmissions) {}
