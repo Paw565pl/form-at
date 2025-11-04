@@ -3,7 +3,7 @@ package format.backend.form.exception;
 import format.backend.core.exception.ApplicationException;
 import org.springframework.http.HttpStatus;
 
-public class MultipleChoiceQuestionAnswersValidationException extends ApplicationException {
+public final class MultipleChoiceQuestionAnswersValidationException extends ApplicationException {
 
     public MultipleChoiceQuestionAnswersValidationException() {
         super(

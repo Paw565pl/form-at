@@ -4,7 +4,7 @@ import format.backend.core.exception.ApplicationException;
 import java.util.Collection;
 import org.springframework.http.HttpStatus;
 
-public class InvalidFileExtensionException extends ApplicationException {
+public final class InvalidFileExtensionException extends ApplicationException {
 
     public InvalidFileExtensionException(String fileExtension, Collection<String> allowedExtensions) {
         super(

@@ -4,7 +4,7 @@ import format.backend.core.exception.ApplicationException;
 import format.backend.form.entity.FormStatus;
 import org.springframework.http.HttpStatus;
 
-public class BlankPasswordException extends ApplicationException {
+public final class BlankPasswordException extends ApplicationException {
 
     public BlankPasswordException() {
         super(
