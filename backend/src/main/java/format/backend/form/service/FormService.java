@@ -69,7 +69,7 @@ public class FormService {
 
     private static final String ESTIMATED_DURATION_FIELD = "estimatedDuration";
     private static final Map<String, String> validSortFields = Stream.of(
-                    "name", ESTIMATED_DURATION_FIELD, "submissionsCount", "createdAt", "updatedAt")
+                    ESTIMATED_DURATION_FIELD, "submissionsCount", "createdAt", "updatedAt")
             .collect(Collectors.toMap(String::toLowerCase, Function.identity()));
 
     public Page<FormListResponseDto> findAllPublic(FormFilterDto filterDto, Pageable pageable) {
