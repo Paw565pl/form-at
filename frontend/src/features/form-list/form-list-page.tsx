@@ -64,7 +64,7 @@ export const FormListPage = () => {
           >
             <Input
               placeholder={t("options.searchPlaceholder")}
-              type="text"
+              type="search"
               className="md:min-w-60"
               value={queryValue}
               onChange={(e) => setQueryValue(e.target.value)}
