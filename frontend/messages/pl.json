@@ -8,7 +8,7 @@
       "signOut": "Wyloguj"
     }
   },
-  "publicFormsList": {
+  "formListPage": {
     "title": "Wyświetlanie {count, plural, =1 {# formularza} other {# formularzy}}",
     "options": {
       "searchPlaceholder": "Szukaj formularzy...",

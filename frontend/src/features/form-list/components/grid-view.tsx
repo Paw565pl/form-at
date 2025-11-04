@@ -1,13 +1,10 @@
 import { Card } from "@/core/components/ui/card";
-import {
-  forms,
-  placeholder_image_url,
-} from "@/features/public-forms-list-view/forms";
+import { forms, placeholder_image_url } from "@/features/form-list/forms";
 import { useFormatter, useTranslations } from "next-intl";
 import Link from "next/link";
 
 export const GridView = () => {
-  const t = useTranslations("publicFormsList");
+  const t = useTranslations("formListPage");
   const format = useFormatter();
 
   return (

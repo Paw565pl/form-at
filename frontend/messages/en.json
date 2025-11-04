@@ -8,7 +8,7 @@
       "signOut": "Sign Out"
     }
   },
-  "publicFormsList": {
+  "formListPage": {
     "title": "Showing {count, plural, =1 {# form} other {# forms}}",
     "options": {
       "searchPlaceholder": "Search forms...",

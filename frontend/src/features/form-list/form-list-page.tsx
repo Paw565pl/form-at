@@ -14,16 +14,16 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/core/components/ui/tooltip";
-import { GridView } from "@/features/public-forms-list-view/components/grid-view";
-import { ListView } from "@/features/public-forms-list-view/components/list-view";
-import { forms } from "@/features/public-forms-list-view/forms";
-import { sortByParser } from "@/features/public-forms-list-view/search-params/sort-by-parser";
+import { GridView } from "@/features/form-list/components/grid-view";
+import { ListView } from "@/features/form-list/components/list-view";
+import { forms } from "@/features/form-list/forms";
+import { sortByParser } from "@/features/form-list/search-params/sort-by-parser";
 import { LayoutGrid, List } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useQueryState } from "nuqs";
 import { useRef, useState } from "react";
 
-export const PublicFormsListView = () => {
+export const FormListPage = () => {
   // eslint-disable-next-line
   const [loading, setLoading] = useState(false);
   const [gridLayout, setGridLayout] = useState(true);
@@ -34,7 +34,7 @@ export const PublicFormsListView = () => {
   const [query, setQuery] = useQueryState("query", { defaultValue: "" });
   const [queryValue, setQueryValue] = useState(query);
   const loader = useRef<HTMLDivElement | null>(null);
-  const t = useTranslations("publicFormsList");
+  const t = useTranslations("formListPage");
 
   const sortOptions = [
     { key: "newest", label: t("options.sortOptions.newest") },

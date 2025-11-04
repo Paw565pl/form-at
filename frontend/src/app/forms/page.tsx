@@ -1,3 +1,3 @@
-import { PublicFormsListView } from "@/features/public-forms-list-view/PublicFormsListView";
+import { FormListPage } from "@/features/form-list/form-list-page";
 
-export default PublicFormsListView;
+export default FormListPage;
