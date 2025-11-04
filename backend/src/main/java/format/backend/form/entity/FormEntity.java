@@ -16,6 +16,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.annotation.ReadOnlyProperty;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.annotation.Version;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
@@ -29,6 +30,13 @@ import org.springframework.lang.Nullable;
 @Setter
 @RequiredArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@CompoundIndex(
+        def = "{'status': 1, 'allowsGuestSubmissions': 1, 'language': 1, 'updatedAt': -1, 'estimatedDuration': 1}")
+@CompoundIndex(
+        def = "{'status': 1, 'allowsGuestSubmissions': 1, 'language': 1, 'createdAt': -1, 'estimatedDuration': 1}")
+@CompoundIndex(
+        def =
+                "{'status': 1, 'allowsGuestSubmissions': 1, 'language': 1, 'submissionsCount': -1, 'estimatedDuration': 1}")
 @Document(collection = "forms")
 public class FormEntity {
 
@@ -46,12 +54,10 @@ public class FormEntity {
     @Field(name = "description")
     @Nullable private String description;
 
-    @Indexed
     @org.springframework.data.mongodb.core.mapping.Language
     @Field(name = "language")
     @NonNull private String language;
 
-    @Indexed
     @Field(name = "status")
     @NonNull private FormStatus status;
 
@@ -64,7 +70,6 @@ public class FormEntity {
     @Field(name = "thanksMessage")
     @Nullable private String thanksMessage;
 
-    @Indexed
     @Field(name = "estimatedDuration")
     @NonNull private Duration estimatedDuration;
 
