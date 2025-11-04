@@ -1,4 +1,5 @@
 import { Badge } from "@/core/components/ui/badge";
+import { FormResponseDto } from "@/features/form/types/form-response-dto";
 import {
   BadgeQuestionMark,
   ClockArrowUp,
@@ -7,7 +8,6 @@ import {
 } from "lucide-react";
 import ms from "ms";
 import { useTranslations } from "next-intl";
-import { FormResponseDto } from "@/features/form/types/form-response-dto";
 interface DetailsProps {
   form: FormResponseDto;
 }

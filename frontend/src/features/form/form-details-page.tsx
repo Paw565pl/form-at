@@ -8,15 +8,15 @@ import {
 import { Banner } from "@/features/form/components/banner";
 import { Details } from "@/features/form/components/details";
 import { QuestionList } from "@/features/form/components/question-list";
-import { QuestionType } from "@/features/form/types/question-type";
-import { MessageSquareX } from "lucide-react";
-import { useTranslations } from "next-intl";
 import {
   FormResponseDto,
   FormStatus,
   Language,
   ShuffleVariant,
 } from "@/features/form/types/form-response-dto";
+import { QuestionType } from "@/features/form/types/question-type";
+import { MessageSquareX } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 const form: FormResponseDto = {
   id: "1",
