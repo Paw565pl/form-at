@@ -1,4 +1,4 @@
-package format.backend.storage.dto;
+package format.backend.upload.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;

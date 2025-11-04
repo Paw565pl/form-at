@@ -1,6 +1,6 @@
-package format.backend.storage.repository;
+package format.backend.upload.repository;
 
-import format.backend.storage.entity.PendingUploadEntity;
+import format.backend.upload.entity.PendingUploadEntity;
 import java.time.Instant;
 import java.util.Optional;
 import org.springframework.data.domain.Pageable;

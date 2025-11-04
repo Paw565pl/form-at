@@ -1,8 +1,8 @@
-package format.backend.storage.job;
+package format.backend.upload.job;
 
-import format.backend.storage.entity.PendingUploadEntity;
-import format.backend.storage.repository.PendingUploadRepository;
-import format.backend.storage.service.UploadService;
+import format.backend.upload.entity.PendingUploadEntity;
+import format.backend.upload.repository.PendingUploadRepository;
+import format.backend.upload.service.UploadService;
 import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

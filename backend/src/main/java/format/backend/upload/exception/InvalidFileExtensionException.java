@@ -1,4 +1,4 @@
-package format.backend.storage.exception;
+package format.backend.upload.exception;
 
 import format.backend.core.exception.ApplicationException;
 import java.util.Collection;

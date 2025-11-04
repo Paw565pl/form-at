@@ -1,6 +1,6 @@
-package format.backend.storage.config;
+package format.backend.upload.config;
 
-import format.backend.storage.properties.MinioProperties;
+import format.backend.upload.properties.MinioProperties;
 import io.minio.MinioClient;
 import java.net.InetSocketAddress;
 import java.net.Proxy;

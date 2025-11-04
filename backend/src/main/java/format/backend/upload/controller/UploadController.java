@@ -1,10 +1,10 @@
-package format.backend.storage.controller;
+package format.backend.upload.controller;
 
 import format.backend.auth.annotation.IsAuthenticated;
 import format.backend.auth.jwt.KeycloakJwtClaimsExtractor;
-import format.backend.storage.dto.UploadRequestDto;
-import format.backend.storage.dto.UploadRequestResponseDto;
-import format.backend.storage.service.UploadService;
+import format.backend.upload.dto.UploadRequestDto;
+import format.backend.upload.dto.UploadRequestResponseDto;
+import format.backend.upload.service.UploadService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

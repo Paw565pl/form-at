@@ -1,4 +1,4 @@
-package format.backend.storage.dto;
+package format.backend.upload.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

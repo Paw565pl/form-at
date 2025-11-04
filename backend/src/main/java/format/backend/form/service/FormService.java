@@ -25,7 +25,7 @@ import format.backend.form.exception.SingleChoiceQuestionAnswersValidationExcept
 import format.backend.form.mapper.FormMapper;
 import format.backend.form.mapper.QuestionMapper;
 import format.backend.form.repository.FormRepository;
-import format.backend.storage.service.UploadService;
+import format.backend.upload.service.UploadService;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Map;

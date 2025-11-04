@@ -1,12 +1,12 @@
-package format.backend.storage.service;
+package format.backend.upload.service;
 
 import format.backend.auth.jwt.KeycloakJwtClaims;
-import format.backend.storage.dto.UploadRequestDto;
-import format.backend.storage.dto.UploadRequestResponseDto;
-import format.backend.storage.entity.PendingUploadEntity;
-import format.backend.storage.exception.InvalidFileExtensionException;
-import format.backend.storage.properties.MinioProperties;
-import format.backend.storage.repository.PendingUploadRepository;
+import format.backend.upload.dto.UploadRequestDto;
+import format.backend.upload.dto.UploadRequestResponseDto;
+import format.backend.upload.entity.PendingUploadEntity;
+import format.backend.upload.exception.InvalidFileExtensionException;
+import format.backend.upload.properties.MinioProperties;
+import format.backend.upload.repository.PendingUploadRepository;
 import io.minio.BucketExistsArgs;
 import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MakeBucketArgs;

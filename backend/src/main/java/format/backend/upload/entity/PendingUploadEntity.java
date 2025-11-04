@@ -1,4 +1,4 @@
-package format.backend.storage.entity;
+package format.backend.upload.entity;
 
 import java.time.Instant;
 import lombok.AccessLevel;

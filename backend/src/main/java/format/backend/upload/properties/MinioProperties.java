@@ -1,4 +1,4 @@
-package format.backend.storage.properties;
+package format.backend.upload.properties;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
