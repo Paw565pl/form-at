@@ -7,7 +7,7 @@ import {
 } from "lucide-react";
 import ms from "ms";
 import { useTranslations } from "next-intl";
-import { FormResponseDto } from "../types/form-response-dto";
+import { FormResponseDto } from "@/features/form/types/form-response-dto";
 interface DetailsProps {
   form: FormResponseDto;
 }
@@ -39,11 +39,13 @@ export const Details = ({ form }: DetailsProps) => {
         </div>
       </div>
       <div className="my-2 flex flex-col-reverse items-start justify-between md:flex-row">
-        <div className="flex items-center gap-2">
-          <h1 className="truncate text-4xl font-extrabold">{form.name}</h1>
-          {form.allowsGuestSubmissions ? null : <Lock className="h-12 w-12" />}
+        <div className="flex flex-1 items-center gap-2">
+          <h1 className="line-clamp-2 max-w-2xl text-4xl font-extrabold">
+            {form.name}
+          </h1>
+          {form.allowsGuestSubmissions ? null : <Lock className="flex-none" />}
         </div>
-        <div className="flex items-center">
+        <div className="flex flex-none items-center">
           <Badge>{t("quizFinished", { finishedAt: "20.12.2025" })}</Badge>
         </div>
       </div>

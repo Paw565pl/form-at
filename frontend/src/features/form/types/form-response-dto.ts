@@ -1,4 +1,4 @@
-import { QuestionResponseDto } from "./question-response-dto";
+import { QuestionResponseDto } from "@/features/form/types/question-response-dto";
 
 export enum FormStatus {
   Public = "PUBLIC",

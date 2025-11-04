@@ -16,7 +16,7 @@ import {
   FormStatus,
   Language,
   ShuffleVariant,
-} from "./types/form-response-dto";
+} from "@/features/form/types/form-response-dto";
 
 const form: FormResponseDto = {
   id: "1",
