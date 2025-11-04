@@ -6,22 +6,20 @@ import {
   PersonStanding,
 } from "lucide-react";
 import ms from "ms";
-import { useFormatter, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { FormResponseDto } from "../types/form-response-dto";
 interface DetailsProps {
   form: FormResponseDto;
 }
 
 export const Details = ({ form }: DetailsProps) => {
-  const format = useFormatter();
-  const dateTime = new Date(form.updatedAt);
   const t = useTranslations("PublicFormView.Details");
   return (
     <div>
-      <div className="flex gap-6 text-gray-500">
+      <div className="flex flex-wrap gap-2 md:gap-6">
         <div className="flex items-center gap-1">
           <BadgeQuestionMark />
-          <h2 className="hidden md:block">
+          <h2>
             {t("questionsCount", { count: form.questions.length.toString() })}
           </h2>
         </div>
@@ -40,21 +38,17 @@ export const Details = ({ form }: DetailsProps) => {
           </h2>
         </div>
       </div>
-      <div className="my-2 flex justify-between">
+      <div className="my-2 flex flex-col-reverse items-start justify-between md:flex-row">
         <div className="flex items-center gap-2">
-          <h1 className="text-4xl font-extrabold">{form.name}</h1>
-          <Lock />
+          <h1 className="truncate text-4xl font-extrabold">{form.name}</h1>
+          {form.allowsGuestSubmissions ? null : <Lock className="h-12 w-12" />}
         </div>
-        <Badge>{t("quizFinished", { finishedAt: "20.12.2025" })}</Badge>
+        <div className="flex items-center">
+          <Badge>{t("quizFinished", { finishedAt: "20.12.2025" })}</Badge>
+        </div>
       </div>
-      <p>{form.description}</p>
-      <p className="w-full text-right text-gray-500">
-        {format.dateTime(dateTime, {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        })}
-      </p>
+      {form.description && <p>{form.description}</p>}
+      <p className="w-full text-right">{form.updatedAt}</p>
     </div>
   );
 };

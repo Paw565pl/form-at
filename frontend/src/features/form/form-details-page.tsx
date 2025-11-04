@@ -1,7 +1,16 @@
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/core/components/ui/empty";
 import { Banner } from "@/features/form/components/banner";
 import { Details } from "@/features/form/components/details";
 import { QuestionList } from "@/features/form/components/question-list";
 import { QuestionType } from "@/features/form/types/question-type";
+import { MessageSquareX } from "lucide-react";
+import { useTranslations } from "next-intl";
 import {
   FormResponseDto,
   FormStatus,
@@ -11,7 +20,7 @@ import {
 
 const form: FormResponseDto = {
   id: "1",
-  name: "Formularz 1",
+  name: "Formularz 1 Formularz 1 Formularz 1 Formularz 1 Formularz 1 Formularz 1 Formularz 1 Formularz 1 Formularz 1 ",
   slug: "formularz-1",
   description: "Opis formularza 1",
   language: Language.Pl,
@@ -58,12 +67,25 @@ const form: FormResponseDto = {
 };
 
 const FormDetailsPage = () => {
+  const t = useTranslations("PublicFormView.QuestionList");
   return (
     <div className="mx-auto flex max-w-5xl flex-col items-center justify-center">
-      <div className="mx-4">
+      <div className="w-full px-4">
         <Banner />
         <Details form={form} />
-        <QuestionList questions={form.questions} />
+        {form.questions && form.allowsQuestionPreview ? (
+          <QuestionList questions={form.questions} />
+        ) : (
+          <Empty className="my-4 border border-dashed">
+            <EmptyHeader>
+              <EmptyMedia variant="icon">
+                <MessageSquareX />
+              </EmptyMedia>
+              <EmptyTitle>{t("noQuestions")}</EmptyTitle>
+              <EmptyDescription>{t("noQuestionsDescription")}</EmptyDescription>
+            </EmptyHeader>
+          </Empty>
+        )}
       </div>
     </div>
   );

@@ -4,7 +4,7 @@ import { QuestionResponseDto } from "@/features/form/types/question-response-dto
 
 export const Question = (question: QuestionResponseDto) => {
   return (
-    <div className="flex gap-2 rounded-lg border-2 border-black p-2">
+    <div className="flex gap-2 rounded-lg border-2 p-2">
       {question.imageKey && <div className="h-32 w-32 bg-amber-600"></div>}
       <div className="flex flex-col gap-2">
         <h1 className="w-full text-center text-xl">{question.content}</h1>

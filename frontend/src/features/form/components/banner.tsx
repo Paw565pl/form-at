@@ -31,12 +31,17 @@ export const Banner = () => {
       <Button size={"icon-sm"} className="absolute top-4 right-4">
         <MoreHorizontal />
       </Button>
-      <div className="absolute -bottom-6 left-4 flex h-24 w-24 items-center justify-center rounded-full border-2 border-black bg-white">
-        <Brain className="h-16 w-16" />
+      <div
+        className={cn(
+          "absolute flex items-center justify-center rounded-full border-2 border-black bg-white md:-bottom-6 md:left-4 md:h-24 md:w-24",
+          "-bottom-4 left-2 h-16 w-16",
+        )}
+      >
+        <Brain className="h-12 w-12 md:h-16 md:w-16" />
       </div>
       <div
         className={cn(
-          "absolute right-4 bottom-4 flex flex-col items-end gap-2",
+          "absolute right-2 bottom-2 flex flex-col items-end gap-2 md:right-4 md:bottom-4",
           "md:flex-row",
         )}
       >

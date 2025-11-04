@@ -19,7 +19,9 @@
       "estimatedTime": "Estimated time to complete: {time}"
     },
     "QuestionList": {
-      "showQuestions": "Show Questions"
+      "showQuestions": "Show Questions",
+      "noQuestions": "No Questions",
+      "noQuestionsDescription": "Question preview is disabled or there are no questions to display"
     }
   }
 }

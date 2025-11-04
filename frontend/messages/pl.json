@@ -19,7 +19,9 @@
       "estimatedTime": "Szacowany czas ukończenia: {time}"
     },
     "QuestionList": {
-      "showQuestions": "Pokaż pytania"
+      "showQuestions": "Pokaż pytania",
+      "noQuestions": "Brak pytań",
+      "noQuestionsDescription": "Podgląd pytań jest wyłączony lub brak pytań do wyświetlenia"
     }
   }
 }
