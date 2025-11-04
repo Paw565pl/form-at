@@ -12,11 +12,13 @@ import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.PostPolicy;
+import io.minio.RemoveObjectsArgs;
 import io.minio.StatObjectArgs;
 import io.minio.Time;
 import io.minio.errors.ErrorResponseException;
 import io.minio.errors.MinioException;
 import io.minio.http.Method;
+import io.minio.messages.DeleteObject;
 import jakarta.annotation.PostConstruct;
 import java.io.IOException;
 import java.security.InvalidKeyException;
@@ -144,6 +146,23 @@ public class UploadService {
         } catch (MinioException | InvalidKeyException | IOException | NoSuchAlgorithmException e) {
             log.error("Could not create GET presigned url for key {}", key, e);
             return null;
+        }
+    }
+
+    public void deleteAllByKeys(List<String> keys) {
+        val deleteObjects = keys.stream().map(DeleteObject::new).toList();
+        val removeObjects = minioClient.removeObjects(RemoveObjectsArgs.builder()
+                .bucket(minioProperties.getBucketName())
+                .objects(deleteObjects)
+                .build());
+
+        for (val removeObject : removeObjects) {
+            try {
+                val error = removeObject.get();
+                if (error != null) log.error("Error while removing file for key {}", error.objectName());
+            } catch (MinioException | InvalidKeyException | IOException | NoSuchAlgorithmException e) {
+                log.error("Caught exception while removing file", e);
+            }
         }
     }
 }

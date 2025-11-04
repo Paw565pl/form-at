@@ -1,14 +1,8 @@
 package format.backend.storage.job;
 
-import format.backend.storage.properties.MinioProperties;
+import format.backend.storage.entity.PendingUploadEntity;
 import format.backend.storage.repository.PendingUploadRepository;
-import io.minio.MinioClient;
-import io.minio.RemoveObjectsArgs;
-import io.minio.errors.MinioException;
-import io.minio.messages.DeleteObject;
-import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
+import format.backend.storage.service.UploadService;
 import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,9 +16,8 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 class PendingUploadCleanupJob {
 
-    private final MinioClient minioClient;
-    private final MinioProperties minioProperties;
     private final PendingUploadRepository pendingUploadRepository;
+    private final UploadService uploadService;
 
     private static final int BATCH_SIZE = 500;
 
@@ -39,23 +32,10 @@ class PendingUploadCleanupJob {
         var expiredPendingUploads = pendingUploadRepository.findAllByExpiresAtBefore(now, pageable);
 
         while (expiredPendingUploads.hasContent()) {
-            val deleteObjects = expiredPendingUploads.stream()
-                    .map(upload -> new DeleteObject(upload.getKey()))
+            val keys = expiredPendingUploads.stream()
+                    .map(PendingUploadEntity::getKey)
                     .toList();
-
-            val removeObjects = minioClient.removeObjects(RemoveObjectsArgs.builder()
-                    .bucket(minioProperties.getBucketName())
-                    .objects(deleteObjects)
-                    .build());
-            for (val removeObject : removeObjects) {
-                try {
-                    val error = removeObject.get();
-                    if (error != null)
-                        log.error("Error while removing expired pending upload for key {}", error.objectName());
-                } catch (MinioException | InvalidKeyException | IOException | NoSuchAlgorithmException e) {
-                    log.error("Caught exception while removing expired pending upload", e);
-                }
-            }
+            uploadService.deleteAllByKeys(keys);
 
             pendingUploadRepository.deleteAll(expiredPendingUploads);
             deletedCount += expiredPendingUploads.getNumberOfElements();
