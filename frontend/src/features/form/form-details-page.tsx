@@ -20,7 +20,7 @@ import { useTranslations } from "next-intl";
 
 const form: FormResponseDto = {
   id: "1",
-  name: "Formularz 1 Formularz 1 Formularz 1 Formularz 1 Formularz 1 Formularz 1 Formularz 1 Formularz 1 Formularz 1 ",
+  name: "Formularz 1",
   slug: "formularz-1",
   description: "Opis formularza 1",
   language: Language.Pl,
