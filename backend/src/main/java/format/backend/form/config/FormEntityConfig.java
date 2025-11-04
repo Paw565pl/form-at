@@ -2,6 +2,7 @@ package format.backend.form.config;
 
 import format.backend.form.entity.FormEntity;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -10,6 +11,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.index.TextIndexDefinition;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 class FormEntityConfig implements ApplicationRunner {
@@ -18,6 +20,8 @@ class FormEntityConfig implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
+        val indexOps = mongoTemplate.indexOps(FormEntity.class);
+
         val textIndexName = "forms_text_idx";
         val textIndexDefinition = TextIndexDefinition.builder()
                 .named(textIndexName)
@@ -27,12 +31,14 @@ class FormEntityConfig implements ApplicationRunner {
                 .withLanguageOverride("language")
                 .build();
 
-        val indexOps = mongoTemplate.indexOps(FormEntity.class);
-
         try {
             indexOps.createIndex(textIndexDefinition);
         } catch (DataIntegrityViolationException e) {
-            // index already exists
+            log.warn(
+                    "Text index '{}' was found with a different definition. Dropping and recreating.",
+                    textIndexName,
+                    e);
+
             indexOps.dropIndex(textIndexName);
             indexOps.createIndex(textIndexDefinition);
         }
