@@ -1,0 +1,20 @@
+meta {
+  name: Delete
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{baseUrl}}/api/v1/forms/:idOrSlug
+  body: none
+  auth: inherit
+}
+
+params:path {
+  idOrSlug: 6904ceba26900778a3e41fbd
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

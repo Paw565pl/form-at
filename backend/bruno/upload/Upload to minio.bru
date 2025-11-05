@@ -1,0 +1,28 @@
+meta {
+  name: Upload to minio
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:9000/uploads
+  body: multipartForm
+  auth: none
+}
+
+body:multipart-form {
+  filename: test.jpg
+  x-amz-date: 20251101T165912Z
+  x-amz-signature: 1bc5302545595dcfa233a37ea7c4dbfcee358eb9ca3c01edd3cbe0d8c892e6a8
+  x-amz-algorithm: AWS4-HMAC-SHA256
+  key: 28f1a125-59d9-4e7a-8d74-0ccbc15c3ac2/jelonek.jpg
+  x-amz-credential: root/20251101/us-east-1/s3/aws4_request
+  policy: eyJleHBpcmF0aW9uIjoiMjAyNS0xMS0wMVQxNzowOToxMi43MzhaIiwiY29uZGl0aW9ucyI6W1siZXEiLCIkYnVja2V0IiwidXBsb2FkcyJdLFsiZXEiLCIka2V5IiwiMjhmMWExMjUtNTlkOS00ZTdhLThkNzQtMGNjYmMxNWMzYWMyL2plbG9uZWsuanBnIl0sWyJlcSIsIiRmaWxlTmFtZSIsImplbG9uZWsuanBnIl0sWyJlcSIsIiRDb250ZW50LVR5cGUiLCJpbWFnZS9qcGVnIl0sWyJjb250ZW50LWxlbmd0aC1yYW5nZSIsMSwxMDQ4NTc2MF0sWyJlcSIsIiR4LWFtei1hbGdvcml0aG0iLCJBV1M0LUhNQUMtU0hBMjU2Il0sWyJlcSIsIiR4LWFtei1jcmVkZW50aWFsIiwicm9vdC8yMDI1MTEwMS91cy1lYXN0LTEvczMvYXdzNF9yZXF1ZXN0Il0sWyJlcSIsIiR4LWFtei1kYXRlIiwiMjAyNTExMDFUMTY1OTEyWiJdXX0=
+  Content-Type: image/jpeg
+  file: @file()
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

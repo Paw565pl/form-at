@@ -1,7 +1,13 @@
+import { AuthButton } from "@/core/components/auth-button/auth-button";
 import { useTranslations } from "next-intl";
 
 export const RootPage = () => {
-  const t = useTranslations("RootPage");
+  const t = useTranslations("rootPage");
 
-  return <div>{t("message")}</div>;
+  return (
+    <>
+      <AuthButton />
+      <div>{t("message")}</div>
+    </>
+  );
 };

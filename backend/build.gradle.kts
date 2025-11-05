@@ -3,8 +3,8 @@ import com.diffplug.spotless.LineEnding
 plugins {
     java
     idea
-    id("org.springframework.boot") version "3.5.6"
-    id("org.springframework.boot.aot") version "3.5.6" apply false
+    id("org.springframework.boot") version "3.5.7"
+    id("org.springframework.boot.aot") version "3.5.7" apply false
     id("io.spring.dependency-management") version "1.1.7"
     id("se.solrike.sonarlint") version "2.2.0"
     id("com.diffplug.spotless") version "8.0.0"
@@ -39,7 +39,7 @@ spotless {
         removeUnusedImports()
         importOrder()
         cleanthat()
-        palantirJavaFormat("2.80.0")
+        palantirJavaFormat("2.81.0")
         trimTrailingWhitespace()
         leadingTabsToSpaces()
         endWithNewline()
@@ -71,6 +71,8 @@ repositories {
 
 val mapstructVersion = "1.6.3"
 val springdocVersion = "2.8.13"
+val slugifyVersion = "3.0.7"
+val minioVersion = "8.6.0"
 val dataFakerVersion = "2.5.2"
 val sonarlintVersion = "8.9.3.40165"
 
@@ -83,6 +85,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
     implementation("org.mapstruct:mapstruct:$mapstructVersion")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdocVersion")
+    implementation("com.github.slugify:slugify:$slugifyVersion")
+    implementation("io.minio:minio:$minioVersion")
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")

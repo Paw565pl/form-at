@@ -1,0 +1,20 @@
+meta {
+  name: Find By Id or Slug
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/v1/forms/:idOrSlug
+  body: none
+  auth: inherit
+}
+
+params:path {
+  idOrSlug: quiz-about-cats
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

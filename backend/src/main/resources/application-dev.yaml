@@ -3,11 +3,21 @@ spring:
     mongodb:
       uri: mongodb://root:password@mongodb:27017/format?authSource=admin
 
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:7000/realms/form-at
+          jwk-set-uri: http://keycloak:7000/realms/form-at/protocol/openid-connect/certs
+          audiences: ["spring-boot-backend"]
+
 logging:
   level:
     data: debug
     org:
       springframework:
+        security:
+          oauth2: debug
         data:
           mongodb:
             core:
@@ -15,5 +25,19 @@ logging:
             repository:
               query: debug
 
+springdoc:
+  api-docs:
+    path: /api/docs
+
+  swagger-ui:
+    path: /swagger-ui.html
+
 cors:
   allowed-origins: "*"
+
+minio:
+  endpoint: http://minio:9000
+  public-endpoint: http://localhost:9000
+  access-key: root
+  secret-key: password
+  bucket-name: uploads

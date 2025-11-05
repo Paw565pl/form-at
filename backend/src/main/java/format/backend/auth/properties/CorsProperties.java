@@ -16,7 +16,9 @@ import org.springframework.validation.annotation.Validated;
 @ConfigurationProperties("cors")
 public class CorsProperties {
 
-    private @NotEmpty List<String> allowedHeaders = new ArrayList<>();
-    private @NotEmpty List<String> allowedMethods = new ArrayList<>();
-    private @NotEmpty List<String> allowedOrigins = new ArrayList<>();
+    @NotEmpty private List<String> allowedHeaders = new ArrayList<>();
+
+    @NotEmpty private List<String> allowedMethods = new ArrayList<>();
+
+    @NotEmpty private List<String> allowedOrigins = new ArrayList<>();
 }

@@ -1,3 +1,12 @@
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:7000/realms/form-at
+          jwk-set-uri: http://keycloak:7000/realms/form-at/protocol/openid-connect/certs
+          audiences: ["spring-boot-backend"]
+
 springdoc:
   api-docs:
     enabled: false
@@ -8,3 +17,10 @@ springdoc:
 logging:
   level:
     root: error
+
+minio:
+  endpoint: http://minio:9000
+  public-endpoint: http://localhost:9000
+  access-key: root
+  secret-key: password
+  bucket-name: uploads
