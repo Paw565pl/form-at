@@ -4,15 +4,22 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 import format.backend.auth.entity.Role;
+import format.backend.auth.entity.UserEntity;
 import format.backend.auth.jwt.KeycloakJwtClaims;
 import format.backend.auth.repository.UserRepository;
 import format.backend.comment.dto.CommentRequestDto;
 import format.backend.comment.dto.CommentResponseDto;
+import format.backend.comment.entity.CommentEntity;
+import format.backend.comment.exception.CommentNotFoundException;
+import format.backend.comment.exception.UserNotFoundException;
 import format.backend.comment.mapper.CommentMapper;
 import format.backend.comment.repository.CommentRepository;
+import format.backend.form.entity.FormEntity;
+import format.backend.form.exception.FormNotFoundException;
 import format.backend.form.repository.FormRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -24,24 +31,33 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 @RequiredArgsConstructor
 public class CommentService {
-    private static final String FORM_NOT_FOUND = "Form not found";
-    private static final String USER_NOT_FOUND = "User not found";
-    private static final String COMMENT_NOT_FOUND = "Comment not found";
     private static final String COMMENT_FORM_MISMATCH = "Comment doesn't match given form";
     private static final String NOT_AUTHOR = "You are not the author of this comment";
 
-    private final MongoTemplate mongoTemplate;
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final FormRepository formRepository;
     private final CommentMapper commentMapper;
 
-    public Page<CommentResponseDto> findAll(String formId, Pageable pageable) {
-        if (!formRepository.existsById(formId)) {
-            throw new ResponseStatusException(NOT_FOUND, FORM_NOT_FOUND);
-        }
+    private FormEntity findFormOrThrow(String idOrSlug) {
+        val form = ObjectId.isValid(idOrSlug) ? formRepository.findById(idOrSlug) : formRepository.findBySlug(idOrSlug);
+        return form.orElseThrow(() -> new FormNotFoundException(idOrSlug));
+    }
 
-        val  comments = commentRepository.findByFormId(formId, pageable);
+    private CommentEntity findCommentOrThrow(String id) {
+        val comment = commentRepository.findById(id);
+        return comment.orElseThrow(() -> new CommentNotFoundException(id));
+    }
+
+    private UserEntity findUserOrThrow(String userId) {
+        val user = userRepository.findById(userId);
+        return user.orElseThrow(() -> new UserNotFoundException(userId));
+    }
+
+    public Page<CommentResponseDto> findAll(String idOrSlug, Pageable pageable) {
+        findFormOrThrow(idOrSlug);
+
+        val comments = commentRepository.findByFormId(idOrSlug, pageable);
         if (comments.isEmpty()) {
             return Page.empty(pageable);
         }
@@ -50,14 +66,10 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentResponseDto create(String formId, KeycloakJwtClaims keycloakJwtClaims, CommentRequestDto commentRequestDto) {
-        val form = formRepository
-                .findById(formId)
-                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, FORM_NOT_FOUND));
+    public CommentResponseDto create(String idOrSlug, KeycloakJwtClaims keycloakJwtClaims, CommentRequestDto commentRequestDto) {
+        val form = findFormOrThrow(idOrSlug);
 
-        val user = userRepository
-                .findById(userId)
-                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, USER_NOT_FOUND));
+        val user = findUserOrThrow(keycloakJwtClaims.sub());
 
         val comment = commentMapper.toEntity(commentRequestDto);
         comment.setForm(form);
@@ -70,43 +82,32 @@ public class CommentService {
 
     @Transactional
     public CommentResponseDto update(
-            String formId, String commentId, KeycloakJwtClaims keycloakJwtClaims, CommentRequestDto commentRequestDto) {
-        val form = formRepository
-                .findById(formId)
-                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, FORM_NOT_FOUND));
+            String idOrSlug, String commentId, KeycloakJwtClaims keycloakJwtClaims, CommentRequestDto commentRequestDto) {
 
-        val user = userRepository
-                .findById(userId)
-                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, USER_NOT_FOUND));
-
-        val comment = commentRepository
-                .findById(commentId)
-                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, COMMENT_NOT_FOUND));
+        val form = findFormOrThrow(idOrSlug);
+        val comment = findCommentOrThrow(commentId);
 
         if (!comment.getForm().getId().equals(form.getId())) {
             throw new ResponseStatusException(NOT_FOUND, COMMENT_FORM_MISMATCH);
         }
 
-        if (comment.getAuthor() == null || !comment.getAuthor().getId().equals(user.getId())) {
+        val canUpdate = comment.getAuthor().getId().equals(keycloakJwtClaims.sub())
+                || keycloakJwtClaims.roles().contains(Role.ADMIN);
+        if (!canUpdate) {
             throw new ResponseStatusException(FORBIDDEN, NOT_AUTHOR);
         }
 
-        comment.setContent(commentRequestDto.getContent());
+        commentMapper.updateEntityFromDto(commentRequestDto, comment);
 
         val updated = commentRepository.save(comment);
-
         return commentMapper.toResponseDto(updated);
     }
 
     @Transactional
-    public void delete(String formId, String commentId, KeycloakJwtClaims keycloakJwtClaims) {
-        val form = formRepository
-                .findById(formId)
-                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, FORM_NOT_FOUND));
+    public void delete(String idOrSlug, String commentId, KeycloakJwtClaims keycloakJwtClaims) {
+        val form = findFormOrThrow(idOrSlug);
 
-        val comment = commentRepository
-                .findById(commentId)
-                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, COMMENT_NOT_FOUND));
+        val comment = findCommentOrThrow(commentId);
 
         if (!comment.getForm().getId().equals(form.getId())) {
             throw new ResponseStatusException(NOT_FOUND, COMMENT_FORM_MISMATCH);
@@ -114,7 +115,7 @@ public class CommentService {
 
         val canDelete = comment.getAuthor().getId().equals(keycloakJwtClaims.sub())
                 || keycloakJwtClaims.roles().contains(Role.ADMIN);
-        if (!canDelete) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        if (!canDelete) throw new ResponseStatusException(HttpStatus.FORBIDDEN, NOT_AUTHOR);
 
         commentRepository.delete(comment);
     }

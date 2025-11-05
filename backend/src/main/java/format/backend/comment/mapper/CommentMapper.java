@@ -6,6 +6,7 @@ import format.backend.comment.entity.CommentEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
+import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface CommentMapper {
@@ -19,4 +20,11 @@ public interface CommentMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     CommentEntity toEntity(CommentRequestDto commentRequestDto);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "author", ignore = true)
+    @Mapping(target = "form", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    void updateEntityFromDto(CommentRequestDto commentRequestDto, @MappingTarget CommentEntity entity);
 }
