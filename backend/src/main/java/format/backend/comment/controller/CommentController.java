@@ -3,6 +3,7 @@ package format.backend.comment.controller;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
 import format.backend.auth.annotation.IsAuthenticated;
+import format.backend.auth.jwt.KeycloakJwtClaimsExtractor;
 import format.backend.comment.dto.CommentRequestDto;
 import format.backend.comment.dto.CommentResponseDto;
 import format.backend.comment.service.CommentService;
@@ -16,7 +17,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,16 +27,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/forms/{formId}/comments")
 public class CommentController {
+    private final KeycloakJwtClaimsExtractor keycloakJwtClaimsExtractor;
     private final CommentService commentService;
 
     @GetMapping
     public Page<CommentResponseDto> findAll(
-            @AuthenticationPrincipal Jwt jwt,
             @NotBlank @ValidFormId @PathVariable String formId,
             @PageableDefault(size = 10, sort = "createdAt", direction = DESC) Pageable pageable) {
         return commentService.findAll(formId, pageable);
@@ -48,8 +47,7 @@ public class CommentController {
             @AuthenticationPrincipal Jwt jwt,
             @NotBlank @ValidFormId @PathVariable String formId,
             @Valid @RequestBody CommentRequestDto commentRequestDto) {
-        String userId = jwt.getClaimAsString("sub");
-        return commentService.create(formId, commentRequestDto, userId);
+        return commentService.create(formId, keycloakJwtClaimsExtractor.getClaims(jwt), commentRequestDto);
     }
 
     @IsAuthenticated
@@ -59,8 +57,7 @@ public class CommentController {
             @NotBlank @ValidFormId @PathVariable String formId,
             @NotBlank @PathVariable String commentId,
             @Valid @RequestBody CommentRequestDto commentRequestDto) {
-        String userId = jwt.getClaimAsString("sub");
-        return commentService.update(formId, commentId, commentRequestDto, userId);
+        return commentService.update(formId, commentId, keycloakJwtClaimsExtractor.getClaims(jwt), commentRequestDto);
     }
 
     @IsAuthenticated
@@ -70,7 +67,6 @@ public class CommentController {
             @AuthenticationPrincipal Jwt jwt,
             @NotBlank @ValidFormId @PathVariable String formId,
             @NotBlank @PathVariable String commentId) {
-        String userId = jwt.getClaimAsString("sub");
-        commentService.delete(formId, commentId, userId);
+        commentService.delete(formId, commentId, keycloakJwtClaimsExtractor.getClaims(jwt));
     }
 }

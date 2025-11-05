@@ -3,6 +3,8 @@ package format.backend.comment.service;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
+import format.backend.auth.entity.Role;
+import format.backend.auth.jwt.KeycloakJwtClaims;
 import format.backend.auth.repository.UserRepository;
 import format.backend.comment.dto.CommentRequestDto;
 import format.backend.comment.dto.CommentResponseDto;
@@ -14,6 +16,7 @@ import lombok.val;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -47,7 +50,7 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentResponseDto create(String formId, CommentRequestDto commentRequestDto, String userId) {
+    public CommentResponseDto create(String formId, KeycloakJwtClaims keycloakJwtClaims, CommentRequestDto commentRequestDto) {
         val form = formRepository
                 .findById(formId)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, FORM_NOT_FOUND));
@@ -67,7 +70,7 @@ public class CommentService {
 
     @Transactional
     public CommentResponseDto update(
-            String formId, String commentId, CommentRequestDto commentRequestDto, String userId) {
+            String formId, String commentId, KeycloakJwtClaims keycloakJwtClaims, CommentRequestDto commentRequestDto) {
         val form = formRepository
                 .findById(formId)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, FORM_NOT_FOUND));
@@ -96,14 +99,10 @@ public class CommentService {
     }
 
     @Transactional
-    public void delete(String formId, String commentId, String userId) {
+    public void delete(String formId, String commentId, KeycloakJwtClaims keycloakJwtClaims) {
         val form = formRepository
                 .findById(formId)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, FORM_NOT_FOUND));
-
-        val user = userRepository
-                .findById(userId)
-                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, USER_NOT_FOUND));
 
         val comment = commentRepository
                 .findById(commentId)
@@ -113,9 +112,9 @@ public class CommentService {
             throw new ResponseStatusException(NOT_FOUND, COMMENT_FORM_MISMATCH);
         }
 
-        if (comment.getAuthor() == null || !comment.getAuthor().getId().equals(user.getId())) {
-            throw new ResponseStatusException(FORBIDDEN, NOT_AUTHOR);
-        }
+        val canDelete = comment.getAuthor().getId().equals(keycloakJwtClaims.sub())
+                || keycloakJwtClaims.roles().contains(Role.ADMIN);
+        if (!canDelete) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 
         commentRepository.delete(comment);
     }

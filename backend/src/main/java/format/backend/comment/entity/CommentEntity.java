@@ -31,11 +31,11 @@ public class CommentEntity {
 
     @DocumentReference(lazy = true)
     @Nullable @Field(name = "authorId")
-    private UserEntity authorId;
+    private UserEntity author;
 
     @DocumentReference(lazy = true)
     @Field(name = "formId")
-    @NonNull private FormEntity formId;
+    @NonNull private FormEntity form;
 
     @NonNull @Field(name = "content")
     private String content;
