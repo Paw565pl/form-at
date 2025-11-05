@@ -14,5 +14,4 @@ public record CommentResponseDto(
 
         @NonNull Instant createdAt,
 
-        @NonNull Instant updatedAt
-) {}
+        @NonNull Instant updatedAt) {}
