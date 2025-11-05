@@ -3,14 +3,16 @@ package format.backend.comment.dto;
 import java.time.Instant;
 import org.springframework.lang.NonNull;
 
-public class CommentResponseDto {
-    @NonNull private String id;
+public record CommentResponseDto(
+        @NonNull String id,
 
-    @NonNull private String authorName;
+        @NonNull String formId,
 
-    @NonNull private String content;
+        @NonNull String authorName,
 
-    @NonNull private Instant createdAt;
+        @NonNull String content,
 
-    @NonNull private Instant updatedAt;
-}
+        @NonNull Instant createdAt,
+
+        @NonNull Instant updatedAt
+) {}
