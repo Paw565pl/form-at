@@ -1,0 +1,21 @@
+meta {
+  name: Delete
+  type: http
+  seq: 4
+}
+
+delete {
+  url: {{baseUrl}}/api/v1/forms/:formIdOrSlug/comments/:commentId
+  body: none
+  auth: inherit
+}
+
+params:path {
+  commentId: 690bb5bd5fa0d85411437150
+  formIdOrSlug: 690bafd513bb16a31f215b3a
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

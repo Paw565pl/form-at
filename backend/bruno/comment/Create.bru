@@ -1,0 +1,26 @@
+meta {
+  name: Create
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/v1/forms/:formIdOrSlug/comments
+  body: json
+  auth: inherit
+}
+
+params:path {
+  formIdOrSlug: 690bafd513bb16a31f215b3a
+}
+
+body:json {
+  {
+    "content": "Test comment"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
