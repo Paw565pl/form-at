@@ -1,0 +1,73 @@
+meta {
+  name: Update
+  type: http
+  seq: 6
+}
+
+put {
+  url: {{baseUrl}}/api/v1/forms/:idOrSlug
+  body: json
+  auth: inherit
+}
+
+params:path {
+  idOrSlug: 6904ceba26900778a3e41fbd
+}
+
+body:json {
+  {
+    "name": "my example form",
+    "description": null,
+    "language": "EN",
+    "status": "PUBLIC",
+    "password": null,
+    "shuffleVariant": null,
+    "thanksMessage": null,
+    "estimatedDuration": "PT10M",
+    "thumbnailKey": null,
+    "allowsQuestionsPreview": true,
+    "allowsGuestSubmissions": true,
+    "saveSubmissions": false,
+    "questions": [
+      {
+        "content": "first question updated",
+        "type": "OPEN",
+        "imageKey": null,
+        "isRequired": true,
+        "answers": []
+      },
+      {
+        "content": "second question",
+        "type": "OPEN",
+        "imageKey": null,
+        "isRequired": true,
+        "answers": []
+      },
+      {
+        "content": "third question",
+        "type": "MULTIPLE_CHOICE",
+        "imageKey": null,
+        "isRequired": true,
+        "answers": [
+          {
+            "content": "answer 1",
+            "isCorrect": true
+          },
+          {
+            "content": "answer 2",
+            "isCorrect": false
+          },
+          {
+            "content": "answer 3",
+            "isCorrect": true
+          }
+        ]
+      }
+    ]
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -14,9 +14,10 @@ import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.annotation.ReadOnlyProperty;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.annotation.Version;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -29,6 +30,13 @@ import org.springframework.lang.Nullable;
 @Setter
 @RequiredArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@CompoundIndex(
+        def = "{'status': 1, 'allowsGuestSubmissions': 1, 'language': 1, 'updatedAt': -1, 'estimatedDuration': 1}")
+@CompoundIndex(
+        def = "{'status': 1, 'allowsGuestSubmissions': 1, 'language': 1, 'createdAt': -1, 'estimatedDuration': 1}")
+@CompoundIndex(
+        def =
+                "{'status': 1, 'allowsGuestSubmissions': 1, 'language': 1, 'submissionsCount': -1, 'estimatedDuration': 1}")
 @Document(collection = "forms")
 public class FormEntity {
 
@@ -37,19 +45,20 @@ public class FormEntity {
     private String id;
 
     @Field(name = "name")
-    @TextIndexed(weight = 2.0F)
     @NonNull private String name;
 
-    @Field(name = "slug")
     @Indexed(unique = true)
+    @Field(name = "slug")
     @NonNull private String slug;
 
     @Field(name = "description")
-    @TextIndexed(weight = 1.0F)
     @Nullable private String description;
 
+    @org.springframework.data.mongodb.core.mapping.Language
+    @Field(name = "language")
+    @NonNull private String language;
+
     @Field(name = "status")
-    @Indexed
     @NonNull private FormStatus status;
 
     @Field(name = "passwordHash")
@@ -101,4 +110,14 @@ public class FormEntity {
     @Version
     @Field(name = "version")
     private Long version;
+
+    @Transient
+    @NonNull public Language getLanguage() {
+        return Language.fromMongoValue(language)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid language mongo value: " + language));
+    }
+
+    public void setLanguage(@NonNull Language language) {
+        this.language = language.getMongoValue();
+    }
 }

@@ -1,0 +1,22 @@
+meta {
+  name: Request upload
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/v1/upload/request
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "fileName": "test.jpg"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
