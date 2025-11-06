@@ -18,13 +18,13 @@ export const ListView = () => {
             <header className="flex flex-wrap items-center justify-between gap-1">
               <h1 className="font-medium">{form.name}</h1>
               <span className="text-muted-foreground text-sm">
-                {t("by")} {form.author.name}
+                {t("by")} {form.author?.name}
               </span>
             </header>
             <p className="text-sm lg:mr-36">{form.description}</p>
             <footer className="text-muted-foreground mt-1 flex flex-wrap justify-between text-sm">
               <span>
-                {t("questions", { count: form.questionsCount || 0 })} •{" "}
+                {t("questions", { count: form.questions.length })} •{" "}
                 {t("submissions", { count: form.submissionsCount })} •{" "}
                 {form.estimatedDuration} min
               </span>

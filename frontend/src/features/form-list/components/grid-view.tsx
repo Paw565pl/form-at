@@ -27,7 +27,7 @@ export const GridView = () => {
               <header className="bg-card flex flex-wrap items-center justify-between">
                 <h1 className="font-medium">{form.name}</h1>
                 <span className="text-muted-foreground text-sm">
-                  {t("by")} {form.author.name}
+                  {t("by")} {form.author?.name}
                 </span>
               </header>
               <p className="line-clamp-4 overflow-hidden text-sm">
@@ -35,7 +35,7 @@ export const GridView = () => {
               </p>
               <footer className="text-muted-foreground mt-auto flex flex-wrap justify-between gap-1 text-sm">
                 <span>
-                  {t("questions", { count: form.questionsCount || 0 })} •{" "}
+                  {t("questions", { count: form.questions.length })} •{" "}
                   {t("submissions", { count: form.submissionsCount })}
                 </span>
                 <span className="text-muted-foreground text-sm">
