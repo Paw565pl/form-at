@@ -1,5 +1,5 @@
-import { AnswerResponseDto } from "@/features/form/types/answer-response-dto";
-import { QuestionType } from "@/features/form/types/question-type";
+import { AnswerResponseDto } from "@/features/form-details/types/answer-response-dto";
+import { QuestionType } from "@/features/form-details/types/question-type";
 
 export interface QuestionResponseDto {
   id: string;

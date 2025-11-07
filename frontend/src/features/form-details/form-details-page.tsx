@@ -5,16 +5,16 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/core/components/ui/empty";
-import { Banner } from "@/features/form/components/banner";
-import { Details } from "@/features/form/components/details";
-import { QuestionList } from "@/features/form/components/question-list";
+import { Banner } from "@/features/form-details/components/banner";
+import { Details } from "@/features/form-details/components/details";
+import { QuestionList } from "@/features/form-details/components/question-list";
 import {
   FormResponseDto,
   FormStatus,
   Language,
   ShuffleVariant,
-} from "@/features/form/types/form-response-dto";
-import { QuestionType } from "@/features/form/types/question-type";
+} from "@/features/form-details/types/form-response-dto";
+import { QuestionType } from "@/features/form-details/types/question-type";
 import { MessageSquareX } from "lucide-react";
 import { useTranslations } from "next-intl";
 

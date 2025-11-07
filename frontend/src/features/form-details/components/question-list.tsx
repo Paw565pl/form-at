@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/core/components/ui/button";
-import { Question } from "@/features/form/components/question";
-import { QuestionResponseDto } from "@/features/form/types/question-response-dto";
+import { Question } from "@/features/form-details/components/question";
+import { QuestionResponseDto } from "@/features/form-details/types/question-response-dto";
 import { ChevronDown } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";

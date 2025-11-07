@@ -1,5 +1,5 @@
 import { Badge } from "@/core/components/ui/badge";
-import { FormResponseDto } from "@/features/form/types/form-response-dto";
+import { FormResponseDto } from "@/features/form-details/types/form-response-dto";
 import {
   BadgeQuestionMark,
   ClockArrowUp,
