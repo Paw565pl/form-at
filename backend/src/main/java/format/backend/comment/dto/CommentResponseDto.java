@@ -6,8 +6,6 @@ import org.springframework.lang.NonNull;
 public record CommentResponseDto(
         @NonNull String id,
 
-        @NonNull String formId,
-
         @NonNull String authorName,
 
         @NonNull String content,

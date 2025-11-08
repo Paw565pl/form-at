@@ -11,7 +11,6 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface CommentMapper {
     @Mapping(target = "authorName", source = "comment.author.username")
-    @Mapping(target = "formId", source = "comment.form.id")
     CommentResponseDto toResponseDto(CommentEntity comment);
 
     @Mapping(target = "id", ignore = true)
