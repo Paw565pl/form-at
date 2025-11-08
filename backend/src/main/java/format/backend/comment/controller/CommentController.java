@@ -57,7 +57,8 @@ public class CommentController {
             @ValidFormId @PathVariable String formIdOrSlug,
             @PathVariable String commentId,
             @Valid @RequestBody CommentRequestDto commentRequestDto) {
-        return commentService.update(formIdOrSlug, commentId, keycloakJwtClaimsExtractor.getClaims(jwt), commentRequestDto);
+        return commentService.update(
+                formIdOrSlug, commentId, keycloakJwtClaimsExtractor.getClaims(jwt), commentRequestDto);
     }
 
     @IsAuthenticated

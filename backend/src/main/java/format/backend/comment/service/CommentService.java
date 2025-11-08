@@ -45,8 +45,7 @@ public class CommentService {
     }
 
     private UserEntity findUserOrThrow(String userId) {
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN));
+        return userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN));
     }
 
     public Page<CommentResponseDto> findAll(String idOrSlug, Pageable pageable) {
