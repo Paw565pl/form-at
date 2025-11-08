@@ -10,16 +10,16 @@
   },
   "PublicFormView": {
     "Banner": {
-      "takeTheQuiz": "Wykonaj Quiz",
-      "enterTheCode": "Wprowadź kod do quizu",
-      "codeDescription": "Ten quiz jest zabezpieczony hasłem, zapytaj twórcę quizu o hasło",
+      "fillOutForm": "Wypełnij formularz",
+      "enterTheCode": "Wprowadź kod do formularza",
+      "codeDescription": "Ten formularz jest zabezpieczony hasłem, zapytaj twórcę formularza o hasło",
       "code": "Kod",
       "cancel": "Anuluj",
       "saveChanges": "Zapisz zmiany",
-      "fillAnonymously": "Wykonaj Quiz anonimowo"
+      "fillAnonymously": "Wypełnij formularz anonimowo"
     },
     "Details": {
-      "quizFinished": "Quiz został wykonany: {finishedAt}",
+      "formFinished": "Formularz został wykonany: {finishedAt}",
       "questionsCount": "ilość pytań: {count}",
       "submissionsCount": "ilość zgłoszeń: {count}",
       "estimatedTime": "Szacowany czas ukończenia: {time}"

@@ -1,4 +1,5 @@
-import { QuestionResponseDto } from "@/features/form-details/types/question-response-dto";
+import { QuestionResponseDto } from "@/core/types/question";
+import { User } from "@/features/auth/types/user";
 
 export enum FormStatus {
   Public = "PUBLIC",
@@ -27,16 +28,17 @@ export interface FormResponseDto {
   description?: string;
   language: Language;
   status: FormStatus;
-  shuffleVariant: ShuffleVariant;
-  thanksMessage: string;
+  shuffleVariant?: ShuffleVariant;
+  thanksMessage?: string;
   estimatedDuration: number;
-  thumbnailKey: string;
-  allowsQuestionPreview: boolean;
+  thumbnailKey?: string;
+  allowsQuestionsPreview: boolean;
   allowsGuestSubmissions: boolean;
   saveSubmissions: boolean;
   authorId: string;
-  createdAt: string;
-  updatedAt: string;
-  submissionCount: number;
+  author?: User;
+  createdAt: Date;
+  updatedAt: Date;
+  submissionsCount: number;
   questions: QuestionResponseDto[];
 }

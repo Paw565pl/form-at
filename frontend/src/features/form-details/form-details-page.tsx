@@ -5,16 +5,17 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/core/components/ui/empty";
-import { Banner } from "@/features/form-details/components/banner";
-import { Details } from "@/features/form-details/components/details";
-import { QuestionList } from "@/features/form-details/components/question-list";
 import {
   FormResponseDto,
   FormStatus,
   Language,
   ShuffleVariant,
-} from "@/features/form-details/types/form-response-dto";
-import { QuestionType } from "@/features/form-details/types/question-type";
+} from "@/core/types/form";
+import { QuestionType } from "@/core/types/question";
+import { Banner } from "@/features/form-details/components/banner";
+import { Details } from "@/features/form-details/components/details";
+import { QuestionList } from "@/features/form-details/components/question-list";
+
 import { MessageSquareX } from "lucide-react";
 import { useTranslations } from "next-intl";
 
@@ -29,13 +30,13 @@ const form: FormResponseDto = {
   thanksMessage: "Dziękujemy za wypełnienie formularza!",
   estimatedDuration: 5 * 1000 * 60,
   thumbnailKey: "thumbnail-1",
-  allowsQuestionPreview: true,
+  allowsQuestionsPreview: true,
   allowsGuestSubmissions: false,
   saveSubmissions: true,
   authorId: "author-1",
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString(),
-  submissionCount: 0,
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  submissionsCount: 0,
   questions: [
     {
       id: "1",
@@ -69,11 +70,13 @@ const form: FormResponseDto = {
 const FormDetailsPage = () => {
   const t = useTranslations("PublicFormView.QuestionList");
   return (
-    <div className="mx-auto flex max-w-5xl flex-col items-center justify-center">
+    <main className="mx-auto flex max-w-5xl flex-col items-center justify-center">
       <div className="w-full px-4">
-        <Banner />
+        <Banner form={form} />
+
         <Details form={form} />
-        {form.questions && form.allowsQuestionPreview ? (
+
+        {form.questions && form.allowsQuestionsPreview ? (
           <QuestionList questions={form.questions} />
         ) : (
           <Empty className="my-4 border border-dashed">
@@ -87,7 +90,7 @@ const FormDetailsPage = () => {
           </Empty>
         )}
       </div>
-    </div>
+    </main>
   );
 };
 

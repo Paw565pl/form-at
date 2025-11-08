@@ -1,21 +1,22 @@
 import { Badge } from "@/core/components/ui/badge";
-import { FormResponseDto } from "@/features/form-details/types/form-response-dto";
+import { FormResponseDto } from "@/core/types/form";
 import {
   BadgeQuestionMark,
   ClockArrowUp,
   Lock,
   PersonStanding,
 } from "lucide-react";
-import ms from "ms";
-import { useTranslations } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 interface DetailsProps {
   form: FormResponseDto;
 }
 
 export const Details = ({ form }: DetailsProps) => {
+  const format = useFormatter();
   const t = useTranslations("PublicFormView.Details");
   return (
-    <div>
+    <main>
+      {/* form tags */}
       <div className="flex flex-wrap gap-2 md:gap-6">
         <div className="flex items-center gap-1">
           <BadgeQuestionMark />
@@ -26,19 +27,20 @@ export const Details = ({ form }: DetailsProps) => {
         <div className="flex items-center gap-1">
           <PersonStanding />
           <h2>
-            {t("submissionsCount", { count: form.submissionCount.toString() })}
+            {t("submissionsCount", { count: form.submissionsCount.toString() })}
           </h2>
         </div>
         <div className="flex items-center gap-1">
           <ClockArrowUp />
           <h2>
             {t("estimatedTime", {
-              time: ms(form.estimatedDuration),
+              time: form.estimatedDuration / 60 / 1000 + " min",
             })}
           </h2>
         </div>
       </div>
-      <div className="my-2 flex flex-col-reverse items-start justify-between md:flex-row">
+
+      <header className="my-2 flex flex-col-reverse items-start justify-between md:flex-row">
         <div className="flex flex-1 items-center gap-2">
           <h1 className="line-clamp-2 max-w-2xl text-4xl font-extrabold">
             {form.name}
@@ -46,11 +48,20 @@ export const Details = ({ form }: DetailsProps) => {
           {form.allowsGuestSubmissions ? null : <Lock className="flex-none" />}
         </div>
         <div className="flex flex-none items-center">
-          <Badge>{t("quizFinished", { finishedAt: "20.12.2025" })}</Badge>
+          {/* TODO take submission date from user's submission data */}
+          <Badge>{t("formFinished", { finishedAt: "20.12.2025" })}</Badge>
         </div>
-      </div>
+      </header>
+
       {form.description && <p>{form.description}</p>}
-      <p className="w-full text-right">{form.updatedAt}</p>
-    </div>
+      <br />
+      <p className="w-full text-right">
+        {format.dateTime(form.updatedAt, {
+          year: "numeric",
+          month: "numeric",
+          day: "numeric",
+        })}
+      </p>
+    </main>
   );
 };

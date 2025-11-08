@@ -1,5 +1,10 @@
-import { AnswerResponseDto } from "@/features/form-details/types/answer-response-dto";
-import { QuestionType } from "@/features/form-details/types/question-type";
+import { AnswerResponseDto } from "@/core/types/answer";
+
+export enum QuestionType {
+  Single = "SINGLE",
+  Multiple = "MULTIPLE",
+  Open = "OPEN",
+}
 
 export interface QuestionResponseDto {
   id: string;
