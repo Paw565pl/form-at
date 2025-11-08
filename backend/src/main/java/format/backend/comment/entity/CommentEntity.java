@@ -30,15 +30,15 @@ public class CommentEntity {
     private String id;
 
     @DocumentReference(lazy = true)
-    @Nullable @Field(name = "authorId")
-    private UserEntity author;
+    @Field(name = "authorId")
+    @Nullable private UserEntity author;
 
     @DocumentReference(lazy = true)
     @Field(name = "formId")
     @NonNull private FormEntity form;
 
-    @NonNull @Field(name = "content")
-    private String content;
+    @Field(name = "content")
+    @NonNull private String content;
 
     @CreatedDate
     @Field("createdAt")
