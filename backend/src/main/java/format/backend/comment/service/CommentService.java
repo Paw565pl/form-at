@@ -96,7 +96,7 @@ public class CommentService {
             throw new ResponseStatusException(FORBIDDEN);
         }
 
-        commentMapper.updateEntityFromDto(commentRequestDto, comment);
+        comment.setContent(commentRequestDto.content());
 
         val updated = commentRepository.save(comment);
         return commentMapper.toResponseDto(updated);
