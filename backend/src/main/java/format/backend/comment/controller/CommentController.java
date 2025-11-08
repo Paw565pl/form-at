@@ -29,35 +29,36 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/forms/{formId}/comments")
+@RequestMapping("/api/v1/forms/{formIdOrSlug}/comments")
 public class CommentController {
     private final KeycloakJwtClaimsExtractor keycloakJwtClaimsExtractor;
     private final CommentService commentService;
 
     @GetMapping
     public Page<CommentResponseDto> findAll(
-            @NotBlank @ValidFormId @PathVariable String formId,
-            @PageableDefault(size = 10, sort = "createdAt", direction = DESC) Pageable pageable) {
-        return commentService.findAll(formId, pageable);
+            @NotBlank @ValidFormId @PathVariable String formIdOrSlug,
+            @PageableDefault(size = 20, sort = "createdAt", direction = DESC) Pageable pageable) {
+        return commentService.findAll(formIdOrSlug, pageable);
     }
 
     @IsAuthenticated
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public CommentResponseDto create(
             @AuthenticationPrincipal Jwt jwt,
-            @NotBlank @ValidFormId @PathVariable String formId,
+            @NotBlank @ValidFormId @PathVariable String formIdOrSlug,
             @Valid @RequestBody CommentRequestDto commentRequestDto) {
-        return commentService.create(formId, keycloakJwtClaimsExtractor.getClaims(jwt), commentRequestDto);
+        return commentService.create(formIdOrSlug, keycloakJwtClaimsExtractor.getClaims(jwt), commentRequestDto);
     }
 
     @IsAuthenticated
     @PutMapping("/{commentId}")
     public CommentResponseDto update(
             @AuthenticationPrincipal Jwt jwt,
-            @NotBlank @ValidFormId @PathVariable String formId,
+            @NotBlank @ValidFormId @PathVariable String formIdOrSlug,
             @NotBlank @PathVariable String commentId,
             @Valid @RequestBody CommentRequestDto commentRequestDto) {
-        return commentService.update(formId, commentId, keycloakJwtClaimsExtractor.getClaims(jwt), commentRequestDto);
+        return commentService.update(formIdOrSlug, commentId, keycloakJwtClaimsExtractor.getClaims(jwt), commentRequestDto);
     }
 
     @IsAuthenticated
@@ -65,8 +66,8 @@ public class CommentController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(
             @AuthenticationPrincipal Jwt jwt,
-            @NotBlank @ValidFormId @PathVariable String formId,
+            @NotBlank @ValidFormId @PathVariable String formIdOrSlug,
             @NotBlank @PathVariable String commentId) {
-        commentService.delete(formId, commentId, keycloakJwtClaimsExtractor.getClaims(jwt));
+        commentService.delete(formIdOrSlug, commentId, keycloakJwtClaimsExtractor.getClaims(jwt));
     }
 }
