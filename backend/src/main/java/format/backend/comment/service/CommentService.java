@@ -50,9 +50,9 @@ public class CommentService {
     }
 
     public Page<CommentResponseDto> findAll(String idOrSlug, Pageable pageable) {
-        findFormOrThrow(idOrSlug);
+        val form = findFormOrThrow(idOrSlug);
 
-        val comments = commentRepository.findByFormId(idOrSlug, pageable);
+        val comments = commentRepository.findByFormId(form.getId(), pageable);
         if (comments.isEmpty()) {
             return Page.empty(pageable);
         }
