@@ -80,7 +80,7 @@ const FormDetailsPage = () => {
         {form.questions.length > 0 && form.allowsQuestionsPreview ? (
           <QuestionList questions={form.questions} />
         ) : (
-          <Empty className="my-4 border border-dashed">
+          <Empty className="border border-dashed py-4">
             <EmptyHeader>
               <EmptyMedia variant="icon">
                 <MessageSquareX />
