@@ -15,7 +15,7 @@ export const QuestionList = ({ questions }: QuestionListProps) => {
   const [showQuestions, setShowQuestions] = useState(true);
 
   return (
-    <div className="flex flex-col gap-2 py-2">
+    <div className="flex w-full flex-col gap-2 py-2">
       <div className="flex gap-2">
         <h1 className="text-xl">{t("showQuestions")}</h1>
         <Button

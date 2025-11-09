@@ -71,8 +71,8 @@ const FormDetailsPage = () => {
   const t = useTranslations("publicFormView.questionList");
 
   return (
-    <main className="mx-auto flex max-w-5xl flex-col items-center justify-center">
-      <div className="w-full px-4">
+    <main className="flex min-h-screen justify-center">
+      <div className="flex w-full max-w-3xl flex-col items-center justify-center px-4">
         <Banner form={form} />
 
         <Details form={form} />
@@ -80,7 +80,7 @@ const FormDetailsPage = () => {
         {form.questions.length > 0 && form.allowsQuestionsPreview ? (
           <QuestionList questions={form.questions} />
         ) : (
-          <Empty className="border border-dashed py-4">
+          <Empty className="w-full border border-dashed">
             <EmptyHeader>
               <EmptyMedia variant="icon">
                 <MessageSquareX />

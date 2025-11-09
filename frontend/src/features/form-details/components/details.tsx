@@ -16,7 +16,7 @@ export const Details = ({ form }: DetailsProps) => {
   const t = useTranslations("publicFormView.details");
 
   return (
-    <main>
+    <main className="w-full">
       {/* form tags */}
       <div className="flex flex-wrap gap-2 md:gap-6">
         <div className="flex items-center gap-1">
@@ -56,7 +56,7 @@ export const Details = ({ form }: DetailsProps) => {
 
       {form.description && <p>{form.description}</p>}
       <br />
-      <p className="w-full text-right">
+      <p className="w-full pb-4 text-right">
         {format.dateTime(form.updatedAt, {
           year: "numeric",
           month: "numeric",
