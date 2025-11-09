@@ -68,7 +68,8 @@ const form: FormResponseDto = {
 };
 
 const FormDetailsPage = () => {
-  const t = useTranslations("PublicFormView.QuestionList");
+  const t = useTranslations("publicFormView.questionList");
+
   return (
     <main className="mx-auto flex max-w-5xl flex-col items-center justify-center">
       <div className="w-full px-4">
@@ -76,7 +77,7 @@ const FormDetailsPage = () => {
 
         <Details form={form} />
 
-        {form.questions && form.allowsQuestionsPreview ? (
+        {form.questions.length > 0 && form.allowsQuestionsPreview ? (
           <QuestionList questions={form.questions} />
         ) : (
           <Empty className="my-4 border border-dashed">

@@ -8,8 +8,8 @@
       "signOut": "Sign Out"
     }
   },
-  "PublicFormView": {
-    "Banner": {
+  "publicFormView": {
+    "banner": {
       "fillOutForm": "Fill Out the Form",
       "enterTheCode": "Enter the Form Code",
       "codeDescription": "This form is protected by the code, ask the form maker for the code",
@@ -18,13 +18,13 @@
       "saveChanges": "Save changes",
       "fillAnonymously": "Fill Anonymously"
     },
-    "Details": {
+    "details": {
       "formFinished": "The form finished at: {finishedAt}",
       "questionsCount": "{count} question(s)",
       "submissionsCount": "{count} submission(s)",
       "estimatedTime": "Estimated time to complete: {time}"
     },
-    "QuestionList": {
+    "questionList": {
       "showQuestions": "Show Questions",
       "noQuestions": "No Questions",
       "noQuestionsDescription": "Question preview is disabled or there are no questions to display"

@@ -8,8 +8,8 @@
       "signOut": "Wyloguj"
     }
   },
-  "PublicFormView": {
-    "Banner": {
+  "publicFormView": {
+    "banner": {
       "fillOutForm": "Wypełnij formularz",
       "enterTheCode": "Wprowadź kod do formularza",
       "codeDescription": "Ten formularz jest zabezpieczony hasłem, zapytaj twórcę formularza o hasło",
@@ -18,13 +18,13 @@
       "saveChanges": "Zapisz zmiany",
       "fillAnonymously": "Wypełnij formularz anonimowo"
     },
-    "Details": {
+    "details": {
       "formFinished": "Formularz został wykonany: {finishedAt}",
       "questionsCount": "ilość pytań: {count}",
       "submissionsCount": "ilość zgłoszeń: {count}",
       "estimatedTime": "Szacowany czas ukończenia: {time}"
     },
-    "QuestionList": {
+    "questionList": {
       "showQuestions": "Pokaż pytania",
       "noQuestions": "Brak pytań",
       "noQuestionsDescription": "Podgląd pytań jest wyłączony lub brak pytań do wyświetlenia"

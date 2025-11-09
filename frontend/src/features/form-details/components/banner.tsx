@@ -22,7 +22,8 @@ interface BannerProps {
 }
 
 export const Banner = ({ form }: BannerProps) => {
-  const t = useTranslations("PublicFormView.Banner");
+  const t = useTranslations("publicFormView.banner");
+
   return (
     <main className="relative mb-7 flex h-48 w-full max-w-5xl items-end">
       {/* background image */}

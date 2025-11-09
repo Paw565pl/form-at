@@ -11,11 +11,11 @@ interface QuestionListProps {
 }
 
 export const QuestionList = ({ questions }: QuestionListProps) => {
-  const t = useTranslations("PublicFormView.QuestionList");
+  const t = useTranslations("publicFormView.questionList");
   const [showQuestions, setShowQuestions] = useState(true);
 
   return (
-    <div className="my-2 flex flex-col gap-2">
+    <div className="flex flex-col gap-2 py-2">
       <div className="flex gap-2">
         <h1 className="text-xl">{t("showQuestions")}</h1>
         <Button

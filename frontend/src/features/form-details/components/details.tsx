@@ -13,7 +13,8 @@ interface DetailsProps {
 
 export const Details = ({ form }: DetailsProps) => {
   const format = useFormatter();
-  const t = useTranslations("PublicFormView.Details");
+  const t = useTranslations("publicFormView.details");
+
   return (
     <main>
       {/* form tags */}
@@ -40,7 +41,7 @@ export const Details = ({ form }: DetailsProps) => {
         </div>
       </div>
 
-      <header className="my-2 flex flex-col-reverse items-start justify-between md:flex-row">
+      <header className="flex flex-col-reverse items-start justify-between py-2 md:flex-row">
         <div className="flex flex-1 items-center gap-2">
           <h1 className="line-clamp-2 max-w-2xl text-4xl font-extrabold">
             {form.name}
