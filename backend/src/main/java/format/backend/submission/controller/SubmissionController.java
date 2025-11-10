@@ -29,4 +29,11 @@ public class SubmissionController {
         return submissionService.findAllByFormIdOrSlug(
                 keycloakJwtClaimsExtractor.getClaims(jwt), formIdOrSlug, pageable);
     }
+
+    @IsAuthenticated
+    @GetMapping("/me")
+    public SubmissionResponseDto findByFormIdOrSlugAndAuthorId(
+            @AuthenticationPrincipal Jwt jwt, @PathVariable String formIdOrSlug) {
+        return submissionService.findByFormIdOrSlugAndAuthorId(keycloakJwtClaimsExtractor.getClaims(jwt), formIdOrSlug);
+    }
 }

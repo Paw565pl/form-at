@@ -9,5 +9,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 public interface SubmissionRepository extends MongoRepository<SubmissionEntity, String> {
     Page<SubmissionEntity> findAllByFormId(String formId, Pageable pageable);
 
-    Optional<SubmissionEntity> findByIdAndFormId(String id, String formId);
+    Optional<SubmissionEntity> findByFormIdAndAuthorId(String formId, String authorId);
 }

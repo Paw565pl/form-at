@@ -3,6 +3,7 @@ package format.backend.submission.service;
 import format.backend.auth.jwt.KeycloakJwtClaims;
 import format.backend.form.service.FormService;
 import format.backend.submission.dto.SubmissionResponseDto;
+import format.backend.submission.exception.SubmissionNotFoundForUserException;
 import format.backend.submission.mapper.SubmissionMapper;
 import format.backend.submission.repository.SubmissionRepository;
 import lombok.RequiredArgsConstructor;
@@ -34,5 +35,15 @@ public class SubmissionService {
                 PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Order.desc("_id"))));
 
         return submissions.map(submissionMapper::toResponseDto);
+    }
+
+    public SubmissionResponseDto findByFormIdOrSlugAndAuthorId(
+            KeycloakJwtClaims keycloakJwtClaims, String formIdOrSlug) {
+        val form = formService.findOrThrow(formIdOrSlug);
+        val submission = submissionRepository
+                .findByFormIdAndAuthorId(form.getId(), keycloakJwtClaims.sub())
+                .orElseThrow(() -> new SubmissionNotFoundForUserException(formIdOrSlug));
+
+        return submissionMapper.toResponseDto(submission);
     }
 }
