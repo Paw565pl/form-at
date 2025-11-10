@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -56,5 +57,13 @@ public class SubmissionController {
                 .map(keycloakJwtClaimsExtractor::getClaims)
                 .orElse(null);
         return submissionService.createByFormIdOrSlug(keycloakJwtClaims, formIdOrSlug, requestDto);
+    }
+
+    @IsAuthenticated
+    @DeleteMapping("/{submissionId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteByFormIdOrSlugAndSubmissionId(
+            @AuthenticationPrincipal Jwt jwt, @PathVariable String formIdOrSlug, @PathVariable String submissionId) {
+        submissionService.delete(keycloakJwtClaimsExtractor.getClaims(jwt), formIdOrSlug, submissionId);
     }
 }

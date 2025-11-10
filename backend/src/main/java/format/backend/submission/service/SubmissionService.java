@@ -13,6 +13,7 @@ import format.backend.submission.exception.NotExistingQuestionsAnswersException;
 import format.backend.submission.exception.RequiredQuestionsNotAnsweredException;
 import format.backend.submission.exception.SubmissionAlreadyCreatedForUserException;
 import format.backend.submission.exception.SubmissionAnswersValidationException;
+import format.backend.submission.exception.SubmissionNotFoundException;
 import format.backend.submission.exception.SubmissionNotFoundForUserException;
 import format.backend.submission.mapper.SubmissionMapper;
 import format.backend.submission.repository.SubmissionRepository;
@@ -197,5 +198,21 @@ public class SubmissionService {
         } catch (DataIntegrityViolationException e) {
             throw new SubmissionAlreadyCreatedForUserException(formIdOrSlug);
         }
+    }
+
+    @Transactional
+    public void delete(KeycloakJwtClaims keycloakJwtClaims, String formIdOrSlug, String submissionId) {
+        val form = formService.findOrThrow(formIdOrSlug);
+        val submission = submissionRepository
+                .findById(submissionId)
+                .orElseThrow(() -> new SubmissionNotFoundException(submissionId));
+
+        if (!form.getAuthor().getId().equals(keycloakJwtClaims.sub())
+                || !submission.getForm().getId().equals(form.getId()))
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+
+        submissionRepository.delete(submission);
+        form.setSubmissionsCount(form.getSubmissionsCount() - 1);
+        formRepository.save(form);
     }
 }
