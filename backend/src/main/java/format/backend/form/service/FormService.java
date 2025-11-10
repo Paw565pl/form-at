@@ -4,7 +4,6 @@ import com.github.slugify.Slugify;
 import format.backend.auth.entity.Role;
 import format.backend.auth.jwt.KeycloakJwtClaims;
 import format.backend.auth.repository.UserRepository;
-import format.backend.comment.entity.CommentEntity;
 import format.backend.comment.repository.CommentRepository;
 import format.backend.form.dto.AnswerRequestDto;
 import format.backend.form.dto.FormAccessRequestDto;

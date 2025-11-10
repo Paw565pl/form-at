@@ -56,8 +56,7 @@ public class CommentService {
         val sortedPageable = PageRequest.of(
                 pageable.getPageNumber(),
                 pageable.getPageSize(),
-                Sort.by(Sort.Order.desc("updatedAt"), Sort.Order.asc("_id"))
-        );
+                Sort.by(Sort.Order.desc("updatedAt"), Sort.Order.asc("_id")));
 
         val comments = commentRepository.findByFormId(form.getId(), sortedPageable);
 

@@ -20,4 +20,3 @@ public interface CommentMapper {
     @Mapping(target = "version", ignore = true)
     CommentEntity toEntity(CommentRequestDto commentRequestDto);
 }
-
