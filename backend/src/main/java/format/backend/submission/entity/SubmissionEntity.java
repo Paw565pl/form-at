@@ -11,8 +11,6 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -46,12 +44,4 @@ public class SubmissionEntity {
     @CreatedDate
     @Field(name = "createdAt")
     private Instant createdAt;
-
-    @LastModifiedDate
-    @Field(name = "updatedAt")
-    private Instant updatedAt;
-
-    @Version
-    @Field(name = "version")
-    private Long version;
 }
