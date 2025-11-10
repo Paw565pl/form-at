@@ -6,28 +6,27 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/core/components/ui/select";
-import { sortByParser } from "@/features/form-list/search-params/sort-by-parser";
 import { useTranslations } from "next-intl";
-import { useQueryState } from "nuqs";
+import { parseAsStringLiteral, useQueryState } from "nuqs";
 import { useState } from "react";
 
 export const Filters = () => {
-  const [sortBy, setSortBy] = useQueryState(
-    "sortBy",
-    sortByParser.withDefault("newest"),
-  );
   const [query, setQuery] = useQueryState("query", { defaultValue: "" });
   const [queryValue, setQueryValue] = useState(query);
   const t = useTranslations("formListPage");
 
   const sortOptions = [
-    { key: "newest", label: t("options.sortOptions.newest") },
-    { key: "oldest", label: t("options.sortOptions.oldest") },
-    { key: "name", label: t("options.sortOptions.name") },
-    { key: "questions", label: t("options.sortOptions.questions") },
-    { key: "submissions", label: t("options.sortOptions.submissions") },
-    { key: "duration", label: t("options.sortOptions.duration") },
+    { key: "createdAt", label: t("options.sortOptions.newest") },
+    { key: "submissionsCount", label: t("options.sortOptions.submissions") },
+    { key: "estimatedDuration", label: t("options.sortOptions.duration") },
   ];
+
+  const [sortBy, setSortBy] = useQueryState(
+    "sortBy",
+    parseAsStringLiteral(sortOptions.map((opt) => opt.key)).withDefault(
+      "createdAt",
+    ),
+  );
 
   return (
     <div className="flex w-full flex-wrap gap-2 md:flex-nowrap">
@@ -47,7 +46,7 @@ export const Filters = () => {
         />
       </form>
 
-      <Select value={sortBy} onValueChange={(value) => setSortBy(value)}>
+      <Select value={sortBy} onValueChange={setSortBy}>
         <SelectTrigger className="w-full max-w-70">
           {t("options.sortBy")}
           <SelectValue />

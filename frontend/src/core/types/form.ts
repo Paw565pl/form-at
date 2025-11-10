@@ -15,7 +15,6 @@ export enum Language {
 }
 
 export enum ShuffleVariant {
-  Null = "NULL",
   Questions = "QUESTIONS",
   Answers = "ANSWERS",
   Both = "BOTH",

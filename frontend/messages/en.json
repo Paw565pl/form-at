@@ -24,7 +24,8 @@
       "listView": "List View",
       "gridView": "Grid View"
     },
-    "by": "by",
+    "by": "by {name}",
+    "byUnknown": "by unknown author",
     "questions": "{count, plural, =1 {# question} other {# questions}}",
     "submissions": "{count, plural, =1 {# submission} other {# submissions}}",
     "end": "You have reached the end of the list.",

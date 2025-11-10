@@ -1,5 +1,5 @@
 import { Card } from "@/core/components/ui/card";
-import { forms } from "@/features/form-list/forms";
+import { forms } from "@/features/form-list/example-forms";
 import { useFormatter, useTranslations } from "next-intl";
 import Link from "next/link";
 
@@ -18,7 +18,9 @@ export const ListView = () => {
             <header className="flex flex-wrap items-center justify-between gap-1">
               <h1 className="font-medium">{form.name}</h1>
               <span className="text-muted-foreground text-sm">
-                {t("by")} {form.author?.name}
+                {form.author
+                  ? `${t("by", { name: form.author.name })}`
+                  : t("byUnknown")}
               </span>
             </header>
             <p className="text-sm lg:mr-36">{form.description}</p>
@@ -29,11 +31,7 @@ export const ListView = () => {
                 {form.estimatedDuration} min
               </span>
               <span className="text-muted-foreground text-sm">
-                {format.dateTime(new Date(form.createdAt), {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
+                {format.dateTime(new Date(form.createdAt), "long")}
               </span>
             </footer>
           </Card>

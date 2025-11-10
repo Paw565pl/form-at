@@ -10,7 +10,7 @@ export interface QuestionResponseDto {
   id: string;
   content: string;
   type: QuestionType;
-  imageKey: string | null;
+  imageKey?: string;
   isRequired: boolean;
-  answers: AnswerResponseDto[] | null;
+  answers: AnswerResponseDto[];
 }

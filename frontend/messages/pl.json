@@ -24,7 +24,8 @@
       "listView": "Widok listy",
       "gridView": "Widok siatki"
     },
-    "by": "autorstwa",
+    "by": "autorstwa {name}",
+    "byUnknown": "autor nieznany",
     "questions": "{count, plural, =1 {# pytanie} other {# pytań}}",
     "submissions": "{count, plural, =1 {# odpowiedź} other {# odpowiedzi}}",
     "end": "Dotarłeś do końca listy.",

@@ -42,7 +42,6 @@ export const forms: FormResponseDto[] = [
     submissionsCount: 0,
     questions: [],
     authorId: "2",
-    author: { id: "2", name: "Jane Smith", email: "", roles: [] },
     createdAt: new Date("2023-09-23"),
     updatedAt: new Date("2023-09-23"),
   },
