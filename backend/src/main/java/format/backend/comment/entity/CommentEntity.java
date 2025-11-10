@@ -11,6 +11,8 @@ import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.annotation.Version;
+import org.springframework.data.mongodb.core.index.IndexDirection;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -41,6 +43,8 @@ public class CommentEntity {
     @Field(name = "content")
     @NonNull private String content;
 
+    @LastModifiedDate
+    @Indexed(direction = IndexDirection.DESCENDING)
     @CreatedDate
     @Field("createdAt")
     private Instant createdAt;

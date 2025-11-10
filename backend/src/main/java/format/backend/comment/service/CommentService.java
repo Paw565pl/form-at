@@ -20,7 +20,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,9 +53,16 @@ public class CommentService {
     public Page<CommentResponseDto> findAll(String idOrSlug, Pageable pageable) {
         val form = findFormOrThrow(idOrSlug);
 
-        val comments = commentRepository.findByFormId(form.getId(), pageable);
+        val sortedPageable = PageRequest.of(
+                pageable.getPageNumber(),
+                pageable.getPageSize(),
+                Sort.by(Sort.Order.desc("updatedAt"), Sort.Order.asc("_id"))
+        );
+
+        val comments = commentRepository.findByFormId(form.getId(), sortedPageable);
+
         if (comments.isEmpty()) {
-            return Page.empty(pageable);
+            return Page.empty(sortedPageable);
         }
 
         return comments.map(comment -> {
