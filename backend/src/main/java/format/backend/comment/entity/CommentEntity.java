@@ -43,13 +43,12 @@ public class CommentEntity {
     @Field(name = "content")
     @NonNull private String content;
 
-    @LastModifiedDate
-    @Indexed(direction = IndexDirection.DESCENDING)
     @CreatedDate
     @Field("createdAt")
     private Instant createdAt;
 
     @LastModifiedDate
+    @Indexed(direction = IndexDirection.DESCENDING)
     @Field("updatedAt")
     private Instant updatedAt;
 

@@ -77,9 +77,7 @@ public class CommentService {
 
         val user = findUserOrThrow(keycloakJwtClaims.sub());
 
-        val comment = commentMapper.toEntity(commentRequestDto);
-        comment.setForm(form);
-        comment.setAuthor(user);
+        val comment = commentMapper.toEntity(commentRequestDto, form, user);
 
         val saved = commentRepository.save(comment);
         val authorName = saved.getAuthor() != null ? saved.getAuthor().getUsername() : null;
