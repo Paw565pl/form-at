@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -25,8 +26,8 @@ import org.springframework.lang.Nullable;
 @Document(collection = "comments")
 public class CommentEntity {
 
-    @MongoId(targetType = FieldType.OBJECT_ID)
-    @Field(name = "_id")
+    @MongoId
+    @Field(name = "_id", targetType = FieldType.OBJECT_ID)
     private String id;
 
     @DocumentReference(lazy = true)
@@ -47,4 +48,8 @@ public class CommentEntity {
     @LastModifiedDate
     @Field("updatedAt")
     private Instant updatedAt;
+
+    @Version
+    @Field(name = "version")
+    private Long version;
 }
