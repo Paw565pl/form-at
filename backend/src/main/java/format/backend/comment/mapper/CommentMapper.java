@@ -17,5 +17,7 @@ public interface CommentMapper {
     @Mapping(target = "form", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "version", ignore = true)
     CommentEntity toEntity(CommentRequestDto commentRequestDto);
 }
+
