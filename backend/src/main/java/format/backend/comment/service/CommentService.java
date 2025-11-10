@@ -56,7 +56,10 @@ public class CommentService {
             return Page.empty(pageable);
         }
 
-        return comments.map(commentMapper::toResponseDto);
+        return comments.map(comment -> {
+            val authorName = comment.getAuthor() != null ? comment.getAuthor().getUsername() : null;
+            return commentMapper.toResponseDto(comment, authorName);
+        });
     }
 
     @Transactional
@@ -71,8 +74,9 @@ public class CommentService {
         comment.setAuthor(user);
 
         val saved = commentRepository.save(comment);
+        val authorName = saved.getAuthor() != null ? saved.getAuthor().getUsername() : null;
 
-        return commentMapper.toResponseDto(saved);
+        return commentMapper.toResponseDto(saved, authorName);
     }
 
     @Transactional
@@ -98,7 +102,9 @@ public class CommentService {
         comment.setContent(commentRequestDto.content());
 
         val updated = commentRepository.save(comment);
-        return commentMapper.toResponseDto(updated);
+        val authorName = updated.getAuthor() != null ? updated.getAuthor().getUsername() : null;
+
+        return commentMapper.toResponseDto(updated, authorName);
     }
 
     @Transactional

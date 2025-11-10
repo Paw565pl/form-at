@@ -9,8 +9,8 @@ import org.mapstruct.MappingConstants;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface CommentMapper {
-    @Mapping(target = "authorName", source = "comment.author.username")
-    CommentResponseDto toResponseDto(CommentEntity comment);
+    @Mapping(target = "authorName", source = "authorName")
+    CommentResponseDto toResponseDto(CommentEntity comment, String authorName);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "author", ignore = true)
