@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CommentRepository extends MongoRepository<CommentEntity, String> {
     Page<CommentEntity> findByFormId(String formId, Pageable pageable);
+
+    void deleteByFormId(String formId);
 }
