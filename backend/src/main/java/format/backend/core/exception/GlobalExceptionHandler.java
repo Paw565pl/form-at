@@ -86,7 +86,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ApplicationException.class)
     public ResponseEntity<ErrorResponseDto> handleApplicationException(ApplicationException e) {
         val status = e.getStatus();
-        val response = new ErrorResponseDto(status, e.getMessage());
+        val response = e.getErrors() != null
+                ? new ErrorResponseDto(status, e.getMessage(), e.getErrors())
+                : new ErrorResponseDto(status, e.getMessage());
 
         return ResponseEntity.status(status).body(response);
     }
