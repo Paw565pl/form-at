@@ -36,7 +36,7 @@ public class CommentController {
     @GetMapping
     public Page<CommentResponseDto> findAll(
             @ValidFormId @PathVariable String formIdOrSlug,
-            @PageableDefault(size = 20, sort = "createdAt", direction = DESC) Pageable pageable) {
+            Pageable pageable) {
         return commentService.findAll(formIdOrSlug, pageable);
     }
 
