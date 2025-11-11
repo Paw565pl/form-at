@@ -1,4 +1,5 @@
 import { Card } from "@/core/components/ui/card";
+import { formatDuration } from "@/core/utils/formatDuration";
 import { forms } from "@/features/form-list/example-forms";
 import { useFormatter, useTranslations } from "next-intl";
 import Link from "next/link";
@@ -28,7 +29,7 @@ export const ListView = () => {
               <span>
                 {t("questions", { count: form.questions.length })} •{" "}
                 {t("submissions", { count: form.submissionsCount })} •{" "}
-                {form.estimatedDuration} min
+                {formatDuration(form.estimatedDuration)}
               </span>
               <span className="text-muted-foreground text-sm">
                 {format.dateTime(new Date(form.createdAt), "long")}
