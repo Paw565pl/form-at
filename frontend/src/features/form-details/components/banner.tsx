@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/core/components/ui/button";
 import {
   Dialog,
@@ -13,9 +15,15 @@ import { Input } from "@/core/components/ui/input";
 import { Label } from "@/core/components/ui/label";
 import { cn } from "@/core/lib/cn";
 import { FormResponseDto } from "@/core/types/form";
-import { HatGlasses, ListChecks, MoreHorizontal } from "lucide-react";
+import {
+  CornerUpLeft,
+  HatGlasses,
+  ListChecks,
+  MoreHorizontal,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 interface BannerProps {
   form: FormResponseDto;
@@ -23,6 +31,7 @@ interface BannerProps {
 
 export const Banner = ({ form }: BannerProps) => {
   const t = useTranslations("publicFormView.banner");
+  const router = useRouter();
 
   return (
     <main className="relative mb-7 flex h-48 w-full max-w-5xl items-end">
@@ -35,6 +44,15 @@ export const Banner = ({ form }: BannerProps) => {
         priority
         className="-z-10 rounded-3xl"
       />
+
+      {/* go back button */}
+      <Button
+        size={"icon-sm"}
+        className="absolute top-4 left-4"
+        onClick={() => router.back()}
+      >
+        <CornerUpLeft />
+      </Button>
 
       {/* more options */}
       <Button size={"icon-sm"} className="absolute top-4 right-4">
