@@ -6,8 +6,6 @@ import org.springframework.http.HttpStatus;
 public final class MultipleChoiceQuestionAnswersValidationException extends ApplicationException {
 
     public MultipleChoiceQuestionAnswersValidationException() {
-        super(
-                HttpStatus.BAD_REQUEST,
-                "Multiple choice questions must have at least one valid answer and at least one invalid answer");
+        super(HttpStatus.BAD_REQUEST, "Multiple choice questions must have at least one valid answer");
     }
 }

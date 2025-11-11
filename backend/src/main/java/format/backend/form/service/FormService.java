@@ -185,9 +185,7 @@ public class FormService {
                             val correctAnswersCount = q.answers().stream()
                                     .filter(AnswerRequestDto::isCorrect)
                                     .count();
-                            if (!(1 < correctAnswersCount
-                                    && correctAnswersCount < q.answers().size()))
-                                throw new MultipleChoiceQuestionAnswersValidationException();
+                            if (correctAnswersCount < 1) throw new MultipleChoiceQuestionAnswersValidationException();
                         }
                         case OPEN -> q.answers().clear();
                     }
