@@ -4,7 +4,7 @@ import com.github.slugify.Slugify;
 import format.backend.auth.entity.Role;
 import format.backend.auth.entity.UserEntity;
 import format.backend.auth.jwt.KeycloakJwtClaims;
-import format.backend.auth.repository.UserRepository;
+import format.backend.auth.service.UserService;
 import format.backend.form.dto.AnswerRequestDto;
 import format.backend.form.dto.FormAccessRequestDto;
 import format.backend.form.dto.FormDetailResponseDto;
@@ -64,10 +64,10 @@ public class FormService {
     private final PasswordEncoder passwordEncoder;
 
     private final FormRepository formRepository;
-    private final UserRepository userRepository;
     private final SubmissionRepository submissionRepository;
     private final FormMapper formMapper;
     private final QuestionMapper questionMapper;
+    private final UserService userService;
     private final UploadService uploadService;
 
     private static final Map<String, String> sortFields = Stream.of(
@@ -212,9 +212,7 @@ public class FormService {
         val slug = slugify.slugify(requestDto.name());
         val passwordHash = createPasswordHash(requestDto);
 
-        val author = userRepository
-                .findById(keycloakJwtClaims.sub())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
+        val author = userService.findOrThrow(keycloakJwtClaims.sub());
 
         val formEntity = formMapper.toEntity(requestDto, slug, passwordHash, author);
         formEntity.setQuestions(questionEntities);

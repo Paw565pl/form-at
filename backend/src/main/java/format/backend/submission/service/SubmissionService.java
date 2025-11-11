@@ -2,7 +2,7 @@ package format.backend.submission.service;
 
 import format.backend.auth.entity.Role;
 import format.backend.auth.jwt.KeycloakJwtClaims;
-import format.backend.auth.repository.UserRepository;
+import format.backend.auth.service.UserService;
 import format.backend.form.entity.AnswerEntity;
 import format.backend.form.entity.QuestionEntity;
 import format.backend.form.repository.FormRepository;
@@ -42,10 +42,10 @@ import org.springframework.web.server.ResponseStatusException;
 @RequiredArgsConstructor
 public class SubmissionService {
 
-    private final UserRepository userRepository;
     private final FormRepository formRepository;
     private final SubmissionRepository submissionRepository;
     private final SubmissionMapper submissionMapper;
+    private final UserService userService;
     private final FormService formService;
 
     public Page<SubmissionResponseDto> findAllByFormIdOrSlug(
@@ -169,9 +169,7 @@ public class SubmissionService {
         if (!errors.isEmpty()) throw new SubmissionAnswersValidationException(errors);
 
         val user = Optional.ofNullable(keycloakJwtClaims)
-                .map(claims -> userRepository
-                        .findById(claims.sub())
-                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED)))
+                .map(claims -> userService.findOrThrow(claims.sub()))
                 .orElse(null);
         val submissionEntity = submissionMapper.toEntity(requestDto, form, user);
         for (val submissionAnswer : submissionEntity.getAnswers()) {
