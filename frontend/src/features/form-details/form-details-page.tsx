@@ -1,17 +1,9 @@
-import {
-  Empty,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-} from "@/core/components/ui/empty";
 import { FormResponseDto, FormStatus, Language } from "@/core/types/form";
 import { QuestionType } from "@/core/types/question";
 import { Banner } from "@/features/form-details/components/banner";
 import { Details } from "@/features/form-details/components/details";
-import { QuestionList } from "@/features/form-details/components/question-list";
-import { MessageSquareX } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { NoQuestions } from "@/features/form-details/components/question/no-questions";
+import { QuestionList } from "@/features/form-details/components/question/question-list";
 
 const form: FormResponseDto = {
   id: "1",
@@ -21,7 +13,7 @@ const form: FormResponseDto = {
   language: Language.Pl,
   status: FormStatus.Public,
   thanksMessage: "Dziękujemy za wypełnienie formularza!",
-  estimatedDuration: 5 * 1000 * 60,
+  estimatedDuration: "PT6H5M",
   thumbnailKey: "thumbnail-1",
   allowsQuestionsPreview: true,
   allowsGuestSubmissions: false,
@@ -61,8 +53,6 @@ const form: FormResponseDto = {
 };
 
 const FormDetailsPage = () => {
-  const t = useTranslations("publicFormView.questionList");
-
   return (
     <main className="flex justify-center">
       <div className="flex w-full max-w-3xl flex-col items-center justify-center px-4">
@@ -73,15 +63,7 @@ const FormDetailsPage = () => {
         {form.questions.length > 0 && form.allowsQuestionsPreview ? (
           <QuestionList questions={form.questions} />
         ) : (
-          <Empty className="w-full border border-dashed">
-            <EmptyHeader>
-              <EmptyMedia variant="icon">
-                <MessageSquareX />
-              </EmptyMedia>
-              <EmptyTitle>{t("noQuestions")}</EmptyTitle>
-              <EmptyDescription>{t("noQuestionsDescription")}</EmptyDescription>
-            </EmptyHeader>
-          </Empty>
+          <NoQuestions />
         )}
       </div>
     </main>

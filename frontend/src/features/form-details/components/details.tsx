@@ -1,5 +1,6 @@
 import { Badge } from "@/core/components/ui/badge";
 import { FormResponseDto } from "@/core/types/form";
+import { formatDuration } from "@/core/utils/formatDuration";
 import {
   BadgeQuestionMark,
   ClockArrowUp,
@@ -35,7 +36,7 @@ export const Details = ({ form }: DetailsProps) => {
           <ClockArrowUp />
           <h2>
             {t("estimatedTime", {
-              time: form.estimatedDuration / 60 / 1000 + " min",
+              time: formatDuration(form.estimatedDuration),
             })}
           </h2>
         </div>

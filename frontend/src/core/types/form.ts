@@ -29,7 +29,7 @@ export interface FormResponseDto {
   status: FormStatus;
   shuffleVariant?: ShuffleVariant;
   thanksMessage?: string;
-  estimatedDuration: number;
+  estimatedDuration: string;
   thumbnailKey?: string;
   allowsQuestionsPreview: boolean;
   allowsGuestSubmissions: boolean;
