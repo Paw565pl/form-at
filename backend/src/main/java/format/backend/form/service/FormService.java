@@ -72,7 +72,7 @@ public class FormService {
 
     private static final Map<String, String> sortFields = Stream.of(
                     "estimatedDuration", "submissionsCount", "createdAt", "updatedAt")
-            .collect(Collectors.toMap(String::toLowerCase, Function.identity()));
+            .collect(Collectors.toUnmodifiableMap(String::toLowerCase, Function.identity()));
 
     public Page<FormListResponseDto> findAllPublic(FormFilterDto filterDto, Pageable pageable) {
         var query = new Query();
