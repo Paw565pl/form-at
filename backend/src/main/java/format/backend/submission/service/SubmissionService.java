@@ -1,5 +1,6 @@
 package format.backend.submission.service;
 
+import format.backend.auth.entity.Role;
 import format.backend.auth.jwt.KeycloakJwtClaims;
 import format.backend.auth.repository.UserRepository;
 import format.backend.form.entity.AnswerEntity;
@@ -22,7 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -51,8 +51,12 @@ public class SubmissionService {
     public Page<SubmissionResponseDto> findAllByFormIdOrSlug(
             KeycloakJwtClaims keycloakJwtClaims, String formIdOrSlug, Pageable pageable) {
         val form = formService.findOrThrow(formIdOrSlug);
-        if (!form.getAuthor().getId().equals(keycloakJwtClaims.sub()))
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+
+        val isFormOwner = Optional.ofNullable(form.getAuthor())
+                .map(a -> a.getId().equals(keycloakJwtClaims.sub()))
+                .orElse(false);
+        val isAdmin = keycloakJwtClaims.roles().contains(Role.ADMIN);
+        if (!isFormOwner || !isAdmin) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 
         val submissions = submissionRepository.findAllByFormId(
                 form.getId(),
@@ -175,16 +179,16 @@ public class SubmissionService {
 
             switch (question.getType()) {
                 case SINGLE_CHOICE, MULTIPLE_CHOICE -> {
-                    val questionAnswersIds = question.getAnswers().stream()
+                    val questionsAnswersIds = question.getAnswers().stream()
                             .map(AnswerEntity::getId)
                             .collect(Collectors.toUnmodifiableSet());
 
                     submissionAnswer.setOpenAnswer(null);
                     submissionAnswer.setChosenAnswerIds(submissionAnswer.getChosenAnswerIds().stream()
-                            .filter(questionAnswersIds::contains)
+                            .filter(questionsAnswersIds::contains)
                             .collect(Collectors.toUnmodifiableSet()));
                 }
-                case OPEN -> submissionAnswer.setChosenAnswerIds(Set.of());
+                case OPEN -> submissionAnswer.getChosenAnswerIds().clear();
             }
         }
 
@@ -207,9 +211,11 @@ public class SubmissionService {
                 .findById(submissionId)
                 .orElseThrow(() -> new SubmissionNotFoundException(submissionId));
 
-        if (!form.getAuthor().getId().equals(keycloakJwtClaims.sub())
-                || !submission.getForm().getId().equals(form.getId()))
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        val isFormOwner = Optional.ofNullable(form.getAuthor())
+                .map(a -> a.getId().equals(keycloakJwtClaims.sub()))
+                .orElse(false);
+        val isAdmin = keycloakJwtClaims.roles().contains(Role.ADMIN);
+        if (!isFormOwner || !isAdmin) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 
         submissionRepository.delete(submission);
         form.setSubmissionsCount(form.getSubmissionsCount() - 1);

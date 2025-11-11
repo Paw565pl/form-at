@@ -175,7 +175,6 @@ public class FormService {
                         throw new QuestionImageNotFound(q.imageKey());
 
                     switch (q.type()) {
-                        case OPEN -> q.answers().clear();
                         case SINGLE_CHOICE -> {
                             val correctAnswersCount = q.answers().stream()
                                     .filter(AnswerRequestDto::isCorrect)
@@ -190,6 +189,7 @@ public class FormService {
                                     && correctAnswersCount < q.answers().size()))
                                 throw new MultipleChoiceQuestionAnswersValidationException();
                         }
+                        case OPEN -> q.answers().clear();
                     }
 
                     return questionMapper.toEntity(q);
@@ -233,11 +233,11 @@ public class FormService {
             String idOrSlug, KeycloakJwtClaims keycloakJwtClaims, FormRequestDto requestDto) {
         val oldFormEntity = findOrThrow(idOrSlug);
 
-        val canUpdate = Optional.ofNullable(oldFormEntity.getAuthor())
-                        .map(a -> a.getId().equals(keycloakJwtClaims.sub()))
-                        .orElse(false)
-                || keycloakJwtClaims.roles().contains(Role.ADMIN);
-        if (!canUpdate) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        val isFormOwner = Optional.ofNullable(oldFormEntity.getAuthor())
+                .map(a -> a.getId().equals(keycloakJwtClaims.sub()))
+                .orElse(false);
+        val isAdmin = keycloakJwtClaims.roles().contains(Role.ADMIN);
+        if (!isFormOwner || !isAdmin) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 
         if (!uploadService.confirmUpload(requestDto.thumbnailKey(), keycloakJwtClaims.sub()))
             throw new FormImageNotFound(requestDto.thumbnailKey());
@@ -274,11 +274,11 @@ public class FormService {
     public void delete(String idOrSlug, KeycloakJwtClaims keycloakJwtClaims) {
         val formEntity = findOrThrow(idOrSlug);
 
-        val canUpdate = Optional.ofNullable(formEntity.getAuthor())
-                        .map(a -> a.getId().equals(keycloakJwtClaims.sub()))
-                        .orElse(false)
-                || keycloakJwtClaims.roles().contains(Role.ADMIN);
-        if (!canUpdate) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        val isFormOwner = Optional.ofNullable(formEntity.getAuthor())
+                .map(a -> a.getId().equals(keycloakJwtClaims.sub()))
+                .orElse(false);
+        val isAdmin = keycloakJwtClaims.roles().contains(Role.ADMIN);
+        if (!isFormOwner || !isAdmin) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 
         val imageKeys = Stream.concat(
                         Stream.ofNullable(formEntity.getThumbnailKey()),
