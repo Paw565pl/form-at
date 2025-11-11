@@ -10,4 +10,6 @@ public interface SubmissionRepository extends MongoRepository<SubmissionEntity, 
     Page<SubmissionEntity> findAllByFormId(String formId, Pageable pageable);
 
     Optional<SubmissionEntity> findByFormIdAndAuthorId(String formId, String authorId);
+
+    void deleteAllByFormId(String formId);
 }

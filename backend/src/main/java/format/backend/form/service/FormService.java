@@ -26,6 +26,7 @@ import format.backend.form.exception.SingleChoiceQuestionAnswersValidationExcept
 import format.backend.form.mapper.FormMapper;
 import format.backend.form.mapper.QuestionMapper;
 import format.backend.form.repository.FormRepository;
+import format.backend.submission.repository.SubmissionRepository;
 import format.backend.upload.service.UploadService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -64,6 +65,7 @@ public class FormService {
 
     private final FormRepository formRepository;
     private final UserRepository userRepository;
+    private final SubmissionRepository submissionRepository;
     private final FormMapper formMapper;
     private final QuestionMapper questionMapper;
     private final UploadService uploadService;
@@ -286,5 +288,7 @@ public class FormService {
 
         formRepository.delete(formEntity);
         if (!imageKeys.isEmpty()) uploadService.deleteAllByKeys(imageKeys);
+
+        submissionRepository.deleteAllByFormId(formEntity.getId());
     }
 }
