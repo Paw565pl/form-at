@@ -5,12 +5,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/core/components/ui/empty";
-import {
-  FormResponseDto,
-  FormStatus,
-  Language,
-  ShuffleVariant,
-} from "@/core/types/form";
+import { FormResponseDto, FormStatus, Language } from "@/core/types/form";
 import { QuestionType } from "@/core/types/question";
 import { Banner } from "@/features/form-details/components/banner";
 import { Details } from "@/features/form-details/components/details";
@@ -26,7 +21,6 @@ const form: FormResponseDto = {
   description: "Opis formularza 1",
   language: Language.Pl,
   status: FormStatus.Public,
-  shuffleVariant: ShuffleVariant.Null,
   thanksMessage: "Dziękujemy za wypełnienie formularza!",
   estimatedDuration: 5 * 1000 * 60,
   thumbnailKey: "thumbnail-1",
@@ -71,7 +65,7 @@ const FormDetailsPage = () => {
   const t = useTranslations("publicFormView.questionList");
 
   return (
-    <main className="flex min-h-screen justify-center">
+    <main className="flex justify-center">
       <div className="flex w-full max-w-3xl flex-col items-center justify-center px-4">
         <Banner form={form} />
 
