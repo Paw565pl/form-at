@@ -4,6 +4,7 @@ import {
   placeholder_image_url,
 } from "@/features/form-list/example-forms";
 import { useFormatter, useTranslations } from "next-intl";
+import Image from "next/image";
 import Link from "next/link";
 
 export const GridView = () => {
@@ -18,14 +19,15 @@ export const GridView = () => {
             key={form.id}
             className="group hover:border-primary h-full overflow-hidden transition-all"
           >
-            <div
-              style={{
-                backgroundImage: `url(${form.thumbnailKey || placeholder_image_url})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              }}
-              className="min-h-36 origin-bottom rounded-t-md transition-transform group-hover:scale-105"
-            ></div>
+            <div className="relative min-h-40">
+              <Image
+                src={form.thumbnailKey || placeholder_image_url}
+                alt={form.name}
+                className="origin-bottom object-cover transition-transform group-hover:scale-105"
+                fill
+              />
+            </div>
+
             <div className="flex h-full flex-col gap-2 p-3">
               <header className="bg-card flex flex-wrap items-center justify-between">
                 <h1 className="font-medium">{form.name}</h1>

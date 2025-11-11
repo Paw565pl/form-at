@@ -8,6 +8,14 @@ const nextConfig: NextConfig = {
   experimental: {
     reactCompiler: true,
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**",
+      },
+    ],
+  },
 };
 
 const withNextIntl = createNextIntlPlugin({

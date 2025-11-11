@@ -12,13 +12,12 @@ import { GridView } from "@/features/form-list/components/grid-view";
 import { ListView } from "@/features/form-list/components/list-view";
 import { forms } from "@/features/form-list/example-forms";
 import { useTranslations } from "next-intl";
-import { useRef, useState } from "react";
+import { useState } from "react";
 
 export const FormListPage = () => {
   // eslint-disable-next-line
   const [loading, setLoading] = useState(false);
   const [gridLayout, setGridLayout] = useState(true);
-  const loader = useRef<HTMLDivElement | null>(null);
   const t = useTranslations("formListPage");
 
   return (
@@ -65,8 +64,6 @@ export const FormListPage = () => {
       </header>
 
       {gridLayout ? <GridView /> : <ListView />}
-
-      <div ref={loader} className="h-px-40" />
 
       {loading && <p>{t("loading")}</p>}
 
