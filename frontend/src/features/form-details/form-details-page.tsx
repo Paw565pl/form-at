@@ -10,7 +10,6 @@ import { QuestionType } from "@/core/types/question";
 import { Banner } from "@/features/form-details/components/banner";
 import { Details } from "@/features/form-details/components/details";
 import { QuestionList } from "@/features/form-details/components/question-list";
-
 import { MessageSquareX } from "lucide-react";
 import { useTranslations } from "next-intl";
 
