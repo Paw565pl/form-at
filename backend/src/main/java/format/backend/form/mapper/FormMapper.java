@@ -11,16 +11,17 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.MappingTarget;
+import org.springframework.lang.Nullable;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = QuestionMapper.class)
 public interface FormMapper {
 
     @Mapping(target = "questionsCount", expression = "java(formEntity.getQuestions().size())")
-    FormListResponseDto toListResponseDto(FormEntity formEntity, String thumbnail);
+    FormListResponseDto toListResponseDto(FormEntity formEntity, String thumbnail, @Nullable String authorName);
 
     @Mapping(target = "questions", source = "questions")
     FormDetailResponseDto toDetailResponseDto(
-            FormEntity formEntity, String thumbnail, List<QuestionResponseDto> questions);
+            FormEntity formEntity, String thumbnail, @Nullable String authorName, List<QuestionResponseDto> questions);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "language", expression = "java(formRequestDto.language().getMongoValue())")
@@ -29,7 +30,7 @@ public interface FormMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "version", ignore = true)
-    FormEntity toEntity(FormRequestDto formRequestDto, String slug, String passwordHash, UserEntity author);
+    FormEntity toEntity(FormRequestDto formRequestDto, String slug, String passwordHash, @Nullable UserEntity author);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "submissionsCount", ignore = true)

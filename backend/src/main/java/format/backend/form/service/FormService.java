@@ -2,6 +2,7 @@ package format.backend.form.service;
 
 import com.github.slugify.Slugify;
 import format.backend.auth.entity.Role;
+import format.backend.auth.entity.UserEntity;
 import format.backend.auth.jwt.KeycloakJwtClaims;
 import format.backend.auth.repository.UserRepository;
 import format.backend.form.dto.AnswerRequestDto;
@@ -107,7 +108,12 @@ public class FormService {
 
         val forms = mongoTemplate.find(query, FormEntity.class);
         val response = forms.stream()
-                .map(f -> formMapper.toListResponseDto(f, uploadService.getFileUrl(f.getThumbnailKey())))
+                .map(f -> {
+                    val authorName = Optional.ofNullable(f.getAuthor())
+                            .map(UserEntity::getUsername)
+                            .orElse(null);
+                    return formMapper.toListResponseDto(f, uploadService.getFileUrl(f.getThumbnailKey()), authorName);
+                })
                 .toList();
 
         return new PageImpl<>(response, pageable, total);
@@ -148,9 +154,12 @@ public class FormService {
         val questions = formEntity.getQuestions().stream()
                 .map(q -> questionMapper.toResponseDto(q, uploadService.getFileUrl(q.getImageKey())))
                 .toList();
+        val authorName = Optional.ofNullable(formEntity.getAuthor())
+                .map(UserEntity::getUsername)
+                .orElse(null);
 
         return formMapper.toDetailResponseDto(
-                formEntity, uploadService.getFileUrl(formEntity.getThumbnailKey()), questions);
+                formEntity, uploadService.getFileUrl(formEntity.getThumbnailKey()), authorName, questions);
     }
 
     private List<QuestionEntity> mapQuestionsToEntities(List<QuestionRequestDto> questions, String userId) {
@@ -222,7 +231,9 @@ public class FormService {
             String idOrSlug, KeycloakJwtClaims keycloakJwtClaims, FormRequestDto requestDto) {
         val oldFormEntity = findOrThrow(idOrSlug);
 
-        val canUpdate = oldFormEntity.getAuthor().getId().equals(keycloakJwtClaims.sub())
+        val canUpdate = Optional.ofNullable(oldFormEntity.getAuthor())
+                        .map(a -> a.getId().equals(keycloakJwtClaims.sub()))
+                        .orElse(false)
                 || keycloakJwtClaims.roles().contains(Role.ADMIN);
         if (!canUpdate) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 
@@ -261,7 +272,9 @@ public class FormService {
     public void delete(String idOrSlug, KeycloakJwtClaims keycloakJwtClaims) {
         val formEntity = findOrThrow(idOrSlug);
 
-        val canUpdate = formEntity.getAuthor().getId().equals(keycloakJwtClaims.sub())
+        val canUpdate = Optional.ofNullable(formEntity.getAuthor())
+                        .map(a -> a.getId().equals(keycloakJwtClaims.sub()))
+                        .orElse(false)
                 || keycloakJwtClaims.roles().contains(Role.ADMIN);
         if (!canUpdate) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 

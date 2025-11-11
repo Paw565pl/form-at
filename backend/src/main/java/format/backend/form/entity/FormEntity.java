@@ -85,12 +85,12 @@ public class FormEntity {
     @Field(name = "saveSubmissions")
     @NonNull private Boolean saveSubmissions;
 
-    @Field(name = "submissionsCount")
-    @NonNull private Long submissionsCount = 0L;
-
     @Field(name = "authorId")
     @DocumentReference(lazy = true)
-    @NonNull private UserEntity author;
+    @Nullable private UserEntity author;
+
+    @Field(name = "submissionsCount")
+    @NonNull private Long submissionsCount = 0L;
 
     @Field(name = "questions")
     @NonNull private List<QuestionEntity> questions = new ArrayList<>();
