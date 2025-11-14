@@ -15,6 +15,7 @@ import { Input } from "@/core/components/ui/input";
 import { Label } from "@/core/components/ui/label";
 import { cn } from "@/core/lib/cn";
 import { FormResponseDto } from "@/core/types/form";
+import { placeholder_image_url } from "@/features/form-list/example-forms";
 import {
   CornerUpLeft,
   HatGlasses,
@@ -34,10 +35,10 @@ export const Banner = ({ form }: BannerProps) => {
   const router = useRouter();
 
   return (
-    <main className="relative mb-7 flex h-48 w-full max-w-5xl items-end">
+    <main className="relative flex h-48 w-full items-end">
       {/* background image */}
       <Image
-        src="/banner.jpg"
+        src={form.thumbnailKey || placeholder_image_url}
         alt="Background"
         fill
         style={{ objectFit: "cover" }}

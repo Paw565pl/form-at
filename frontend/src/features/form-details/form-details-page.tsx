@@ -14,7 +14,7 @@ const form: FormResponseDto = {
   status: FormStatus.Public,
   thanksMessage: "Dziękujemy za wypełnienie formularza!",
   estimatedDuration: "PT6H5M",
-  thumbnailKey: "thumbnail-1",
+  thumbnailKey: undefined,
   allowsQuestionsPreview: true,
   allowsGuestSubmissions: false,
   saveSubmissions: true,
@@ -54,8 +54,8 @@ const form: FormResponseDto = {
 
 const FormDetailsPage = () => {
   return (
-    <main className="flex justify-center">
-      <div className="flex w-full max-w-3xl flex-col items-center justify-center px-4">
+    <main className="flex justify-center px-5 py-10 lg:px-30">
+      <div className="flex w-full flex-col items-center justify-center px-4">
         <Banner form={form} />
 
         <Details form={form} />
