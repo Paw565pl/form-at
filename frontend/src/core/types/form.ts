@@ -2,11 +2,11 @@ import { QuestionResponseDto } from "@/core/types/question";
 import { User } from "@/features/auth/types/user";
 
 export enum FormStatus {
-  Public = "PUBLIC",
-  Unpublic = "UNPUBLIC",
-  Private = "PRIVATE",
-  Draft = "DRAFT",
-  Closed = "CLOSED",
+  Public = "PUBLIC", // visible to everyone
+  Unpublic = "UNPUBLIC", // visible to people with the link
+  Private = "PRIVATE", // accessed to people with password
+  Draft = "DRAFT", // only visible to the author
+  Closed = "CLOSED", // no longer accepting submissions
 }
 
 export enum Language {
@@ -31,8 +31,8 @@ export interface FormResponseDto {
   thanksMessage?: string;
   estimatedDuration: string;
   thumbnailKey?: string;
-  allowsQuestionsPreview: boolean;
-  allowsGuestSubmissions: boolean;
+  allowsQuestionsPreview: boolean; // allows previewing questions before submission
+  allowsGuestSubmissions: boolean; // allows submissions from guests (not logged in users)
   saveSubmissions: boolean;
   authorId: string;
   author?: User;
