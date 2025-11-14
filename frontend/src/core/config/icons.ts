@@ -1,6 +1,29 @@
-import { LayoutGrid, List } from "lucide-react";
+import {
+  Check,
+  ClipboardPen,
+  ClipboardPlus,
+  Globe,
+  Home,
+  LayoutGrid,
+  List,
+  LogIn,
+  LogOut,
+  Moon,
+  Sun,
+  User,
+} from "lucide-react";
 
 export const ICONS = {
   list: List,
   grid: LayoutGrid,
+  home: Home,
+  form: ClipboardPen,
+  formNew: ClipboardPlus,
+  user: User,
+  lang: Globe,
+  check: Check,
+  logout: LogOut,
+  login: LogIn,
+  darkMode: Moon,
+  lightMode: Sun,
 };

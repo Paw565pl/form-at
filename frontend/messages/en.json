@@ -2,11 +2,18 @@
   "rootPage": {
     "message": "Hello world!"
   },
-  "navbar": {
+  "navBar": {
     "auth": {
       "signIn": "Sign In",
       "signOut": "Sign Out"
-    }
+    },
+    "home": "Home",
+    "forms": "Forms",
+    "createForm": "Create Form",
+    "profile": "Profile",
+    "lightMode": "Switch to light mode",
+    "darkMode": "Switch to dark mode",
+    "changeLang": "Change Language"
   },
   "formListPage": {
     "title": "Showing {count, plural, =1 {# form} other {# forms}}",

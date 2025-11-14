@@ -2,11 +2,18 @@
   "rootPage": {
     "message": "Witaj świecie!"
   },
-  "navbar": {
+  "navBar": {
     "auth": {
-      "signIn": "Zaloguj",
-      "signOut": "Wyloguj"
-    }
+      "signIn": "Zaloguj się",
+      "signOut": "Wyloguj się"
+    },
+    "home": "Strona główna",
+    "forms": "Formularze",
+    "createForm": "Utwórz formularz",
+    "profile": "Profil",
+    "lightMode": "Przełącz na tryb jasny",
+    "darkMode": "Przełącz na tryb ciemny",
+    "changeLang": "Zmień język"
   },
   "formListPage": {
     "title": "Wyświetlanie {count, plural, =1 {# formularza} other {# formularzy}}",
