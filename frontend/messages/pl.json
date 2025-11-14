@@ -33,6 +33,8 @@
   },
   "publicFormView": {
     "banner": {
+      "back": "Wróć do poprzedniej strony",
+      "moreOptions": "Więcej opcji",
       "fillOutForm": "Wypełnij formularz",
       "enterTheCode": "Wprowadź kod do formularza",
       "codeDescription": "Ten formularz jest zabezpieczony hasłem, zapytaj twórcę formularza o hasło",
@@ -45,7 +47,8 @@
       "formFinished": "Formularz został wykonany: {finishedAt}",
       "questionsCount": "ilość pytań: {count}",
       "submissionsCount": "ilość zgłoszeń: {count}",
-      "estimatedTime": "Szacowany czas ukończenia: {time}"
+      "estimatedTime": "Szacowany czas ukończenia: {time}",
+      "unpublicForm": "Formularz wymaga kodu"
     },
     "questionList": {
       "showQuestions": "Pokaż pytania",

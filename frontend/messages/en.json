@@ -33,6 +33,8 @@
   },
   "publicFormView": {
     "banner": {
+      "back": "Go Back to Previous Page",
+      "moreOptions": "More Options",
       "fillOutForm": "Fill Out the Form",
       "enterTheCode": "Enter the Form Code",
       "codeDescription": "This form is protected by the code, ask the form maker for the code",
@@ -45,7 +47,8 @@
       "formFinished": "The form finished at: {finishedAt}",
       "questionsCount": "{count} question(s)",
       "submissionsCount": "{count} submission(s)",
-      "estimatedTime": "Estimated time to complete: {time}"
+      "estimatedTime": "Estimated time to complete: {time}",
+      "unpublicForm": "Form Requires Code"
     },
     "questionList": {
       "showQuestions": "Show Questions",

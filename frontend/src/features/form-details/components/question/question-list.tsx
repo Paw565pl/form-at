@@ -1,8 +1,8 @@
 "use client";
 import { Button } from "@/core/components/ui/button";
+import { ICONS } from "@/core/config/icons";
 import { QuestionResponseDto } from "@/core/types/question";
 import { Question } from "@/features/form-details/components/question/question";
-import { ChevronDown } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
@@ -19,10 +19,11 @@ export const QuestionList = ({ questions }: QuestionListProps) => {
       <div className="flex gap-2">
         <h1 className="text-xl">{t("showQuestions")}</h1>
         <Button
+          variant="ghost"
           size={"icon-sm"}
           onClick={() => setShowQuestions((prev) => !prev)}
         >
-          <ChevronDown />
+          <ICONS.chevronDown />
         </Button>
       </div>
       {showQuestions &&

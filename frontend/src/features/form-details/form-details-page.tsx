@@ -13,7 +13,7 @@ const form: FormResponseDto = {
   language: Language.Pl,
   status: FormStatus.Public,
   thanksMessage: "Dziękujemy za wypełnienie formularza!",
-  estimatedDuration: "PT6H5M",
+  estimatedDuration: "PT5M",
   thumbnailKey: undefined,
   allowsQuestionsPreview: true,
   allowsGuestSubmissions: false,
@@ -27,7 +27,7 @@ const form: FormResponseDto = {
       id: "1",
       content: "Jaka jest rasa tego pięknego kota",
       type: QuestionType.Single,
-      imageKey: "",
+      imageKey: undefined,
       isRequired: true,
       answers: [
         { id: "q1a1", content: "Opcja 1", isCorrect: false },
