@@ -13,15 +13,15 @@ import {
 } from "@/core/components/ui/dialog";
 import { Input } from "@/core/components/ui/input";
 import { Label } from "@/core/components/ui/label";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/core/components/ui/tooltip";
+import { ICONS } from "@/core/config/icons";
 import { cn } from "@/core/lib/cn";
 import { FormResponseDto } from "@/core/types/form";
 import { placeholder_image_url } from "@/features/form-list/example-forms";
-import {
-  CornerUpLeft,
-  HatGlasses,
-  ListChecks,
-  MoreHorizontal,
-} from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -47,18 +47,32 @@ export const Banner = ({ form }: BannerProps) => {
       />
 
       {/* go back button */}
-      <Button
-        size={"icon-sm"}
-        className="absolute top-4 left-4"
-        onClick={() => router.back()}
-      >
-        <CornerUpLeft />
-      </Button>
+      <span className="absolute top-4 left-4">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button size="icon" variant="default" onClick={() => router.back()}>
+              <ICONS.back />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="bottom">
+            <p>{t("back")}</p>
+          </TooltipContent>
+        </Tooltip>
+      </span>
 
       {/* more options */}
-      <Button size={"icon-sm"} className="absolute top-4 right-4">
-        <MoreHorizontal />
-      </Button>
+      <span className="absolute top-4 right-4">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button size="icon" variant="default">
+              <ICONS.more />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="bottom">
+            <p>{t("moreOptions")}</p>
+          </TooltipContent>
+        </Tooltip>
+      </span>
 
       <div
         className={cn(
@@ -70,7 +84,7 @@ export const Banner = ({ form }: BannerProps) => {
           <form>
             <DialogTrigger asChild>
               <Button size={"sm"}>
-                <ListChecks />
+                <ICONS.listChecks />
                 {t("fillOutForm")}
               </Button>
             </DialogTrigger>
@@ -95,7 +109,7 @@ export const Banner = ({ form }: BannerProps) => {
 
         {form.allowsGuestSubmissions ? (
           <Button size={"sm"}>
-            <HatGlasses />
+            <ICONS.hatGlasses />
             {t("fillAnonymously")}
           </Button>
         ) : null}
