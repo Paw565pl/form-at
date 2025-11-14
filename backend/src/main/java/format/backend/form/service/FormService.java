@@ -5,7 +5,7 @@ import format.backend.auth.entity.Role;
 import format.backend.auth.entity.UserEntity;
 import format.backend.auth.jwt.KeycloakJwtClaims;
 import format.backend.auth.service.UserService;
-import format.backend.form.dto.AnswerRequestDto;
+import format.backend.core.exception.ValidationException;
 import format.backend.form.dto.FormAccessRequestDto;
 import format.backend.form.dto.FormDetailResponseDto;
 import format.backend.form.dto.FormFilterDto;
@@ -15,17 +15,12 @@ import format.backend.form.dto.QuestionRequestDto;
 import format.backend.form.entity.FormEntity;
 import format.backend.form.entity.FormStatus;
 import format.backend.form.entity.QuestionEntity;
-import format.backend.form.exception.BlankPasswordException;
 import format.backend.form.exception.FormAlreadyExistsException;
-import format.backend.form.exception.FormImageNotFound;
 import format.backend.form.exception.FormNotFoundException;
-import format.backend.form.exception.MultipleChoiceQuestionAnswersValidationException;
-import format.backend.form.exception.QuestionImageNotFound;
-import format.backend.form.exception.RequiredQuestionCountValidationException;
-import format.backend.form.exception.SingleChoiceQuestionAnswersValidationException;
 import format.backend.form.mapper.FormMapper;
 import format.backend.form.mapper.QuestionMapper;
 import format.backend.form.repository.FormRepository;
+import format.backend.form.validator.FormValidator;
 import format.backend.submission.repository.SubmissionRepository;
 import format.backend.upload.service.UploadService;
 import jakarta.validation.Valid;
@@ -60,13 +55,14 @@ import org.springframework.web.server.ResponseStatusException;
 public class FormService {
 
     private final MongoTemplate mongoTemplate;
-    private final Slugify slugify;
     private final PasswordEncoder passwordEncoder;
+    private final Slugify slugify;
 
     private final FormRepository formRepository;
-    private final SubmissionRepository submissionRepository;
     private final FormMapper formMapper;
+    private final FormValidator formValidator;
     private final QuestionMapper questionMapper;
+    private final SubmissionRepository submissionRepository;
     private final UserService userService;
     private final UploadService uploadService;
 
@@ -164,58 +160,18 @@ public class FormService {
                 formEntity, uploadService.getFileUrl(formEntity.getThumbnailKey()), authorName, questions);
     }
 
-    private List<QuestionEntity> mapQuestionsToEntities(List<QuestionRequestDto> questions, String userId) {
-        val requiredQuestionsCount =
-                questions.stream().filter(QuestionRequestDto::isRequired).count();
-        if (requiredQuestionsCount < 1) throw new RequiredQuestionCountValidationException();
-
-        return questions.stream()
-                .map(q -> {
-                    if (!uploadService.confirmUpload(q.imageKey(), userId))
-                        throw new QuestionImageNotFound(q.imageKey());
-
-                    switch (q.type()) {
-                        case SINGLE_CHOICE -> {
-                            val correctAnswersCount = q.answers().stream()
-                                    .filter(AnswerRequestDto::isCorrect)
-                                    .count();
-                            if (correctAnswersCount != 1) throw new SingleChoiceQuestionAnswersValidationException();
-                        }
-                        case MULTIPLE_CHOICE -> {
-                            val correctAnswersCount = q.answers().stream()
-                                    .filter(AnswerRequestDto::isCorrect)
-                                    .count();
-                            if (correctAnswersCount < 1) throw new MultipleChoiceQuestionAnswersValidationException();
-                        }
-                        case OPEN -> q.answers().clear();
-                    }
-
-                    return questionMapper.toEntity(q);
-                })
-                .toList();
-    }
-
-    private String createPasswordHash(FormRequestDto requestDto) {
-        if (!requestDto.status().equals(FormStatus.PRIVATE)) return null;
-        if (Optional.ofNullable(requestDto.password()).map(String::isBlank).orElse(true))
-            throw new BlankPasswordException();
-
-        return passwordEncoder.encode(requestDto.password());
-    }
-
     @Transactional
     public FormDetailResponseDto create(KeycloakJwtClaims keycloakJwtClaims, FormRequestDto requestDto) {
-        if (!uploadService.confirmUpload(requestDto.thumbnailKey(), keycloakJwtClaims.sub()))
-            throw new FormImageNotFound(requestDto.thumbnailKey());
+        val errors = formValidator.validate(requestDto, keycloakJwtClaims.sub());
+        if (!errors.isEmpty()) throw new ValidationException(errors);
 
-        val questionEntities = mapQuestionsToEntities(requestDto.questions(), keycloakJwtClaims.sub());
         val slug = slugify.slugify(requestDto.name());
-        val passwordHash = createPasswordHash(requestDto);
+        val passwordHash = Optional.ofNullable(requestDto.password())
+                .map(passwordEncoder::encode)
+                .orElse(null);
 
         val author = userService.findOrThrow(keycloakJwtClaims.sub());
-
         val formEntity = formMapper.toEntity(requestDto, slug, passwordHash, author);
-        formEntity.setQuestions(questionEntities);
 
         try {
             return mapToDetailResponseDto(formRepository.save(formEntity));
@@ -233,20 +189,21 @@ public class FormService {
                 .map(a -> a.getId().equals(keycloakJwtClaims.sub()))
                 .orElse(false);
         val isAdmin = keycloakJwtClaims.roles().contains(Role.ADMIN);
-        if (!isFormOwner || !isAdmin) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        if (!isFormOwner && !isAdmin) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 
-        if (!uploadService.confirmUpload(requestDto.thumbnailKey(), keycloakJwtClaims.sub()))
-            throw new FormImageNotFound(requestDto.thumbnailKey());
+        val errors = formValidator.validate(requestDto, keycloakJwtClaims.sub());
+        if (!errors.isEmpty()) throw new ValidationException(errors);
 
-        val questionEntities = mapQuestionsToEntities(requestDto.questions(), keycloakJwtClaims.sub());
         val slug = slugify.slugify(requestDto.name());
-        val passwordHash = createPasswordHash(requestDto);
+        val passwordHash = Optional.ofNullable(requestDto.password())
+                .map(passwordEncoder::encode)
+                .orElse(null);
 
         val newImageKeys = Stream.concat(
                         Stream.ofNullable(requestDto.thumbnailKey()),
-                        questionEntities.stream().map(QuestionEntity::getImageKey))
+                        requestDto.questions().stream().map(QuestionRequestDto::imageKey))
                 .filter(Objects::nonNull)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toUnmodifiableSet());
         val outdatedImageKeys = Stream.concat(
                         Stream.ofNullable(oldFormEntity.getThumbnailKey()),
                         oldFormEntity.getQuestions().stream().map(QuestionEntity::getImageKey))
@@ -255,7 +212,6 @@ public class FormService {
                 .toList();
 
         val updatedFormEntity = formMapper.updateEntityFromDto(requestDto, oldFormEntity, slug, passwordHash);
-        updatedFormEntity.setQuestions(questionEntities);
 
         try {
             val response = mapToDetailResponseDto(formRepository.save(updatedFormEntity));

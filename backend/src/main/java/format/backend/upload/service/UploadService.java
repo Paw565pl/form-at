@@ -118,7 +118,6 @@ public class UploadService {
     }
 
     public boolean confirmUpload(String key, String userId) {
-        if (key == null) return true;
         if (!isUploaded(key)) return false;
 
         val pendingUploadOpt = pendingUploadRepository.findByKey(key);
