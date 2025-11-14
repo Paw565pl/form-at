@@ -2,6 +2,7 @@ package format.backend.core.exception;
 
 import jakarta.validation.ConstraintViolationException;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.val;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -86,9 +87,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ApplicationException.class)
     public ResponseEntity<ErrorResponseDto> handleApplicationException(ApplicationException e) {
         val status = e.getStatus();
-        val response = e.getErrors() != null
-                ? new ErrorResponseDto(status, e.getMessage(), e.getErrors())
-                : new ErrorResponseDto(status, e.getMessage());
+        val response = Optional.ofNullable(e.getErrors())
+                .map(errors -> new ErrorResponseDto(status, e.getMessage(), errors))
+                .orElse(new ErrorResponseDto(status, e.getMessage()));
 
         return ResponseEntity.status(status).body(response);
     }
