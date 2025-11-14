@@ -17,7 +17,7 @@ export const Details = ({ form }: DetailsProps) => {
   const t = useTranslations("publicFormView.details");
 
   return (
-    <main className="w-full">
+    <main className="w-full pt-7">
       {/* form tags */}
       <div className="flex flex-wrap gap-2 md:gap-6">
         <div className="flex items-center gap-1">
