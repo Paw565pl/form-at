@@ -8,6 +8,7 @@ import {
   List,
   ListChecks,
   Lock,
+  MessageSquareX,
   MoreHorizontal,
   PersonStanding,
 } from "lucide-react";
@@ -24,4 +25,5 @@ export const ICONS = {
   submissionsCount: PersonStanding,
   estimatedDuration: ClockArrowUp,
   allowGuestSubmissions: Lock,
+  noQuestions: MessageSquareX,
 };

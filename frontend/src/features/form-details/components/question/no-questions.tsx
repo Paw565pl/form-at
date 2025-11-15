@@ -5,7 +5,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/core/components/ui/empty";
-import { MessageSquareX } from "lucide-react";
+import { ICONS } from "@/core/config/icons";
 import { useTranslations } from "next-intl";
 
 export const NoQuestions = () => {
@@ -15,7 +15,7 @@ export const NoQuestions = () => {
     <Empty className="border-muted-foreground w-full border border-dashed">
       <EmptyHeader>
         <EmptyMedia variant="icon">
-          <MessageSquareX />
+          <ICONS.noQuestions />
         </EmptyMedia>
         <EmptyTitle>{t("noQuestions")}</EmptyTitle>
         <EmptyDescription>{t("noQuestionsDescription")}</EmptyDescription>
