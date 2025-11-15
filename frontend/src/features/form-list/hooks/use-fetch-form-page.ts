@@ -1,8 +1,10 @@
 import { apiService } from "@/core/services/api-service";
 import { ErrorResponseDto } from "@/core/types/error-response-dto";
-import { FormFilterOptionsDto } from "@/core/types/form-filter-options-dto";
-import { FormListResponseDto } from "@/core/types/form-list-response-dto";
-import { formSortOptions } from "@/core/types/form-sort-options";
+import {
+  FormFilterOptionsDto,
+  FormListResponseDto,
+  formSortOptions,
+} from "@/core/types/form";
 import { PaginatedResponseDto } from "@/core/types/paginated-response-dto";
 import {
   infiniteQueryOptions,

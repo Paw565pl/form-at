@@ -1,6 +1,6 @@
 import { authenticatedApiService } from "@/core/services/api-service";
 import { ErrorResponseDto } from "@/core/types/error-response-dto";
-import { FormDetailResponseDto } from "@/core/types/form-detail-response-dto";
+import { FormDetailResponseDto } from "@/core/types/form";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 

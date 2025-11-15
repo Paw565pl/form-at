@@ -1,5 +1,4 @@
-import { FormStatus, Language } from "@/core/types/form-detail-response-dto";
-import { FormListResponseDto } from "@/core/types/form-list-response-dto";
+import { FormListResponseDto, FormStatus, Language } from "@/core/types/form";
 
 export const placeholder_image_url =
   "https://media.gettyimages.com/id/2160237234/video/grass-waving-in-the-wind-sunny-day-in-the-forest.jpg?s=640x640&k=20&c=A5Fkny7OIkrfeouSyoUZ_m9vn0QkJd9oTv4Scs4iOfU=";

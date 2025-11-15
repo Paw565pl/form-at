@@ -1,6 +1,6 @@
 import { apiService } from "@/core/services/api-service";
 import { ErrorResponseDto } from "@/core/types/error-response-dto";
-import { FormDetailResponseDto } from "@/core/types/form-detail-response-dto";
+import { FormDetailResponseDto } from "@/core/types/form";
 import { QueryClient, queryOptions, useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 

@@ -1,16 +1,24 @@
-import { AnswerResponseDto } from "@/core/types/answer";
+import { AnswerRequestDto, AnswerResponseDto } from "@/core/types/answer";
+
+export interface QuestionResponseDto {
+  readonly id: string;
+  readonly content: string;
+  readonly type: QuestionType;
+  readonly image: string | null;
+  readonly isRequired: boolean;
+  readonly answers: AnswerResponseDto[];
+}
 
 export enum QuestionType {
-  Single = "SINGLE",
-  Multiple = "MULTIPLE",
+  SingleChoice = "SINGLE_CHOICE",
+  MultipleChoice = "MULTIPLE_CHOICE",
   Open = "OPEN",
 }
 
-export interface QuestionResponseDto {
-  id: string;
+export interface QuestionRequestDto {
   content: string;
   type: QuestionType;
-  imageKey?: string;
+  imageKey: string | null;
   isRequired: boolean;
-  answers: AnswerResponseDto[];
+  answers: AnswerRequestDto[];
 }
