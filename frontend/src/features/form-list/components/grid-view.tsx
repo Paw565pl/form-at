@@ -14,6 +14,7 @@ export const GridView = () => {
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {forms.map((form) => (
+        // TODO: fix when details page merges in
         <Link href={{ pathname: `/forms/${form.id}` }} key={form.id}>
           <Card
             key={form.id}
@@ -21,7 +22,7 @@ export const GridView = () => {
           >
             <div className="relative min-h-40">
               <Image
-                src={form.thumbnailKey || placeholder_image_url}
+                src={form.thumbnail || placeholder_image_url}
                 alt={form.name}
                 className="origin-bottom object-cover transition-transform group-hover:scale-105"
                 fill
@@ -32,8 +33,8 @@ export const GridView = () => {
               <header className="bg-card flex flex-wrap items-center justify-between">
                 <h1 className="font-medium">{form.name}</h1>
                 <span className="text-muted-foreground text-sm">
-                  {form.author
-                    ? `${t("by", { name: form.author.name })}`
+                  {form.authorName
+                    ? `${t("by", { name: form.authorName })}`
                     : t("byUnknown")}
                 </span>
               </header>
@@ -42,7 +43,7 @@ export const GridView = () => {
               </p>
               <footer className="text-muted-foreground mt-auto flex flex-wrap justify-between gap-1 text-sm">
                 <span>
-                  {t("questions", { count: form.questions.length })} •{" "}
+                  {t("questions", { count: form.questionsCount })} •{" "}
                   {t("submissions", { count: form.submissionsCount })}
                 </span>
                 <span className="text-muted-foreground text-sm">
