@@ -19,7 +19,6 @@ import {
   TooltipTrigger,
 } from "@/core/components/ui/tooltip";
 import { ICONS } from "@/core/config/icons";
-import { cn } from "@/core/lib/cn";
 import { FormResponseDto } from "@/core/types/form";
 import { placeholder_image_url } from "@/features/form-list/example-forms";
 import { useTranslations } from "next-intl";
@@ -74,12 +73,7 @@ export const Banner = ({ form }: BannerProps) => {
         </Tooltip>
       </span>
 
-      <div
-        className={cn(
-          "absolute right-2 bottom-2 flex flex-col items-end gap-2 md:right-4 md:bottom-4",
-          "md:flex-row",
-        )}
-      >
+      <div className="absolute right-2 bottom-2 flex flex-col items-end gap-2 md:right-4 md:bottom-4 md:flex-row">
         <Dialog>
           <form>
             <DialogTrigger asChild>
