@@ -1,3 +1,5 @@
+import { SortOptionsDto } from "@/core/types/sort-options-dto";
+
 export const formSortOptions = {
   "estimatedDuration:asc": new SortOptionsDto("estimatedDuration", "asc"),
   "estimatedDuration:desc": new SortOptionsDto("estimatedDuration", "desc"),

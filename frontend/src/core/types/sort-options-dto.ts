@@ -1,4 +1,4 @@
-class SortOptionsDto {
+export class SortOptionsDto {
   constructor(
     public field: string,
     public order: "asc" | "desc",
