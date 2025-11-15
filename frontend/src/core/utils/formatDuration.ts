@@ -8,7 +8,6 @@ import { parse } from "tinyduration";
  *  - invalid -> empty string
  */
 export function formatDuration(iso: string): string {
-  if (!iso) return "";
   try {
     const d = parse(iso);
     const parts: string[] = [];
