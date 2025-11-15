@@ -21,7 +21,9 @@ export const Question = (question: QuestionResponseDto) => {
         <h1 className="w-full text-xl">{question.content}</h1>
         {question.answers?.map((answer, index) => (
           <div key={index} className="flex items-center gap-3">
-            <Label className="text-secondary">{answer.content}</Label>
+            <Label className="text-secondary-foreground">
+              {answer.content}
+            </Label>
           </div>
         ))}
       </div>
