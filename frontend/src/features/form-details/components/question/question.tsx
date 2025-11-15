@@ -9,6 +9,7 @@ export const Question = (question: QuestionResponseDto) => {
       {/* placeholder for when the library is ready */}
       {question.imageKey && (
         <Image
+          className="rounded-md"
           src={placeholder_image_url}
           alt="Question image"
           width={128}
