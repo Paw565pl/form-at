@@ -39,7 +39,7 @@ public class FormValidator {
                 .orElse(true);
         if (isThumbnailUploaded) return Optional.empty();
 
-        val message = String.format("Form image with key %s was not found in storage", form.thumbnailKey());
+        val message = String.format("Form image with key '%s' was not found in storage", form.thumbnailKey());
         return Optional.of(Map.entry("thumbnailKey", List.of(message)));
     }
 
@@ -70,7 +70,10 @@ public class FormValidator {
         for (var i = 0; i < questions.size(); i++) {
             val question = questions.get(i);
 
-            if (!uploadService.confirmUpload(question.imageKey(), userId)) {
+            val isQuestionImageUploaded = Optional.ofNullable(question.imageKey())
+                    .map(imageKey -> uploadService.confirmUpload(imageKey, userId))
+                    .orElse(true);
+            if (!isQuestionImageUploaded) {
                 val message =
                         String.format("Question image with key '%s' was not found in storage", question.imageKey());
                 errors.add(Map.entry(String.format("questions[%s].imageKey", i), List.of(message)));
