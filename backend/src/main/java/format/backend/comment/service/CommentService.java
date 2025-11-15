@@ -34,7 +34,6 @@ import org.springframework.web.server.ResponseStatusException;
 public class CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
-    private final FormRepository formRepository;
     private final CommentMapper commentMapper;
 
     private final FormService formService;
