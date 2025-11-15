@@ -27,7 +27,9 @@ export const QuestionList = ({ questions }: QuestionListProps) => {
         </Button>
       </div>
       {showQuestions &&
-        questions.map((question, idx) => <Question key={idx} {...question} />)}
+        questions.map((question) => (
+          <Question key={question.id} {...question} />
+        ))}
     </div>
   );
 };
