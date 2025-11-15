@@ -6,7 +6,7 @@ import Image from "next/image";
 export const Question = (question: QuestionResponseDto) => {
   return (
     <div className="border-primary/60 flex gap-2 rounded-lg border p-2 shadow-sm">
-      {/* placeholder for when the library is ready */}
+      {/* TODO: replace placeholder_image_url with minio implementation */}
       {question.imageKey && (
         <Image
           className="rounded-md"
