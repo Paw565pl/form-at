@@ -5,7 +5,7 @@ import format.backend.auth.jwt.KeycloakJwtClaimsExtractor;
 import format.backend.comment.dto.CommentRequestDto;
 import format.backend.comment.dto.CommentResponseDto;
 import format.backend.comment.service.CommentService;
-import format.backend.form.validator.ValidFormId;
+import format.backend.comment.validator.ValidCommentId;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -31,7 +31,7 @@ public class CommentController {
     private final CommentService commentService;
 
     @GetMapping
-    public Page<CommentResponseDto> findAll(@ValidFormId @PathVariable String formIdOrSlug, Pageable pageable) {
+    public Page<CommentResponseDto> findAll(@PathVariable String formIdOrSlug, Pageable pageable) {
         return commentService.findAll(formIdOrSlug, pageable);
     }
 
@@ -40,7 +40,7 @@ public class CommentController {
     @ResponseStatus(HttpStatus.CREATED)
     public CommentResponseDto create(
             @AuthenticationPrincipal Jwt jwt,
-            @ValidFormId @PathVariable String formIdOrSlug,
+            @PathVariable String formIdOrSlug,
             @Valid @RequestBody CommentRequestDto commentRequestDto) {
         return commentService.create(formIdOrSlug, keycloakJwtClaimsExtractor.getClaims(jwt), commentRequestDto);
     }
@@ -49,8 +49,8 @@ public class CommentController {
     @PutMapping("/{commentId}")
     public CommentResponseDto update(
             @AuthenticationPrincipal Jwt jwt,
-            @ValidFormId @PathVariable String formIdOrSlug,
-            @PathVariable String commentId,
+            @PathVariable String formIdOrSlug,
+            @ValidCommentId @PathVariable String commentId,
             @Valid @RequestBody CommentRequestDto commentRequestDto) {
         return commentService.update(
                 formIdOrSlug, commentId, keycloakJwtClaimsExtractor.getClaims(jwt), commentRequestDto);
@@ -61,8 +61,8 @@ public class CommentController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(
             @AuthenticationPrincipal Jwt jwt,
-            @ValidFormId @PathVariable String formIdOrSlug,
-            @PathVariable String commentId) {
+            @PathVariable String formIdOrSlug,
+            @ValidCommentId @PathVariable String commentId) {
         commentService.delete(formIdOrSlug, commentId, keycloakJwtClaimsExtractor.getClaims(jwt));
     }
 }
