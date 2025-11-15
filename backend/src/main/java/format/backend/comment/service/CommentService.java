@@ -13,13 +13,9 @@ import format.backend.comment.entity.CommentEntity;
 import format.backend.comment.exception.CommentNotFoundException;
 import format.backend.comment.mapper.CommentMapper;
 import format.backend.comment.repository.CommentRepository;
-import format.backend.form.entity.FormEntity;
-import format.backend.form.exception.FormNotFoundException;
-import format.backend.form.repository.FormRepository;
 import format.backend.form.service.FormService;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +24,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -62,7 +60,9 @@ public class CommentService {
         }
 
         return comments.map(comment -> {
-            val authorName = comment.getAuthor() != null ? comment.getAuthor().getUsername() : null;
+            val authorName = Optional.ofNullable(comment.getAuthor())
+                    .map(UserEntity::getUsername)
+                    .orElse(null);
             return commentMapper.toResponseDto(comment, authorName);
         });
     }
@@ -77,7 +77,9 @@ public class CommentService {
         val comment = commentMapper.toEntity(commentRequestDto, form, user);
 
         val saved = commentRepository.save(comment);
-        val authorName = saved.getAuthor() != null ? saved.getAuthor().getUsername() : null;
+        val authorName = Optional.ofNullable(saved.getAuthor())
+                .map(UserEntity::getUsername)
+                .orElse(null);
 
         return commentMapper.toResponseDto(saved, authorName);
     }
@@ -105,7 +107,9 @@ public class CommentService {
         comment.setContent(commentRequestDto.content());
 
         val updated = commentRepository.save(comment);
-        val authorName = updated.getAuthor() != null ? updated.getAuthor().getUsername() : null;
+        val authorName = Optional.ofNullable(updated.getAuthor())
+                .map(UserEntity::getUsername)
+                .orElse(null);
 
         return commentMapper.toResponseDto(updated, authorName);
     }
