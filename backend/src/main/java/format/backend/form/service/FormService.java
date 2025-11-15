@@ -127,7 +127,7 @@ public class FormService {
                 .toList();
     }
 
-    private FormEntity findOrThrow(String idOrSlug) {
+    public FormEntity findOrThrow(String idOrSlug) {
         val form = ObjectId.isValid(idOrSlug) ? formRepository.findById(idOrSlug) : formRepository.findBySlug(idOrSlug);
         return form.orElseThrow(() -> new FormNotFoundException(idOrSlug));
     }

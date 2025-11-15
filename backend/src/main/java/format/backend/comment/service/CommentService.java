@@ -16,6 +16,7 @@ import format.backend.comment.repository.CommentRepository;
 import format.backend.form.entity.FormEntity;
 import format.backend.form.exception.FormNotFoundException;
 import format.backend.form.repository.FormRepository;
+import format.backend.form.service.FormService;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.bson.types.ObjectId;
@@ -36,10 +37,7 @@ public class CommentService {
     private final FormRepository formRepository;
     private final CommentMapper commentMapper;
 
-    private FormEntity findFormOrThrow(String idOrSlug) {
-        val form = ObjectId.isValid(idOrSlug) ? formRepository.findById(idOrSlug) : formRepository.findBySlug(idOrSlug);
-        return form.orElseThrow(() -> new FormNotFoundException(idOrSlug));
-    }
+    private final FormService formService;
 
     private CommentEntity findCommentOrThrow(String id) {
         val comment = commentRepository.findById(id);
@@ -51,7 +49,7 @@ public class CommentService {
     }
 
     public Page<CommentResponseDto> findAll(String idOrSlug, Pageable pageable) {
-        val form = findFormOrThrow(idOrSlug);
+        val form = formService.findOrThrow(idOrSlug);
 
         val sortedPageable = PageRequest.of(
                 pageable.getPageNumber(),
@@ -73,7 +71,7 @@ public class CommentService {
     @Transactional
     public CommentResponseDto create(
             String idOrSlug, KeycloakJwtClaims keycloakJwtClaims, CommentRequestDto commentRequestDto) {
-        val form = findFormOrThrow(idOrSlug);
+        val form = formService.findOrThrow(idOrSlug);
 
         val user = findUserOrThrow(keycloakJwtClaims.sub());
 
@@ -92,7 +90,7 @@ public class CommentService {
             KeycloakJwtClaims keycloakJwtClaims,
             CommentRequestDto commentRequestDto) {
 
-        val form = findFormOrThrow(idOrSlug);
+        val form = formService.findOrThrow(idOrSlug);
         val comment = findCommentOrThrow(commentId);
 
         if (!comment.getForm().getId().equals(form.getId())) {
@@ -115,7 +113,7 @@ public class CommentService {
 
     @Transactional
     public void delete(String idOrSlug, String commentId, KeycloakJwtClaims keycloakJwtClaims) {
-        val form = findFormOrThrow(idOrSlug);
+        val form = formService.findOrThrow(idOrSlug);
 
         val comment = findCommentOrThrow(commentId);
 
