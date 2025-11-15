@@ -273,7 +273,7 @@ public class FormService {
                 .filter(Objects::nonNull)
                 .toList();
 
-        commentRepository.deleteByFormId(formEntity.getId());
+        commentRepository.deleteAllByFormId(formEntity.getId());
 
         formRepository.delete(formEntity);
         if (!imageKeys.isEmpty()) uploadService.deleteAllByKeys(imageKeys);
