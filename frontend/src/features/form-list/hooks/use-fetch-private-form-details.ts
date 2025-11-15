@@ -9,7 +9,7 @@ const getFetchPrivateFormDetailsQueryOptions = (
   password: string,
 ) =>
   queryOptions<FormDetailResponseDto, AxiosError<ErrorResponseDto>>({
-    queryKey: ["forms", idOrSlug, "access", password],
+    queryKey: ["forms", idOrSlug, "access", password] as const,
     queryFn: async () => {
       const { data } = await apiService.post<FormDetailResponseDto>(
         `/api/v1/forms/${idOrSlug}/access`,

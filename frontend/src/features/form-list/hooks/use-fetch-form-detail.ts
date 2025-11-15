@@ -6,7 +6,7 @@ import { AxiosError } from "axios";
 
 const getFetchFormDetailQueryOptions = (idOrSlug: string) =>
   queryOptions<FormDetailResponseDto, AxiosError<ErrorResponseDto>>({
-    queryKey: ["forms", idOrSlug],
+    queryKey: ["forms", idOrSlug] as const,
     queryFn: async () => {
       const { data } = await apiService.get<FormDetailResponseDto>(
         `/api/v1/forms/${idOrSlug}`,

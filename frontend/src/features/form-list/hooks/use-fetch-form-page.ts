@@ -22,7 +22,7 @@ const getFetchFormPageQueryOptions = (
     PaginatedResponseDto<FormListResponseDto>,
     AxiosError<ErrorResponseDto>
   >({
-    queryKey: ["forms", formFilterOptionsDto, formSortOptionsDto],
+    queryKey: ["forms", formFilterOptionsDto, formSortOptionsDto] as const,
     queryFn: async ({ pageParam }) => {
       const { data } = await apiService.get<
         PaginatedResponseDto<FormListResponseDto>
