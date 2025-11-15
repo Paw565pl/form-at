@@ -1,6 +1,7 @@
 export interface FormDetailResponseDto {
   readonly id: string;
   readonly name: string;
+  readonly slug: string;
   readonly description: string | null;
   readonly language: Language;
   readonly formStatus: FormStatus;
