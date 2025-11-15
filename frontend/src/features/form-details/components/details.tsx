@@ -66,14 +66,9 @@ export const Details = ({ form }: DetailsProps) => {
         </div>
       </header>
 
-      {form.description && <p>{form.description}</p>}
-      <br />
+      {form.description && <p className="pb-6">{form.description}</p>}
       <p className="w-full pb-4 text-right">
-        {format.dateTime(form.updatedAt, {
-          year: "numeric",
-          month: "numeric",
-          day: "numeric",
-        })}
+        {format.dateTime(form.updatedAt, "long")}
       </p>
     </main>
   );
