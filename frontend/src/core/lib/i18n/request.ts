@@ -34,9 +34,19 @@ const getLocale = async () => {
 export default getRequestConfig(async () => {
   const locale = await getLocale();
   const messages = (await import(`@root/messages/${locale}.json`)).default;
+  const formats = {
+    dateTime: {
+      long: {
+        year: "numeric" as const,
+        month: "long" as const,
+        day: "numeric" as const,
+      },
+    },
+  };
 
   return {
     locale,
     messages,
+    formats,
   };
 });
