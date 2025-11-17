@@ -11,7 +11,7 @@ const form: FormResponseDto = {
   slug: "formularz-1",
   description: "Opis formularza 1",
   language: Language.Pl,
-  status: FormStatus.Public,
+  status: FormStatus.Private,
   thanksMessage: "Dziękujemy za wypełnienie formularza!",
   estimatedDuration: "PT5M",
   thumbnailKey: undefined,

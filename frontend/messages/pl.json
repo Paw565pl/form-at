@@ -48,7 +48,7 @@
       "questionsCount": "Ilość pytań: {count}",
       "submissionsCount": "Ilość zgłoszeń: {count}",
       "estimatedTime": "Szacowany czas ukończenia: {time}",
-      "unpublicForm": "Formularz wymaga kodu"
+      "privateForm": "Formularz wymaga kodu"
     },
     "questionList": {
       "showQuestions": "Pokaż pytania",

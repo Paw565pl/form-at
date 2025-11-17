@@ -47,18 +47,18 @@ export const Details = ({ form }: DetailsProps) => {
           <h1 className="line-clamp-2 max-w-2xl text-4xl font-extrabold">
             {form.name}
           </h1>
-          {form.status == FormStatus.Unpublic ? null : (
+          {form.status == FormStatus.Private ? (
             <span className="flex-none">
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <ICONS.allowGuestSubmissions />
+                  <ICONS.privateForm />
                 </TooltipTrigger>
                 <TooltipContent side="bottom">
-                  <p>{t("unpublicForm")}</p>
+                  <p>{t("privateForm")}</p>
                 </TooltipContent>
               </Tooltip>
             </span>
-          )}
+          ) : null}
         </div>
         <div className="flex flex-none items-center">
           {/* TODO take submission date from user's submission data */}

@@ -48,7 +48,7 @@
       "questionsCount": "{count} question(s)",
       "submissionsCount": "{count} submission(s)",
       "estimatedTime": "Estimated time to complete: {time}",
-      "unpublicForm": "Form Requires Code"
+      "privateForm": "Form Requires Code"
     },
     "questionList": {
       "showQuestions": "Show Questions",
