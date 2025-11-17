@@ -35,5 +35,6 @@ public class QuestionEntity {
     @NonNull private Boolean isRequired;
 
     @Field(name = "answers")
+    @Setter(AccessLevel.NONE)
     @NonNull private List<AnswerEntity> answers = new ArrayList<>();
 }

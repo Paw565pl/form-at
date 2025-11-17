@@ -41,6 +41,7 @@ public class SubmissionEntity {
     @Nullable private UserEntity author;
 
     @Field(name = "answers")
+    @Setter(AccessLevel.NONE)
     @NonNull private List<SubmissionAnswerEntity> answers = new ArrayList<>();
 
     @CreatedDate

@@ -99,7 +99,8 @@ public class SubmissionService {
                             .filter(questionAnswersIds::contains)
                             .collect(Collectors.toUnmodifiableSet());
 
-                    submissionAnswer.setChosenAnswerIds(existingAnswersIds);
+                    submissionAnswer.getChosenAnswerIds().clear();
+                    submissionAnswer.getChosenAnswerIds().addAll(existingAnswersIds);
                     submissionAnswer.setOpenAnswer(null);
                 }
                 case OPEN -> submissionAnswer.getChosenAnswerIds().clear();
