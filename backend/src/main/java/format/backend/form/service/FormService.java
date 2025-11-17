@@ -4,6 +4,7 @@ import com.github.slugify.Slugify;
 import format.backend.auth.entity.Role;
 import format.backend.auth.jwt.KeycloakJwtClaims;
 import format.backend.auth.repository.UserRepository;
+import format.backend.comment.repository.CommentRepository;
 import format.backend.form.dto.AnswerRequestDto;
 import format.backend.form.dto.FormAccessRequestDto;
 import format.backend.form.dto.FormDetailResponseDto;
@@ -62,6 +63,7 @@ public class FormService {
     private final PasswordEncoder passwordEncoder;
 
     private final FormRepository formRepository;
+    private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final FormMapper formMapper;
     private final QuestionMapper questionMapper;
@@ -125,7 +127,7 @@ public class FormService {
                 .toList();
     }
 
-    private FormEntity findOrThrow(String idOrSlug) {
+    public FormEntity findOrThrow(String idOrSlug) {
         val form = ObjectId.isValid(idOrSlug) ? formRepository.findById(idOrSlug) : formRepository.findBySlug(idOrSlug);
         return form.orElseThrow(() -> new FormNotFoundException(idOrSlug));
     }
@@ -273,5 +275,6 @@ public class FormService {
 
         formRepository.delete(formEntity);
         if (!imageKeys.isEmpty()) uploadService.deleteAllByKeys(imageKeys);
+        commentRepository.deleteAllByFormId(formEntity.getId());
     }
 }
