@@ -6,7 +6,6 @@ import format.backend.auth.service.UserService;
 import format.backend.core.exception.ValidationException;
 import format.backend.form.entity.AnswerEntity;
 import format.backend.form.entity.QuestionEntity;
-import format.backend.form.repository.FormRepository;
 import format.backend.form.service.FormService;
 import format.backend.submission.SubmissionValidator;
 import format.backend.submission.dto.SubmissionRequestDto;
@@ -39,7 +38,6 @@ public class SubmissionService {
     private final SubmissionRepository submissionRepository;
     private final SubmissionMapper submissionMapper;
     private final SubmissionValidator submissionValidator;
-    private final FormRepository formRepository;
     private final FormService formService;
     private final UserService userService;
 
@@ -114,9 +112,7 @@ public class SubmissionService {
 
         try {
             val savedSubmissionEntity = submissionRepository.save(submissionEntity);
-
-            form.setSubmissionsCount(form.getSubmissionsCount() + 1);
-            formRepository.save(form);
+            formService.incrementSubmissionsCountById(form.getId());
 
             return submissionMapper.toResponseDto(savedSubmissionEntity);
         } catch (DataIntegrityViolationException e) {
@@ -140,7 +136,6 @@ public class SubmissionService {
         if (!isFormOwner || !isAdmin) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 
         submissionRepository.delete(submission);
-        form.setSubmissionsCount(form.getSubmissionsCount() - 1);
-        formRepository.save(form);
+        formService.decrementSubmissionsCountById(form.getId());
     }
 }

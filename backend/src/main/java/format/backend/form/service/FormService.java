@@ -257,4 +257,14 @@ public class FormService {
 
         submissionRepository.deleteAllByFormId(formEntity.getId());
     }
+
+    @Transactional
+    public void incrementSubmissionsCountById(String id) {
+        formRepository.incrementSubmissionsCount(id);
+    }
+
+    @Transactional
+    public void decrementSubmissionsCountById(String id) {
+        formRepository.decrementSubmissionsCount(id);
+    }
 }

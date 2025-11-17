@@ -88,6 +88,7 @@ public class FormEntity {
     @Nullable private UserEntity author;
 
     @Field(name = "submissionsCount")
+    @Setter(AccessLevel.NONE)
     @NonNull private Long submissionsCount = 0L;
 
     @Field(name = "questions")
