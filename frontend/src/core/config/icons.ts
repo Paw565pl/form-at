@@ -1,6 +1,7 @@
 import {
   BadgeQuestionMark,
   ChevronDown,
+  ChevronUp,
   ClockArrowUp,
   CornerUpLeft,
   HatGlasses,
@@ -21,6 +22,7 @@ export const ICONS = {
   listChecks: ListChecks,
   hatGlasses: HatGlasses,
   chevronDown: ChevronDown,
+  chevronUp: ChevronUp,
   questionsCount: BadgeQuestionMark,
   submissionsCount: PersonStanding,
   estimatedDuration: ClockArrowUp,

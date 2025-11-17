@@ -23,7 +23,7 @@ export const QuestionList = ({ questions }: QuestionListProps) => {
           size={"icon-sm"}
           onClick={() => setShowQuestions((prev) => !prev)}
         >
-          <ICONS.chevronDown />
+          {showQuestions ? <ICONS.chevronUp /> : <ICONS.chevronDown />}
         </Button>
       </div>
       {showQuestions &&
