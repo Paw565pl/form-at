@@ -21,23 +21,23 @@ export enum ShuffleVariant {
 }
 
 export interface FormResponseDto {
-  id: string;
-  name: string;
-  slug: string;
-  description?: string;
-  language: Language;
-  status: FormStatus;
-  shuffleVariant?: ShuffleVariant;
-  thanksMessage?: string;
-  estimatedDuration: string;
-  thumbnailKey?: string;
-  allowsQuestionsPreview: boolean; // allows previewing questions before submission
-  allowsGuestSubmissions: boolean; // allows submissions from guests (not logged in users)
-  saveSubmissions: boolean;
-  authorId: string;
-  author?: User;
-  createdAt: Date;
-  updatedAt: Date;
-  submissionsCount: number;
-  questions: QuestionResponseDto[];
+  readonly id: string;
+  readonly name: string;
+  readonly slug: string;
+  readonly description?: string;
+  readonly language: Language;
+  readonly status: FormStatus;
+  readonly shuffleVariant?: ShuffleVariant;
+  readonly thanksMessage?: string;
+  readonly estimatedDuration: string;
+  readonly thumbnailKey?: string;
+  readonly allowsQuestionsPreview: boolean; // allows previewing questions before submission
+  readonly allowsGuestSubmissions: boolean; // allows submissions from guests (not logged in users)
+  readonly saveSubmissions: boolean;
+  readonly authorId: string;
+  readonly author?: User;
+  readonly createdAt: Date;
+  readonly updatedAt: Date;
+  readonly submissionsCount: number;
+  readonly questions: QuestionResponseDto[];
 }

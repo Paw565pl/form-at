@@ -9,7 +9,7 @@ import { FormResponseDto, FormStatus } from "@/core/types/form";
 import { formatDuration } from "@/core/utils/formatDuration";
 import { useFormatter, useTranslations } from "next-intl";
 interface DetailsProps {
-  form: FormResponseDto;
+  readonly form: FormResponseDto;
 }
 
 export const Details = ({ form }: DetailsProps) => {

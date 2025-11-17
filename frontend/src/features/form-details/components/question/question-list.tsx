@@ -7,7 +7,7 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 interface QuestionListProps {
-  questions: QuestionResponseDto[];
+  readonly questions: QuestionResponseDto[];
 }
 
 export const QuestionList = ({ questions }: QuestionListProps) => {

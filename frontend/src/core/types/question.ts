@@ -7,10 +7,10 @@ export enum QuestionType {
 }
 
 export interface QuestionResponseDto {
-  id: string;
-  content: string;
-  type: QuestionType;
-  imageKey?: string;
-  isRequired: boolean;
-  answers: AnswerResponseDto[];
+  readonly id: string;
+  readonly content: string;
+  readonly type: QuestionType;
+  readonly imageKey?: string;
+  readonly isRequired: boolean;
+  readonly answers: AnswerResponseDto[];
 }

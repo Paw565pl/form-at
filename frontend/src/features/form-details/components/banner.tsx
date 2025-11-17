@@ -26,7 +26,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 interface BannerProps {
-  form: FormResponseDto;
+  readonly form: FormResponseDto;
 }
 
 export const Banner = ({ form }: BannerProps) => {
