@@ -45,8 +45,8 @@
     },
     "details": {
       "formFinished": "Formularz został wykonany: {finishedAt}",
-      "questionsCount": "ilość pytań: {count}",
-      "submissionsCount": "ilość zgłoszeń: {count}",
+      "questionsCount": "Ilość pytań: {count}",
+      "submissionsCount": "Ilość zgłoszeń: {count}",
       "estimatedTime": "Szacowany czas ukończenia: {time}",
       "unpublicForm": "Formularz wymaga kodu"
     },
