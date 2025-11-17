@@ -45,8 +45,8 @@
     },
     "details": {
       "formFinished": "The form finished at: {finishedAt}",
-      "questionsCount": "{count} question(s)",
-      "submissionsCount": "{count} submission(s)",
+      "questionsCount": "{count, plural, =1 {# question} other {# questions}}",
+      "submissionsCount": "{count, plural, =1 {# submission} other {# submissions}}",
       "estimatedTime": "Estimated time to complete: {time}",
       "privateForm": "Form Requires Code"
     },
