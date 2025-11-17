@@ -46,6 +46,7 @@ public class SubmissionService {
     public Page<SubmissionResponseDto> findAllByFormIdOrSlug(
             KeycloakJwtClaims keycloakJwtClaims, String formIdOrSlug, Pageable pageable) {
         val form = formService.findOrThrow(formIdOrSlug);
+        if (!form.getSaveSubmissions()) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 
         val isFormOwner = Optional.ofNullable(form.getAuthor())
                 .map(a -> a.getId().equals(keycloakJwtClaims.sub()))
@@ -63,6 +64,8 @@ public class SubmissionService {
     public SubmissionResponseDto findByFormIdOrSlugAndAuthorId(
             KeycloakJwtClaims keycloakJwtClaims, String formIdOrSlug) {
         val form = formService.findOrThrow(formIdOrSlug);
+        if (!form.getSaveSubmissions()) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+
         val submission = submissionRepository
                 .findByFormIdAndAuthorId(form.getId(), keycloakJwtClaims.sub())
                 .orElseThrow(() -> new SubmissionNotFoundForUserException(formIdOrSlug));
@@ -76,6 +79,8 @@ public class SubmissionService {
         val form = formService.findOrThrow(formIdOrSlug);
         if (!form.getAllowsGuestSubmissions() && keycloakJwtClaims == null)
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+
+        if (!form.getSaveSubmissions()) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 
         val errors = submissionValidator.validate(form, requestDto);
         if (!errors.isEmpty()) throw new ValidationException(errors);
@@ -122,6 +127,8 @@ public class SubmissionService {
     @Transactional
     public void delete(KeycloakJwtClaims keycloakJwtClaims, String formIdOrSlug, String submissionId) {
         val form = formService.findOrThrow(formIdOrSlug);
+        if (!form.getSaveSubmissions()) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+
         val submission = submissionRepository
                 .findById(submissionId)
                 .orElseThrow(() -> new SubmissionNotFoundException(submissionId));
