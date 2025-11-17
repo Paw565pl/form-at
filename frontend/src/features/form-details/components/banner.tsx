@@ -34,7 +34,7 @@ export const Banner = ({ form }: BannerProps) => {
   const router = useRouter();
 
   return (
-    <main className="relative flex h-48 w-full items-end">
+    <section className="relative flex h-48 w-full items-end">
       {/* background image */}
       <Image
         src={form.thumbnailKey || placeholder_image_url}
@@ -108,6 +108,6 @@ export const Banner = ({ form }: BannerProps) => {
           </Button>
         ) : null}
       </div>
-    </main>
+    </section>
   );
 };
