@@ -84,7 +84,7 @@ public class FormService {
             query.addCriteria(Criteria.where("language").is(filterDto.language().getMongoValue()));
 
         if (filterDto.minEstimatedDuration() != null || filterDto.maxEstimatedDuration() != null) {
-            val estimatedDurationFilterCriteria = Criteria.where("estimatedDuration");
+            val estimatedDurationFilterCriteria = Criteria.where("estimatedDurationSeconds");
 
             if (filterDto.minEstimatedDuration() != null)
                 estimatedDurationFilterCriteria.gte(
