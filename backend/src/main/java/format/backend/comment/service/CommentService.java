@@ -97,8 +97,11 @@ public class CommentService {
             throw new ResponseStatusException(NOT_FOUND);
         }
 
-        val canUpdate = comment.getAuthor().getId().equals(keycloakJwtClaims.sub())
-                || keycloakJwtClaims.roles().contains(Role.ADMIN);
+        val canUpdate = Optional.ofNullable(comment.getAuthor())
+                        .map(author -> author.getId().equals(keycloakJwtClaims.sub()))
+                        .orElse(false)
+                        || keycloakJwtClaims.roles().contains(Role.ADMIN);
+
         if (!canUpdate) {
             throw new ResponseStatusException(FORBIDDEN);
         }
@@ -123,9 +126,14 @@ public class CommentService {
             throw new ResponseStatusException(NOT_FOUND);
         }
 
-        val canDelete = comment.getAuthor().getId().equals(keycloakJwtClaims.sub())
-                || keycloakJwtClaims.roles().contains(Role.ADMIN);
-        if (!canDelete) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        val canDelete = Optional.ofNullable(comment.getAuthor())
+                        .map(author -> author.getId().equals(keycloakJwtClaims.sub()))
+                        .orElse(false)
+                        || keycloakJwtClaims.roles().contains(Role.ADMIN);
+
+        if (!canDelete) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
 
         commentRepository.delete(comment);
     }
