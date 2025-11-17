@@ -30,15 +30,9 @@ import org.springframework.lang.Nullable;
 @Setter
 @RequiredArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@CompoundIndex(
-        def =
-                "{'status': 1, 'allowsGuestSubmissions': 1, 'language': 1, 'updatedAt': -1, '_id': 1, 'estimatedDurationSeconds': 1}")
-@CompoundIndex(
-        def =
-                "{'status': 1, 'allowsGuestSubmissions': 1, 'language': 1, 'createdAt': -1, '_id': 1, 'estimatedDurationSeconds': 1}")
-@CompoundIndex(
-        def =
-                "{'status': 1, 'allowsGuestSubmissions': 1, 'language': 1, 'submissionsCount': -1, '_id': 1, 'estimatedDurationSeconds': 1}")
+@CompoundIndex(def = "{'status': 1, 'updatedAt': -1, '_id': 1}")
+@CompoundIndex(def = "{'status': 1, 'createdAt': -1, '_id': 1}")
+@CompoundIndex(def = "{'status': 1, 'submissionsCount': -1, '_id': 1}")
 @Document(collection = "forms")
 public class FormEntity {
 
