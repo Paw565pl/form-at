@@ -31,12 +31,14 @@ import org.springframework.lang.Nullable;
 @RequiredArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @CompoundIndex(
-        def = "{'status': 1, 'allowsGuestSubmissions': 1, 'language': 1, 'updatedAt': -1, 'estimatedDuration': 1}")
-@CompoundIndex(
-        def = "{'status': 1, 'allowsGuestSubmissions': 1, 'language': 1, 'createdAt': -1, 'estimatedDuration': 1}")
+        def =
+                "{'status': 1, 'allowsGuestSubmissions': 1, 'language': 1, 'updatedAt': -1, '_id': 1, 'estimatedDurationSeconds': 1}")
 @CompoundIndex(
         def =
-                "{'status': 1, 'allowsGuestSubmissions': 1, 'language': 1, 'submissionsCount': -1, 'estimatedDuration': 1}")
+                "{'status': 1, 'allowsGuestSubmissions': 1, 'language': 1, 'createdAt': -1, '_id': 1, 'estimatedDurationSeconds': 1}")
+@CompoundIndex(
+        def =
+                "{'status': 1, 'allowsGuestSubmissions': 1, 'language': 1, 'submissionsCount': -1, '_id': 1, 'estimatedDurationSeconds': 1}")
 @Document(collection = "forms")
 public class FormEntity {
 
@@ -70,8 +72,10 @@ public class FormEntity {
     @Field(name = "thanksMessage")
     @Nullable private String thanksMessage;
 
-    @Field(name = "estimatedDuration")
-    @NonNull private Duration estimatedDuration;
+    @Field(name = "estimatedDurationSeconds")
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    @NonNull private Integer estimatedDurationSeconds;
 
     @Field(name = "thumbnailKey")
     @Nullable private String thumbnailKey;
@@ -93,10 +97,12 @@ public class FormEntity {
     @NonNull private Long submissionsCount = 0L;
 
     @Field(name = "questions")
+    @Setter(AccessLevel.NONE)
     @NonNull private List<QuestionEntity> questions = new ArrayList<>();
 
     @ReadOnlyProperty
     @DocumentReference(lazy = true, lookup = "{'formId':?#{#self._id} }")
+    @Setter(AccessLevel.NONE)
     @NonNull private List<SubmissionEntity> submissions = new ArrayList<>();
 
     @CreatedDate
@@ -119,5 +125,14 @@ public class FormEntity {
 
     public void setLanguage(@NonNull Language language) {
         this.language = language.getMongoValue();
+    }
+
+    @Transient
+    @NonNull public Duration getEstimatedDuration() {
+        return Duration.ofSeconds(estimatedDurationSeconds);
+    }
+
+    public void setEstimatedDuration(@NonNull Duration estimatedDuration) {
+        this.estimatedDurationSeconds = (int) estimatedDuration.toSeconds();
     }
 }

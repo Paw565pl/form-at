@@ -87,9 +87,11 @@ public class FormService {
             val estimatedDurationFilterCriteria = Criteria.where("estimatedDuration");
 
             if (filterDto.minEstimatedDuration() != null)
-                estimatedDurationFilterCriteria.gte(filterDto.minEstimatedDuration());
+                estimatedDurationFilterCriteria.gte(
+                        filterDto.minEstimatedDuration().toSeconds());
             if (filterDto.maxEstimatedDuration() != null)
-                estimatedDurationFilterCriteria.lte(filterDto.maxEstimatedDuration());
+                estimatedDurationFilterCriteria.lte(
+                        filterDto.maxEstimatedDuration().toSeconds());
 
             query.addCriteria(estimatedDurationFilterCriteria);
         }

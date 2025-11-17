@@ -25,6 +25,9 @@ public interface FormMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "language", expression = "java(formRequestDto.language().getMongoValue())")
+    @Mapping(
+            target = "estimatedDurationSeconds",
+            expression = "java((int) formRequestDto.estimatedDuration().toSeconds())")
     @Mapping(target = "submissionsCount", ignore = true)
     @Mapping(target = "submissions", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
