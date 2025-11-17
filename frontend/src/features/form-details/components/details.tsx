@@ -22,15 +22,11 @@ export const Details = ({ form }: DetailsProps) => {
       <div className="flex flex-wrap gap-2 md:gap-6">
         <div className="flex items-center gap-1">
           <ICONS.questionsCount />
-          <h2>
-            {t("questionsCount", { count: form.questions.length.toString() })}
-          </h2>
+          <h2>{t("questionsCount", { count: form.questions.length })}</h2>
         </div>
         <div className="flex items-center gap-1">
           <ICONS.submissionsCount />
-          <h2>
-            {t("submissionsCount", { count: form.submissionsCount.toString() })}
-          </h2>
+          <h2>{t("submissionsCount", { count: form.submissionsCount })}</h2>
         </div>
         <div className="flex items-center gap-1">
           <ICONS.estimatedDuration />
