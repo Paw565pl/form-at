@@ -176,7 +176,16 @@ public class FormService {
         val formEntity = formMapper.toEntity(requestDto, slug, passwordHash, author);
 
         try {
-            return mapToDetailResponseDto(formRepository.save(formEntity));
+            val response = mapToDetailResponseDto(formRepository.save(formEntity));
+
+            val imageKeys = Stream.concat(
+                            Stream.ofNullable(requestDto.thumbnailKey()),
+                            requestDto.questions().stream().map(QuestionRequestDto::imageKey))
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toUnmodifiableSet());
+            uploadService.commitUploads(imageKeys);
+
+            return response;
         } catch (DataIntegrityViolationException e) {
             throw new FormAlreadyExistsException(requestDto.name());
         }
@@ -201,23 +210,25 @@ public class FormService {
                 .map(passwordEncoder::encode)
                 .orElse(null);
 
-        val newImageKeys = Stream.concat(
-                        Stream.ofNullable(requestDto.thumbnailKey()),
-                        requestDto.questions().stream().map(QuestionRequestDto::imageKey))
-                .filter(Objects::nonNull)
-                .collect(Collectors.toUnmodifiableSet());
-        val outdatedImageKeys = Stream.concat(
-                        Stream.ofNullable(oldFormEntity.getThumbnailKey()),
-                        oldFormEntity.getQuestions().stream().map(QuestionEntity::getImageKey))
-                .filter(Objects::nonNull)
-                .filter(k -> !newImageKeys.contains(k))
-                .toList();
-
         val updatedFormEntity = formMapper.updateEntityFromDto(requestDto, oldFormEntity, slug, passwordHash);
 
         try {
             val response = mapToDetailResponseDto(formRepository.save(updatedFormEntity));
-            if (!outdatedImageKeys.isEmpty()) uploadService.deleteAllByKeys(outdatedImageKeys);
+
+            val newImageKeys = Stream.concat(
+                            Stream.ofNullable(requestDto.thumbnailKey()),
+                            requestDto.questions().stream().map(QuestionRequestDto::imageKey))
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toUnmodifiableSet());
+            uploadService.commitUploads(newImageKeys);
+
+            val outdatedImageKeys = Stream.concat(
+                            Stream.ofNullable(oldFormEntity.getThumbnailKey()),
+                            oldFormEntity.getQuestions().stream().map(QuestionEntity::getImageKey))
+                    .filter(Objects::nonNull)
+                    .filter(k -> !newImageKeys.contains(k))
+                    .collect(Collectors.toUnmodifiableSet());
+            uploadService.deleteAllByKeys(outdatedImageKeys);
 
             return response;
         } catch (DataIntegrityViolationException e) {
@@ -225,6 +236,7 @@ public class FormService {
         }
     }
 
+    @Transactional
     public void delete(String idOrSlug, KeycloakJwtClaims keycloakJwtClaims) {
         val formEntity = findOrThrow(idOrSlug);
 
@@ -238,10 +250,10 @@ public class FormService {
                         Stream.ofNullable(formEntity.getThumbnailKey()),
                         formEntity.getQuestions().stream().map(QuestionEntity::getImageKey))
                 .filter(Objects::nonNull)
-                .toList();
+                .collect(Collectors.toUnmodifiableSet());
 
         formRepository.delete(formEntity);
-        if (!imageKeys.isEmpty()) uploadService.deleteAllByKeys(imageKeys);
+        uploadService.deleteAllByKeys(imageKeys);
 
         submissionRepository.deleteAllByFormId(formEntity.getId());
     }

@@ -11,7 +11,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Component;
@@ -25,22 +28,11 @@ public class FormValidator {
     public Map<String, List<String>> validate(FormRequestDto form, String userId) {
         val errors = new HashMap<String, List<String>>();
 
-        validateThumbnail(form, userId).ifPresent(e -> errors.put(e.getKey(), e.getValue()));
         validatePassword(form).ifPresent(e -> errors.put(e.getKey(), e.getValue()));
         validateRequiredQuestionsCount(form).ifPresent(e -> errors.put(e.getKey(), e.getValue()));
-        validateQuestions(form, userId).forEach(e -> errors.put(e.getKey(), e.getValue()));
+        validateQuestionsAndUploads(form, userId).forEach(e -> errors.put(e.getKey(), e.getValue()));
 
         return Collections.unmodifiableMap(errors);
-    }
-
-    private Optional<Map.Entry<String, List<String>>> validateThumbnail(FormRequestDto form, String userId) {
-        val isThumbnailUploaded = Optional.ofNullable(form.thumbnailKey())
-                .map(thumbnailKey -> uploadService.confirmUpload(thumbnailKey, userId))
-                .orElse(true);
-        if (isThumbnailUploaded) return Optional.empty();
-
-        val message = String.format("Form image with key '%s' was not found in storage", form.thumbnailKey());
-        return Optional.of(Map.entry("thumbnailKey", List.of(message)));
     }
 
     private Optional<Map.Entry<String, List<String>>> validatePassword(FormRequestDto form) {
@@ -63,15 +55,30 @@ public class FormValidator {
         return Optional.of(Map.entry("questions", List.of(message)));
     }
 
-    private List<Map.Entry<String, List<String>>> validateQuestions(FormRequestDto form, String userId) {
-        val questions = form.questions();
+    private List<Map.Entry<String, List<String>>> validateQuestionsAndUploads(FormRequestDto form, String userId) {
         val errors = new ArrayList<Map.Entry<String, List<String>>>();
+
+        val thumbnailKey = form.thumbnailKey();
+        val questions = form.questions();
+
+        val uploadKeys = Stream.concat(
+                        Stream.of(thumbnailKey), questions.stream().map(QuestionRequestDto::imageKey))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toUnmodifiableSet());
+        val validUploadKeys = uploadService.getValidUploadKeys(uploadKeys, userId);
+
+        val isThumbnailUploaded =
+                Optional.ofNullable(thumbnailKey).map(validUploadKeys::contains).orElse(true);
+        if (!isThumbnailUploaded) {
+            val message = String.format("Form thumbnail with key '%s' was not found in storage", thumbnailKey);
+            errors.add(Map.entry("thumbnailKey", List.of(message)));
+        }
 
         for (var i = 0; i < questions.size(); i++) {
             val question = questions.get(i);
 
             val isQuestionImageUploaded = Optional.ofNullable(question.imageKey())
-                    .map(imageKey -> uploadService.confirmUpload(imageKey, userId))
+                    .map(validUploadKeys::contains)
                     .orElse(true);
             if (!isQuestionImageUploaded) {
                 val message =
@@ -79,6 +86,7 @@ public class FormValidator {
                 errors.add(Map.entry(String.format("questions[%s].imageKey", i), List.of(message)));
             }
 
+            if (question.type().equals(QuestionType.OPEN)) continue;
             val correctAnswersCount = question.answers().stream()
                     .filter(AnswerRequestDto::isCorrect)
                     .count();

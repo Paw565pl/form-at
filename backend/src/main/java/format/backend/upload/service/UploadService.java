@@ -1,6 +1,5 @@
 package format.backend.upload.service;
 
-import format.backend.auth.jwt.KeycloakJwtClaims;
 import format.backend.upload.dto.UploadRequestDto;
 import format.backend.upload.dto.UploadRequestResponseDto;
 import format.backend.upload.entity.PendingUploadEntity;
@@ -28,7 +27,9 @@ import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -67,8 +68,7 @@ public class UploadService {
     }
 
     @Transactional
-    public UploadRequestResponseDto getUploadPresignedFormData(
-            KeycloakJwtClaims keycloakJwtClaims, UploadRequestDto requestDto) {
+    public UploadRequestResponseDto getUploadPresignedFormData(String userId, UploadRequestDto requestDto) {
         val fileName = requestDto.fileName().replaceAll("[^A-Za-z0-9._-]", "_").trim();
         val fileExtension = List.of(fileName.split("\\.")).getLast();
         if (!validExtensionsToContentTypeMap.containsKey(fileExtension))
@@ -78,15 +78,11 @@ public class UploadService {
         val contentType = validExtensionsToContentTypeMap.get(fileExtension);
 
         val pendingUpload = new PendingUploadEntity(
-                key,
-                fileName,
-                contentType,
-                keycloakJwtClaims.sub(),
-                Instant.now().plus(Duration.ofHours(1)));
+                key, fileName, contentType, userId, Instant.now().plus(Duration.ofMinutes(20)));
         pendingUploadRepository.save(pendingUpload);
 
         val postPolicy = new PostPolicy(
-                minioProperties.getBucketName(), ZonedDateTime.now(Time.UTC).plusMinutes(10));
+                minioProperties.getBucketName(), ZonedDateTime.now(Time.UTC).plusMinutes(20));
         postPolicy.addContentLengthRangeCondition(1, MAX_FILE_SIZE);
         postPolicy.addEqualsCondition("key", key);
         postPolicy.addEqualsCondition("filename", fileName);
@@ -101,7 +97,24 @@ public class UploadService {
         }
     }
 
+    public Set<String> getValidUploadKeys(Set<String> keys, String userId) {
+        if (keys.isEmpty()) return Set.of();
+
+        return pendingUploadRepository.findAllByKeyIn(keys).stream()
+                .filter(pendingUpload -> {
+                    val userIdMatch = pendingUpload.getUserId().equals(userId);
+                    val isNotExpired = pendingUpload.getExpiresAt().isAfter(Instant.now());
+                    if (!userIdMatch || !isNotExpired) return false;
+
+                    return isUploaded(pendingUpload.getKey());
+                })
+                .map(PendingUploadEntity::getKey)
+                .collect(Collectors.toUnmodifiableSet());
+    }
+
     private boolean isUploaded(String key) {
+        if (key == null) return false;
+
         try {
             minioClient.statObject(StatObjectArgs.builder()
                     .bucket(minioProperties.getBucketName())
@@ -117,19 +130,8 @@ public class UploadService {
         }
     }
 
-    public boolean confirmUpload(String key, String userId) {
-        if (!isUploaded(key)) return false;
-
-        val pendingUploadOpt = pendingUploadRepository.findByKey(key);
-        if (pendingUploadOpt.isEmpty()) return false;
-
-        val pendingUpload = pendingUploadOpt.get();
-        if (!pendingUpload.getUserId().equals(userId)) return false;
-        if (pendingUpload.getExpiresAt().isBefore(Instant.now())) return false;
-
-        pendingUploadRepository.delete(pendingUpload);
-
-        return true;
+    public void commitUploads(Set<String> keys) {
+        if (!keys.isEmpty()) pendingUploadRepository.deleteAllByKeyIn(keys);
     }
 
     public String getFileUrl(String key) {
@@ -148,7 +150,9 @@ public class UploadService {
         }
     }
 
-    public void deleteAllByKeys(List<String> keys) {
+    public void deleteAllByKeys(Set<String> keys) {
+        if (keys.isEmpty()) return;
+
         val deleteObjects = keys.stream().map(DeleteObject::new).toList();
         val removeObjects = minioClient.removeObjects(RemoveObjectsArgs.builder()
                 .bucket(minioProperties.getBucketName())
