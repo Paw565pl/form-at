@@ -100,7 +100,7 @@ public class CommentService {
         val canUpdate = Optional.ofNullable(comment.getAuthor())
                         .map(author -> author.getId().equals(keycloakJwtClaims.sub()))
                         .orElse(false)
-                        || keycloakJwtClaims.roles().contains(Role.ADMIN);
+                || keycloakJwtClaims.roles().contains(Role.ADMIN);
 
         if (!canUpdate) {
             throw new ResponseStatusException(FORBIDDEN);
@@ -129,7 +129,7 @@ public class CommentService {
         val canDelete = Optional.ofNullable(comment.getAuthor())
                         .map(author -> author.getId().equals(keycloakJwtClaims.sub()))
                         .orElse(false)
-                        || keycloakJwtClaims.roles().contains(Role.ADMIN);
+                || keycloakJwtClaims.roles().contains(Role.ADMIN);
 
         if (!canDelete) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
