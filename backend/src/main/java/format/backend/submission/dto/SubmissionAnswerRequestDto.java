@@ -17,4 +17,4 @@ public record SubmissionAnswerRequestDto(
                         @NotBlank(message = "ChosenAnswerId cannot be blank") String>
                 chosenAnswerIds,
 
-        @Size(min = 10, max = 1000, message = "OpenAnswer must be between 1 and 1000 characters long") @Nullable String openAnswer) {}
+        @Size(min = 10, max = 1000, message = "OpenAnswer must be between 10 and 1000 characters long") @Nullable String openAnswer) {}
