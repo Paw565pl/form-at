@@ -1,9 +1,9 @@
 import { Badge } from "@/core/components/ui/badge";
 import { PartyPopper } from "lucide-react";
 import Image from "next/image";
-import type { User } from "../auth/types/user";
-import { forms } from "../form-list/example-forms";
-import { UserForm } from "./components/user-form";
+import type { User } from "@/features/auth/types/user";
+import { forms } from "@/features/form-list/example-forms";
+import { UserForm } from "@/features/user/components/user-form";
 
 const User: User = {
   id: "1",
