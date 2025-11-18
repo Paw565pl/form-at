@@ -65,7 +65,7 @@ public class CommentService {
         val comment = commentMapper.toEntity(commentRequestDto, form, user);
 
         val saved = commentRepository.save(comment);
-        return commentMapper.toResponseDto(saved, keycloakJwtClaims.username());
+        return commentMapper.toResponseDto(saved, user.getUsername());
     }
 
     @Transactional
