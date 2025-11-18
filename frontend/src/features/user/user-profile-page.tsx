@@ -70,7 +70,30 @@ export const UserProfilePage = () => {
         </section>
       </div>
 
-      <p>User John Doe has finished form: Quiz o kotach. 12.12.25</p>
+      <section className="flex flex-col gap-2">
+        <h3>History</h3>
+        <span className="bg-card flex justify-between rounded-md border p-2">
+          <div className="flex items-center gap-2">
+            User John Doe has made submission to form:
+            <Badge variant={"secondary"}>Quiz o kotach</Badge>
+          </div>
+          <Badge variant={"outline"}>12.03.2024</Badge>
+        </span>
+        <span className="bg-card flex justify-between rounded-md border p-2">
+          <div className="flex items-center gap-2">
+            User John Doe has created a new public form:
+            <Badge>Quiz o kotach</Badge>
+          </div>
+          <Badge variant={"outline"}>12.03.2024</Badge>
+        </span>
+        <span className="bg-card flex justify-between rounded-md border p-2">
+          <div className="flex items-center gap-2">
+            User John Doe has achived a perfect score in form:
+            <Badge>Quiz o kotach</Badge>
+          </div>
+          <Badge variant={"outline"}>12.03.2024</Badge>
+        </span>
+      </section>
     </main>
   );
 };
