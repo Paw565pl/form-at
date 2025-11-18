@@ -1,4 +1,4 @@
-package format.backend.submission;
+package format.backend.submission.validator;
 
 import format.backend.form.entity.AnswerEntity;
 import format.backend.form.entity.FormEntity;
