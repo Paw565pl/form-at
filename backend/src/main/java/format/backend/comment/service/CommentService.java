@@ -35,7 +35,7 @@ public class CommentService {
     private final UserService userService;
     private final FormService formService;
 
-    private CommentEntity findCommentOrThrow(String id) {
+    private CommentEntity findOrThrow(String id) {
         return commentRepository.findById(id).orElseThrow(() -> new CommentNotFoundException(id));
     }
 
@@ -75,7 +75,7 @@ public class CommentService {
             KeycloakJwtClaims keycloakJwtClaims,
             CommentRequestDto commentRequestDto) {
         val form = formService.findOrThrow(idOrSlug);
-        val comment = findCommentOrThrow(commentId);
+        val comment = findOrThrow(commentId);
 
         if (!comment.getForm().getId().equals(form.getId())) throw new ResponseStatusException(NOT_FOUND);
 
@@ -98,7 +98,7 @@ public class CommentService {
     @Transactional
     public void delete(String idOrSlug, String commentId, KeycloakJwtClaims keycloakJwtClaims) {
         val form = formService.findOrThrow(idOrSlug);
-        val comment = findCommentOrThrow(commentId);
+        val comment = findOrThrow(commentId);
 
         if (!comment.getForm().getId().equals(form.getId())) throw new ResponseStatusException(NOT_FOUND);
 
