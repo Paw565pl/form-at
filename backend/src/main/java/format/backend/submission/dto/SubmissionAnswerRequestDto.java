@@ -1,5 +1,6 @@
 package format.backend.submission.dto;
 
+import format.backend.core.validator.ValidObjectId;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -8,8 +9,12 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 public record SubmissionAnswerRequestDto(
-        @NotBlank(message = "Question id cannot be blank") @NonNull String questionId, // TODO: add valid object id validator
+        @ValidObjectId(message = "QuestionId must be a valid ObjectId")
+        @NotBlank(message = "Question id cannot be blank") @NonNull String questionId,
 
-        @NotNull(message = "ChosenAnswerIds cannot be null") @NonNull Set<@NotBlank(message = "ChosenAnswerId cannot be blank") String> chosenAnswerIds,
+        @NotNull(message = "ChosenAnswerIds cannot be null") @NonNull Set<
+                        @ValidObjectId(message = "ChosenAnswerId must be a valid ObjectId")
+                        @NotBlank(message = "ChosenAnswerId cannot be blank") String>
+                chosenAnswerIds,
 
         @Size(min = 10, max = 1000, message = "OpenAnswer must be between 1 and 1000 characters long") @Nullable String openAnswer) {}
