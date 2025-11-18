@@ -8,9 +8,11 @@ import {
   List,
   LogIn,
   LogOut,
+  Menu,
   Moon,
   Sun,
   User,
+  X,
 } from "lucide-react";
 
 export const ICONS = {
@@ -26,4 +28,6 @@ export const ICONS = {
   login: LogIn,
   darkMode: Moon,
   lightMode: Sun,
+  menu: Menu,
+  close: X,
 };

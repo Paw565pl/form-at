@@ -9,11 +9,11 @@
     },
     "home": "Home",
     "forms": "Forms",
-    "createForm": "Create Form",
-    "profile": "Profile",
+    "createForm": "Create New Form",
     "lightMode": "Switch to light mode",
     "darkMode": "Switch to dark mode",
-    "changeLang": "Change Language"
+    "changeLang": "Change language",
+    "openMenu": "Open menu"
   },
   "formListPage": {
     "title": "Showing {count, plural, =1 {# form} other {# forms}}",

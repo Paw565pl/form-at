@@ -9,11 +9,11 @@
     },
     "home": "Strona główna",
     "forms": "Formularze",
-    "createForm": "Utwórz formularz",
-    "profile": "Profil",
+    "createForm": "Utwórz nowy formularz",
     "lightMode": "Przełącz na tryb jasny",
     "darkMode": "Przełącz na tryb ciemny",
-    "changeLang": "Zmień język"
+    "changeLang": "Zmień język",
+    "openMenu": "Otwórz menu"
   },
   "formListPage": {
     "title": "Wyświetlanie {count, plural, =1 {# formularza} other {# formularzy}}",

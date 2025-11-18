@@ -3,6 +3,7 @@
 import { AuthButton } from "@/core/components/auth-button/auth-button";
 import { Logo } from "@/core/components/logo/logo";
 import { LanguageSwitcher } from "@/core/components/nav-bar/language-switcher";
+import { MobileMenu } from "@/core/components/nav-bar/mobile-menu";
 import { ThemeSwitcher } from "@/core/components/nav-bar/theme-switcher";
 import { Button } from "@/core/components/ui/button";
 import { ICONS } from "@/core/config/icons";
@@ -16,37 +17,39 @@ export const NavBar = () => {
 
   return (
     <nav className="flex w-full justify-between p-2">
-      <div className="links flex items-center gap-2">
-        <div className="text-primary mr-2 flex items-center text-lg font-semibold">
+      <div className="links flex items-center gap-4">
+        <div className="text-primary flex items-center text-lg font-semibold">
           <Logo />
           <h2>formAT</h2>
         </div>
 
-        <Button size="sm" asChild variant="outline">
-          <Link href="/">
-            <ICONS.home />
-            {t("home")}
-          </Link>
-        </Button>
-        <Button size="sm" asChild variant="outline">
-          <Link href="/forms">
-            <ICONS.form />
-            {t("forms")}
-          </Link>
-        </Button>
-        {session && (
-          <Button size="sm" asChild>
-            <Link href="/forms/new">
-              <ICONS.formNew />
-              {t("createForm")}
+        <div className="hidden gap-2 md:flex">
+          <Button size="sm" asChild variant="outline">
+            <Link href="/">
+              <ICONS.home />
+              {t("home")}
             </Link>
           </Button>
-        )}
+          <Button size="sm" asChild variant="outline">
+            <Link href="/forms">
+              <ICONS.form />
+              {t("forms")}
+            </Link>
+          </Button>
+          {session && (
+            <Button size="sm" asChild>
+              <Link href="/forms/new">
+                <ICONS.formNew />
+                {t("createForm")}
+              </Link>
+            </Button>
+          )}
+        </div>
       </div>
 
       <div className="actions flex items-center gap-2">
         {session && (
-          <Button size="sm" asChild>
+          <Button size="sm" asChild className="hidden md:flex">
             <Link href="/profile">
               <ICONS.user />
               {session?.user?.name}
@@ -54,9 +57,12 @@ export const NavBar = () => {
           </Button>
         )}
 
-        <AuthButton />
+        <div className="hidden md:inline">
+          <AuthButton />
+        </div>
         <ThemeSwitcher />
         <LanguageSwitcher />
+        <MobileMenu />
       </div>
     </nav>
   );
