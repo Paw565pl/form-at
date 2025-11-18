@@ -6,9 +6,12 @@ import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import jakarta.validation.Constraint;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.Payload;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+import org.bson.types.ObjectId;
 
 @Retention(RUNTIME)
 @Target({FIELD, PARAMETER, ANNOTATION_TYPE})
@@ -19,4 +22,14 @@ public @interface ValidObjectId {
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
+}
+
+class ObjectIdValidator implements ConstraintValidator<ValidObjectId, String> {
+
+    @Override
+    public boolean isValid(String value, ConstraintValidatorContext context) {
+        if (value == null) return true;
+
+        return ObjectId.isValid(value);
+    }
 }

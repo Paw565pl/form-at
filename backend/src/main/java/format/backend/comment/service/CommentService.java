@@ -6,7 +6,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 import format.backend.auth.entity.Role;
 import format.backend.auth.entity.UserEntity;
 import format.backend.auth.jwt.KeycloakJwtClaims;
-import format.backend.auth.repository.UserRepository;
+import format.backend.auth.service.UserService;
 import format.backend.comment.dto.CommentRequestDto;
 import format.backend.comment.dto.CommentResponseDto;
 import format.backend.comment.entity.CommentEntity;
@@ -21,7 +21,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -29,19 +28,15 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 @RequiredArgsConstructor
 public class CommentService {
+
     private final CommentRepository commentRepository;
-    private final UserRepository userRepository;
     private final CommentMapper commentMapper;
 
+    private final UserService userService;
     private final FormService formService;
 
     private CommentEntity findCommentOrThrow(String id) {
-        val comment = commentRepository.findById(id);
-        return comment.orElseThrow(() -> new CommentNotFoundException(id));
-    }
-
-    private UserEntity findUserOrThrow(String userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN));
+        return commentRepository.findById(id).orElseThrow(() -> new CommentNotFoundException(id));
     }
 
     public Page<CommentResponseDto> findAll(String idOrSlug, Pageable pageable) {
@@ -51,12 +46,7 @@ public class CommentService {
                 pageable.getPageNumber(),
                 pageable.getPageSize(),
                 Sort.by(Sort.Order.desc("updatedAt"), Sort.Order.asc("_id")));
-
-        val comments = commentRepository.findByFormId(form.getId(), sortedPageable);
-
-        if (comments.isEmpty()) {
-            return Page.empty(sortedPageable);
-        }
+        val comments = commentRepository.findAllByFormId(form.getId(), sortedPageable);
 
         return comments.map(comment -> {
             val authorName = Optional.ofNullable(comment.getAuthor())
@@ -70,17 +60,12 @@ public class CommentService {
     public CommentResponseDto create(
             String idOrSlug, KeycloakJwtClaims keycloakJwtClaims, CommentRequestDto commentRequestDto) {
         val form = formService.findOrThrow(idOrSlug);
-
-        val user = findUserOrThrow(keycloakJwtClaims.sub());
+        val user = userService.findOrThrow(keycloakJwtClaims.sub());
 
         val comment = commentMapper.toEntity(commentRequestDto, form, user);
 
         val saved = commentRepository.save(comment);
-        val authorName = Optional.ofNullable(saved.getAuthor())
-                .map(UserEntity::getUsername)
-                .orElse(null);
-
-        return commentMapper.toResponseDto(saved, authorName);
+        return commentMapper.toResponseDto(saved, keycloakJwtClaims.username());
     }
 
     @Transactional
@@ -89,22 +74,16 @@ public class CommentService {
             String commentId,
             KeycloakJwtClaims keycloakJwtClaims,
             CommentRequestDto commentRequestDto) {
-
         val form = formService.findOrThrow(idOrSlug);
         val comment = findCommentOrThrow(commentId);
 
-        if (!comment.getForm().getId().equals(form.getId())) {
-            throw new ResponseStatusException(NOT_FOUND);
-        }
+        if (!comment.getForm().getId().equals(form.getId())) throw new ResponseStatusException(NOT_FOUND);
 
-        val canUpdate = Optional.ofNullable(comment.getAuthor())
-                        .map(author -> author.getId().equals(keycloakJwtClaims.sub()))
-                        .orElse(false)
-                || keycloakJwtClaims.roles().contains(Role.ADMIN);
-
-        if (!canUpdate) {
-            throw new ResponseStatusException(FORBIDDEN);
-        }
+        val isCommentOwner = Optional.ofNullable(comment.getAuthor())
+                .map(a -> a.getId().equals(keycloakJwtClaims.sub()))
+                .orElse(false);
+        val isAdmin = keycloakJwtClaims.roles().contains(Role.ADMIN);
+        if (!(isCommentOwner || isAdmin)) throw new ResponseStatusException(FORBIDDEN);
 
         comment.setContent(commentRequestDto.content());
 
@@ -119,21 +98,15 @@ public class CommentService {
     @Transactional
     public void delete(String idOrSlug, String commentId, KeycloakJwtClaims keycloakJwtClaims) {
         val form = formService.findOrThrow(idOrSlug);
-
         val comment = findCommentOrThrow(commentId);
 
-        if (!comment.getForm().getId().equals(form.getId())) {
-            throw new ResponseStatusException(NOT_FOUND);
-        }
+        if (!comment.getForm().getId().equals(form.getId())) throw new ResponseStatusException(NOT_FOUND);
 
-        val canDelete = Optional.ofNullable(comment.getAuthor())
-                        .map(author -> author.getId().equals(keycloakJwtClaims.sub()))
-                        .orElse(false)
-                || keycloakJwtClaims.roles().contains(Role.ADMIN);
-
-        if (!canDelete) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }
+        val isCommentOwner = Optional.ofNullable(comment.getAuthor())
+                .map(a -> a.getId().equals(keycloakJwtClaims.sub()))
+                .orElse(false);
+        val isAdmin = keycloakJwtClaims.roles().contains(Role.ADMIN);
+        if (!(isCommentOwner || isAdmin)) throw new ResponseStatusException(FORBIDDEN);
 
         commentRepository.delete(comment);
     }

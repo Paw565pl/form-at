@@ -50,7 +50,7 @@ public class SubmissionService {
                 .map(a -> a.getId().equals(keycloakJwtClaims.sub()))
                 .orElse(false);
         val isAdmin = keycloakJwtClaims.roles().contains(Role.ADMIN);
-        if (!isFormOwner && !isAdmin) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        if (!(isFormOwner || isAdmin)) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 
         val submissions = submissionRepository.findAllByFormId(
                 form.getId(),

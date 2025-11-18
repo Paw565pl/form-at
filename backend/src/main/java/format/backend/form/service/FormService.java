@@ -202,7 +202,7 @@ public class FormService {
                 .map(a -> a.getId().equals(keycloakJwtClaims.sub()))
                 .orElse(false);
         val isAdmin = keycloakJwtClaims.roles().contains(Role.ADMIN);
-        if (!isFormOwner && !isAdmin) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        if (!(isFormOwner || isAdmin)) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 
         val errors = formValidator.validate(requestDto, keycloakJwtClaims.sub());
         if (!errors.isEmpty()) throw new ValidationException(errors);
@@ -246,7 +246,7 @@ public class FormService {
                 .map(a -> a.getId().equals(keycloakJwtClaims.sub()))
                 .orElse(false);
         val isAdmin = keycloakJwtClaims.roles().contains(Role.ADMIN);
-        if (!isFormOwner && !isAdmin) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        if (!(isFormOwner || isAdmin)) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 
         val imageKeys = Stream.concat(
                         Stream.ofNullable(formEntity.getThumbnailKey()),
@@ -256,8 +256,8 @@ public class FormService {
 
         formRepository.delete(formEntity);
         uploadService.deleteAllByKeys(imageKeys);
-        commentRepository.deleteAllByFormId(formEntity.getId());
 
+        commentRepository.deleteAllByFormId(formEntity.getId());
         submissionRepository.deleteAllByFormId(formEntity.getId());
     }
 
