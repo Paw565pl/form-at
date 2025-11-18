@@ -60,10 +60,11 @@ public class FormService {
     private final Slugify slugify;
 
     private final FormRepository formRepository;
-    private final CommentRepository commentRepository;
     private final FormMapper formMapper;
     private final FormValidator formValidator;
     private final QuestionMapper questionMapper;
+
+    private final CommentRepository commentRepository;
     private final SubmissionRepository submissionRepository;
     private final UserService userService;
     private final UploadService uploadService;
@@ -199,7 +200,7 @@ public class FormService {
         val oldFormEntity = findOrThrow(idOrSlug);
 
         val isFormOwner = Optional.ofNullable(oldFormEntity.getAuthor())
-                .map(a -> a.getId().equals(keycloakJwtClaims.sub()))
+                .map(a -> Objects.equals(a.getId(), keycloakJwtClaims.sub()))
                 .orElse(false);
         val isAdmin = keycloakJwtClaims.roles().contains(Role.ADMIN);
         if (!(isFormOwner || isAdmin)) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
@@ -243,7 +244,7 @@ public class FormService {
         val formEntity = findOrThrow(idOrSlug);
 
         val isFormOwner = Optional.ofNullable(formEntity.getAuthor())
-                .map(a -> a.getId().equals(keycloakJwtClaims.sub()))
+                .map(a -> Objects.equals(a.getId(), keycloakJwtClaims.sub()))
                 .orElse(false);
         val isAdmin = keycloakJwtClaims.roles().contains(Role.ADMIN);
         if (!(isFormOwner || isAdmin)) throw new ResponseStatusException(HttpStatus.FORBIDDEN);

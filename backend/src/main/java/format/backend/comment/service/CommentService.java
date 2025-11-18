@@ -14,6 +14,7 @@ import format.backend.comment.exception.CommentNotFoundException;
 import format.backend.comment.mapper.CommentMapper;
 import format.backend.comment.repository.CommentRepository;
 import format.backend.form.service.FormService;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -80,7 +81,7 @@ public class CommentService {
         if (!comment.getForm().getId().equals(form.getId())) throw new ResponseStatusException(NOT_FOUND);
 
         val isCommentOwner = Optional.ofNullable(comment.getAuthor())
-                .map(a -> a.getId().equals(keycloakJwtClaims.sub()))
+                .map(a -> Objects.equals(a.getId(), keycloakJwtClaims.sub()))
                 .orElse(false);
         val isAdmin = keycloakJwtClaims.roles().contains(Role.ADMIN);
         if (!(isCommentOwner || isAdmin)) throw new ResponseStatusException(FORBIDDEN);
@@ -103,7 +104,7 @@ public class CommentService {
         if (!comment.getForm().getId().equals(form.getId())) throw new ResponseStatusException(NOT_FOUND);
 
         val isCommentOwner = Optional.ofNullable(comment.getAuthor())
-                .map(a -> a.getId().equals(keycloakJwtClaims.sub()))
+                .map(a -> Objects.equals(a.getId(), keycloakJwtClaims.sub()))
                 .orElse(false);
         val isAdmin = keycloakJwtClaims.roles().contains(Role.ADMIN);
         if (!(isCommentOwner || isAdmin)) throw new ResponseStatusException(FORBIDDEN);

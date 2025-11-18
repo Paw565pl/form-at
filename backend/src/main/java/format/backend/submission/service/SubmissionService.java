@@ -15,6 +15,7 @@ import format.backend.submission.exception.SubmissionNotFoundForUserException;
 import format.backend.submission.mapper.SubmissionMapper;
 import format.backend.submission.repository.SubmissionRepository;
 import format.backend.submission.validator.SubmissionValidator;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -38,6 +39,7 @@ public class SubmissionService {
     private final SubmissionRepository submissionRepository;
     private final SubmissionMapper submissionMapper;
     private final SubmissionValidator submissionValidator;
+
     private final FormService formService;
     private final UserService userService;
 
@@ -47,7 +49,7 @@ public class SubmissionService {
         if (!form.getSaveSubmissions()) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 
         val isFormOwner = Optional.ofNullable(form.getAuthor())
-                .map(a -> a.getId().equals(keycloakJwtClaims.sub()))
+                .map(a -> Objects.equals(a.getId(), keycloakJwtClaims.sub()))
                 .orElse(false);
         val isAdmin = keycloakJwtClaims.roles().contains(Role.ADMIN);
         if (!(isFormOwner || isAdmin)) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
@@ -130,7 +132,7 @@ public class SubmissionService {
                 .orElseThrow(() -> new SubmissionNotFoundException(submissionId));
 
         val isFormOwner = Optional.ofNullable(form.getAuthor())
-                .map(a -> a.getId().equals(keycloakJwtClaims.sub()))
+                .map(a -> Objects.equals(a.getId(), keycloakJwtClaims.sub()))
                 .orElse(false);
         val isAdmin = keycloakJwtClaims.roles().contains(Role.ADMIN);
         if (!(isFormOwner || isAdmin)) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
