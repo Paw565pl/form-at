@@ -5,6 +5,7 @@ import format.backend.auth.entity.Role;
 import format.backend.auth.entity.UserEntity;
 import format.backend.auth.jwt.KeycloakJwtClaims;
 import format.backend.auth.service.UserService;
+import format.backend.comment.repository.CommentRepository;
 import format.backend.core.exception.ValidationException;
 import format.backend.form.dto.FormAccessRequestDto;
 import format.backend.form.dto.FormDetailResponseDto;
@@ -59,6 +60,7 @@ public class FormService {
     private final Slugify slugify;
 
     private final FormRepository formRepository;
+    private final CommentRepository commentRepository;
     private final FormMapper formMapper;
     private final FormValidator formValidator;
     private final QuestionMapper questionMapper;
@@ -254,6 +256,7 @@ public class FormService {
 
         formRepository.delete(formEntity);
         uploadService.deleteAllByKeys(imageKeys);
+        commentRepository.deleteAllByFormId(formEntity.getId());
 
         submissionRepository.deleteAllByFormId(formEntity.getId());
     }

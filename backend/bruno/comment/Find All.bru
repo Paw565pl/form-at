@@ -1,0 +1,25 @@
+meta {
+  name: Find All
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/v1/forms/:formIdOrSlug/comments?page=0&size=10
+  body: none
+  auth: inherit
+}
+
+params:query {
+  page: 0
+  size: 10
+}
+
+params:path {
+  formIdOrSlug: 690bafd513bb16a31f215b3a
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
