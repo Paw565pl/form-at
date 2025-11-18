@@ -9,7 +9,7 @@
     }
   },
   "formListPage": {
-    "title": "Showing {count, plural, =1 {# form} other {# forms}}",
+    "title": "Showing {count, plural, one {# form} other {# forms}}",
     "options": {
       "searchPlaceholder": "Search forms...",
       "sortBy": "Sort by",
@@ -26,8 +26,8 @@
     },
     "by": "by {name}",
     "byUnknown": "by unknown author",
-    "questions": "{count, plural, =1 {# question} other {# questions}}",
-    "submissions": "{count, plural, =1 {# submission} other {# submissions}}",
+    "questions": "{count, plural, one {# question} other {# questions}}",
+    "submissions": "{count, plural, one {# submission} other {# submissions}}",
     "end": "You have reached the end of the list.",
     "loading": "Loading forms..."
   },
@@ -37,23 +37,30 @@
       "moreOptions": "More Options",
       "fillOutForm": "Fill Out the Form",
       "enterTheCode": "Enter the Form Code",
-      "codeDescription": "This form is protected by the code, ask the form maker for the code",
+      "codeDescription": "This form is private, ask the form author for the access code.",
       "code": "Code",
       "cancel": "Cancel",
-      "saveChanges": "Save changes",
+      "confirm": "Confirm",
       "fillAnonymously": "Fill Anonymously"
     },
     "details": {
-      "formFinished": "The form finished at: {finishedAt}",
-      "questionsCount": "{count, plural, =1 {# question} other {# questions}}",
-      "submissionsCount": "{count, plural, =1 {# submission} other {# submissions}}",
-      "estimatedTime": "Estimated time to complete: {time}",
-      "privateForm": "Form Requires Code"
+      "formFinished": "Completed on {finishedAt}",
+      "questionsCount": "{count, plural, one {# question} other {# questions}}",
+      "submissionsCount": "{count, plural, one {# submission} other {# submissions}}",
+      "estimatedTime": "{time} to complete",
+      "privateForm": "Form Requires Code",
+      "createdAt": "Created {date}"
     },
     "questionList": {
-      "showQuestions": "Show Questions",
-      "noQuestions": "No Questions",
-      "noQuestionsDescription": "Question preview is disabled or there are no questions to display"
+      "showQuestions": "Show Questions Preview",
+      "hideQuestions": "Hide Questions Preview",
+      "noPreviewAllowed": "The author has not allowed questions preview.",
+      "noQuestions": "No questions to display.",
+      "questionTypes": {
+        "single": "Single Choice",
+        "multiple": "Multiple Choice",
+        "open": "Open Ended"
+      }
     }
   }
 }

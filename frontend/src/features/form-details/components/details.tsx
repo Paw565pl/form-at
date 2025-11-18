@@ -1,4 +1,5 @@
 import { Badge } from "@/core/components/ui/badge";
+import { Card } from "@/core/components/ui/card";
 import {
   Tooltip,
   TooltipContent,
@@ -8,6 +9,7 @@ import { ICONS } from "@/core/config/icons";
 import { FormResponseDto, FormStatus } from "@/core/types/form";
 import { formatDuration } from "@/core/utils/formatDuration";
 import { useFormatter, useTranslations } from "next-intl";
+
 interface DetailsProps {
   readonly form: FormResponseDto;
 }
@@ -17,9 +19,33 @@ export const Details = ({ form }: DetailsProps) => {
   const t = useTranslations("publicFormView.details");
 
   return (
-    <section className="w-full pt-7">
+    <Card className="flex w-full flex-col gap-4 rounded-t-none p-4">
+      <header className="flex flex-wrap items-center gap-2 md:flex-row">
+        {form.status === FormStatus.Private && (
+          <Tooltip>
+            <TooltipTrigger>
+              <ICONS.privateForm />
+            </TooltipTrigger>
+            <TooltipContent side="bottom">
+              <span>{t("privateForm")}</span>
+            </TooltipContent>
+          </Tooltip>
+        )}
+
+        <h1 className="line-clamp-2 max-w-2xl text-2xl">{form.name}</h1>
+
+        {/* TODO take submission date from user's submission data */}
+        <Badge className="text-wrap md:ml-auto">
+          {t("formFinished", {
+            finishedAt: format.dateTime(new Date(), "long"),
+          })}
+        </Badge>
+      </header>
+
+      {form.description && <p>{form.description}</p>}
+
       {/* form tags */}
-      <div className="flex flex-wrap gap-2 md:gap-6">
+      <div className="text-muted-foreground flex flex-wrap items-center gap-2 text-sm md:gap-6">
         <div className="flex items-center gap-1">
           <ICONS.questionsCount />
           <h2>{t("questionsCount", { count: form.questions.length })}</h2>
@@ -36,36 +62,10 @@ export const Details = ({ form }: DetailsProps) => {
             })}
           </h2>
         </div>
+        <p className="ml-auto">
+          {t("createdAt", { date: format.dateTime(form.updatedAt, "long") })}
+        </p>
       </div>
-
-      <header className="flex flex-col-reverse items-start justify-between py-2 md:flex-row">
-        <div className="flex flex-1 items-center gap-2">
-          <h1 className="line-clamp-2 max-w-2xl text-4xl font-extrabold">
-            {form.name}
-          </h1>
-          {form.status == FormStatus.Private ? (
-            <span className="flex-none">
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <ICONS.privateForm />
-                </TooltipTrigger>
-                <TooltipContent side="bottom">
-                  <p>{t("privateForm")}</p>
-                </TooltipContent>
-              </Tooltip>
-            </span>
-          ) : null}
-        </div>
-        <div className="flex flex-none items-center">
-          {/* TODO take submission date from user's submission data */}
-          <Badge>{t("formFinished", { finishedAt: "20.12.2025" })}</Badge>
-        </div>
-      </header>
-
-      {form.description && <p className="pb-6">{form.description}</p>}
-      <p className="w-full pb-4 text-right">
-        {format.dateTime(form.updatedAt, "long")}
-      </p>
-    </section>
+    </Card>
   );
 };

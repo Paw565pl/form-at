@@ -12,7 +12,6 @@ import {
   DialogTrigger,
 } from "@/core/components/ui/dialog";
 import { Input } from "@/core/components/ui/input";
-import { Label } from "@/core/components/ui/label";
 import {
   Tooltip,
   TooltipContent,
@@ -42,19 +41,19 @@ export const Banner = ({ form }: BannerProps) => {
         fill
         style={{ objectFit: "cover" }}
         priority
-        className="-z-10 rounded-3xl"
+        className="rounded-t-md"
       />
 
       {/* go back button */}
       <span className="absolute top-4 left-4">
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button size="icon" variant="default" onClick={() => router.back()}>
+            <Button size="icon-sm" onClick={() => router.back()}>
               <ICONS.back />
             </Button>
           </TooltipTrigger>
           <TooltipContent side="bottom">
-            <p>{t("back")}</p>
+            <span>{t("back")}</span>
           </TooltipContent>
         </Tooltip>
       </span>
@@ -63,12 +62,12 @@ export const Banner = ({ form }: BannerProps) => {
       <span className="absolute top-4 right-4">
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button size="icon" variant="default">
+            <Button size="icon-sm">
               <ICONS.more />
             </Button>
           </TooltipTrigger>
           <TooltipContent side="bottom">
-            <p>{t("moreOptions")}</p>
+            <span>{t("moreOptions")}</span>
           </TooltipContent>
         </Tooltip>
       </span>
@@ -77,8 +76,8 @@ export const Banner = ({ form }: BannerProps) => {
         <Dialog>
           <form>
             <DialogTrigger asChild>
-              <Button size={"sm"}>
-                <ICONS.listChecks />
+              <Button>
+                <ICONS.fillForm />
                 {t("fillOutForm")}
               </Button>
             </DialogTrigger>
@@ -88,25 +87,24 @@ export const Banner = ({ form }: BannerProps) => {
                 <DialogDescription>{t("codeDescription")}</DialogDescription>
               </DialogHeader>
               <div className="grid gap-3">
-                <Label htmlFor="code">{t("code")}</Label>
                 <Input id="code" name="code" placeholder={t("code")} />
               </div>
               <DialogFooter>
                 <DialogClose asChild>
                   <Button variant="outline">{t("cancel")}</Button>
                 </DialogClose>
-                <Button type="submit">{t("saveChanges")}</Button>
+                <Button type="submit">{t("confirm")}</Button>
               </DialogFooter>
             </DialogContent>
           </form>
         </Dialog>
 
-        {form.allowsGuestSubmissions ? (
-          <Button size={"sm"}>
-            <ICONS.hatGlasses />
+        {form.allowsGuestSubmissions && (
+          <Button>
+            <ICONS.anonymous />
             {t("fillAnonymously")}
           </Button>
-        ) : null}
+        )}
       </div>
     </section>
   );

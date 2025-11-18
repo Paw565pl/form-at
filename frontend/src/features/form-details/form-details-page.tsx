@@ -2,21 +2,22 @@ import { FormResponseDto, FormStatus, Language } from "@/core/types/form";
 import { QuestionType } from "@/core/types/question";
 import { Banner } from "@/features/form-details/components/banner";
 import { Details } from "@/features/form-details/components/details";
-import { NoQuestions } from "@/features/form-details/components/question/no-questions";
 import { QuestionList } from "@/features/form-details/components/question/question-list";
+import { useTranslations } from "next-intl";
 
 const form: FormResponseDto = {
   id: "1",
-  name: "Formularz 1",
+  name: "Jak obszerna jest Twoja wiedza o kotach?",
   slug: "formularz-1",
-  description: "Opis formularza 1",
+  description:
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
   language: Language.Pl,
   status: FormStatus.Private,
   thanksMessage: "Dziękujemy za wypełnienie formularza!",
   estimatedDuration: "PT5M",
   thumbnailKey: undefined,
   allowsQuestionsPreview: true,
-  allowsGuestSubmissions: false,
+  allowsGuestSubmissions: true,
   saveSubmissions: true,
   authorId: "author-1",
   createdAt: new Date(),
@@ -25,7 +26,7 @@ const form: FormResponseDto = {
   questions: [
     {
       id: "1",
-      content: "Jaka jest rasa tego pięknego kota",
+      content: "Jaka jest rasa tego pięknego kota?",
       type: QuestionType.Single,
       imageKey: undefined,
       isRequired: true,
@@ -38,8 +39,8 @@ const form: FormResponseDto = {
     },
     {
       id: "2",
-      content: "Jaka jest rasa tego pięknego kota",
-      type: QuestionType.Single,
+      content: "Jakie rasy kotów widzisz na obrazku?",
+      type: QuestionType.Multiple,
       imageKey: "1",
       isRequired: true,
       answers: [
@@ -49,25 +50,31 @@ const form: FormResponseDto = {
         { id: "q2a4", content: "Opcja 4", isCorrect: false },
       ],
     },
+    {
+      id: "3",
+      content: "Jak wygląda Twój wymarzony kot?",
+      type: QuestionType.Open,
+      imageKey: "1",
+      isRequired: false,
+      answers: [],
+    },
   ],
 };
 
-const FormDetailsPage = () => {
+export const FormDetailsPage = () => {
+  const t = useTranslations("publicFormView");
   return (
-    <main className="flex justify-center px-5 py-10 lg:px-30">
-      <div className="flex w-full flex-col items-center justify-center px-4">
-        <Banner form={form} />
+    <main className="px-5 py-10 lg:px-30">
+      <Banner form={form} />
+      <Details form={form} />
 
-        <Details form={form} />
-
-        {form.questions.length > 0 && form.allowsQuestionsPreview ? (
-          <QuestionList questions={form.questions} />
-        ) : (
-          <NoQuestions />
-        )}
-      </div>
+      {form.allowsQuestionsPreview ? (
+        <QuestionList questions={form.questions} />
+      ) : (
+        <p className="text-muted-foreground p-4 text-sm">
+          {t("questionList.noPreviewAllowed")}
+        </p>
+      )}
     </main>
   );
 };
-
-export default FormDetailsPage;

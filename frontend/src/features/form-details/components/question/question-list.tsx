@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@/core/components/ui/button";
+import { Card } from "@/core/components/ui/card";
 import { ICONS } from "@/core/config/icons";
 import { QuestionResponseDto } from "@/core/types/question";
 import { Question } from "@/features/form-details/components/question/question";
@@ -15,21 +16,26 @@ export const QuestionList = ({ questions }: QuestionListProps) => {
   const [showQuestions, setShowQuestions] = useState(true);
 
   return (
-    <div className="flex w-full flex-col gap-2 py-2">
-      <div className="flex gap-2">
-        <h1 className="text-xl">{t("showQuestions")}</h1>
-        <Button
-          variant="ghost"
-          size={"icon-sm"}
-          onClick={() => setShowQuestions((prev) => !prev)}
-        >
-          {showQuestions ? <ICONS.chevronUp /> : <ICONS.chevronDown />}
-        </Button>
-      </div>
-      {showQuestions &&
-        questions.map((question) => (
-          <Question key={question.id} {...question} />
-        ))}
+    <div className="mt-2 flex w-full flex-col gap-2">
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => setShowQuestions((prev) => !prev)}
+        className="w-fit"
+      >
+        {showQuestions ? t("hideQuestions") : t("showQuestions")}
+        <ICONS.chevronDown
+          className={`transition-transform ${showQuestions ? "rotate-180" : ""}`}
+        />
+      </Button>
+
+      {showQuestions && (
+        <Card className="gap-1 p-4">
+          {questions.map((question, index) => (
+            <Question key={question.id} question={question} index={index} />
+          ))}
+        </Card>
+      )}
     </div>
   );
 };

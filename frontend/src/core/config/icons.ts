@@ -1,7 +1,6 @@
 import {
   BadgeQuestionMark,
   ChevronDown,
-  ChevronUp,
   ClockArrowUp,
   CornerUpLeft,
   FileKey2,
@@ -9,7 +8,6 @@ import {
   LayoutGrid,
   List,
   ListChecks,
-  MessageSquareX,
   MoreHorizontal,
   PersonStanding,
 } from "lucide-react";
@@ -19,13 +17,11 @@ export const ICONS = {
   grid: LayoutGrid,
   back: CornerUpLeft,
   more: MoreHorizontal,
-  listChecks: ListChecks,
-  hatGlasses: HatGlasses,
+  fillForm: ListChecks,
+  anonymous: HatGlasses,
   chevronDown: ChevronDown,
-  chevronUp: ChevronUp,
   questionsCount: BadgeQuestionMark,
   submissionsCount: PersonStanding,
   estimatedDuration: ClockArrowUp,
   privateForm: FileKey2,
-  noQuestions: MessageSquareX,
 };
