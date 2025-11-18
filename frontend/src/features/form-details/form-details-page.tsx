@@ -63,6 +63,7 @@ const form: FormResponseDto = {
 
 export const FormDetailsPage = () => {
   const t = useTranslations("publicFormView");
+
   return (
     <main className="px-5 py-10 lg:px-30">
       <Banner form={form} />
