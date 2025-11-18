@@ -77,9 +77,9 @@ public class SubmissionService {
     public SubmissionResponseDto createByFormIdOrSlug(
             @Nullable KeycloakJwtClaims keycloakJwtClaims, String formIdOrSlug, SubmissionRequestDto requestDto) {
         val form = formService.findOrThrow(formIdOrSlug);
+
         if (!form.getAllowsGuestSubmissions() && keycloakJwtClaims == null)
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
-
         if (!form.getSaveSubmissions()) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 
         val errors = submissionValidator.validate(form, requestDto);
@@ -127,15 +127,15 @@ public class SubmissionService {
         val form = formService.findOrThrow(formIdOrSlug);
         if (!form.getSaveSubmissions()) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 
-        val submission = submissionRepository
-                .findById(submissionId)
-                .orElseThrow(() -> new SubmissionNotFoundException(submissionId));
-
         val isFormOwner = Optional.ofNullable(form.getAuthor())
                 .map(a -> Objects.equals(a.getId(), keycloakJwtClaims.sub()))
                 .orElse(false);
         val isAdmin = keycloakJwtClaims.roles().contains(Role.ADMIN);
         if (!(isFormOwner || isAdmin)) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+
+        val submission = submissionRepository
+                .findById(submissionId)
+                .orElseThrow(() -> new SubmissionNotFoundException(submissionId));
 
         submissionRepository.delete(submission);
         formService.decrementSubmissionsCountById(form.getId());
