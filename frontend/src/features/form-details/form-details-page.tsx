@@ -62,10 +62,10 @@ const form: FormResponseDto = {
 };
 
 export const FormDetailsPage = () => {
-  const t = useTranslations("publicFormView");
+  const t = useTranslations("formDetailsPage");
 
   return (
-    <main className="px-5 py-10 lg:px-30">
+    <section id="form-details" className="px-5 py-10 lg:px-30">
       <Banner form={form} />
       <Details form={form} />
 
@@ -76,6 +76,6 @@ export const FormDetailsPage = () => {
           {t("questionList.noPreviewAllowed")}
         </p>
       )}
-    </main>
+    </section>
   );
 };

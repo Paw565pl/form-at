@@ -31,7 +31,7 @@
     "end": "You have reached the end of the list.",
     "loading": "Loading forms..."
   },
-  "publicFormView": {
+  "formDetailsPage": {
     "banner": {
       "back": "Go Back to Previous Page",
       "moreOptions": "More Options",
