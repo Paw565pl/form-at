@@ -1,10 +1,15 @@
+"use client";
+
 import { AuthButton } from "@/core/components/auth-button/auth-button";
 import { Logo } from "@/core/components/logo/logo";
 import { Button } from "@/core/components/ui/button";
 import { Card } from "@/core/components/ui/card";
-import { Tooltip, TooltipTrigger } from "@/core/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/core/components/ui/tooltip";
 import { ICONS } from "@/core/config/icons";
-import { TooltipContent } from "@radix-ui/react-tooltip";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";

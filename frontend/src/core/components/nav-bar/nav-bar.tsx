@@ -1,5 +1,3 @@
-"use client";
-
 import { AuthButton } from "@/core/components/auth-button/auth-button";
 import { Logo } from "@/core/components/logo/logo";
 import { LanguageSwitcher } from "@/core/components/nav-bar/language-switcher";
@@ -7,13 +5,13 @@ import { MobileMenu } from "@/core/components/nav-bar/mobile-menu";
 import { ThemeSwitcher } from "@/core/components/nav-bar/theme-switcher";
 import { Button } from "@/core/components/ui/button";
 import { ICONS } from "@/core/config/icons";
-import { useSession } from "next-auth/react";
-import { useTranslations } from "next-intl";
+import { auth } from "@/features/auth/config/auth-config";
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 
-export const NavBar = () => {
-  const t = useTranslations("navBar");
-  const { data: session } = useSession();
+export const NavBar = async () => {
+  const t = await getTranslations("navBar");
+  const session = await auth();
 
   return (
     <nav className="flex w-full justify-between p-2">

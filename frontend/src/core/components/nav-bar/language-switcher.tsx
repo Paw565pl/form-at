@@ -1,4 +1,5 @@
 "use client";
+
 import { Button } from "@/core/components/ui/button";
 import {
   DropdownMenu,
@@ -12,24 +13,18 @@ import {
   TooltipTrigger,
 } from "@/core/components/ui/tooltip";
 import { ICONS } from "@/core/config/icons";
+import { ValidLocale } from "@/core/lib/i18n/request";
+import { switchLocale } from "@/core/lib/i18n/switch-locale";
 import { useLocale, useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
 
-const langs = [
+const langs: { code: ValidLocale; name: string }[] = [
   { code: "en", name: "English" },
   { code: "pl", name: "Polski" },
-];
+] as const;
 
 export const LanguageSwitcher = () => {
   const t = useTranslations("navBar");
   const locale = useLocale();
-  const router = useRouter();
-
-  const SwitchLocale = (locale: string) => {
-    // eslint-disable-next-line react-hooks/immutability
-    document.cookie = `locale=${locale}`;
-    router.refresh();
-  };
 
   return (
     <DropdownMenu>
@@ -50,7 +45,7 @@ export const LanguageSwitcher = () => {
         {langs.map((lang) => (
           <DropdownMenuItem
             key={lang.code}
-            onClick={() => SwitchLocale(lang.code)}
+            onClick={() => switchLocale(lang.code)}
             className="justify-between"
           >
             {lang.name}

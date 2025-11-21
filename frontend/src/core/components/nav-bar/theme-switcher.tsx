@@ -1,4 +1,5 @@
 "use client";
+
 import { Button } from "@/core/components/ui/button";
 import {
   Tooltip,
@@ -15,12 +16,15 @@ export const ThemeSwitcher = () => {
   const { theme, setTheme } = useTheme();
 
   const [mounted, setMounted] = useState(false); // needed for theme checks
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true);
-  }, []);
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => setMounted(true), []);
 
-  if (!mounted) return null;
+  if (!mounted)
+    return (
+      <Button size="icon-sm" variant="outline">
+        <ICONS.lightMode />
+      </Button>
+    );
 
   return (
     <Tooltip>
