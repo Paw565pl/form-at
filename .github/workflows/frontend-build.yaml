@@ -42,7 +42,7 @@ jobs:
         run: pnpm lint
 
       - name: Check translations consistency
-        run: pnpx @lingual/i18n-check@latest --source en --locales messages
+        run: pnpx @lingual/i18n-check@v0.8.14 --source en --locales messages
 
       - name: Build project
         run: pnpm build
