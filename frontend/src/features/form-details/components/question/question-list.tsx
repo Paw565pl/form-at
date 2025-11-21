@@ -12,11 +12,11 @@ interface QuestionListProps {
 }
 
 export const QuestionList = ({ questions }: QuestionListProps) => {
-  const t = useTranslations("publicFormView.questionList");
+  const t = useTranslations("formDetailsPage.questionList");
   const [showQuestions, setShowQuestions] = useState(true);
 
   return (
-    <div className="mt-2 flex w-full flex-col gap-2">
+    <section className="mt-2 flex w-full flex-col gap-2">
       <Button
         variant="ghost"
         size="sm"
@@ -24,7 +24,7 @@ export const QuestionList = ({ questions }: QuestionListProps) => {
         className="w-fit"
       >
         {showQuestions ? t("hideQuestions") : t("showQuestions")}
-        <ICONS.chevronDown
+        <ICONS.expandDown
           className={`transition-transform ${showQuestions ? "rotate-180" : ""}`}
         />
       </Button>
@@ -36,6 +36,6 @@ export const QuestionList = ({ questions }: QuestionListProps) => {
           ))}
         </Card>
       )}
-    </div>
+    </section>
   );
 };

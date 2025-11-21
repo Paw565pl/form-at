@@ -19,7 +19,7 @@ export const ICONS = {
   more: MoreHorizontal,
   fillForm: ListChecks,
   anonymous: HatGlasses,
-  chevronDown: ChevronDown,
+  expandDown: ChevronDown,
   questionsCount: BadgeQuestionMark,
   submissionsCount: PersonStanding,
   estimatedDuration: ClockArrowUp,

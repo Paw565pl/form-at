@@ -29,7 +29,7 @@ interface BannerProps {
 }
 
 export const Banner = ({ form }: BannerProps) => {
-  const t = useTranslations("publicFormView.banner");
+  const t = useTranslations("formDetailsPage.banner");
   const router = useRouter();
 
   return (

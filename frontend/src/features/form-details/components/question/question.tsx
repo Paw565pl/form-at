@@ -7,9 +7,9 @@ interface QuestionProps {
 }
 
 export const Question = ({ question, index }: QuestionProps) => {
-  const t = useTranslations("publicFormView.questionList");
+  const t = useTranslations("formDetailsPage.questionList");
 
-  const question_types = {
+  const questionTypes = {
     SINGLE: t("questionTypes.single"),
     MULTIPLE: t("questionTypes.multiple"),
     OPEN: t("questionTypes.open"),
@@ -24,7 +24,7 @@ export const Question = ({ question, index }: QuestionProps) => {
         </span>
       </p>
       <p className="text-muted-foreground ml-auto text-sm">
-        {question_types[question.type]}
+        {questionTypes[question.type]}
       </p>
     </div>
   );

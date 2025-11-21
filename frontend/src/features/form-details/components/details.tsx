@@ -16,7 +16,7 @@ interface DetailsProps {
 
 export const Details = ({ form }: DetailsProps) => {
   const format = useFormatter();
-  const t = useTranslations("publicFormView.details");
+  const t = useTranslations("formDetailsPage.details");
 
   return (
     <Card className="flex w-full flex-col gap-4 rounded-t-none p-4">
