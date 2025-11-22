@@ -30,6 +30,8 @@ public record FormListResponseDto(
 
         @NonNull Boolean saveSubmissions,
 
+        @Nullable String authorName,
+
         @NonNull Long submissionsCount,
 
         @NonNull Integer questionsCount,

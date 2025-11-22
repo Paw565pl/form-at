@@ -26,11 +26,13 @@ public class KeycloakJwtClaimsExtractor {
         if (realmAccess == null) return Set.of();
 
         val rolesObj = realmAccess.get("roles");
-        if (!(rolesObj instanceof Collection<?>)) return Set.of();
+        if (!(rolesObj instanceof Collection<?> roles)) return Set.of();
 
-        @SuppressWarnings("unchecked")
-        val roles = (Collection<String>) rolesObj;
-
-        return roles.stream().map(Role::fromValue).flatMap(Optional::stream).collect(Collectors.toSet());
+        return roles.stream()
+                .filter(String.class::isInstance)
+                .map(String.class::cast)
+                .map(Role::fromValue)
+                .flatMap(Optional::stream)
+                .collect(Collectors.toUnmodifiableSet());
     }
 }
