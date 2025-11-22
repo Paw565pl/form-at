@@ -21,7 +21,10 @@ export const FormListPage = () => {
   const t = useTranslations("formListPage");
 
   return (
-    <main className="forms-list flex w-full flex-col gap-2 px-5 py-10 lg:px-30">
+    <section
+      id="forms-list"
+      className="flex w-full flex-col gap-2 px-5 py-10 lg:px-30"
+    >
       <header className="mb-2 flex flex-wrap items-center justify-between gap-4">
         <h1 className="ml-4 text-xl font-bold">
           {t("title", { count: forms.length })}
@@ -70,6 +73,6 @@ export const FormListPage = () => {
       <p className="text-muted-foreground p-4 text-center text-sm">
         {t("end")}
       </p>
-    </main>
+    </section>
   );
 };
