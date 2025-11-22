@@ -13,6 +13,17 @@ import {
   Sun,
   User,
   X,
+  BadgeQuestionMark,
+  ChevronDown,
+  ClockArrowUp,
+  CornerUpLeft,
+  FileKey2,
+  HatGlasses,
+  LayoutGrid,
+  List,
+  ListChecks,
+  MoreHorizontal,
+  PersonStanding,
 } from "lucide-react";
 
 export const ICONS = {
@@ -30,4 +41,13 @@ export const ICONS = {
   lightMode: Sun,
   menu: Menu,
   close: X,
+  back: CornerUpLeft,
+  more: MoreHorizontal,
+  fillForm: ListChecks,
+  anonymous: HatGlasses,
+  expandDown: ChevronDown,
+  questionsCount: BadgeQuestionMark,
+  submissionsCount: PersonStanding,
+  estimatedDuration: ClockArrowUp,
+  privateForm: FileKey2,
 };

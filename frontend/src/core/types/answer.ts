@@ -1,5 +1,5 @@
 export interface AnswerResponseDto {
-  id: string;
-  content: string;
-  isCorrect: boolean;
+  readonly id: string;
+  readonly content: string;
+  readonly isCorrect: boolean;
 }
