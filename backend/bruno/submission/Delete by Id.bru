@@ -1,0 +1,21 @@
+meta {
+  name: Delete by Id
+  type: http
+  seq: 4
+}
+
+delete {
+  url: {{baseUrl}}/api/v1/forms/:formIdOrSlug/submissions/:submissionId
+  body: none
+  auth: inherit
+}
+
+params:path {
+  formIdOrSlug: 69120e2d23b9cf9f544cfb2d
+  submissionId: 69120e2d23b9cf9f544cfb1f
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

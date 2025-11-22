@@ -30,13 +30,9 @@ import org.springframework.lang.Nullable;
 @Setter
 @RequiredArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@CompoundIndex(
-        def = "{'status': 1, 'allowsGuestSubmissions': 1, 'language': 1, 'updatedAt': -1, 'estimatedDuration': 1}")
-@CompoundIndex(
-        def = "{'status': 1, 'allowsGuestSubmissions': 1, 'language': 1, 'createdAt': -1, 'estimatedDuration': 1}")
-@CompoundIndex(
-        def =
-                "{'status': 1, 'allowsGuestSubmissions': 1, 'language': 1, 'submissionsCount': -1, 'estimatedDuration': 1}")
+@CompoundIndex(def = "{'status': 1, 'updatedAt': -1, '_id': 1}")
+@CompoundIndex(def = "{'status': 1, 'createdAt': -1, '_id': 1}")
+@CompoundIndex(def = "{'status': 1, 'submissionsCount': -1, '_id': 1}")
 @Document(collection = "forms")
 public class FormEntity {
 
@@ -70,8 +66,10 @@ public class FormEntity {
     @Field(name = "thanksMessage")
     @Nullable private String thanksMessage;
 
-    @Field(name = "estimatedDuration")
-    @NonNull private Duration estimatedDuration;
+    @Field(name = "estimatedDurationSeconds")
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    @NonNull private Integer estimatedDurationSeconds;
 
     @Field(name = "thumbnailKey")
     @Nullable private String thumbnailKey;
@@ -85,18 +83,21 @@ public class FormEntity {
     @Field(name = "saveSubmissions")
     @NonNull private Boolean saveSubmissions;
 
-    @Field(name = "submissionsCount")
-    @NonNull private Long submissionsCount = 0L;
-
     @Field(name = "authorId")
     @DocumentReference(lazy = true)
-    @NonNull private UserEntity author;
+    @Nullable private UserEntity author;
+
+    @Field(name = "submissionsCount")
+    @Setter(AccessLevel.NONE)
+    @NonNull private Long submissionsCount = 0L;
 
     @Field(name = "questions")
+    @Setter(AccessLevel.NONE)
     @NonNull private List<QuestionEntity> questions = new ArrayList<>();
 
     @ReadOnlyProperty
     @DocumentReference(lazy = true, lookup = "{'formId':?#{#self._id} }")
+    @Setter(AccessLevel.NONE)
     @NonNull private List<SubmissionEntity> submissions = new ArrayList<>();
 
     @CreatedDate
@@ -119,5 +120,14 @@ public class FormEntity {
 
     public void setLanguage(@NonNull Language language) {
         this.language = language.getMongoValue();
+    }
+
+    @Transient
+    @NonNull public Duration getEstimatedDuration() {
+        return Duration.ofSeconds(estimatedDurationSeconds);
+    }
+
+    public void setEstimatedDuration(@NonNull Duration estimatedDuration) {
+        this.estimatedDurationSeconds = (int) estimatedDuration.toSeconds();
     }
 }

@@ -11,8 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.annotation.Version;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -25,6 +24,7 @@ import org.springframework.lang.Nullable;
 @Setter
 @RequiredArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@CompoundIndex(def = "{'formId': 1, 'userId': 1}", unique = true, partialFilter = "{'userId': {'$exists': true}}")
 @Document(collection = "submissions")
 public class SubmissionEntity {
 
@@ -41,17 +41,10 @@ public class SubmissionEntity {
     @Nullable private UserEntity author;
 
     @Field(name = "answers")
+    @Setter(AccessLevel.NONE)
     @NonNull private List<SubmissionAnswerEntity> answers = new ArrayList<>();
 
     @CreatedDate
     @Field(name = "createdAt")
     private Instant createdAt;
-
-    @LastModifiedDate
-    @Field(name = "updatedAt")
-    private Instant updatedAt;
-
-    @Version
-    @Field(name = "version")
-    private Long version;
 }

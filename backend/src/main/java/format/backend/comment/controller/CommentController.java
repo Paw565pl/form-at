@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/forms/{formIdOrSlug}/comments")
 public class CommentController {
+
     private final KeycloakJwtClaimsExtractor keycloakJwtClaimsExtractor;
     private final CommentService commentService;
 
