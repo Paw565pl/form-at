@@ -21,11 +21,11 @@ export interface FormListResponseDto {
 }
 
 export interface FormFilterOptionsDto {
-  searchQuery?: string;
-  language?: Language;
-  minEstimatedDuration?: string;
-  maxEstimatedDuration?: string;
-  allowsGuestSubmissions?: boolean;
+  searchQuery?: string | null;
+  language?: Language | null;
+  minEstimatedDuration?: string | null;
+  maxEstimatedDuration?: string | null;
+  allowsGuestSubmissions?: boolean | null;
 }
 
 export const formSortOptions = {

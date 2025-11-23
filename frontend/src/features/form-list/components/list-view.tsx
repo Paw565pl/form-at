@@ -1,13 +1,16 @@
 import { Card } from "@/core/components/ui/card";
 import { formatDuration } from "@/core/utils/formatDuration";
 import { useFetchFormPage } from "@/features/form-list/hooks/use-fetch-form-page";
+import { formFilterSearchParams } from "@/features/form-list/search-params/form-search-params";
 import { useFormatter, useTranslations } from "next-intl";
 import Link from "next/link";
+import { useQueryStates } from "nuqs";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 export const ListView = () => {
   const t = useTranslations("formListPage");
   const format = useFormatter();
+  const [filters] = useQueryStates(formFilterSearchParams);
   const {
     data: formPages,
     isLoading,
@@ -15,7 +18,7 @@ export const ListView = () => {
     isFetchingNextPage,
     fetchNextPage,
     hasNextPage,
-  } = useFetchFormPage();
+  } = useFetchFormPage(filters);
 
   if (formPages?.pages.at(0)?.content.length == 0)
     return (
