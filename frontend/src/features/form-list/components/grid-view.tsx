@@ -19,7 +19,6 @@ export const GridView = () => {
   const {
     data: formPages,
     isLoading,
-    isError,
     isFetchingNextPage,
     fetchNextPage,
     hasNextPage,
@@ -28,13 +27,6 @@ export const GridView = () => {
   if (formPages?.pages.at(0)?.content.length == 0)
     return (
       <p className="p-4 text-center">No forms found for given criteria.</p>
-    );
-
-  if (isError)
-    return (
-      <p className="p-4 text-center">
-        An unexpected error occurred. Please try again later.
-      </p>
     );
 
   const dataLength =

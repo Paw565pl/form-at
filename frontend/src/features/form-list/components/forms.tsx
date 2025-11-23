@@ -24,7 +24,9 @@ export const Forms = () => {
   const [isGridLayout, setIsGridLayout] = useState(true);
   const [filtersDto] = useQueryStates(formFilterSearchParams);
   const [sortDto] = useQueryStates(formSortSearchParams);
-  const { data: formPages } = useFetchFormPages(filtersDto, sortDto);
+  const { data: formPages, error } = useFetchFormPages(filtersDto, sortDto);
+
+  if (error) throw error;
 
   const dataLength =
     formPages?.pages.reduce((acc, curr) => acc + curr.content.length, 0) || 0;
