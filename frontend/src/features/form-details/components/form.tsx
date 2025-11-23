@@ -3,7 +3,7 @@
 import { Banner } from "@/features/form-details/components/banner";
 import { Details } from "@/features/form-details/components/details";
 import { QuestionList } from "@/features/form-details/components/question-list/question-list";
-import { useFetchFormDetails } from "@/features/form-list/hooks/use-fetch-form-details";
+import { useFetchFormDetails } from "@/features/form-details/hooks/use-fetch-form-details";
 import { HttpStatusCode } from "axios";
 import { useTranslations } from "next-intl";
 import { notFound } from "next/navigation";
