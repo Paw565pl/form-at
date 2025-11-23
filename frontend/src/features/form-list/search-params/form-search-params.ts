@@ -1,10 +1,11 @@
-import { Language } from "@/core/types/form";
+import { formSortOptions, Language } from "@/core/types/form";
 import { parseAsDuration } from "@/features/form-list/search-params/parseAsDuration";
 import {
   createLoader,
   parseAsBoolean,
   parseAsString,
   parseAsStringEnum,
+  parseAsStringLiteral,
 } from "nuqs/server";
 
 export const formFilterSearchParams = {
@@ -18,7 +19,7 @@ export const formFilterSearchParams = {
 export const loadFormFilterSearchParams = createLoader(formFilterSearchParams);
 
 export const formSortSearchParams = {
-  sort: parseAsString,
+  sort: parseAsStringLiteral(formSortOptions).withDefault("updatedAt,desc"),
 } as const;
 
 export const loadFormSortSearchParams = createLoader(formSortSearchParams);

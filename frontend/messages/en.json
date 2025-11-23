@@ -23,8 +23,6 @@
       "sortOptions": {
         "newest": "Newest",
         "oldest": "Oldest",
-        "name": "Name",
-        "questions": "Questions",
         "submissions": "Submissions",
         "duration": "Duration"
       },

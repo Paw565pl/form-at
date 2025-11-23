@@ -1,5 +1,4 @@
 import { QuestionRequestDto, QuestionResponseDto } from "@/core/types/question";
-import { SortOptionsDto } from "@/core/types/sort-options-dto";
 
 export interface FormListResponseDto {
   readonly id: string;
@@ -28,19 +27,21 @@ export interface FormFilterOptionsDto {
   allowsGuestSubmissions?: boolean | null;
 }
 
-export const formSortOptions = {
-  "estimatedDuration:asc": new SortOptionsDto("estimatedDuration", "asc"),
-  "estimatedDuration:desc": new SortOptionsDto("estimatedDuration", "desc"),
+export const formSortOptions = [
+  "estimatedDuration,asc",
+  "estimatedDuration,desc",
 
-  "submissionsCount:asc": new SortOptionsDto("submissionsCount", "asc"),
-  "submissionsCount:desc": new SortOptionsDto("submissionsCount", "desc"),
+  "submissionsCount,asc",
+  "submissionsCount,desc",
 
-  "createdAt:asc": new SortOptionsDto("createdAt", "asc"),
-  "createdAt:desc": new SortOptionsDto("createdAt", "desc"),
+  "createdAt,asc",
+  "createdAt,desc",
 
-  "updatedAt:asc": new SortOptionsDto("updatedAt", "asc"),
-  "updatedAt:desc": new SortOptionsDto("updatedAt", "desc"),
-} as const;
+  "updatedAt,asc",
+  "updatedAt,desc",
+] as const;
+
+export type FormSortOptions = (typeof formSortOptions)[number];
 
 export interface FormDetailResponseDto {
   readonly id: string;

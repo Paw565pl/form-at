@@ -1,14 +1,20 @@
 import { getQueryClient } from "@/core/lib/tanstack-query";
 import { Forms } from "@/features/form-list/components/forms";
 import { prefetchFormPage } from "@/features/form-list/hooks/use-fetch-form-page";
-import { loadFormFilterSearchParams } from "@/features/form-list/search-params/form-search-params";
+import {
+  loadFormFilterSearchParams,
+  loadFormSortSearchParams,
+} from "@/features/form-list/search-params/form-search-params";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 
 export const FormListPage = async ({ searchParams }: PageProps<"/forms">) => {
   const queryClient = getQueryClient();
 
-  const filters = await loadFormFilterSearchParams(searchParams);
-  await prefetchFormPage(queryClient, filters);
+  const [filtersDto, sortDto] = await Promise.all([
+    loadFormFilterSearchParams(searchParams),
+    loadFormSortSearchParams(searchParams),
+  ]);
+  await prefetchFormPage(queryClient, filtersDto, sortDto);
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>

@@ -6,28 +6,33 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/core/components/ui/select";
-import { formFilterSearchParams } from "@/features/form-list/search-params/form-search-params";
+import { FormSortOptions } from "@/core/types/form";
+import {
+  formFilterSearchParams,
+  formSortSearchParams,
+} from "@/features/form-list/search-params/form-search-params";
 import { useTranslations } from "next-intl";
-import { parseAsStringLiteral, useQueryState, useQueryStates } from "nuqs";
+import { useQueryStates } from "nuqs";
 import { useRef } from "react";
 
 export const Filters = () => {
-  const [, setFilters] = useQueryStates(formFilterSearchParams);
-  const searchInputRef = useRef<HTMLInputElement>(null);
   const t = useTranslations("formListPage");
+  const [, setFilters] = useQueryStates(formFilterSearchParams);
+  const [{ sort }, setSort] = useQueryStates(formSortSearchParams);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
-  const sortOptions = [
-    { key: "createdAt", label: t("options.sortOptions.newest") },
-    { key: "submissionsCount", label: t("options.sortOptions.submissions") },
-    { key: "estimatedDuration", label: t("options.sortOptions.duration") },
+  const sortOptions: {
+    key: FormSortOptions;
+    label: string;
+  }[] = [
+    { key: "updatedAt,desc", label: t("options.sortOptions.newest") },
+    { key: "updatedAt,asc", label: t("options.sortOptions.oldest") },
+    {
+      key: "submissionsCount,desc",
+      label: t("options.sortOptions.submissions"),
+    },
+    { key: "estimatedDuration,desc", label: t("options.sortOptions.duration") },
   ] as const;
-
-  const [sortBy, setSortBy] = useQueryState(
-    "sortBy",
-    parseAsStringLiteral(sortOptions.map((opt) => opt.key)).withDefault(
-      "createdAt",
-    ),
-  );
 
   return (
     <div className="flex w-full flex-wrap gap-2 md:flex-nowrap">
@@ -48,15 +53,20 @@ export const Filters = () => {
         />
       </form>
 
-      <Select value={sortBy} onValueChange={setSortBy}>
+      <Select
+        value={sort ?? undefined}
+        onValueChange={(newValue) =>
+          setSort({ sort: newValue as FormSortOptions })
+        }
+      >
         <SelectTrigger className="w-full max-w-70">
           {t("options.sortBy")}
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
-          {sortOptions.map((opt) => (
-            <SelectItem key={opt.key} value={opt.key}>
-              {opt.label}
+          {sortOptions.map((option) => (
+            <SelectItem key={option.key} value={option.key}>
+              {option.label}
             </SelectItem>
           ))}
         </SelectContent>

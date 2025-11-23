@@ -1,7 +1,10 @@
 import { Card } from "@/core/components/ui/card";
 import { placeholder_image_url } from "@/features/form-list/example-forms";
 import { useFetchFormPage } from "@/features/form-list/hooks/use-fetch-form-page";
-import { formFilterSearchParams } from "@/features/form-list/search-params/form-search-params";
+import {
+  formFilterSearchParams,
+  formSortSearchParams,
+} from "@/features/form-list/search-params/form-search-params";
 import { useFormatter, useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,7 +14,8 @@ import InfiniteScroll from "react-infinite-scroll-component";
 export const GridView = () => {
   const t = useTranslations("formListPage");
   const format = useFormatter();
-  const [filters] = useQueryStates(formFilterSearchParams);
+  const [filtersDto] = useQueryStates(formFilterSearchParams);
+  const [sortDto] = useQueryStates(formSortSearchParams);
   const {
     data: formPages,
     isLoading,
@@ -19,7 +23,7 @@ export const GridView = () => {
     isFetchingNextPage,
     fetchNextPage,
     hasNextPage,
-  } = useFetchFormPage(filters);
+  } = useFetchFormPage(filtersDto, sortDto);
 
   if (formPages?.pages.at(0)?.content.length == 0)
     return (

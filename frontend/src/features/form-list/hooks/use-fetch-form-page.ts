@@ -3,9 +3,10 @@ import { ErrorResponseDto } from "@/core/types/error-response-dto";
 import {
   FormFilterOptionsDto,
   FormListResponseDto,
-  formSortOptions,
+  FormSortOptions,
 } from "@/core/types/form";
 import { PaginatedResponseDto } from "@/core/types/paginated-response-dto";
+import { SortOptionsDto } from "@/core/types/sort-options-dto";
 import {
   infiniteQueryOptions,
   QueryClient,
@@ -15,12 +16,9 @@ import { AxiosError } from "axios";
 
 const getFetchFormPageQueryOptions = (
   formFilterOptionsDto?: FormFilterOptionsDto,
-  formSortOptionKey?: keyof typeof formSortOptions,
-) => {
-  const formSortOptionsDto =
-    formSortOptionKey && formSortOptions[formSortOptionKey];
-
-  return infiniteQueryOptions<
+  formSortOptionsDto?: SortOptionsDto<FormSortOptions>,
+) =>
+  infiniteQueryOptions<
     PaginatedResponseDto<FormListResponseDto>,
     AxiosError<ErrorResponseDto>
   >({
@@ -31,7 +29,7 @@ const getFetchFormPageQueryOptions = (
       >("/api/v1/forms", {
         params: {
           ...formFilterOptionsDto,
-          sort: formSortOptionsDto?.getSearchParamValue(),
+          ...formSortOptionsDto,
           page: pageParam,
         },
       });
@@ -42,21 +40,20 @@ const getFetchFormPageQueryOptions = (
       page.number + 1 < page.totalPages ? page.number + 1 : undefined,
     staleTime: 1000 * 60 * 10, // 10 minutes
   });
-};
 
 export const useFetchFormPage = (
   formFilterOptionsDto?: FormFilterOptionsDto,
-  formSortOptionsKey?: keyof typeof formSortOptions,
+  formSortOptionsDto?: SortOptionsDto<FormSortOptions>,
 ) =>
   useInfiniteQuery(
-    getFetchFormPageQueryOptions(formFilterOptionsDto, formSortOptionsKey),
+    getFetchFormPageQueryOptions(formFilterOptionsDto, formSortOptionsDto),
   );
 
 export const prefetchFormPage = (
   queryClient: QueryClient,
   formFilterOptionsDto?: FormFilterOptionsDto,
-  formSortOptionsKey?: keyof typeof formSortOptions,
+  formSortOptionsDto?: SortOptionsDto<FormSortOptions>,
 ) =>
   queryClient.prefetchInfiniteQuery(
-    getFetchFormPageQueryOptions(formFilterOptionsDto, formSortOptionsKey),
+    getFetchFormPageQueryOptions(formFilterOptionsDto, formSortOptionsDto),
   );

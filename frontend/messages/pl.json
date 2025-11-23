@@ -23,8 +23,6 @@
       "sortOptions": {
         "newest": "Najnowsze",
         "oldest": "Najstarsze",
-        "name": "Nazwa",
-        "questions": "Liczba pytań",
         "submissions": "Liczba odpowiedzi",
         "duration": "Czas trwania"
       },
