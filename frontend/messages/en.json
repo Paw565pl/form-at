@@ -2,6 +2,9 @@
   "rootPage": {
     "message": "Hello world!"
   },
+  "errorPage": {
+    "message": "An unexpected error ocurred. Please try again later."
+  },
   "navBar": {
     "auth": {
       "signIn": "Sign In",
