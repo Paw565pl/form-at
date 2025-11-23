@@ -24,9 +24,7 @@ export const ListView = () => {
   } = useFetchFormPages(filtersDto, sortDto);
 
   if (formPages?.pages.at(0)?.content.length == 0)
-    return (
-      <p className="p-4 text-center">No forms found for given criteria.</p>
-    );
+    return <p className="p-4 text-center">{t("empty")}</p>;
 
   const dataLength =
     formPages?.pages.reduce((acc, curr) => acc + curr.content.length, 0) || 0;

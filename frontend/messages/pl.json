@@ -37,7 +37,8 @@
     "questions": "{count, plural, one {# pytanie} few {# pytania} many {# pytań} other {# pytań}}",
     "submissions": "{count, plural, one {# odpowiedź} other {# odpowiedzi}}",
     "end": "Dotarłeś do końca listy.",
-    "loading": "Ładowanie formularzy..."
+    "loading": "Ładowanie formularzy...",
+    "empty": "Brak formularzy dla wybranych kryteriów wyszukiwania."
   },
   "formDetailsPage": {
     "loading": "Ładowanie...",
