@@ -4,6 +4,7 @@ import format.backend.upload.entity.PendingUploadEntity;
 import format.backend.upload.repository.PendingUploadRepository;
 import format.backend.upload.service.UploadService;
 import java.time.Instant;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -34,7 +35,7 @@ class PendingUploadCleanupJob {
         while (expiredPendingUploads.hasContent()) {
             val keys = expiredPendingUploads.stream()
                     .map(PendingUploadEntity::getKey)
-                    .toList();
+                    .collect(Collectors.toUnmodifiableSet());
             uploadService.deleteAllByKeys(keys);
 
             pendingUploadRepository.deleteAll(expiredPendingUploads);

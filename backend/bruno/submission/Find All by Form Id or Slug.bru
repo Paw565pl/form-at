@@ -1,0 +1,25 @@
+meta {
+  name: Find All by Form Id or Slug
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/v1/forms/:formIdOrSlug/submissions
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~page: 0
+  ~size: 20
+}
+
+params:path {
+  formIdOrSlug: quiz-about-cats
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

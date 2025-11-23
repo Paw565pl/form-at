@@ -2,14 +2,21 @@
   "rootPage": {
     "message": "Hello world!"
   },
-  "navbar": {
+  "navBar": {
     "auth": {
       "signIn": "Sign In",
       "signOut": "Sign Out"
-    }
+    },
+    "home": "Home",
+    "forms": "Forms",
+    "createForm": "Create New Form",
+    "lightMode": "Switch to light mode",
+    "darkMode": "Switch to dark mode",
+    "changeLang": "Change language",
+    "openMenu": "Open menu"
   },
   "formListPage": {
-    "title": "Showing {count, plural, =1 {# form} other {# forms}}",
+    "title": "Showing {count, plural, one {# form} other {# forms}}",
     "options": {
       "searchPlaceholder": "Search forms...",
       "sortBy": "Sort by",
@@ -26,9 +33,41 @@
     },
     "by": "by {name}",
     "byUnknown": "by unknown author",
-    "questions": "{count, plural, =1 {# question} other {# questions}}",
-    "submissions": "{count, plural, =1 {# submission} other {# submissions}}",
+    "questions": "{count, plural, one {# question} other {# questions}}",
+    "submissions": "{count, plural, one {# submission} other {# submissions}}",
     "end": "You have reached the end of the list.",
     "loading": "Loading forms..."
+  },
+  "formDetailsPage": {
+    "banner": {
+      "back": "Go Back to Previous Page",
+      "moreOptions": "More Options",
+      "fillOutForm": "Fill Out the Form",
+      "enterTheCode": "Enter the Form Code",
+      "codeDescription": "This form is private, ask the form author for the access code.",
+      "code": "Code",
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "fillAnonymously": "Fill Anonymously"
+    },
+    "details": {
+      "formFinished": "Completed on {finishedAt}",
+      "questionsCount": "{count, plural, one {# question} other {# questions}}",
+      "submissionsCount": "{count, plural, one {# submission} other {# submissions}}",
+      "estimatedTime": "{time} to complete",
+      "privateForm": "Form Requires Code",
+      "createdAt": "Created {date}"
+    },
+    "questionList": {
+      "showQuestions": "Show Questions Preview",
+      "hideQuestions": "Hide Questions Preview",
+      "noPreviewAllowed": "The author has not allowed questions preview.",
+      "noQuestions": "No questions to display.",
+      "questionTypes": {
+        "single": "Single Choice",
+        "multiple": "Multiple Choice",
+        "open": "Open Ended"
+      }
+    }
   }
 }

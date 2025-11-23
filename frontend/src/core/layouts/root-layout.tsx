@@ -1,3 +1,4 @@
+import { NavBar } from "@/core/components/nav-bar/nav-bar";
 import { ClientProviders } from "@/core/providers/client-providers";
 import { ServerProviders } from "@/core/providers/server-providers";
 import { getLocale } from "next-intl/server";
@@ -16,6 +17,7 @@ export const RootLayout = async ({ children }: PropsWithChildren) => {
       <body>
         <ServerProviders>
           <ClientProviders>
+            <NavBar />
             <main className="container mx-auto">{children}</main>
           </ClientProviders>
         </ServerProviders>
