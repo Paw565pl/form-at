@@ -37,6 +37,7 @@
     "loading": "Loading forms..."
   },
   "formDetailsPage": {
+    "loading": "Loading...",
     "banner": {
       "back": "Go Back to Previous Page",
       "moreOptions": "More Options",

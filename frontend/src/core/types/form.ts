@@ -49,7 +49,7 @@ export interface FormDetailResponseDto {
   readonly slug: string;
   readonly description: string | null;
   readonly language: Language;
-  readonly formStatus: FormStatus;
+  readonly status: FormStatus;
   readonly shuffleVariant: FormShuffleVariant | null;
   readonly thanksMessage: string | null;
   readonly estimatedDuration: string;

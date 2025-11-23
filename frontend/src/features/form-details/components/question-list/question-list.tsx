@@ -2,18 +2,25 @@
 import { Button } from "@/core/components/ui/button";
 import { Card } from "@/core/components/ui/card";
 import { ICONS } from "@/core/config/icons";
-import { QuestionResponseDto } from "@/core/types/question";
+import { FormDetailResponseDto } from "@/core/types/form";
 import { Question } from "@/features/form-details/components/question-list/question";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 interface QuestionListProps {
-  readonly questions: QuestionResponseDto[];
+  readonly form: FormDetailResponseDto;
 }
 
-export const QuestionList = ({ questions }: QuestionListProps) => {
+export const QuestionList = ({ form }: QuestionListProps) => {
   const t = useTranslations("formDetailsPage.questionList");
   const [showQuestions, setShowQuestions] = useState(true);
+
+  if (!form.allowsQuestionsPreview)
+    return (
+      <p className="text-muted-foreground p-4 text-sm">
+        {t("noPreviewAllowed")}
+      </p>
+    );
 
   return (
     <section className="mt-2 flex w-full flex-col gap-2">
@@ -31,7 +38,7 @@ export const QuestionList = ({ questions }: QuestionListProps) => {
 
       {showQuestions && (
         <Card className="gap-1 p-4">
-          {questions.map((question, index) => (
+          {form.questions.map((question, index) => (
             <Question key={question.id} question={question} index={index} />
           ))}
         </Card>
