@@ -10,19 +10,30 @@ import { ICONS } from "@/core/config/icons";
 import { Filters } from "@/features/form-list/components/filters";
 import { GridView } from "@/features/form-list/components/grid-view";
 import { ListView } from "@/features/form-list/components/list-view";
-import { forms } from "@/features/form-list/example-forms";
+import { useFetchFormPage } from "@/features/form-list/hooks/use-fetch-form-page";
+import {
+  formFilterSearchParams,
+  formSortSearchParams,
+} from "@/features/form-list/search-params/form-search-params";
 import { useTranslations } from "next-intl";
+import { useQueryStates } from "nuqs";
 import { useState } from "react";
 
 export const Forms = () => {
   const t = useTranslations("formListPage");
   const [isGridLayout, setIsGridLayout] = useState(true);
+  const [filtersDto] = useQueryStates(formFilterSearchParams);
+  const [sortDto] = useQueryStates(formSortSearchParams);
+  const { data: formPages } = useFetchFormPage(filtersDto, sortDto);
+
+  const dataLength =
+    formPages?.pages.reduce((acc, curr) => acc + curr.content.length, 0) || 0;
 
   return (
     <>
       <header className="mb-2 flex flex-wrap items-center justify-between gap-4">
         <h1 className="ml-4 text-xl font-bold">
-          {t("title", { count: forms.length })}
+          {t("title", { count: dataLength })}
         </h1>
         <div className="flex flex-wrap justify-between gap-2 md:flex-nowrap">
           <Filters />
