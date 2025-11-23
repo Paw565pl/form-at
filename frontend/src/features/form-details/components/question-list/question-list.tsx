@@ -3,7 +3,7 @@ import { Button } from "@/core/components/ui/button";
 import { Card } from "@/core/components/ui/card";
 import { ICONS } from "@/core/config/icons";
 import { QuestionResponseDto } from "@/core/types/question";
-import { Question } from "@/features/form-details/components/question/question";
+import { Question } from "@/features/form-details/components/question-list/question";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
