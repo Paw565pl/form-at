@@ -18,12 +18,7 @@ export const FormListPage = async ({ searchParams }: PageProps<"/forms">) => {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <section
-        id="forms-list"
-        className="flex w-full flex-col gap-2 px-5 py-10 lg:px-30"
-      >
-        <Forms />
-      </section>
+      <Forms />
     </HydrationBoundary>
   );
 };

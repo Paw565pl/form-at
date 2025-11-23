@@ -30,7 +30,10 @@ export const Forms = () => {
     formPages?.pages.reduce((acc, curr) => acc + curr.content.length, 0) || 0;
 
   return (
-    <>
+    <section
+      id="forms-list"
+      className="flex w-full flex-col gap-2 px-5 py-10 lg:px-30"
+    >
       <header className="mb-2 flex flex-wrap items-center justify-between gap-4">
         <h1 className="ml-4 text-xl font-bold">
           {t("title", { count: dataLength })}
@@ -73,6 +76,6 @@ export const Forms = () => {
       </header>
 
       {isGridLayout ? <GridView /> : <ListView />}
-    </>
+    </section>
   );
 };
