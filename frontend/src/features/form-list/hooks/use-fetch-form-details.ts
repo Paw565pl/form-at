@@ -4,7 +4,7 @@ import { FormDetailResponseDto } from "@/core/types/form";
 import { QueryClient, queryOptions, useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
-const getFetchFormDetailQueryOptions = (idOrSlug: string) =>
+const getFetchFormDetailsQueryOptions = (idOrSlug: string) =>
   queryOptions<FormDetailResponseDto, AxiosError<ErrorResponseDto>>({
     queryKey: ["forms", idOrSlug] as const,
     queryFn: async () => {
@@ -16,10 +16,10 @@ const getFetchFormDetailQueryOptions = (idOrSlug: string) =>
     staleTime: 1000 * 60 * 10, // 10 minutes
   });
 
-export const useFetchFormDetail = (idOrSlug: string) =>
-  useQuery(getFetchFormDetailQueryOptions(idOrSlug));
+export const useFetchFormDetails = (idOrSlug: string) =>
+  useQuery(getFetchFormDetailsQueryOptions(idOrSlug));
 
-export const prefetchFormDetail = (
+export const prefetchFormDetails = (
   queryClient: QueryClient,
   idOrSlug: string,
-) => queryClient.prefetchQuery(getFetchFormDetailQueryOptions(idOrSlug));
+) => queryClient.prefetchQuery(getFetchFormDetailsQueryOptions(idOrSlug));

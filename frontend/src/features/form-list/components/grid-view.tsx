@@ -1,6 +1,6 @@
 import { Card } from "@/core/components/ui/card";
-import { placeholder_image_url } from "@/features/form-list/example-forms";
-import { useFetchFormPage } from "@/features/form-list/hooks/use-fetch-form-page";
+import { placeholderImageUrl } from "@/features/form-list/example-forms";
+import { useFetchFormPages } from "@/features/form-list/hooks/use-fetch-form-pages";
 import {
   formFilterSearchParams,
   formSortSearchParams,
@@ -23,7 +23,7 @@ export const GridView = () => {
     isFetchingNextPage,
     fetchNextPage,
     hasNextPage,
-  } = useFetchFormPage(filtersDto, sortDto);
+  } = useFetchFormPages(filtersDto, sortDto);
 
   if (formPages?.pages.at(0)?.content.length == 0)
     return (
@@ -58,7 +58,7 @@ export const GridView = () => {
               >
                 <div className="relative min-h-40">
                   <Image
-                    src={form.thumbnail || placeholder_image_url}
+                    src={form.thumbnail || placeholderImageUrl}
                     alt={form.name}
                     className="origin-bottom object-cover transition-transform group-hover:scale-105"
                     fill

@@ -10,7 +10,7 @@ import { ICONS } from "@/core/config/icons";
 import { Filters } from "@/features/form-list/components/filters";
 import { GridView } from "@/features/form-list/components/grid-view";
 import { ListView } from "@/features/form-list/components/list-view";
-import { useFetchFormPage } from "@/features/form-list/hooks/use-fetch-form-page";
+import { useFetchFormPages } from "@/features/form-list/hooks/use-fetch-form-pages";
 import {
   formFilterSearchParams,
   formSortSearchParams,
@@ -24,7 +24,7 @@ export const Forms = () => {
   const [isGridLayout, setIsGridLayout] = useState(true);
   const [filtersDto] = useQueryStates(formFilterSearchParams);
   const [sortDto] = useQueryStates(formSortSearchParams);
-  const { data: formPages } = useFetchFormPage(filtersDto, sortDto);
+  const { data: formPages } = useFetchFormPages(filtersDto, sortDto);
 
   const dataLength =
     formPages?.pages.reduce((acc, curr) => acc + curr.content.length, 0) || 0;

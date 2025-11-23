@@ -1,6 +1,6 @@
 import { Card } from "@/core/components/ui/card";
 import { formatDuration } from "@/core/utils/formatDuration";
-import { useFetchFormPage } from "@/features/form-list/hooks/use-fetch-form-page";
+import { useFetchFormPages } from "@/features/form-list/hooks/use-fetch-form-pages";
 import {
   formFilterSearchParams,
   formSortSearchParams,
@@ -22,7 +22,7 @@ export const ListView = () => {
     isFetchingNextPage,
     fetchNextPage,
     hasNextPage,
-  } = useFetchFormPage(filtersDto, sortDto);
+  } = useFetchFormPages(filtersDto, sortDto);
 
   if (formPages?.pages.at(0)?.content.length == 0)
     return (

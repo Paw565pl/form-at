@@ -14,7 +14,7 @@ import {
 } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
-const getFetchFormPageQueryOptions = (
+const getFetchFormPagesQueryOptions = (
   formFilterOptionsDto?: FormFilterOptionsDto,
   formSortOptionsDto?: SortOptionsDto<FormSortOptions>,
 ) =>
@@ -41,19 +41,19 @@ const getFetchFormPageQueryOptions = (
     staleTime: 1000 * 60 * 10, // 10 minutes
   });
 
-export const useFetchFormPage = (
+export const useFetchFormPages = (
   formFilterOptionsDto?: FormFilterOptionsDto,
   formSortOptionsDto?: SortOptionsDto<FormSortOptions>,
 ) =>
   useInfiniteQuery(
-    getFetchFormPageQueryOptions(formFilterOptionsDto, formSortOptionsDto),
+    getFetchFormPagesQueryOptions(formFilterOptionsDto, formSortOptionsDto),
   );
 
-export const prefetchFormPage = (
+export const prefetchFormPages = (
   queryClient: QueryClient,
   formFilterOptionsDto?: FormFilterOptionsDto,
   formSortOptionsDto?: SortOptionsDto<FormSortOptions>,
 ) =>
   queryClient.prefetchInfiniteQuery(
-    getFetchFormPageQueryOptions(formFilterOptionsDto, formSortOptionsDto),
+    getFetchFormPagesQueryOptions(formFilterOptionsDto, formSortOptionsDto),
   );
