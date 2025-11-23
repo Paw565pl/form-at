@@ -1,5 +1,5 @@
 import { formSortOptions, Language } from "@/core/types/form";
-import { parseAsDuration } from "@/features/form-list/search-params/parseAsDuration";
+import { parseAsDuration } from "@/features/form-list/search-params/parse-as-duration";
 import {
   createLoader,
   parseAsBoolean,
