@@ -35,6 +35,7 @@ import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.bson.types.ObjectId;
+import org.jspecify.annotations.NonNull;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -73,7 +74,7 @@ public class FormService {
                     "estimatedDuration", "submissionsCount", "createdAt", "updatedAt")
             .collect(Collectors.toUnmodifiableMap(String::toLowerCase, Function.identity()));
 
-    public Page<FormListResponseDto> findAllPublic(FormFilterDto filterDto, Pageable pageable) {
+    public Page<@NonNull FormListResponseDto> findAllPublic(FormFilterDto filterDto, Pageable pageable) {
         var query = new Query();
         if (filterDto.searchQuery() != null && !filterDto.searchQuery().isBlank())
             query = TextQuery.queryText(TextCriteria.forDefaultLanguage()

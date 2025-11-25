@@ -8,24 +8,24 @@ import java.util.List;
 import java.util.Map;
 import lombok.Getter;
 import lombok.ToString;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.http.HttpStatus;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 
 @Getter
 @ToString
 @JsonInclude(NON_NULL)
 public class ErrorResponseDto {
 
-    @NonNull private final Instant timestamp = Instant.now();
+    private final @NonNull Instant timestamp = Instant.now();
 
     private final int status;
 
-    @NonNull private final String error;
+    private final @NonNull String error;
 
-    @NonNull private final String message;
+    private final @NonNull String message;
 
-    @Nullable private final Map<String, List<String>> errors;
+    private final @Nullable Map<@NonNull String, @NonNull List<@NonNull String>> errors;
 
     public ErrorResponseDto(@NonNull HttpStatus status, @NonNull String message) {
         this.status = status.value();
@@ -35,7 +35,9 @@ public class ErrorResponseDto {
     }
 
     public ErrorResponseDto(
-            @NonNull HttpStatus status, @NonNull String message, @Nullable Map<String, List<String>> errors) {
+            @NonNull HttpStatus status,
+            @NonNull String message,
+            @Nullable Map<@NonNull String, @NonNull List<@NonNull String>> errors) {
         this.status = status.value();
         this.error = status.getReasonPhrase();
         this.message = message;

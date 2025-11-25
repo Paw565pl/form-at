@@ -11,6 +11,7 @@ import format.backend.form.dto.FormListResponseDto;
 import format.backend.form.dto.FormRequestDto;
 import format.backend.form.service.FormService;
 import jakarta.validation.Valid;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,7 +38,7 @@ public class FormController {
     private final FormService formService;
 
     @GetMapping
-    public Page<FormListResponseDto> findAllPublic(
+    public Page<@NonNull FormListResponseDto> findAllPublic(
             FormFilterDto filterDto,
             @PageableDefault(size = 20, sort = "updatedAt", direction = DESC) Pageable pageable) {
         return formService.findAllPublic(filterDto, pageable);

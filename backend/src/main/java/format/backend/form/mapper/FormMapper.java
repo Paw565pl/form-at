@@ -7,11 +7,11 @@ import format.backend.form.dto.FormRequestDto;
 import format.backend.form.dto.QuestionResponseDto;
 import format.backend.form.entity.FormEntity;
 import java.util.List;
+import org.jspecify.annotations.Nullable;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.MappingTarget;
-import org.springframework.lang.Nullable;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = QuestionMapper.class)
 public interface FormMapper {

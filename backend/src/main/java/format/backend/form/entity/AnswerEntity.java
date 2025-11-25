@@ -6,9 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.bson.types.ObjectId;
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;
-import org.springframework.lang.NonNull;
 
 @Getter
 @Setter
@@ -20,8 +20,8 @@ public class AnswerEntity {
     private String id = ObjectId.get().toHexString();
 
     @Field(name = "content")
-    @NonNull private String content;
+    private @NonNull String content;
 
     @Field(name = "isCorrect")
-    @NonNull private Boolean isCorrect;
+    private @NonNull Boolean isCorrect;
 }

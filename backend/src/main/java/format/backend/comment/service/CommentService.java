@@ -18,6 +18,7 @@ import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -40,7 +41,7 @@ public class CommentService {
         return commentRepository.findById(id).orElseThrow(() -> new CommentNotFoundException(id));
     }
 
-    public Page<CommentResponseDto> findAll(String idOrSlug, Pageable pageable) {
+    public Page<@NonNull CommentResponseDto> findAll(String idOrSlug, Pageable pageable) {
         val form = formService.findOrThrow(idOrSlug);
 
         val sortedPageable = PageRequest.of(

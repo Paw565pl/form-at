@@ -2,7 +2,7 @@ package format.backend.form.dto;
 
 import format.backend.form.entity.Language;
 import java.time.Duration;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public record FormFilterDto(
         @Nullable String searchQuery,

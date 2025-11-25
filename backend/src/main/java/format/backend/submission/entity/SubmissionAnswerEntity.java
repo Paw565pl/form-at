@@ -7,10 +7,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 
 @Getter
 @Setter
@@ -19,12 +19,12 @@ import org.springframework.lang.Nullable;
 public class SubmissionAnswerEntity {
 
     @Field(name = "questionId", targetType = FieldType.OBJECT_ID)
-    @NonNull private String questionId;
+    private @NonNull String questionId;
 
     @Field(name = "chosenAnswerIds", targetType = FieldType.OBJECT_ID)
     @Setter(AccessLevel.NONE)
-    @NonNull private Set<String> chosenAnswerIds = new HashSet<>();
+    private @NonNull Set<@NonNull String> chosenAnswerIds = new HashSet<>();
 
     @Field(name = "openAnswer")
-    @Nullable private String openAnswer;
+    private @Nullable String openAnswer;
 }

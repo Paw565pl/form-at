@@ -11,6 +11,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.annotation.ReadOnlyProperty;
@@ -23,8 +25,6 @@ import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 
 @Getter
 @Setter
@@ -41,64 +41,64 @@ public class FormEntity {
     private String id;
 
     @Field(name = "name")
-    @NonNull private String name;
+    private @NonNull String name;
 
     @Indexed(unique = true)
     @Field(name = "slug")
-    @NonNull private String slug;
+    private @NonNull String slug;
 
     @Field(name = "description")
-    @Nullable private String description;
+    private @Nullable String description;
 
     @org.springframework.data.mongodb.core.mapping.Language
     @Field(name = "language")
-    @NonNull private String language;
+    private @NonNull String language;
 
     @Field(name = "status")
-    @NonNull private FormStatus status;
+    private @NonNull FormStatus status;
 
     @Field(name = "passwordHash")
-    @Nullable private String passwordHash;
+    private @Nullable String passwordHash;
 
     @Field(name = "shuffleVariant")
-    @Nullable private FormShuffleVariant shuffleVariant;
+    private @Nullable FormShuffleVariant shuffleVariant;
 
     @Field(name = "thanksMessage")
-    @Nullable private String thanksMessage;
+    private @Nullable String thanksMessage;
 
     @Field(name = "estimatedDurationSeconds")
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
-    @NonNull private Integer estimatedDurationSeconds;
+    private @NonNull Integer estimatedDurationSeconds;
 
     @Field(name = "thumbnailKey")
-    @Nullable private String thumbnailKey;
+    private @Nullable String thumbnailKey;
 
     @Field(name = "allowsQuestionsPreview")
-    @NonNull private Boolean allowsQuestionsPreview;
+    private @NonNull Boolean allowsQuestionsPreview;
 
     @Field(name = "allowsGuestSubmissions")
-    @NonNull private Boolean allowsGuestSubmissions;
+    private @NonNull Boolean allowsGuestSubmissions;
 
     @Field(name = "saveSubmissions")
-    @NonNull private Boolean saveSubmissions;
+    private @NonNull Boolean saveSubmissions;
 
     @Field(name = "authorId")
     @DocumentReference(lazy = true)
-    @Nullable private UserEntity author;
+    private @Nullable UserEntity author;
 
     @Field(name = "submissionsCount")
     @Setter(AccessLevel.NONE)
-    @NonNull private Long submissionsCount = 0L;
+    private @NonNull Long submissionsCount = 0L;
 
     @Field(name = "questions")
     @Setter(AccessLevel.NONE)
-    @NonNull private List<QuestionEntity> questions = new ArrayList<>();
+    private @NonNull List<@NonNull QuestionEntity> questions = new ArrayList<>();
 
     @ReadOnlyProperty
     @DocumentReference(lazy = true, lookup = "{'formId':?#{#self._id} }")
     @Setter(AccessLevel.NONE)
-    @NonNull private List<SubmissionEntity> submissions = new ArrayList<>();
+    private @NonNull List<@NonNull SubmissionEntity> submissions = new ArrayList<>();
 
     @CreatedDate
     @Field(name = "createdAt")
@@ -113,7 +113,7 @@ public class FormEntity {
     private Long version;
 
     @Transient
-    @NonNull public Language getLanguage() {
+    public @NonNull Language getLanguage() {
         return Language.fromMongoValue(language)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid language mongo value: " + language));
     }
@@ -123,7 +123,7 @@ public class FormEntity {
     }
 
     @Transient
-    @NonNull public Duration getEstimatedDuration() {
+    public @NonNull Duration getEstimatedDuration() {
         return Duration.ofSeconds(estimatedDurationSeconds);
     }
 

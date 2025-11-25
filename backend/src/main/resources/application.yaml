@@ -2,6 +2,11 @@ spring:
   application:
     name: backend
 
+  web:
+    error:
+      include-message: always
+      include-path: never
+
   data:
     web:
       pageable:
@@ -24,11 +29,6 @@ spring:
 
   profiles:
     active: dev
-
-server:
-  error:
-    include-message: always
-    include-path: never
 
 cors:
   allowed-headers: "*"
