@@ -72,5 +72,10 @@
         "open": "Open Ended"
       }
     }
+  },
+  "components": {
+    "scrollToTopButton": {
+      "ariaLabel": "Scroll to the top of the page"
+    }
   }
 }

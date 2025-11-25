@@ -1,5 +1,6 @@
 "use client";
 
+import { ScrollToTopButton } from "@/core/components/scroll-to-top-button/scroll-to-top-button";
 import { Button } from "@/core/components/ui/button";
 import {
   Tooltip,
@@ -77,6 +78,8 @@ export const Forms = () => {
       </header>
 
       {isGridLayout ? <GridView /> : <ListView />}
+
+      <ScrollToTopButton />
     </section>
   );
 };

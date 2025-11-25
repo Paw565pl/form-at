@@ -2,6 +2,7 @@ import {
   BadgeQuestionMark,
   Check,
   ChevronDown,
+  ChevronUp,
   ClipboardPen,
   ClipboardPlus,
   ClockArrowUp,
@@ -48,4 +49,5 @@ export const ICONS = {
   submissionsCount: PersonStanding,
   estimatedDuration: ClockArrowUp,
   privateForm: FileKey2,
-};
+  scrollToTop: ChevronUp,
+} as const;

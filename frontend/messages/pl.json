@@ -72,5 +72,10 @@
         "open": "Odpowiedź otwarta"
       }
     }
+  },
+  "components": {
+    "scrollToTopButton": {
+      "ariaLabel": "Przewiń na górę strony"
+    }
   }
 }
