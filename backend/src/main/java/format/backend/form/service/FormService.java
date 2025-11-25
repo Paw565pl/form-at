@@ -24,7 +24,6 @@ import format.backend.form.repository.FormRepository;
 import format.backend.form.validator.FormValidator;
 import format.backend.submission.repository.SubmissionRepository;
 import format.backend.upload.service.UploadService;
-import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -36,6 +35,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.bson.types.ObjectId;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -140,14 +140,30 @@ public class FormService {
         return form.orElseThrow(() -> new FormNotFoundException(idOrSlug));
     }
 
-    public FormDetailResponseDto findByIdOrSlug(String idOrSlug) {
-        return mapToDetailResponseDto(findOrThrow(idOrSlug));
+    public FormDetailResponseDto findByIdOrSlug(@Nullable KeycloakJwtClaims keycloakJwtClaims, String idOrSlug) {
+        val form = findOrThrow(idOrSlug);
+        val permitsAnonymousAccess =
+                form.getStatus().equals(FormStatus.PUBLIC) || form.getStatus().equals(FormStatus.UNPUBLIC);
+
+        if (!permitsAnonymousAccess) {
+            val userId = Optional.ofNullable(keycloakJwtClaims)
+                    .map(KeycloakJwtClaims::sub)
+                    .orElse(null);
+            if (userId == null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+
+            val isAuthor = Optional.ofNullable(form.getAuthor())
+                    .map(a -> Objects.equals(a.getId(), userId))
+                    .orElse(false);
+            if (!isAuthor) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+
+        return mapToDetailResponseDto(form);
     }
 
-    public FormDetailResponseDto findPrivateByIdOrSlug(String idOrSlug, @Valid FormAccessRequestDto accessRequestDto) {
+    public FormDetailResponseDto findPrivateByIdOrSlug(String idOrSlug, FormAccessRequestDto accessRequestDto) {
         val formEntity = findOrThrow(idOrSlug);
 
-        if (!formEntity.getStatus().equals(FormStatus.PRIVATE)) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        if (!formEntity.getStatus().equals(FormStatus.PRIVATE)) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         if (!passwordEncoder.matches(accessRequestDto.password(), formEntity.getPasswordHash()))
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 
