@@ -28,8 +28,7 @@ export const Forms = () => {
 
   if (error) throw error;
 
-  const dataLength =
-    formPages?.pages.reduce((acc, curr) => acc + curr.content.length, 0) || 0;
+  const totalElements = formPages?.pages.at(0)?.page.totalElements || 0;
 
   return (
     <section
@@ -38,7 +37,7 @@ export const Forms = () => {
     >
       <header className="mb-2 flex flex-wrap items-center justify-between gap-4">
         <h1 className="ml-4 text-xl font-bold">
-          {t("title", { count: dataLength })}
+          {t("title", { count: totalElements })}
         </h1>
         <div className="flex flex-wrap justify-between gap-2 md:flex-nowrap">
           <Filters />
