@@ -24,7 +24,7 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 @Setter
 @RequiredArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@CompoundIndex(def = "{'formId': 1, 'userId': 1}", unique = true, partialFilter = "{'userId': {'$exists': true}}")
+@CompoundIndex(def = "{'formId': 1, 'authorId': 1}", unique = true, partialFilter = "{'authorId': {'$exists': true}}")
 @Document(collection = "submissions")
 public class SubmissionEntity {
 
@@ -36,7 +36,7 @@ public class SubmissionEntity {
     @DocumentReference(lazy = true)
     private @NonNull FormEntity form;
 
-    @Field(name = "userId")
+    @Field(name = "authorId")
     @DocumentReference(lazy = true)
     private @Nullable UserEntity author;
 
