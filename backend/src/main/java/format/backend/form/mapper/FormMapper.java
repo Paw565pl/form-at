@@ -6,6 +6,7 @@ import format.backend.form.dto.FormListResponseDto;
 import format.backend.form.dto.FormRequestDto;
 import format.backend.form.dto.QuestionResponseDto;
 import format.backend.form.entity.FormEntity;
+import format.backend.form.entity.FormListAggregationResult;
 import java.util.List;
 import org.jspecify.annotations.Nullable;
 import org.mapstruct.Mapper;
@@ -18,6 +19,8 @@ public interface FormMapper {
 
     @Mapping(target = "questionsCount", expression = "java(formEntity.getQuestions().size())")
     FormListResponseDto toListResponseDto(FormEntity formEntity, String thumbnail, @Nullable String authorName);
+
+    FormListResponseDto toListResponseDto(FormListAggregationResult formListAggregationResult, String thumbnail);
 
     @Mapping(target = "questions", source = "questions")
     FormDetailResponseDto toDetailResponseDto(

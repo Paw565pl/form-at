@@ -14,6 +14,7 @@ import format.backend.form.dto.FormListResponseDto;
 import format.backend.form.dto.FormRequestDto;
 import format.backend.form.dto.QuestionRequestDto;
 import format.backend.form.entity.FormEntity;
+import format.backend.form.entity.FormListAggregationResult;
 import format.backend.form.entity.FormStatus;
 import format.backend.form.entity.QuestionEntity;
 import format.backend.form.exception.FormAlreadyExistsException;
@@ -24,6 +25,7 @@ import format.backend.form.repository.FormRepository;
 import format.backend.form.validator.FormValidator;
 import format.backend.submission.repository.SubmissionRepository;
 import format.backend.upload.service.UploadService;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -33,6 +35,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -42,10 +45,11 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
+import org.springframework.data.mongodb.core.aggregation.ArrayOperators;
 import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.TextCriteria;
-import org.springframework.data.mongodb.core.query.TextQuery;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -75,63 +79,97 @@ public class FormService {
             .collect(Collectors.toUnmodifiableMap(String::toLowerCase, Function.identity()));
 
     public Page<@NonNull FormListResponseDto> findAllPublic(FormFilterDto filterDto, Pageable pageable) {
-        var query = new Query();
-        if (filterDto.searchQuery() != null && !filterDto.searchQuery().isBlank())
-            query = TextQuery.queryText(TextCriteria.forDefaultLanguage()
-                            .matchingPhrase(filterDto.searchQuery())
-                            .caseSensitive(false))
-                    .sortByScore();
+        val operations = new ArrayList<AggregationOperation>();
 
-        query.addCriteria(Criteria.where("status").is(FormStatus.PUBLIC.name()));
+        val isTextQuery =
+                filterDto.searchQuery() != null && !filterDto.searchQuery().isBlank();
+        if (isTextQuery) {
+            val textMatch = Aggregation.match(TextCriteria.forDefaultLanguage()
+                    .matchingPhrase(filterDto.searchQuery())
+                    .caseSensitive(false));
+            operations.add(textMatch);
+        }
 
-        if (filterDto.language() != null)
-            query.addCriteria(Criteria.where("language").is(filterDto.language().getMongoValue()));
+        operations.add(Aggregation.match(Criteria.where("status").is(FormStatus.PUBLIC.name())));
+
+        if (filterDto.language() != null) {
+            val languageMatch = Aggregation.match(
+                    Criteria.where("language").is(filterDto.language().getMongoValue()));
+            operations.add(languageMatch);
+        }
 
         if (filterDto.minEstimatedDuration() != null || filterDto.maxEstimatedDuration() != null) {
             val estimatedDurationFilterCriteria = Criteria.where("estimatedDurationSeconds");
 
-            if (filterDto.minEstimatedDuration() != null)
+            if (filterDto.minEstimatedDuration() != null) {
                 estimatedDurationFilterCriteria.gte(
                         filterDto.minEstimatedDuration().toSeconds());
-            if (filterDto.maxEstimatedDuration() != null)
+            }
+            if (filterDto.maxEstimatedDuration() != null) {
                 estimatedDurationFilterCriteria.lte(
                         filterDto.maxEstimatedDuration().toSeconds());
+            }
 
-            query.addCriteria(estimatedDurationFilterCriteria);
+            operations.add(Aggregation.match(estimatedDurationFilterCriteria));
         }
 
-        if (filterDto.allowsGuestSubmissions() != null)
-            query.addCriteria(Criteria.where("allowsGuestSubmissions").is(filterDto.allowsGuestSubmissions()));
+        if (filterDto.allowsGuestSubmissions() != null) {
+            val allowsGuestSubmissionsMatch =
+                    Aggregation.match(Criteria.where("allowsGuestSubmissions").is(filterDto.allowsGuestSubmissions()));
+            operations.add(allowsGuestSubmissionsMatch);
+        }
 
-        val total = mongoTemplate.count(query, FormEntity.class);
+        val countOperations = Stream.concat(
+                        operations.stream(), Stream.of(Aggregation.count().as("count")))
+                .toList();
+        final long total = Optional.ofNullable(mongoTemplate
+                        .aggregate(Aggregation.newAggregation(countOperations), FormEntity.class, Document.class)
+                        .getUniqueMappedResult())
+                .map(d -> (long) d.getInteger("count"))
+                .orElse(0L);
         if (total == 0) return Page.empty(pageable);
 
-        query.with(Sort.by(getSortOrders(pageable)));
-        query.skip(pageable.getOffset());
-        query.limit(pageable.getPageSize());
+        if (isTextQuery) {
+            operations.add(Aggregation.addFields()
+                    .addField("score")
+                    .withValue(new Document("$meta", "textScore"))
+                    .build());
+        }
 
-        val forms = mongoTemplate.find(query, FormEntity.class);
-        val response = forms.stream()
-                .map(f -> {
-                    val authorName = Optional.ofNullable(f.getAuthor())
-                            .map(UserEntity::getUsername)
-                            .orElse(null);
-                    return formMapper.toListResponseDto(f, uploadService.getFileUrl(f.getThumbnailKey()), authorName);
-                })
+        operations.add(Aggregation.sort(Sort.by(getSortOrders(pageable, isTextQuery))));
+        operations.add(Aggregation.skip(pageable.getOffset()));
+        operations.add(Aggregation.limit(pageable.getPageSize()));
+
+        operations.add(Aggregation.lookup("users", "authorId", "_id", "author"));
+        operations.add(Aggregation.addFields()
+                .addField("authorName")
+                .withValue(ArrayOperators.arrayOf("author.username").first())
+                .build());
+        operations.add(Aggregation.addFields()
+                .addField("questionsCount")
+                .withValue(ArrayOperators.arrayOf("questions").length())
+                .build());
+
+        val forms = mongoTemplate
+                .aggregate(Aggregation.newAggregation(operations), FormEntity.class, FormListAggregationResult.class)
+                .getMappedResults();
+        val content = forms.stream()
+                .map(f -> formMapper.toListResponseDto(f, uploadService.getFileUrl(f.thumbnailKey())))
                 .toList();
 
-        return new PageImpl<>(response, pageable, total);
+        return new PageImpl<>(content, pageable, total);
     }
 
-    private List<Sort.Order> getSortOrders(Pageable pageable) {
-        return Stream.concat(
-                        pageable.getSort().stream()
-                                .filter(o ->
-                                        sortFields.containsKey(o.getProperty().toLowerCase()))
-                                .map(o -> new Sort.Order(
-                                        o.getDirection(),
-                                        sortFields.get(o.getProperty().toLowerCase()))),
-                        Stream.of(Sort.Order.asc("_id")))
+    private List<Sort.Order> getSortOrders(Pageable pageable, boolean isTextQuery) {
+        val textScoreSortOrder = isTextQuery ? Stream.of(Sort.Order.desc("score")) : Stream.<Sort.Order>empty();
+        val pageableSortOrders = pageable.getSort().stream()
+                .filter(o -> sortFields.containsKey(o.getProperty().toLowerCase()))
+                .map(o -> new Sort.Order(
+                        o.getDirection(), sortFields.get(o.getProperty().toLowerCase())));
+        val tieBreaker = Stream.of(Sort.Order.asc("_id"));
+
+        return Stream.of(textScoreSortOrder, pageableSortOrders, tieBreaker)
+                .flatMap(Function.identity())
                 .toList();
     }
 
