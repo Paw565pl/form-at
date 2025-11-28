@@ -26,6 +26,7 @@ public class UploadController {
     @PostMapping("/request")
     public UploadRequestResponseDto getUploadPresignedFormData(
             @AuthenticationPrincipal Jwt jwt, @Valid @RequestBody UploadRequestDto requestDto) {
-        return uploadService.getUploadPresignedFormData(keycloakJwtClaimsExtractor.getClaims(jwt), requestDto);
+        return uploadService.getUploadPresignedFormData(
+                keycloakJwtClaimsExtractor.getClaims(jwt).sub(), requestDto);
     }
 }

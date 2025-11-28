@@ -22,6 +22,7 @@ public class SubmissionAnswerEntity {
     @NonNull private String questionId;
 
     @Field(name = "chosenAnswerIds", targetType = FieldType.OBJECT_ID)
+    @Setter(AccessLevel.NONE)
     @NonNull private Set<String> chosenAnswerIds = new HashSet<>();
 
     @Field(name = "openAnswer")

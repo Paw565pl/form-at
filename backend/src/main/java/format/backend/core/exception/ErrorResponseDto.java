@@ -25,12 +25,13 @@ public class ErrorResponseDto {
 
     @NonNull private final String message;
 
-    @Nullable private Map<String, List<String>> errors;
+    @Nullable private final Map<String, List<String>> errors;
 
     public ErrorResponseDto(@NonNull HttpStatus status, @NonNull String message) {
         this.status = status.value();
         this.error = status.getReasonPhrase();
         this.message = message;
+        this.errors = null;
     }
 
     public ErrorResponseDto(

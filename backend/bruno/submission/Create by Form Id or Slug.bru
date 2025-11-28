@@ -1,0 +1,42 @@
+meta {
+  name: Create by Form Id or Slug
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/api/v1/forms/:formIdOrSlug/submissions
+  body: json
+  auth: inherit
+}
+
+params:path {
+  formIdOrSlug: 69120e2d23b9cf9f544cfb2d
+}
+
+body:json {
+  {
+    "answers": [
+      {
+        "questionId": "69120e2d23b9cf9f544cfb1d",
+        "chosenAnswerIds": [],
+        "openAnswer": "very long open answer"
+      },
+      {
+        "questionId": "69120e2d23b9cf9f544cfb1e",
+        "chosenAnswerIds": ["69120e2d23b9cf9f544cfb1f", "69120e2d23b9cf9f544cfb20"],
+        "openAnswer": null
+      },
+      {
+        "questionId": "69120e2d23b9cf9f544cfb22",
+        "chosenAnswerIds": ["69120e2d23b9cf9f544cfb24"],
+        "openAnswer": null
+      }
+    ]
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

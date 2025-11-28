@@ -24,6 +24,10 @@ logging:
               MongoTemplate: debug
             repository:
               query: debug
+      mongodb:
+        driver:
+          protocol:
+            command: debug
 
 springdoc:
   api-docs:

@@ -1,0 +1,20 @@
+meta {
+  name: Find My Submission
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/v1/forms/:formIdOrSlug/submissions/me
+  body: none
+  auth: inherit
+}
+
+params:path {
+  formIdOrSlug: quiz-about-cats
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
