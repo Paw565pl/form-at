@@ -6,7 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/core/components/ui/select";
-import { FormSortOptions } from "@/core/types/form";
+import { FormSortOption } from "@/core/types/form";
 import {
   formFilterSearchParams,
   formSortSearchParams,
@@ -22,7 +22,7 @@ export const Filters = () => {
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const sortOptions: {
-    key: FormSortOptions;
+    key: FormSortOption;
     label: string;
   }[] = [
     { key: "createdAt,desc", label: t("sortOptions.createdAt,desc") },
@@ -67,10 +67,13 @@ export const Filters = () => {
       <Select
         value={sort ?? undefined}
         onValueChange={(newValue) =>
-          setSort({ sort: newValue as FormSortOptions })
+          setSort({ sort: newValue as FormSortOption })
         }
       >
-        <SelectTrigger aria-label={t("sortBy")} className="w-full max-w-70">
+        <SelectTrigger
+          aria-label={t("sortBy")}
+          className="w-full max-w-70 md:max-w-54"
+        >
           {t("sortBy")}
           <SelectValue />
         </SelectTrigger>
