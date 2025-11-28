@@ -41,7 +41,7 @@ export const formSortOptions = [
   "updatedAt,desc",
 ] as const;
 
-export type FormSortOptions = (typeof formSortOptions)[number];
+export type FormSortOption = (typeof formSortOptions)[number];
 
 export interface FormDetailResponseDto {
   readonly id: string;

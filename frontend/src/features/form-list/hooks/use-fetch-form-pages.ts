@@ -3,7 +3,7 @@ import { ErrorResponseDto } from "@/core/types/error-response-dto";
 import {
   FormFilterOptionsDto,
   FormListResponseDto,
-  FormSortOptions,
+  FormSortOption,
 } from "@/core/types/form";
 import { PaginatedResponseDto } from "@/core/types/paginated-response-dto";
 import { SortOptionsDto } from "@/core/types/sort-options-dto";
@@ -16,7 +16,7 @@ import { AxiosError } from "axios";
 
 const getFetchFormPagesQueryOptions = (
   formFilterOptionsDto?: FormFilterOptionsDto,
-  formSortOptionsDto?: SortOptionsDto<FormSortOptions>,
+  formSortOptionsDto?: SortOptionsDto<FormSortOption>,
 ) =>
   infiniteQueryOptions<
     PaginatedResponseDto<FormListResponseDto>,
@@ -43,7 +43,7 @@ const getFetchFormPagesQueryOptions = (
 
 export const useFetchFormPages = (
   formFilterOptionsDto?: FormFilterOptionsDto,
-  formSortOptionsDto?: SortOptionsDto<FormSortOptions>,
+  formSortOptionsDto?: SortOptionsDto<FormSortOption>,
 ) =>
   useInfiniteQuery(
     getFetchFormPagesQueryOptions(formFilterOptionsDto, formSortOptionsDto),
@@ -52,7 +52,7 @@ export const useFetchFormPages = (
 export const prefetchFormPages = (
   queryClient: QueryClient,
   formFilterOptionsDto?: FormFilterOptionsDto,
-  formSortOptionsDto?: SortOptionsDto<FormSortOptions>,
+  formSortOptionsDto?: SortOptionsDto<FormSortOption>,
 ) =>
   queryClient.prefetchInfiniteQuery(
     getFetchFormPagesQueryOptions(formFilterOptionsDto, formSortOptionsDto),
