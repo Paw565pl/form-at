@@ -13,8 +13,7 @@ import org.jspecify.annotations.Nullable;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.annotation.Version;
-import org.springframework.data.mongodb.core.index.IndexDirection;
-import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -25,6 +24,7 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 @Setter
 @RequiredArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@CompoundIndex(def = "{'formId': 1, 'updatedAt': -1, '_id': 1}")
 @Document(collection = "comments")
 public class CommentEntity {
 
@@ -48,7 +48,6 @@ public class CommentEntity {
     private Instant createdAt;
 
     @LastModifiedDate
-    @Indexed(direction = IndexDirection.DESCENDING)
     @Field("updatedAt")
     private Instant updatedAt;
 
