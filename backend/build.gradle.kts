@@ -39,14 +39,14 @@ spotless {
         removeUnusedImports()
         importOrder()
         cleanthat()
-        palantirJavaFormat("2.82.0")
+        palantirJavaFormat("2.83.0")
         trimTrailingWhitespace()
         leadingTabsToSpaces()
         endWithNewline()
         formatAnnotations()
     }
 
-    val prettierVersion = "3.6.2"
+    val prettierVersion = "3.7.1"
 
     yaml {
         target("src/**/*.yaml")
