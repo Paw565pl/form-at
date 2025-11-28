@@ -16,7 +16,7 @@ import { useQueryStates } from "nuqs";
 import { useRef } from "react";
 
 export const Filters = () => {
-  const t = useTranslations("formListPage");
+  const t = useTranslations("formListPage.filters");
   const [, setFilters] = useQueryStates(formFilterSearchParams);
   const [{ sort }, setSort] = useQueryStates(formSortSearchParams);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -25,13 +25,24 @@ export const Filters = () => {
     key: FormSortOptions;
     label: string;
   }[] = [
-    { key: "updatedAt,desc", label: t("options.sortOptions.newest") },
-    { key: "updatedAt,asc", label: t("options.sortOptions.oldest") },
+    { key: "createdAt,desc", label: t("sortOptions.createdAt,desc") },
+    { key: "createdAt,asc", label: t("sortOptions.createdAt,asc") },
+    {
+      key: "submissionsCount,asc",
+      label: t("sortOptions.submissionsCount,asc"),
+    },
     {
       key: "submissionsCount,desc",
-      label: t("options.sortOptions.submissions"),
+      label: t("sortOptions.submissionsCount,desc"),
     },
-    { key: "estimatedDuration,desc", label: t("options.sortOptions.duration") },
+    {
+      key: "estimatedDuration,asc",
+      label: t("sortOptions.estimatedDuration,asc"),
+    },
+    {
+      key: "estimatedDuration,desc",
+      label: t("sortOptions.estimatedDuration,desc"),
+    },
   ] as const;
 
   return (
@@ -47,7 +58,7 @@ export const Filters = () => {
       >
         <Input
           ref={searchInputRef}
-          placeholder={t("options.searchPlaceholder")}
+          placeholder={t("searchPlaceholder")}
           type="search"
           className="md:min-w-60"
         />
@@ -60,7 +71,7 @@ export const Filters = () => {
         }
       >
         <SelectTrigger className="w-full max-w-70">
-          {t("options.sortBy")}
+          {t("sortBy")}
           <SelectValue />
         </SelectTrigger>
         <SelectContent>

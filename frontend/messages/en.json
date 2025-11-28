@@ -20,14 +20,16 @@
   },
   "formListPage": {
     "title": "Showing {count, plural, one {# form} other {# forms}}",
-    "options": {
+    "filters": {
       "searchPlaceholder": "Search forms...",
       "sortBy": "Sort by",
       "sortOptions": {
-        "newest": "Newest",
-        "oldest": "Oldest",
-        "submissions": "Submissions",
-        "duration": "Duration"
+        "createdAt,desc": "Newest",
+        "createdAt,asc": "Oldest",
+        "submissionsCount,asc": "Submissions count: ascending",
+        "submissionsCount,desc": "Submissions count: descending",
+        "estimatedDuration,asc": "Estimated duration: ascending",
+        "estimatedDuration,desc": "Estimated duration: descending"
       },
       "listView": "List View",
       "gridView": "Grid View"

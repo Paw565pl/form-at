@@ -24,10 +24,12 @@
       "searchPlaceholder": "Szukaj formularzy...",
       "sortBy": "Sortuj według",
       "sortOptions": {
-        "newest": "Najnowsze",
-        "oldest": "Najstarsze",
-        "submissions": "Liczba odpowiedzi",
-        "duration": "Czas trwania"
+        "createdAt,desc": "Najnowsze",
+        "createdAt,asc": "Najstarsze",
+        "submissionsCount,asc": "Liczba odpowiedzi: rosnąco",
+        "submissionsCount,desc": "Liczba odpowiedzi: malejąco",
+        "estimatedDuration,asc": "Czas trwania: rosnąco",
+        "estimatedDuration,desc": "Czas trwania: malejąco"
       },
       "listView": "Widok listy",
       "gridView": "Widok siatki"
