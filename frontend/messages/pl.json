@@ -15,8 +15,8 @@
     "createForm": "Utwórz nowy formularz",
     "lightMode": "Przełącz na tryb jasny",
     "darkMode": "Przełącz na tryb ciemny",
-    "changeLang": "Zmień język",
-    "openMenu": "Otwórz menu"
+    "languageSwitcher": "Zmień język",
+    "openMobileMenu": "Otwórz menu"
   },
   "formListPage": {
     "title": "Wyświetlanie {count, plural, one {# formularza} other {# formularzy}}",

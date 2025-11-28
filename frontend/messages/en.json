@@ -15,8 +15,8 @@
     "createForm": "Create New Form",
     "lightMode": "Switch to light mode",
     "darkMode": "Switch to dark mode",
-    "changeLang": "Change language",
-    "openMenu": "Open menu"
+    "languageSwitcher": "Change language",
+    "openMobileMenu": "Open menu"
   },
   "formListPage": {
     "title": "Showing {count, plural, one {# form} other {# forms}}",

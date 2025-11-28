@@ -31,13 +31,17 @@ export const LanguageSwitcher = () => {
       <Tooltip>
         <TooltipTrigger asChild>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="icon-sm">
+            <Button
+              aria-label={t("languageSwitcher")}
+              variant="outline"
+              size="icon-sm"
+            >
               <ICONS.lang />
             </Button>
           </DropdownMenuTrigger>
         </TooltipTrigger>
         <TooltipContent>
-          <span>{t("changeLang")}</span>
+          <span>{t("languageSwitcher")}</span>
         </TooltipContent>
       </Tooltip>
 

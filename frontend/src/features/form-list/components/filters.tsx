@@ -70,7 +70,7 @@ export const Filters = () => {
           setSort({ sort: newValue as FormSortOptions })
         }
       >
-        <SelectTrigger className="w-full max-w-70">
+        <SelectTrigger aria-label={t("sortBy")} className="w-full max-w-70">
           {t("sortBy")}
           <SelectValue />
         </SelectTrigger>

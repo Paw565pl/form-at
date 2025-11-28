@@ -48,7 +48,11 @@ export const Banner = ({ form }: BannerProps) => {
       <span className="absolute top-4 left-4">
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button size="icon-sm" onClick={() => router.back()}>
+            <Button
+              aria-label={t("back")}
+              size="icon-sm"
+              onClick={() => router.back()}
+            >
               <ICONS.back />
             </Button>
           </TooltipTrigger>
@@ -62,7 +66,7 @@ export const Banner = ({ form }: BannerProps) => {
       <span className="absolute top-4 right-4">
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button size="icon-sm">
+            <Button aria-label={t("moreOptions")} size="icon-sm">
               <ICONS.more />
             </Button>
           </TooltipTrigger>

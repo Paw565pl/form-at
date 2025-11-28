@@ -16,8 +16,8 @@ import Link from "next/link";
 import { useState } from "react";
 
 export const MobileMenu = () => {
-  const { data: session } = useSession();
   const t = useTranslations("navBar");
+  const { data: session } = useSession();
   const [open, setOpen] = useState(false);
 
   return (
@@ -25,6 +25,7 @@ export const MobileMenu = () => {
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
+            aria-label={t("openMobileMenu")}
             variant="outline"
             size="icon-sm"
             onClick={() => setOpen(true)}
@@ -33,7 +34,7 @@ export const MobileMenu = () => {
           </Button>
         </TooltipTrigger>
         <TooltipContent>
-          <span>{t("openMenu")}</span>
+          <span>{t("openMobileMenu")}</span>
         </TooltipContent>
       </Tooltip>
 

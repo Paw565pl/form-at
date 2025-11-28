@@ -47,6 +47,7 @@ export const Forms = () => {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
+                  aria-label={t("options.gridView")}
                   size="icon"
                   variant={isGridLayout ? "default" : "outline"}
                   onClick={() => setIsGridLayout(true)}
@@ -62,6 +63,7 @@ export const Forms = () => {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
+                  aria-label={t("options.listView")}
                   size="icon"
                   variant={isGridLayout ? "outline" : "default"}
                   onClick={() => setIsGridLayout(false)}
