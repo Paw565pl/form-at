@@ -1,6 +1,11 @@
 "use client";
 
 import { Button } from "@/core/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/core/components/ui/tooltip";
 import { ICONS } from "@/core/config/icons";
 import { cn } from "@/core/lib/cn";
 import { useTranslations } from "next-intl";
@@ -31,16 +36,24 @@ export const ScrollToTopButton = ({
     });
 
   return (
-    <Button
-      aria-label={t("ariaLabel")}
-      title={t("ariaLabel")}
-      className={cn(
-        "fixed right-2.5 bottom-2.5 transition-opacity sm:right-5 sm:bottom-5",
-        isVisible ? "opacity-100" : "opacity-0",
-      )}
-      onClick={scrollToTop}
-    >
-      <ICONS.scrollToTop />
-    </Button>
+    <Tooltip>
+      <TooltipTrigger
+        asChild
+        className={cn(
+          "fixed right-2.5 bottom-2.5 transition-opacity sm:right-5 sm:bottom-5",
+          isVisible ? "opacity-100" : "pointer-events-none opacity-0",
+        )}
+      >
+        <Button
+          aria-label={t("ariaLabel")}
+          onClick={scrollToTop}
+          tabIndex={isVisible ? 0 : -1}
+          aria-hidden={!isVisible}
+        >
+          <ICONS.scrollToTop />
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent>{t("ariaLabel")}</TooltipContent>
+    </Tooltip>
   );
 };
