@@ -20,7 +20,7 @@
   },
   "formListPage": {
     "title": "Showing {count, plural, one {# form} other {# forms}}",
-    "filters": {
+    "options": {
       "searchPlaceholder": "Search forms...",
       "sortBy": "Sort by",
       "sortOptions": {

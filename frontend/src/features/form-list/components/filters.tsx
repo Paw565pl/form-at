@@ -16,7 +16,7 @@ import { useQueryStates } from "nuqs";
 import { useRef } from "react";
 
 export const Filters = () => {
-  const t = useTranslations("formListPage.filters");
+  const t = useTranslations("formListPage.options");
   const [, setFilters] = useQueryStates(formFilterSearchParams);
   const [{ sort }, setSort] = useQueryStates(formSortSearchParams);
   const searchInputRef = useRef<HTMLInputElement>(null);
