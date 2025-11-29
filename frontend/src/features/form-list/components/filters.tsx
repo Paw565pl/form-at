@@ -27,6 +27,8 @@ export const Filters = () => {
   }[] = [
     { key: "createdAt,desc", label: t("sortOptions.createdAt,desc") },
     { key: "createdAt,asc", label: t("sortOptions.createdAt,asc") },
+    { key: "questionsCount,asc", label: t("sortOptions.questionsCount,asc") },
+    { key: "questionsCount,desc", label: t("sortOptions.questionsCount,desc") },
     {
       key: "submissionsCount,asc",
       label: t("sortOptions.submissionsCount,asc"),
