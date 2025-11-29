@@ -26,6 +26,8 @@
       "sortOptions": {
         "createdAt,desc": "Newest",
         "createdAt,asc": "Oldest",
+        "questionsCount,asc": "Questions count: ascending",
+        "questionsCount,desc": "Questions count: descending",
         "submissionsCount,asc": "Submissions count: ascending",
         "submissionsCount,desc": "Submissions count: descending",
         "estimatedDuration,asc": "Estimated duration: ascending",

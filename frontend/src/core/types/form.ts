@@ -31,6 +31,9 @@ export const formSortOptions = [
   "estimatedDuration,asc",
   "estimatedDuration,desc",
 
+  "questionsCount,asc",
+  "questionsCount,desc",
+
   "submissionsCount,asc",
   "submissionsCount,desc",
 

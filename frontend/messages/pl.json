@@ -26,6 +26,8 @@
       "sortOptions": {
         "createdAt,desc": "Najnowsze",
         "createdAt,asc": "Najstarsze",
+        "questionsCount,asc": "Liczba pytań: rosnąco",
+        "questionsCount,desc": "Liczba pytań: malejąco",
         "submissionsCount,asc": "Liczba odpowiedzi: rosnąco",
         "submissionsCount,desc": "Liczba odpowiedzi: malejąco",
         "estimatedDuration,asc": "Czas trwania: rosnąco",
