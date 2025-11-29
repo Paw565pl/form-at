@@ -32,6 +32,7 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @CompoundIndex(def = "{'status': 1, 'updatedAt': -1, '_id': 1}")
 @CompoundIndex(def = "{'status': 1, 'createdAt': -1, '_id': 1}")
+@CompoundIndex(def = "{'status': 1, 'questionsCount': -1, '_id': 1}")
 @CompoundIndex(def = "{'status': 1, 'submissionsCount': -1, '_id': 1}")
 @Document(collection = "forms")
 public class FormEntity {
@@ -83,9 +84,8 @@ public class FormEntity {
     @Field(name = "saveSubmissions")
     private @NonNull Boolean saveSubmissions;
 
-    @Field(name = "authorId")
-    @DocumentReference(lazy = true)
-    private @Nullable UserEntity author;
+    @Field(name = "questionsCount")
+    private @NonNull Integer questionsCount;
 
     @Field(name = "submissionsCount")
     @Setter(AccessLevel.NONE)
@@ -99,6 +99,10 @@ public class FormEntity {
     @DocumentReference(lazy = true, lookup = "{'formId':?#{#self._id} }")
     @Setter(AccessLevel.NONE)
     private @NonNull List<@NonNull SubmissionEntity> submissions = new ArrayList<>();
+
+    @Field(name = "authorId")
+    @DocumentReference(lazy = true)
+    private @Nullable UserEntity author;
 
     @CreatedDate
     @Field(name = "createdAt")

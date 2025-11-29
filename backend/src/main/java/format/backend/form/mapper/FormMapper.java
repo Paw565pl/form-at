@@ -17,7 +17,6 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = QuestionMapper.class)
 public interface FormMapper {
 
-    @Mapping(target = "questionsCount", expression = "java(formEntity.getQuestions().size())")
     FormListResponseDto toListResponseDto(FormEntity formEntity, String thumbnail, @Nullable String authorName);
 
     FormListResponseDto toListResponseDto(FormListAggregationResult formListAggregationResult, String thumbnail);
@@ -31,6 +30,7 @@ public interface FormMapper {
     @Mapping(
             target = "estimatedDurationSeconds",
             expression = "java((int) formRequestDto.estimatedDuration().toSeconds())")
+    @Mapping(target = "questionsCount", expression = "java(formRequestDto.questions().size())")
     @Mapping(target = "submissionsCount", ignore = true)
     @Mapping(target = "submissions", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
@@ -39,6 +39,7 @@ public interface FormMapper {
     FormEntity toEntity(FormRequestDto formRequestDto, String slug, String passwordHash, @Nullable UserEntity author);
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "questionsCount", expression = "java(formRequestDto.questions().size())")
     @Mapping(target = "submissionsCount", ignore = true)
     @Mapping(target = "author", ignore = true)
     @Mapping(target = "submissions", ignore = true)

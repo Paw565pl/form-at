@@ -75,7 +75,7 @@ public class FormService {
     private final UploadService uploadService;
 
     private static final Map<String, String> sortFields = Stream.of(
-                    "estimatedDuration", "submissionsCount", "createdAt", "updatedAt")
+                    "estimatedDuration", "questionsCount", "submissionsCount", "createdAt", "updatedAt")
             .collect(Collectors.toUnmodifiableMap(String::toLowerCase, Function.identity()));
 
     public Page<@NonNull FormListResponseDto> findAllPublic(FormFilterDto filterDto, Pageable pageable) {
