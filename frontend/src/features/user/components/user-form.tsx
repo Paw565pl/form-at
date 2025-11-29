@@ -17,8 +17,8 @@ export const UserForm = ({ form }: UserFormProps) => {
         key={form.id}
         className="hover:border-primary gap-1 p-3 transition-all"
       >
-        <header className="font-medium">{form.name}</header>
-        <p className="text-sm lg:mr-36">{form.description}</p>
+        <header className="font-semibold">{form.name}</header>
+        <p className="text-sm">{form.description}</p>
         <footer className="text-muted-foreground mt-1 flex flex-wrap justify-between text-sm">
           <span>
             {t("questions", { count: form.questions.length })} •{" "}
