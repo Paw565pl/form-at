@@ -1,12 +1,11 @@
+import { ImageWithFallback } from "@/core/components/image-with-fallback/image-with-fallback";
 import { Card } from "@/core/components/ui/card";
-import { placeholderImageUrl } from "@/features/form-list/example-forms";
 import { useFetchFormPages } from "@/features/form-list/hooks/use-fetch-form-pages";
 import {
   formFilterSearchParams,
   formSortSearchParams,
 } from "@/features/form-list/search-params/form-search-params";
 import { useFormatter, useTranslations } from "next-intl";
-import Image from "next/image";
 import Link from "next/link";
 import { useQueryStates } from "nuqs";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -47,8 +46,8 @@ export const GridView = () => {
                 className="group hover:border-primary h-full overflow-hidden transition-all"
               >
                 <div className="relative min-h-40">
-                  <Image
-                    src={form.thumbnail || placeholderImageUrl}
+                  <ImageWithFallback
+                    src={form.thumbnail}
                     alt={form.name}
                     className="origin-bottom object-cover transition-transform group-hover:scale-105"
                     fill
