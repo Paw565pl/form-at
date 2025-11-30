@@ -1,16 +1,13 @@
-import { Badge } from "@/core/components/ui/badge";
+"use client";
 
-const historyItem = {
-  content: "User John Doe has made submission to form: ",
-  formName: "Quiz o kotach",
-  date: "12.03.2024",
-};
+import { Badge, BadgeVariant } from "@/core/components/ui/badge";
+import { useFormatter } from "next-intl";
 
 interface HistoryItemProps {
   content: string;
   formName: string;
-  date: string;
-  badgeVariant?: "default" | "secondary" | "destructive" | "outline";
+  date: Date;
+  badgeVariant?: BadgeVariant;
 }
 
 export const HistoryItem = ({
@@ -19,6 +16,8 @@ export const HistoryItem = ({
   date,
   badgeVariant,
 }: HistoryItemProps) => {
+  const format = useFormatter();
+
   return (
     <section className="bg-card flex flex-col items-start justify-between gap-1 rounded-md p-2 shadow-sm md:flex-row md:items-center">
       <div className="flex flex-col gap-2 md:flex-row">
@@ -28,7 +27,7 @@ export const HistoryItem = ({
         </Badge>
       </div>
       <Badge className="flex-none self-end md:self-start" variant={"outline"}>
-        {date}
+        {format.dateTime(new Date(date), "long")}
       </Badge>
     </section>
   );
