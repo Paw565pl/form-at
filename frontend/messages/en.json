@@ -69,5 +69,13 @@
         "open": "Open Ended"
       }
     }
+  },
+  "userProfilePage": {
+    "achievements": "Achievements:",
+    "noAchievements": "No achievements yet. Start completing forms to earn some!",
+    "noDescription": "This user has not added a description yet.",
+    "usersForms": "{userName}'s Forms",
+    "usersHistory": "{userName}'s History",
+    "noHistory": "No history yet. Fill out some forms to see your activity here."
   }
 }

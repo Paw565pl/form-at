@@ -69,5 +69,13 @@
         "open": "Odpowiedź otwarta"
       }
     }
+  },
+  "userProfilePage": {
+    "achievements": "Osiągnięcia:",
+    "noAchievements": "Brak osiągnięć. Zacznij wypełniać formularze, aby zdobyć pierwsze!",
+    "noDescription": "Ten użytkownik nie dodał jeszcze opisu.",
+    "usersForms": "Formularze użytkownika {userName}",
+    "usersHistory": "Historia użytkownika {userName}",
+    "noHistory": "Brak historii. Wypełnij kilka formularzy, aby zobaczyć swoją aktywność tutaj."
   }
 }
