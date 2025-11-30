@@ -24,6 +24,8 @@ const badgeVariants = cva(
   },
 );
 
+export type BadgeVariant = "default" | "secondary" | "destructive" | "outline";
+
 function Badge({
   className,
   variant,
