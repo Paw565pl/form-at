@@ -2,11 +2,13 @@ package format.backend.upload.exception;
 
 import format.backend.core.exception.ApplicationException;
 import java.util.Collection;
+import org.jspecify.annotations.NonNull;
 import org.springframework.http.HttpStatus;
 
 public final class InvalidFileExtensionException extends ApplicationException {
 
-    public InvalidFileExtensionException(String fileExtension, Collection<String> allowedExtensions) {
+    public InvalidFileExtensionException(
+            @NonNull String fileExtension, @NonNull Collection<@NonNull String> allowedExtensions) {
         super(
                 HttpStatus.BAD_REQUEST,
                 String.format(

@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -17,14 +19,12 @@ import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 
 @Getter
 @Setter
 @RequiredArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@CompoundIndex(def = "{'formId': 1, 'userId': 1}", unique = true, partialFilter = "{'userId': {'$exists': true}}")
+@CompoundIndex(def = "{'formId': 1, 'authorId': 1}", unique = true, partialFilter = "{'authorId': {'$exists': true}}")
 @Document(collection = "submissions")
 public class SubmissionEntity {
 
@@ -34,15 +34,15 @@ public class SubmissionEntity {
 
     @Field(name = "formId")
     @DocumentReference(lazy = true)
-    @NonNull private FormEntity form;
+    private @NonNull FormEntity form;
 
-    @Field(name = "userId")
+    @Field(name = "authorId")
     @DocumentReference(lazy = true)
-    @Nullable private UserEntity author;
+    private @Nullable UserEntity author;
 
     @Field(name = "answers")
     @Setter(AccessLevel.NONE)
-    @NonNull private List<SubmissionAnswerEntity> answers = new ArrayList<>();
+    private @NonNull List<@NonNull SubmissionAnswerEntity> answers = new ArrayList<>();
 
     @CreatedDate
     @Field(name = "createdAt")

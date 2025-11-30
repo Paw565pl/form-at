@@ -3,11 +3,11 @@ import com.diffplug.spotless.LineEnding
 plugins {
     java
     idea
-    id("org.springframework.boot") version "3.5.7"
-    id("org.springframework.boot.aot") version "3.5.7" apply false
+    id("org.springframework.boot") version "4.0.0"
+    id("org.springframework.boot.aot") version "4.0.0" apply false
     id("io.spring.dependency-management") version "1.1.7"
     id("se.solrike.sonarlint") version "2.2.0"
-    id("com.diffplug.spotless") version "8.0.0"
+    id("com.diffplug.spotless") version "8.1.0"
 }
 
 if (gradle.startParameter.taskNames.any { it.contains("bootJar") }) {
@@ -39,14 +39,14 @@ spotless {
         removeUnusedImports()
         importOrder()
         cleanthat()
-        palantirJavaFormat("2.81.0")
+        palantirJavaFormat("2.83.0")
         trimTrailingWhitespace()
         leadingTabsToSpaces()
         endWithNewline()
         formatAnnotations()
     }
 
-    val prettierVersion = "3.6.2"
+    val prettierVersion = "3.7.1"
 
     yaml {
         target("src/**/*.yaml")
@@ -70,17 +70,18 @@ repositories {
 }
 
 val mapstructVersion = "1.6.3"
-val springdocVersion = "2.8.13"
+val springdocVersion = "3.0.0"
 val slugifyVersion = "3.0.7"
 val minioVersion = "8.6.0"
-val dataFakerVersion = "2.5.2"
-val sonarlintVersion = "8.9.3.40165"
+val restAssuredVersion = "5.5.6"
+val dataFakerVersion = "2.5.3"
+val sonarlintVersion = "8.9.4.40912"
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-webmvc")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-security")
-    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+    implementation("org.springframework.boot:spring-boot-starter-security-oauth2-resource-server")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
     implementation("org.mapstruct:mapstruct:$mapstructVersion")
@@ -92,15 +93,32 @@ dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     annotationProcessor("org.projectlombok:lombok")
     annotationProcessor("org.mapstruct:mapstruct-processor:$mapstructVersion")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.springframework.security:spring-security-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-actuator-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-security-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-security-oauth2-resource-server-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-validation-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-data-mongodb-test")
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
-    testImplementation("org.testcontainers:junit-jupiter")
-    testImplementation("org.testcontainers:mongodb")
-    testImplementation("io.rest-assured:rest-assured")
+    testImplementation("org.testcontainers:testcontainers-junit-jupiter")
+    testImplementation("org.testcontainers:testcontainers-mongodb")
+    testImplementation("io.rest-assured:rest-assured:$restAssuredVersion")
     testImplementation("net.datafaker:datafaker:$dataFakerVersion")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     sonarlintPlugins("org.sonarsource.java:sonar-java-plugin:$sonarlintVersion")
+}
+
+tasks.withType<JavaCompile> {
+    options.compilerArgs.addAll(listOf(
+        "-Xlint:deprecation",
+        "-Xlint:dep-ann",
+        "-Xlint:removal",
+        "-Xlint:overrides",
+        "-Xlint:fallthrough",
+        "-Xlint:try",
+        "-Xlint:finally",
+        "-Werror"
+    ))
 }
 
 tasks.withType<Test> {

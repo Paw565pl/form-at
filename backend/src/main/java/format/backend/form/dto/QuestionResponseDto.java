@@ -2,8 +2,8 @@ package format.backend.form.dto;
 
 import format.backend.form.entity.QuestionType;
 import java.util.List;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public record QuestionResponseDto(
         @NonNull String id,
@@ -16,4 +16,4 @@ public record QuestionResponseDto(
 
         @NonNull Boolean isRequired,
 
-        @NonNull List<AnswerResponseDto> answers) {}
+        @NonNull List<@NonNull AnswerResponseDto> answers) {}
