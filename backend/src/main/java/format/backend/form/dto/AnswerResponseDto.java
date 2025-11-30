@@ -1,6 +1,6 @@
 package format.backend.form.dto;
 
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 public record AnswerResponseDto(
         @NonNull String id,

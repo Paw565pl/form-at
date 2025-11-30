@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.bson.types.ObjectId;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 
 @Getter
 @Setter
@@ -23,18 +23,18 @@ public class QuestionEntity {
     private String id = ObjectId.get().toHexString();
 
     @Field(name = "content")
-    @NonNull private String content;
+    private @NonNull String content;
 
     @Field(name = "type")
-    @NonNull private QuestionType type;
+    private @NonNull QuestionType type;
 
     @Field(name = "imageKey")
-    @Nullable private String imageKey;
+    private @Nullable String imageKey;
 
     @Field(name = "isRequired")
-    @NonNull private Boolean isRequired;
+    private @NonNull Boolean isRequired;
 
     @Field(name = "answers")
     @Setter(AccessLevel.NONE)
-    @NonNull private List<AnswerEntity> answers = new ArrayList<>();
+    private @NonNull List<@NonNull AnswerEntity> answers = new ArrayList<>();
 }

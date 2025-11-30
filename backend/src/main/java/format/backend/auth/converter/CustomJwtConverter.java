@@ -5,8 +5,8 @@ import format.backend.auth.service.UserService;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.jspecify.annotations.NonNull;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -15,13 +15,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class CustomJwtConverter implements Converter<Jwt, AbstractAuthenticationToken> {
+public class CustomJwtConverter implements Converter<@NonNull Jwt, @NonNull AbstractAuthenticationToken> {
 
     private final KeycloakJwtClaimsExtractor keycloakJwtClaimsExtractor;
     private final UserService userService;
 
     @Override
-    public AbstractAuthenticationToken convert(@NonNull Jwt jwt) {
+    public AbstractAuthenticationToken convert(Jwt jwt) {
         val jwtClaims = keycloakJwtClaimsExtractor.getClaims(jwt);
         userService.createOrUpdate(jwtClaims);
 

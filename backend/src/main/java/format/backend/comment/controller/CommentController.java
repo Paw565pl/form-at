@@ -8,6 +8,7 @@ import format.backend.comment.service.CommentService;
 import format.backend.comment.validator.ValidCommentId;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -34,7 +35,7 @@ public class CommentController {
     private final CommentService commentService;
 
     @GetMapping
-    public Page<CommentResponseDto> findAll(@PathVariable String formIdOrSlug, Pageable pageable) {
+    public Page<@NonNull CommentResponseDto> findAll(@PathVariable String formIdOrSlug, Pageable pageable) {
         return commentService.findAll(formIdOrSlug, pageable);
     }
 

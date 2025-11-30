@@ -1,13 +1,11 @@
-package format.backend.form.dto;
+package format.backend.form.entity;
 
-import format.backend.form.entity.FormStatus;
-import format.backend.form.entity.Language;
 import java.time.Duration;
 import java.time.Instant;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-public record FormListResponseDto(
+public record FormListAggregationResult(
         @NonNull String id,
 
         @NonNull String name,
@@ -22,7 +20,7 @@ public record FormListResponseDto(
 
         @NonNull Duration estimatedDuration,
 
-        @Nullable String thumbnail,
+        @Nullable String thumbnailKey,
 
         @NonNull Boolean allowsQuestionsPreview,
 
