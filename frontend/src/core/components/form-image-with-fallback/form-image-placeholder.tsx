@@ -1,4 +1,4 @@
-export const ImagePlaceholder = () => {
+export const FormImagePlaceholder = () => {
   return (
     <div className="bg-muted flex h-full w-full items-center justify-center">
       <svg

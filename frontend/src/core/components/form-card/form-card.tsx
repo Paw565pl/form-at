@@ -1,11 +1,11 @@
 import { Card } from "@/core/components/ui/card";
-import { FormResponseDto } from "@/core/types/form";
+import { FormListResponseDto } from "@/core/types/form";
 import { formatDuration } from "@/core/utils/formatDuration";
 import { useFormatter, useTranslations } from "next-intl";
 import Link from "next/link";
 
 interface FormCardProps {
-  form: FormResponseDto;
+  form: FormListResponseDto;
   showAuthor?: boolean;
 }
 
@@ -30,8 +30,8 @@ export const FormCard = ({ form, showAuthor = false }: FormCardProps) => {
             <>
               <h1 className="font-medium">{form.name}</h1>
               <span className="text-muted-foreground text-sm">
-                {form.author
-                  ? `${t("by", { name: form.author.name })}`
+                {form.authorName
+                  ? `${t("by", { name: form.authorName })}`
                   : t("byUnknown")}
               </span>
             </>
@@ -44,7 +44,7 @@ export const FormCard = ({ form, showAuthor = false }: FormCardProps) => {
         </p>
         <footer className="text-muted-foreground mt-1 flex flex-wrap justify-between text-sm">
           <span>
-            {t("questions", { count: form.questions.length })} •{" "}
+            {t("questions", { count: form.questionsCount })} •{" "}
             {t("submissions", { count: form.submissionsCount })} •{" "}
             {formatDuration(form.estimatedDuration)}
           </span>

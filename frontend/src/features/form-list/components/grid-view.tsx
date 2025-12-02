@@ -1,4 +1,4 @@
-import { ImageWithFallback } from "@/core/components/image-with-fallback/image-with-fallback";
+import { FormImageWithFallback } from "@/core/components/form-image-with-fallback/form-image-with-fallback";
 import { Card } from "@/core/components/ui/card";
 import { useFetchFormPages } from "@/features/form-list/hooks/use-fetch-form-pages";
 import {
@@ -46,7 +46,7 @@ export const GridView = () => {
                 className="group hover:border-primary h-full overflow-hidden transition-all"
               >
                 <div className="relative min-h-40">
-                  <ImageWithFallback
+                  <FormImageWithFallback
                     src={form.thumbnail}
                     alt={form.name}
                     className="origin-bottom object-cover transition-transform group-hover:scale-105"

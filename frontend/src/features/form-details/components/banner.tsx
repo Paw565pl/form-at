@@ -1,6 +1,6 @@
 "use client";
 
-import { ImageWithFallback } from "@/core/components/image-with-fallback/image-with-fallback";
+import { FormImageWithFallback } from "@/core/components/form-image-with-fallback/form-image-with-fallback";
 import { Button } from "@/core/components/ui/button";
 import {
   Dialog,
@@ -34,7 +34,7 @@ export const Banner = ({ form }: BannerProps) => {
   return (
     <section className="relative flex h-48 w-full items-end">
       {/* background image */}
-      <ImageWithFallback
+      <FormImageWithFallback
         src={form.thumbnail}
         alt="Background"
         fill

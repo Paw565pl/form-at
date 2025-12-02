@@ -2,13 +2,13 @@ import { BadgeVariant } from "@/core/components/ui/badge";
 import { UserAchievement } from "@/core/types/achievement";
 import { User } from "@/features/auth/types/user";
 
-export interface UserProfile extends User {
+export interface UserProfileDto extends User {
   readonly description?: string;
   readonly achievements: UserAchievement[];
-  readonly history: UserHistoryItem[];
+  readonly history: UserHistoryItemDto[];
 }
 
-export interface UserHistoryItem {
+export interface UserHistoryItemDto {
   readonly id: string;
   readonly content: string;
   readonly formName: string;

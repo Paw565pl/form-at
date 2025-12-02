@@ -1,16 +1,16 @@
 "use client";
 
 import { FormCard } from "@/core/components/form-card/form-card";
+import { UserImageWithFallback } from "@/core/components/user-image/user-image-with-fallback";
 import { AchievementLevel, AchievementType } from "@/core/types/achievement";
-import { UserProfile } from "@/core/types/user-profile";
+import { UserProfileDto } from "@/core/types/user-profile";
 import type { User } from "@/features/auth/types/user";
-import { forms } from "@/features/form-list/example-forms";
 import { Achievements } from "@/features/user/components/achievements";
 import { History } from "@/features/user/components/history";
+import { userExampleForms } from "@/features/user/example-user-forms";
 import { useTranslations } from "next-intl";
-import Image from "next/image";
 
-const User: UserProfile = {
+const User: UserProfileDto = {
   id: "1",
   name: "John Doe",
   email: "john.doe@example.com",
@@ -57,8 +57,6 @@ const User: UserProfile = {
   ],
 };
 
-const userForms = forms.slice(0, 3);
-
 export const UserProfilePage = () => {
   const t = useTranslations("userProfilePage");
 
@@ -69,7 +67,7 @@ export const UserProfilePage = () => {
           {/* user info  */}
           <header className="flex items-center gap-2">
             {User.image && (
-              <Image
+              <UserImageWithFallback
                 className="rounded-full border-2 border-white"
                 src={User.image}
                 alt={User.name}
@@ -101,7 +99,7 @@ export const UserProfilePage = () => {
             <h2 className="text-secondary-foreground font-semibold">
               {t("usersForms", { userName: User.name })}
             </h2>
-            {userForms.map((form) => (
+            {userExampleForms.map((form) => (
               <FormCard key={form.id} form={form} />
             ))}
           </section>

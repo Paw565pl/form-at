@@ -1,12 +1,10 @@
-import { Card } from "@/core/components/ui/card";
-import { formatDuration } from "@/core/utils/formatDuration";
+import { FormCard } from "@/core/components/form-card/form-card";
 import { useFetchFormPages } from "@/features/form-list/hooks/use-fetch-form-pages";
 import {
   formFilterSearchParams,
   formSortSearchParams,
 } from "@/features/form-list/search-params/form-search-params";
 import { useFormatter, useTranslations } from "next-intl";
-import Link from "next/link";
 import { useQueryStates } from "nuqs";
 import InfiniteScroll from "react-infinite-scroll-component";
 
@@ -40,32 +38,7 @@ export const ListView = () => {
       >
         {formPages?.pages.map((page) =>
           page.content.map((form) => (
-            <Link href={`/forms/${form.slug}`} key={form.id}>
-              <Card
-                key={form.id}
-                className="hover:border-primary gap-1 p-3 transition-all"
-              >
-                <header className="flex flex-wrap items-center justify-between gap-1">
-                  <h1 className="font-medium">{form.name}</h1>
-                  <span className="text-muted-foreground text-sm">
-                    {form.authorName
-                      ? `${t("by", { name: form.authorName })}`
-                      : t("byUnknown")}
-                  </span>
-                </header>
-                <p className="text-sm lg:mr-36">{form.description}</p>
-                <footer className="text-muted-foreground mt-1 flex flex-wrap justify-between text-sm">
-                  <span>
-                    {t("questions", { count: form.questionsCount })} •{" "}
-                    {t("submissions", { count: form.submissionsCount })} •{" "}
-                    {formatDuration(form.estimatedDuration)}
-                  </span>
-                  <span className="text-muted-foreground text-sm">
-                    {format.dateTime(new Date(form.createdAt), "long")}
-                  </span>
-                </footer>
-              </Card>
-            </Link>
+            <FormCard form={form} key={form.id} showAuthor />
           )),
         )}
       </InfiniteScroll>

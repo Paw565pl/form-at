@@ -1,11 +1,11 @@
 "use client";
 
 import { Badge } from "@/core/components/ui/badge";
-import { UserHistoryItem } from "@/core/types/user-profile";
+import { UserHistoryItemDto } from "@/core/types/user-profile";
 import { useFormatter, useTranslations } from "next-intl";
 
 interface HistoryProps {
-  history: UserHistoryItem[];
+  history: UserHistoryItemDto[];
 }
 
 export const History = ({ history }: HistoryProps) => {
