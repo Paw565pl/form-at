@@ -5,9 +5,9 @@ import { UserImageWithFallback } from "@/core/components/user-image/user-image-w
 import { AchievementLevel, AchievementType } from "@/core/types/achievement";
 import { UserProfileDto } from "@/core/types/user-profile";
 import type { User } from "@/features/auth/types/user";
-import { Achievements } from "@/features/user/components/achievements";
-import { History } from "@/features/user/components/history";
-import { userExampleForms } from "@/features/user/example-user-forms";
+import { Achievements } from "@/features/user-profile/components/achievements";
+import { History } from "@/features/user-profile/components/history";
+import { userExampleForms } from "@/features/user-profile/example-user-forms";
 import { useTranslations } from "next-intl";
 
 const User: UserProfileDto = {

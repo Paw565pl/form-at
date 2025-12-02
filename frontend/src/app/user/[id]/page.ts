@@ -1,3 +1,3 @@
-import { UserProfilePage } from "@/features/user/user-profile-page";
+import { UserProfilePage } from "@/features/user-profile/user-profile-page";
 
 export default UserProfilePage;

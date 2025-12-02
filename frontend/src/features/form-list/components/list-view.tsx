@@ -4,13 +4,12 @@ import {
   formFilterSearchParams,
   formSortSearchParams,
 } from "@/features/form-list/search-params/form-search-params";
-import { useFormatter, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { useQueryStates } from "nuqs";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 export const ListView = () => {
   const t = useTranslations("formListPage");
-  const format = useFormatter();
   const [filtersDto] = useQueryStates(formFilterSearchParams);
   const [sortDto] = useQueryStates(formSortSearchParams);
   const {
