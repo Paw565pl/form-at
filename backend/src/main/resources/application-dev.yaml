@@ -1,7 +1,6 @@
 spring:
-  data:
-    mongodb:
-      uri: mongodb://root:password@mongodb:27017/format?authSource=admin
+  mongodb:
+    uri: mongodb://root:password@mongodb:27017/format?authSource=admin
 
   security:
     oauth2:

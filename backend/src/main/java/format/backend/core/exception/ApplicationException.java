@@ -3,23 +3,27 @@ package format.backend.core.exception;
 import java.util.List;
 import java.util.Map;
 import lombok.Getter;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.http.HttpStatus;
-import org.springframework.lang.Nullable;
 
 @Getter
 public abstract class ApplicationException extends RuntimeException {
 
-    private final HttpStatus status;
+    private final @NonNull HttpStatus status;
 
-    @Nullable private final Map<String, List<String>> errors;
+    private final @Nullable Map<@NonNull String, @NonNull List<@NonNull String>> errors;
 
-    protected ApplicationException(HttpStatus status, String message) {
+    protected ApplicationException(@NonNull HttpStatus status, @NonNull String message) {
         super(message);
         this.status = status;
         this.errors = null;
     }
 
-    protected ApplicationException(HttpStatus status, String message, @Nullable Map<String, List<String>> errors) {
+    protected ApplicationException(
+            @NonNull HttpStatus status,
+            @NonNull String message,
+            @Nullable Map<@NonNull String, @NonNull List<@NonNull String>> errors) {
         super(message);
         this.status = status;
         this.errors = errors;

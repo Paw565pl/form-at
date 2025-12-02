@@ -2,8 +2,8 @@ package format.backend.upload.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
+import org.jspecify.annotations.NonNull;
 import org.springframework.http.HttpHeaders;
-import org.springframework.lang.NonNull;
 
 public record UploadRequestResponseDto(
         @JsonProperty(fileNameJson) @NonNull String fileName,

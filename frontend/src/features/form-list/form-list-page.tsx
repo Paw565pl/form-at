@@ -1,78 +1,24 @@
-"use client";
-
-import { Button } from "@/core/components/ui/button";
+import { getQueryClient } from "@/core/lib/tanstack-query";
+import { Forms } from "@/features/form-list/components/forms";
+import { prefetchFormPages } from "@/features/form-list/hooks/use-fetch-form-pages";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/core/components/ui/tooltip";
-import { ICONS } from "@/core/config/icons";
-import { Filters } from "@/features/form-list/components/filters";
-import { GridView } from "@/features/form-list/components/grid-view";
-import { ListView } from "@/features/form-list/components/list-view";
-import { forms } from "@/features/form-list/example-forms";
-import { useTranslations } from "next-intl";
-import { useState } from "react";
+  loadFormFilterSearchParams,
+  loadFormSortSearchParams,
+} from "@/features/form-list/search-params/form-search-params";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 
-export const FormListPage = () => {
-  // eslint-disable-next-line
-  const [loading, setLoading] = useState(false);
-  const [gridLayout, setGridLayout] = useState(true);
-  const t = useTranslations("formListPage");
+export const FormListPage = async ({ searchParams }: PageProps<"/forms">) => {
+  const queryClient = getQueryClient();
+
+  const [filtersDto, sortDto] = await Promise.all([
+    loadFormFilterSearchParams(searchParams),
+    loadFormSortSearchParams(searchParams),
+  ]);
+  await prefetchFormPages(queryClient, filtersDto, sortDto);
 
   return (
-    <section
-      id="forms-list"
-      className="flex w-full flex-col gap-2 px-5 py-10 lg:px-30"
-    >
-      <header className="mb-2 flex flex-wrap items-center justify-between gap-4">
-        <h1 className="ml-4 text-xl font-bold">
-          {t("title", { count: forms.length })}
-        </h1>
-        <div className="flex flex-wrap justify-between gap-2 md:flex-nowrap">
-          <Filters />
-
-          <div className="flex gap-2">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  size="icon"
-                  variant={gridLayout ? "default" : "outline"}
-                  onClick={() => setGridLayout(true)}
-                >
-                  <ICONS.grid />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom">
-                <p>{t("options.gridView")}</p>
-              </TooltipContent>
-            </Tooltip>
-
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  size="icon"
-                  variant={gridLayout ? "outline" : "default"}
-                  onClick={() => setGridLayout(false)}
-                >
-                  <ICONS.list />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom">
-                <p>{t("options.listView")}</p>
-              </TooltipContent>
-            </Tooltip>
-          </div>
-        </div>
-      </header>
-
-      {gridLayout ? <GridView /> : <ListView />}
-
-      {loading && <p>{t("loading")}</p>}
-
-      <p className="text-muted-foreground p-4 text-center text-sm">
-        {t("end")}
-      </p>
-    </section>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <Forms />
+    </HydrationBoundary>
   );
 };

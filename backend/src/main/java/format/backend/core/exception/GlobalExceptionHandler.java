@@ -5,9 +5,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.val;
+import org.jspecify.annotations.NonNull;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.mapping.PropertyReferenceException;
+import org.springframework.data.core.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -20,7 +21,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponseDto> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+    public ResponseEntity<@NonNull ErrorResponseDto> handleMethodArgumentNotValidException(
+            MethodArgumentNotValidException e) {
         val errors = e.getFieldErrors().stream()
                 .filter(fieldError -> fieldError.getDefaultMessage() != null
                         && !fieldError.getDefaultMessage().isBlank())
@@ -35,7 +37,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ErrorResponseDto> handleConstraintViolationException(ConstraintViolationException e) {
+    public ResponseEntity<@NonNull ErrorResponseDto> handleConstraintViolationException(
+            ConstraintViolationException e) {
         val errors = e.getConstraintViolations().stream()
                 .map(error -> {
                     val propertyPathIterator = error.getPropertyPath().iterator();
@@ -60,7 +63,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ErrorResponseDto> handleHttpMessageNotReadableException(
+    public ResponseEntity<@NonNull ErrorResponseDto> handleHttpMessageNotReadableException(
             HttpMessageNotReadableException ignored) {
         val status = HttpStatus.BAD_REQUEST;
         val response = new ErrorResponseDto(status, "Required request body is missing");
@@ -69,7 +72,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ErrorResponseDto> handleIllegalArgumentException(DataIntegrityViolationException e) {
+    public ResponseEntity<@NonNull ErrorResponseDto> handleIllegalArgumentException(DataIntegrityViolationException e) {
         val status = HttpStatus.CONFLICT;
         val response = new ErrorResponseDto(status, e.getMessage());
 
@@ -77,7 +80,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(PropertyReferenceException.class)
-    public ResponseEntity<ErrorResponseDto> handlePropertyReferenceException(PropertyReferenceException e) {
+    public ResponseEntity<@NonNull ErrorResponseDto> handlePropertyReferenceException(PropertyReferenceException e) {
         val status = HttpStatus.BAD_REQUEST;
         val response = new ErrorResponseDto(status, e.getMessage());
 
@@ -85,7 +88,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ApplicationException.class)
-    public ResponseEntity<ErrorResponseDto> handleApplicationException(ApplicationException e) {
+    public ResponseEntity<@NonNull ErrorResponseDto> handleApplicationException(ApplicationException e) {
         val status = e.getStatus();
         val response = Optional.ofNullable(e.getErrors())
                 .map(errors -> new ErrorResponseDto(status, e.getMessage(), errors))

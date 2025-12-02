@@ -11,8 +11,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.Duration;
 import java.util.List;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public record FormRequestDto(
         @Size(min = 3, max = 200, message = "Name must be between 3 and 200 characters long") @NotBlank(message = "Name cannot be blank") @NonNull String name,
@@ -40,4 +40,4 @@ public record FormRequestDto(
 
         @NotNull(message = "SaveSubmissions cannot be null") @NonNull Boolean saveSubmissions,
 
-        @Size(min = 3, max = 100, message = "Questions must contain between 3 and 100 items") @NotEmpty(message = "Questions cannot be empty") @Valid @NonNull List<QuestionRequestDto> questions) {}
+        @Size(min = 3, max = 100, message = "Questions must contain between 3 and 100 items") @NotEmpty(message = "Questions cannot be empty") @Valid @NonNull List<@NonNull QuestionRequestDto> questions) {}

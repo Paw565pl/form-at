@@ -11,7 +11,11 @@ import format.backend.form.dto.FormListResponseDto;
 import format.backend.form.dto.FormRequestDto;
 import format.backend.form.service.FormService;
 import jakarta.validation.Valid;
+import java.util.Optional;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
+import org.jspecify.annotations.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -37,15 +41,19 @@ public class FormController {
     private final FormService formService;
 
     @GetMapping
-    public Page<FormListResponseDto> findAllPublic(
+    public Page<@NonNull FormListResponseDto> findAllPublic(
             FormFilterDto filterDto,
             @PageableDefault(size = 20, sort = "updatedAt", direction = DESC) Pageable pageable) {
         return formService.findAllPublic(filterDto, pageable);
     }
 
     @GetMapping("/{idOrSlug}")
-    public FormDetailResponseDto findByIdOrSlug(@PathVariable String idOrSlug) {
-        return formService.findByIdOrSlug(idOrSlug);
+    public FormDetailResponseDto findByIdOrSlug(
+            @AuthenticationPrincipal @Nullable Jwt jwt, @PathVariable String idOrSlug) {
+        val keycloakJwtClaims = Optional.ofNullable(jwt)
+                .map(keycloakJwtClaimsExtractor::getClaims)
+                .orElse(null);
+        return formService.findByIdOrSlug(keycloakJwtClaims, idOrSlug);
     }
 
     @PostMapping("/{idOrSlug}/access")

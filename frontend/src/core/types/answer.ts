@@ -3,3 +3,8 @@ export interface AnswerResponseDto {
   readonly content: string;
   readonly isCorrect: boolean;
 }
+
+export interface AnswerRequestDto {
+  content: string;
+  isCorrect: boolean;
+}

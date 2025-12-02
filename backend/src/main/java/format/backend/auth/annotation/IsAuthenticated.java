@@ -1,12 +1,14 @@
 package format.backend.auth.annotation;
 
-import java.lang.annotation.ElementType;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.TYPE;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import org.springframework.security.access.prepost.PreAuthorize;
 
-@Target({ElementType.METHOD, ElementType.TYPE})
+@Target({METHOD, TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @PreAuthorize("isAuthenticated()")
 public @interface IsAuthenticated {}

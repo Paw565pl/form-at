@@ -4,6 +4,7 @@ import format.backend.form.entity.FormEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.jspecify.annotations.NonNull;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -19,7 +20,7 @@ class FormEntityConfig implements ApplicationRunner {
     private final MongoTemplate mongoTemplate;
 
     @Override
-    public void run(ApplicationArguments args) {
+    public void run(@NonNull ApplicationArguments args) {
         val indexOps = mongoTemplate.indexOps(FormEntity.class);
 
         val textIndexName = "forms_text_idx";

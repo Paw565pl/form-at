@@ -1,12 +1,12 @@
 package format.backend.submission.dto;
 
 import java.util.Set;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public record SubmissionAnswerResponseDto(
         @NonNull String questionId,
 
-        @NonNull Set<String> chosenAnswerIds,
+        @NonNull Set<@NonNull String> chosenAnswerIds,
 
         @Nullable String openAnswer) {}

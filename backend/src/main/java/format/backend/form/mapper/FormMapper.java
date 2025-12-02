@@ -6,18 +6,20 @@ import format.backend.form.dto.FormListResponseDto;
 import format.backend.form.dto.FormRequestDto;
 import format.backend.form.dto.QuestionResponseDto;
 import format.backend.form.entity.FormEntity;
+import format.backend.form.entity.FormListAggregationResult;
 import java.util.List;
+import org.jspecify.annotations.Nullable;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.MappingTarget;
-import org.springframework.lang.Nullable;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = QuestionMapper.class)
 public interface FormMapper {
 
-    @Mapping(target = "questionsCount", expression = "java(formEntity.getQuestions().size())")
     FormListResponseDto toListResponseDto(FormEntity formEntity, String thumbnail, @Nullable String authorName);
+
+    FormListResponseDto toListResponseDto(FormListAggregationResult formListAggregationResult, String thumbnail);
 
     @Mapping(target = "questions", source = "questions")
     FormDetailResponseDto toDetailResponseDto(
@@ -28,6 +30,7 @@ public interface FormMapper {
     @Mapping(
             target = "estimatedDurationSeconds",
             expression = "java((int) formRequestDto.estimatedDuration().toSeconds())")
+    @Mapping(target = "questionsCount", expression = "java(formRequestDto.questions().size())")
     @Mapping(target = "submissionsCount", ignore = true)
     @Mapping(target = "submissions", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
@@ -36,6 +39,7 @@ public interface FormMapper {
     FormEntity toEntity(FormRequestDto formRequestDto, String slug, String passwordHash, @Nullable UserEntity author);
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "questionsCount", expression = "java(formRequestDto.questions().size())")
     @Mapping(target = "submissionsCount", ignore = true)
     @Mapping(target = "author", ignore = true)
     @Mapping(target = "submissions", ignore = true)

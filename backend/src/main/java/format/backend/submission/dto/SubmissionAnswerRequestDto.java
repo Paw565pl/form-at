@@ -5,8 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.util.Set;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public record SubmissionAnswerRequestDto(
         @ValidObjectId(message = "QuestionId must be a valid ObjectId")
@@ -14,7 +14,7 @@ public record SubmissionAnswerRequestDto(
 
         @NotNull(message = "ChosenAnswerIds cannot be null") @NonNull Set<
                         @ValidObjectId(message = "ChosenAnswerId must be a valid ObjectId")
-                        @NotBlank(message = "ChosenAnswerId cannot be blank") String>
+                        @NotBlank(message = "ChosenAnswerId cannot be blank") @NonNull String>
                 chosenAnswerIds,
 
         @Size(min = 10, max = 1000, message = "OpenAnswer must be between 10 and 1000 characters long") @Nullable String openAnswer) {}

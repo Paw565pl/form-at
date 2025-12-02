@@ -9,10 +9,11 @@ import jakarta.validation.Valid;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.lang.Nullable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,7 +35,7 @@ public class SubmissionController {
 
     @IsAuthenticated
     @GetMapping
-    public Page<SubmissionResponseDto> findAllByFormIdOrSlug(
+    public Page<@NonNull SubmissionResponseDto> findAllByFormIdOrSlug(
             @AuthenticationPrincipal Jwt jwt, @PathVariable String formIdOrSlug, Pageable pageable) {
         return submissionService.findAllByFormIdOrSlug(
                 keycloakJwtClaimsExtractor.getClaims(jwt), formIdOrSlug, pageable);
