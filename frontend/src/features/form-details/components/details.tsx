@@ -6,12 +6,12 @@ import {
   TooltipTrigger,
 } from "@/core/components/ui/tooltip";
 import { ICONS } from "@/core/config/icons";
-import { FormResponseDto, FormStatus } from "@/core/types/form";
+import { FormDetailResponseDto, FormStatus } from "@/core/types/form";
 import { formatDuration } from "@/core/utils/formatDuration";
 import { useFormatter, useTranslations } from "next-intl";
 
 interface DetailsProps {
-  readonly form: FormResponseDto;
+  readonly form: FormDetailResponseDto;
 }
 
 export const Details = ({ form }: DetailsProps) => {
@@ -63,7 +63,9 @@ export const Details = ({ form }: DetailsProps) => {
           </h2>
         </div>
         <p className="ml-auto">
-          {t("createdAt", { date: format.dateTime(form.updatedAt, "long") })}
+          {t("createdAt", {
+            date: format.dateTime(new Date(form.updatedAt), "long"),
+          })}
         </p>
       </div>
     </Card>
