@@ -20,9 +20,9 @@ export const HistoryItem = ({
 
   return (
     <section className="bg-card flex flex-col items-start justify-between gap-1 rounded-md p-2 shadow-sm md:flex-row md:items-center">
-      <div className="flex flex-col gap-2 md:flex-row">
+      <div className="flex flex-row gap-2">
         {content}
-        <Badge variant={badgeVariant} className="text-white">
+        <Badge variant={badgeVariant} className="self-center text-white">
           {formName}
         </Badge>
       </div>
