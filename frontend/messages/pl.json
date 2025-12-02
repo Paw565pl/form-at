@@ -71,11 +71,18 @@
     }
   },
   "userProfilePage": {
-    "achievements": "Osiągnięcia:",
+    "achievementsLabel": "Osiągnięcia:",
     "noAchievements": "Brak osiągnięć. Zacznij wypełniać formularze, aby zdobyć pierwsze!",
     "noDescription": "Ten użytkownik nie dodał jeszcze opisu.",
     "usersForms": "Formularze użytkownika {userName}",
     "usersHistory": "Historia użytkownika {userName}",
-    "noHistory": "Brak historii. Wypełnij kilka formularzy, aby zobaczyć swoją aktywność tutaj."
+    "noHistory": "Brak historii. Wypełnij kilka formularzy, aby zobaczyć swoją aktywność tutaj.",
+    "achievements": {
+      "noAchievements": "Brak osiągnięć. Zacznij wypełniać formularze, aby zdobyć pierwsze!",
+      "formsCreated": "{count, plural, one {Utworzono # formularz} few {Utworzono # formularze} many {Utworzono # formularzy} other {Utworzono # formularzy}}",
+      "submissionsReceived": "{count, plural, one {Otrzymano # odpowiedź} few {Otrzymano # odpowiedzi} many {Otrzymano # odpowiedzi} other {Otrzymano # odpowiedzi}}",
+      "perfectScores": "{count, plural, one {Osiągnięto # perfekcyjny wynik} few {Osiągnięto # perfekcyjne wyniki} many {Osiągnięto # perfekcyjnych wyników} other {Osiągnięto # perfekcyjnych wyników}}",
+      "formsCompleted": "{count, plural, one {Wypełniono # formularz} few {Wypełniono # formularze} many {Wypełniono # formularzy} other {Wypełniono # formularzy}}"
+    }
   }
 }

@@ -1,15 +1,16 @@
 "use client";
 
 import { FormCard } from "@/core/components/form-card/form-card";
-import { Badge, BadgeVariant } from "@/core/components/ui/badge";
+import { AchievementLevel, AchievementType } from "@/core/types/achievement";
+import { UserProfile } from "@/core/types/user-profile";
 import type { User } from "@/features/auth/types/user";
 import { forms } from "@/features/form-list/example-forms";
-import { HistoryItem } from "@/features/user/components/history-item";
-import { PartyPopper } from "lucide-react";
+import { Achievements } from "@/features/user/components/achievements";
+import { History } from "@/features/user/components/history";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 
-const User = {
+const User: UserProfile = {
   id: "1",
   name: "John Doe",
   email: "john.doe@example.com",
@@ -20,13 +21,15 @@ const User = {
   achievements: [
     {
       id: "1",
-      content: "Created 5 forms",
-      badgeVariant: "default",
+      type: AchievementType.FORMS_CREATED,
+      level: AchievementLevel.LEVEL_2,
+      threshold: 5,
     },
     {
       id: "2",
-      content: "Received 100 submissions",
-      badgeVariant: "secondary",
+      type: AchievementType.SUBMISSIONS_RECEIVED,
+      level: AchievementLevel.LEVEL_3,
+      threshold: 100,
     },
   ],
   history: [
@@ -82,23 +85,8 @@ export const UserProfilePage = () => {
 
           {/* achievements  */}
           <section className="bg-accent flex flex-col gap-2 rounded-md p-3 shadow-md">
-            <h2 className="font-semibold">{t("achievements")}</h2>
-            <div className="flex gap-1 p-1">
-              {User.achievements.length === 0 ? (
-                <p className="self-center">{t("noAchievements")}</p>
-              ) : (
-                User.achievements.map((achievement) => (
-                  <Badge
-                    variant={achievement.badgeVariant as BadgeVariant}
-                    key={achievement.id}
-                    className="text-white"
-                  >
-                    <PartyPopper />
-                    {achievement.content}
-                  </Badge>
-                ))
-              )}
-            </div>
+            <h2 className="font-semibold">{t("achievementsLabel")}</h2>
+            <Achievements achievements={User.achievements} />
           </section>
 
           {/* description  */}
@@ -123,19 +111,7 @@ export const UserProfilePage = () => {
             <h3 className="text-secondary-foreground font-semibold">
               {t("usersHistory", { userName: User.name })}
             </h3>
-            {User.history.length === 0 ? (
-              <p className="self-center">{t("noHistory")}</p>
-            ) : (
-              User.history.map((item) => (
-                <HistoryItem
-                  key={item.id}
-                  content={item.content}
-                  formName={item.formName}
-                  date={item.date}
-                  badgeVariant={item.badgeVariant as BadgeVariant}
-                />
-              ))
-            )}
+            <History history={User.history} />
           </section>
         </div>
       </div>
