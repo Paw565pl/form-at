@@ -29,8 +29,8 @@ public class CommentRatingEntity {
     @Field(name = "commentId", targetType = FieldType.OBJECT_ID)
     @NonNull private CommentEntity comment;
 
-    @Field(name = "type")
-    @NonNull private RatingType type;
+    @Field(name = "type", targetType = FieldType.INT32)
+    private int type;
 
     @CreatedDate
     @Field("createdAt")
