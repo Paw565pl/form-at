@@ -1,4 +1,4 @@
-package format.backend.comment.entity;
+package format.backend.commentRating.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
