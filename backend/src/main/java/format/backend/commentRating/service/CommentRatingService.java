@@ -21,5 +21,4 @@ public class CommentRatingService {
     private CommentEntity findOrThrow(String id) {
         return commentRepository.findById(id).orElseThrow(() -> new CommentNotFoundException(id));
     }
-
 }
