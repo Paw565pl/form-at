@@ -5,6 +5,7 @@ import format.backend.auth.jwt.KeycloakJwtClaimsExtractor;
 import format.backend.comment.dto.CommentResponseDto;
 import format.backend.comment.service.CommentService;
 import format.backend.comment.validator.ValidCommentId;
+import format.backend.commentRating.dto.CommentRatingRequestDto;
 import format.backend.commentRating.service.CommentRatingService;
 import format.backend.commentRating.validator.ValidCommentRatingId;
 import jakarta.validation.Valid;
@@ -48,7 +49,7 @@ public class CommentRatingController {
             @PathVariable String formIdOrSlug,
             @ValidCommentId @PathVariable String commentId,
             @Valid @RequestBody CommentRatingRequestDto commentRatingRequestDto) {
-        return commentRatingService.rate(formIdOrSlug, commentId, keycloakJwtClaimsExtractor.getClaims(jwt), CommentRatingRequestDto);
+        return commentRatingService.rate(formIdOrSlug, commentId, keycloakJwtClaimsExtractor.getClaims(jwt), commentRatingRequestDto );
     }
 
     @IsAuthenticated
