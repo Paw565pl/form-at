@@ -1,6 +1,6 @@
 spring:
   mongodb:
-    uri: mongodb://root:password@mongodb:27017/format?authSource=admin
+    uri: mongodb://root:password@mongodb:27017/format?authSource=admin&connectTimeoutMS=10000&socketTimeoutMS=30000
 
   security:
     oauth2:
