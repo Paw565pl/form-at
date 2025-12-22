@@ -36,13 +36,22 @@ class MinioService {
       typeof window === "undefined"
         ? serverEnv.MINIO_URL
         : getClientEnv("NEXT_PUBLIC_MINIO_URL"),
-    adapter: "fetch",
+    timeout: 0,
   });
 
-  public async upload(files: File[]): Promise<UploadResult> {
+  public async upload(
+    files: File[],
+    onProgress?: (percent: number) => void,
+  ): Promise<UploadResult> {
     const nonEmptyFiles = files.filter((f) => f.size !== 0);
     if (nonEmptyFiles.length === 0)
       return { isSuccess: true, filesToKeys: new Map() };
+
+    const totalBytes = nonEmptyFiles.reduce((acc, f) => acc + f.size, 0);
+    const uploadedBytesPerFile: number[] = new Array(nonEmptyFiles.length).fill(
+      0,
+    );
+    onProgress?.(0);
 
     try {
       const uploadRequestDto: FileUploadRequestDto = {
@@ -72,8 +81,21 @@ class MinioService {
           return formData;
         })
         .filter((f) => f.has("file"));
-      for (const uploadFormData of uploadsFormData) {
-        await this.minioClient.post("", uploadFormData);
+      for (let i = 0; i < uploadsFormData.length; i++) {
+        await this.minioClient.post("", uploadsFormData[i], {
+          onUploadProgress(event) {
+            if (!onProgress || !event.total) return;
+
+            uploadedBytesPerFile[i] = event.loaded;
+            const totalUploaded = uploadedBytesPerFile.reduce(
+              (acc, uploadedBytes) => acc + uploadedBytes,
+              0,
+            );
+
+            const percent = Math.round((totalUploaded * 100) / totalBytes);
+            onProgress(percent);
+          },
+        });
       }
 
       const filesToKeys = new Map(

@@ -8,9 +8,14 @@ import {
 } from "@/core/types/form";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+import { useState } from "react";
 
-export const useUpdateForm = (idOrSlug: string) =>
-  useMutation<
+export const useUpdateForm = (idOrSlug: string) => {
+  const [uploadProgressPercent, setUploadProgressPercent] = useState<
+    number | null
+  >(null);
+
+  const mutation = useMutation<
     FormDetailResponseDto,
     AxiosError<ErrorResponseDto> | Error,
     FormRequest
@@ -22,7 +27,9 @@ export const useUpdateForm = (idOrSlug: string) =>
         ...request.questions.map((q) => q.image),
       ].filter((f) => f !== null);
 
-      const result = await minioService.upload(files);
+      const result = await minioService.upload(files, (percent) =>
+        setUploadProgressPercent(percent),
+      );
       if (!result.isSuccess) throw result.error;
 
       const requestDto: FormRequestDto = {
@@ -43,6 +50,10 @@ export const useUpdateForm = (idOrSlug: string) =>
       return data;
     },
     onSettled: (_, __, ___, _____, { client }) => {
+      setUploadProgressPercent(null);
       client.invalidateQueries({ queryKey: ["forms"] });
     },
   });
+
+  return { ...mutation, uploadProgressPercent };
+};
