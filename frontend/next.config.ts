@@ -10,7 +10,7 @@ const getMinioRemotePattern = (): RemotePattern => {
     protocol: protocol.replace(":", "") as "http" | "https",
     hostname,
     port,
-    pathname,
+    pathname: pathname + "/**",
   };
 };
 
