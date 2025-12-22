@@ -1,6 +1,17 @@
 import { serverEnv } from "@/core/lib/env/server-env";
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
+import { RemotePattern } from "next/dist/shared/lib/image-config";
+
+const getMinioRemotePattern = (): RemotePattern => {
+  const { protocol, hostname, port } = new URL(serverEnv.MINIO_URL);
+
+  return {
+    protocol: protocol.replace(":", "") as "http" | "https",
+    hostname,
+    port,
+  };
+};
 
 const nextConfig: NextConfig = {
   output: "standalone",
@@ -10,7 +21,7 @@ const nextConfig: NextConfig = {
     reactCompiler: true,
   },
   images: {
-    remotePatterns: [new URL(serverEnv.MINIO_URL + "/**")],
+    remotePatterns: [getMinioRemotePattern()],
   },
 };
 
