@@ -22,3 +22,7 @@ export interface QuestionRequestDto {
   isRequired: boolean;
   answers: AnswerRequestDto[];
 }
+
+export interface QuestionRequest extends Omit<QuestionRequestDto, "imageKey"> {
+  image: File | null;
+}

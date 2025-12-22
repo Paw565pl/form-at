@@ -19,7 +19,12 @@ RUN \
 
 # Rebuild the source code only when needed
 FROM base AS builder
+
+ARG MINIO_URL
+ENV MINIO_URL=$MINIO_URL
+
 WORKDIR /app
+
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
@@ -35,6 +40,7 @@ RUN \
 
 # Production image, copy all the files and run next
 FROM base AS runner
+
 WORKDIR /app
 
 ENV NODE_ENV=production

@@ -3,7 +3,7 @@ import com.diffplug.spotless.LineEnding
 plugins {
     java
     idea
-    id("org.springframework.boot") version "4.0.0"
+    id("org.springframework.boot") version "4.0.1"
     id("org.springframework.boot.aot") version "4.0.0" apply false
     id("io.spring.dependency-management") version "1.1.7"
     id("se.solrike.sonarlint") version "2.2.0"
@@ -109,16 +109,18 @@ dependencies {
 }
 
 tasks.withType<JavaCompile> {
-    options.compilerArgs.addAll(listOf(
-        "-Xlint:deprecation",
-        "-Xlint:dep-ann",
-        "-Xlint:removal",
-        "-Xlint:overrides",
-        "-Xlint:fallthrough",
-        "-Xlint:try",
-        "-Xlint:finally",
-        "-Werror"
-    ))
+    options.compilerArgs.addAll(
+        listOf(
+            "-Xlint:deprecation",
+            "-Xlint:dep-ann",
+            "-Xlint:removal",
+            "-Xlint:overrides",
+            "-Xlint:fallthrough",
+            "-Xlint:try",
+            "-Xlint:finally",
+            "-Werror"
+        )
+    )
 }
 
 tasks.withType<Test> {

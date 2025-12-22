@@ -3,7 +3,7 @@ import { z } from "zod";
 
 export const serverEnv = createEnv({
   server: {
-    API_BASE_URL: z.url().trim(),
+    API_BASE_URL: z.url().trim().min(1),
     AUTH_SECRET: z
       .string()
       .trim()
@@ -16,6 +16,7 @@ export const serverEnv = createEnv({
     AUTH_KEYCLOAK_AUTH_URL: z.url().trim().min(1),
     AUTH_KEYCLOAK_TOKEN_URL: z.url().trim().min(1),
     AUTH_KEYCLOAK_LOGOUT_URL: z.url().trim().min(1),
+    MINIO_URL: z.url().trim().min(1),
   },
   experimental__runtimeEnv: process.env,
   skipValidation: process.env.CI ? true : false,
