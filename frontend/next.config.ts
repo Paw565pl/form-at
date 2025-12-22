@@ -4,12 +4,13 @@ import createNextIntlPlugin from "next-intl/plugin";
 import { RemotePattern } from "next/dist/shared/lib/image-config";
 
 const getMinioRemotePattern = (): RemotePattern => {
-  const { protocol, hostname, port } = new URL(serverEnv.MINIO_URL);
+  const { protocol, hostname, port, pathname } = new URL(serverEnv.MINIO_URL);
 
   return {
     protocol: protocol.replace(":", "") as "http" | "https",
     hostname,
     port,
+    pathname,
   };
 };
 
