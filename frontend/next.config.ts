@@ -4,6 +4,8 @@ import createNextIntlPlugin from "next-intl/plugin";
 import { RemotePattern } from "next/dist/shared/lib/image-config";
 
 const getMinioRemotePattern = (): RemotePattern => {
+  if (!serverEnv.MINIO_URL) return { hostname: "localhost" };
+
   const url = new URL(serverEnv.MINIO_URL);
   url.pathname = "/**";
 
