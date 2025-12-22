@@ -1,5 +1,5 @@
-import Image, { ImageProps } from "next/image";
 import { UserImagePlaceholder } from "@/core/components/user-image/user-image-placeholder";
+import Image, { ImageProps } from "next/image";
 
 interface UserImageWithFallbackProps extends Omit<ImageProps, "src"> {
   readonly src: string | null;

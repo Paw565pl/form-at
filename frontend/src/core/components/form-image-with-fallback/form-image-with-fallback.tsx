@@ -1,5 +1,5 @@
-import Image, { ImageProps } from "next/image";
 import { FormImagePlaceholder } from "@/core/components/form-image-with-fallback/form-image-placeholder";
+import Image, { ImageProps } from "next/image";
 
 interface FormImageWithFallbackProps extends Omit<ImageProps, "src"> {
   readonly src: string | null;
