@@ -13,4 +13,6 @@ public record FormFilterDto(
 
         @Nullable Duration maxEstimatedDuration,
 
-        @Nullable Boolean allowsGuestSubmissions) {}
+        @Nullable Boolean allowsGuestSubmissions,
+
+        @Nullable String authorId) {}
