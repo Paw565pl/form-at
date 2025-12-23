@@ -14,6 +14,7 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -32,12 +33,13 @@ public class SubmissionEntity {
     @Field(name = "_id", targetType = FieldType.OBJECT_ID)
     private String id;
 
-    @Field(name = "formId")
     @DocumentReference(lazy = true)
+    @Field(name = "formId")
     private @NonNull FormEntity form;
 
-    @Field(name = "authorId")
+    @Indexed
     @DocumentReference(lazy = true)
+    @Field(name = "authorId")
     private @Nullable UserEntity author;
 
     @Field(name = "answers")

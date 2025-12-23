@@ -14,6 +14,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -32,6 +33,7 @@ public class CommentEntity {
     @Field(name = "_id", targetType = FieldType.OBJECT_ID)
     private String id;
 
+    @Indexed
     @DocumentReference(lazy = true)
     @Field(name = "authorId")
     private @Nullable UserEntity author;

@@ -100,8 +100,9 @@ public class FormEntity {
     @Setter(AccessLevel.NONE)
     private @NonNull List<@NonNull SubmissionEntity> submissions = new ArrayList<>();
 
-    @Field(name = "authorId")
+    @Indexed
     @DocumentReference(lazy = true)
+    @Field(name = "authorId")
     private @Nullable UserEntity author;
 
     @CreatedDate
