@@ -1,7 +1,7 @@
 import { getQueryClient } from "@/core/lib/tanstack-query";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { UserProfile } from "@/features/user-profile/components/user-profile";
 import { prefetchUserProfile } from "@/features/user-profile/hooks/use-fetch-user-profile";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 
 export const UserProfilePage = async ({
   params,
