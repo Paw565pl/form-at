@@ -1,0 +1,20 @@
+meta {
+  name: Get User Profile
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/v1/users/:username
+  body: none
+  auth: inherit
+}
+
+params:path {
+  username: test
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

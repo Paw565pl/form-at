@@ -13,4 +13,6 @@ public interface SubmissionRepository extends MongoRepository<@NonNull Submissio
     Optional<SubmissionEntity> findByFormIdAndAuthorId(String formId, String authorId);
 
     void deleteAllByFormId(String formId);
+
+    Integer countAllByAuthorId(String authorId);
 }
