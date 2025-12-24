@@ -83,18 +83,6 @@
     }
   },
   "userProfilePage": {
-    "achievementsLabel": "Achievements:",
-    "noAchievements": "No achievements yet. Start completing forms to earn some!",
-    "noDescription": "This user has not added a description yet.",
-    "usersForms": "{userName}'s Forms",
-    "usersHistory": "{userName}'s History",
-    "noHistory": "No history yet. Fill out some forms to see your activity here.",
-    "achievements": {
-      "noAchievements": "No achievements yet. Start completing forms to earn some!",
-      "formsCreated": "{count, plural, one {Created # form} other {Created # forms}}",
-      "submissionsReceived": "{count, plural, one {Received # submission} other {Received # submissions}}",
-      "perfectScores": "{count, plural, one {Achieved # perfect score} other {Achieved # perfect scores}}",
-      "formsCompleted": "{count, plural, one {Completed # form} other {Completed # forms}}"
-    }
+    "loading": "Loading Profile..."
   }
 }
