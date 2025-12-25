@@ -1,10 +1,11 @@
 package format.backend.commentRating.entity;
 
+import format.backend.auth.entity.UserEntity;
 import format.backend.comment.entity.CommentEntity;
-import format.backend.commentRating.entity.RatingType;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -29,6 +30,10 @@ public class CommentRatingEntity {
     @Field(name = "commentId", targetType = FieldType.OBJECT_ID)
     @NonNull private CommentEntity comment;
 
+    @DocumentReference(lazy = true)
+    @Field(name = "authorId", targetType = FieldType.OBJECT_ID)
+    @NonNull private UserEntity author;
+
     @Field(name = "type", targetType = FieldType.INT32)
     private int type;
 
@@ -40,4 +45,8 @@ public class CommentRatingEntity {
     @Indexed(direction = IndexDirection.DESCENDING)
     @Field("updatedAt")
     private Instant updatedAt;
+
+    @Version
+    @Field(name = "version")
+    private Long version;
 }
