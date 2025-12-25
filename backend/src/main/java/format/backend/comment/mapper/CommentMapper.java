@@ -19,6 +19,7 @@ public interface CommentMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "form", source = "form")
     @Mapping(target = "author", source = "author")
+    @Mapping(target = "ratingCount", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "version", ignore = true)
