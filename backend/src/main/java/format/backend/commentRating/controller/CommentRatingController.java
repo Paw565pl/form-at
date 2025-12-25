@@ -3,7 +3,6 @@ package format.backend.commentRating.controller;
 import format.backend.auth.annotation.IsAuthenticated;
 import format.backend.auth.jwt.KeycloakJwtClaimsExtractor;
 import format.backend.comment.dto.CommentResponseDto;
-import format.backend.comment.service.CommentService;
 import format.backend.comment.validator.ValidCommentId;
 import format.backend.commentRating.dto.CommentRatingRequestDto;
 import format.backend.commentRating.service.CommentRatingService;
@@ -24,42 +23,26 @@ import org.springframework.web.bind.annotation.*;
 public class CommentRatingController {
 
     private final KeycloakJwtClaimsExtractor keycloakJwtClaimsExtractor;
-    private final CommentService commentService;
     private final CommentRatingService commentRatingService;
-
-    @GetMapping
-    public int getRating(@PathVariable String formIdOrSlug, @ValidCommentId @PathVariable String commentId) {
-        return commentRatingService.getRating(formIdOrSlug, commentId);
-    }
-
-    @IsAuthenticated
-    @GetMapping
-    public boolean haveRated(
-            @AuthenticationPrincipal Jwt jwt,
-            @PathVariable String formIdOrSlug,
-            @ValidCommentId @PathVariable String commentId) {
-        return commentRatingService.haveRated(formIdOrSlug, commentId, keycloakJwtClaimsExtractor.getClaims(jwt));
-    }
 
     @IsAuthenticated
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CommentResponseDto rate(
+    public CommentRatingResponseDto add(
             @AuthenticationPrincipal Jwt jwt,
             @PathVariable String formIdOrSlug,
             @ValidCommentId @PathVariable String commentId,
             @Valid @RequestBody CommentRatingRequestDto commentRatingRequestDto) {
-        return commentRatingService.rate(formIdOrSlug, commentId, keycloakJwtClaimsExtractor.getClaims(jwt), commentRatingRequestDto );
+        return commentRatingService.add(formIdOrSlug, commentId, keycloakJwtClaimsExtractor.getClaims(jwt), commentRatingRequestDto);
     }
 
     @IsAuthenticated
-    @DeleteMapping("/{ratingId}")
+    @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(
             @AuthenticationPrincipal Jwt jwt,
             @PathVariable String formIdOrSlug,
-            @ValidCommentId @PathVariable String commentId,
-            @ValidCommentRatingId @PathVariable String ratingId) {
-        commentRatingService.delete(formIdOrSlug, commentId, ratingId, keycloakJwtClaimsExtractor.getClaims(jwt));
+            @ValidCommentId @PathVariable String commentId) {
+        commentRatingService.delete(formIdOrSlug, commentId, keycloakJwtClaimsExtractor.getClaims(jwt));
     }
 }
