@@ -1,6 +1,6 @@
-package format.backend.commentRating.dto;
+package format.backend.comment_rating.dto;
 
-import format.backend.commentRating.entity.RatingType;
+import format.backend.comment_rating.entity.RatingType;
 import org.jspecify.annotations.NonNull;
 
 public record CommentRatingRequestDto(

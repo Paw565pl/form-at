@@ -1,7 +1,7 @@
-package format.backend.commentRating.mapper;
+package format.backend.comment_rating.mapper;
 
-import format.backend.commentRating.dto.CommentRatingResponseDto;
-import format.backend.commentRating.entity.CommentRatingEntity;
+import format.backend.comment_rating.dto.CommentRatingResponseDto;
+import format.backend.comment_rating.entity.CommentRatingEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;

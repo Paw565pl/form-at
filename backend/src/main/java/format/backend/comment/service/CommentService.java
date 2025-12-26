@@ -13,7 +13,7 @@ import format.backend.comment.entity.CommentEntity;
 import format.backend.comment.exception.CommentNotFoundException;
 import format.backend.comment.mapper.CommentMapper;
 import format.backend.comment.repository.CommentRepository;
-import format.backend.commentRating.repository.CommentRatingRepository;
+import format.backend.comment_rating.repository.CommentRatingRepository;
 import format.backend.form.service.FormService;
 import java.util.ArrayList;
 import java.util.Objects;

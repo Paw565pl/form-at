@@ -1,4 +1,4 @@
-package format.backend.commentRating.service;
+package format.backend.comment_rating.service;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
@@ -7,11 +7,11 @@ import format.backend.auth.service.UserService;
 import format.backend.comment.entity.CommentEntity;
 import format.backend.comment.exception.CommentNotFoundException;
 import format.backend.comment.repository.CommentRepository;
-import format.backend.commentRating.dto.CommentRatingRequestDto;
-import format.backend.commentRating.dto.CommentRatingResponseDto;
-import format.backend.commentRating.entity.CommentRatingEntity;
-import format.backend.commentRating.mapper.CommentRatingMapper;
-import format.backend.commentRating.repository.CommentRatingRepository;
+import format.backend.comment_rating.dto.CommentRatingRequestDto;
+import format.backend.comment_rating.dto.CommentRatingResponseDto;
+import format.backend.comment_rating.entity.CommentRatingEntity;
+import format.backend.comment_rating.mapper.CommentRatingMapper;
+import format.backend.comment_rating.repository.CommentRatingRepository;
 import format.backend.form.service.FormService;
 import lombok.RequiredArgsConstructor;
 

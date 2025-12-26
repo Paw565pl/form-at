@@ -1,11 +1,11 @@
-package format.backend.commentRating.controller;
+package format.backend.comment_rating.controller;
 
 import format.backend.auth.annotation.IsAuthenticated;
 import format.backend.auth.jwt.KeycloakJwtClaimsExtractor;
 import format.backend.comment.validator.ValidCommentId;
-import format.backend.commentRating.dto.CommentRatingRequestDto;
-import format.backend.commentRating.dto.CommentRatingResponseDto;
-import format.backend.commentRating.service.CommentRatingService;
+import format.backend.comment_rating.dto.CommentRatingRequestDto;
+import format.backend.comment_rating.dto.CommentRatingResponseDto;
+import format.backend.comment_rating.service.CommentRatingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

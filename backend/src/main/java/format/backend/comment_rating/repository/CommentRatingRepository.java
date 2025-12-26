@@ -1,6 +1,6 @@
-package format.backend.commentRating.repository;
+package format.backend.comment_rating.repository;
 
-import format.backend.commentRating.entity.CommentRatingEntity;
+import format.backend.comment_rating.entity.CommentRatingEntity;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Collection;
