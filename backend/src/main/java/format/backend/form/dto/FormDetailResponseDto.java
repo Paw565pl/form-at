@@ -6,8 +6,8 @@ import format.backend.form.entity.Language;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public record FormDetailResponseDto(
         @NonNull String id,
@@ -40,7 +40,7 @@ public record FormDetailResponseDto(
 
         @NonNull Long submissionsCount,
 
-        @NonNull List<QuestionResponseDto> questions,
+        @NonNull List<@NonNull QuestionResponseDto> questions,
 
         @NonNull Instant createdAt,
 

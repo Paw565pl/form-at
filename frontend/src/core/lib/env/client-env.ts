@@ -5,10 +5,12 @@ import { z } from "zod";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const clientEnv = createEnv({
   client: {
-    NEXT_PUBLIC_API_BASE_URL: z.url().trim(),
+    NEXT_PUBLIC_API_BASE_URL: z.url().trim().min(1),
+    NEXT_PUBLIC_MINIO_URL: z.url().trim().min(1),
   },
   runtimeEnv: {
     NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL,
+    NEXT_PUBLIC_MINIO_URL: process.env.NEXT_PUBLIC_MINIO_URL,
   },
   skipValidation: true,
 });

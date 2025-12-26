@@ -2,6 +2,9 @@
   "rootPage": {
     "message": "Witaj świecie!"
   },
+  "errorPage": {
+    "message": "Wystąpił niespodziewany błąd. Spróbuj ponownie później."
+  },
   "navBar": {
     "auth": {
       "signIn": "Zaloguj się",
@@ -12,8 +15,8 @@
     "createForm": "Utwórz nowy formularz",
     "lightMode": "Przełącz na tryb jasny",
     "darkMode": "Przełącz na tryb ciemny",
-    "changeLang": "Zmień język",
-    "openMenu": "Otwórz menu"
+    "languageSwitcher": "Zmień język",
+    "openMobileMenu": "Otwórz menu"
   },
   "formListPage": {
     "title": "Wyświetlanie {count, plural, one {# formularza} other {# formularzy}}",
@@ -21,12 +24,14 @@
       "searchPlaceholder": "Szukaj formularzy...",
       "sortBy": "Sortuj według",
       "sortOptions": {
-        "newest": "Najnowsze",
-        "oldest": "Najstarsze",
-        "name": "Nazwa",
-        "questions": "Liczba pytań",
-        "submissions": "Liczba odpowiedzi",
-        "duration": "Czas trwania"
+        "createdAt,desc": "Najnowsze",
+        "createdAt,asc": "Najstarsze",
+        "questionsCount,asc": "Liczba pytań: rosnąco",
+        "questionsCount,desc": "Liczba pytań: malejąco",
+        "submissionsCount,asc": "Liczba odpowiedzi: rosnąco",
+        "submissionsCount,desc": "Liczba odpowiedzi: malejąco",
+        "estimatedDuration,asc": "Czas trwania: rosnąco",
+        "estimatedDuration,desc": "Czas trwania: malejąco"
       },
       "listView": "Widok listy",
       "gridView": "Widok siatki"
@@ -36,9 +41,11 @@
     "questions": "{count, plural, one {# pytanie} few {# pytania} many {# pytań} other {# pytań}}",
     "submissions": "{count, plural, one {# odpowiedź} other {# odpowiedzi}}",
     "end": "Dotarłeś do końca listy.",
-    "loading": "Ładowanie formularzy..."
+    "loading": "Ładowanie formularzy...",
+    "empty": "Brak formularzy dla wybranych kryteriów wyszukiwania."
   },
   "formDetailsPage": {
+    "loading": "Ładowanie...",
     "banner": {
       "back": "Wróć do poprzedniej strony",
       "moreOptions": "Więcej opcji",
@@ -68,6 +75,11 @@
         "multiple": "Wybór wielokrotny",
         "open": "Odpowiedź otwarta"
       }
+    }
+  },
+  "components": {
+    "scrollToTopButton": {
+      "ariaLabel": "Przewiń na górę strony"
     }
   }
 }

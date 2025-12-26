@@ -1,14 +1,13 @@
 package format.backend.comment.repository;
 
 import format.backend.comment.entity.CommentEntity;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.mongodb.repository.Update;
 
-public interface CommentRepository extends MongoRepository<CommentEntity, String> {
-    Page<CommentEntity> findAllByFormId(String formId, Pageable pageable);
+public interface CommentRepository extends MongoRepository<@NonNull CommentEntity, @NonNull String> {
+    Integer countAllByAuthorId(String authorId);
 
     void deleteAllByFormId(String formId);
 

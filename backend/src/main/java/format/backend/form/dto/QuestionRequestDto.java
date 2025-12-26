@@ -6,8 +6,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.util.List;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public record QuestionRequestDto(
         @Size(min = 3, max = 200, message = "Content must be between 3 and 200 characters long") @NotBlank(message = "Content cannot be blank") @NonNull String content,
@@ -18,4 +18,4 @@ public record QuestionRequestDto(
 
         @NotNull(message = "IsRequired cannot be null") @NonNull Boolean isRequired,
 
-        @Size(min = 0, max = 6, message = "Answers must contain between 0 and 6 items") @NotNull(message = "Answers cannot be null") @NonNull @Valid List<AnswerRequestDto> answers) {}
+        @Size(min = 0, max = 6, message = "Answers must contain between 0 and 6 items") @NotNull(message = "Answers cannot be null") @Valid @NonNull List<@NonNull AnswerRequestDto> answers) {}

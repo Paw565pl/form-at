@@ -2,6 +2,9 @@
   "rootPage": {
     "message": "Hello world!"
   },
+  "errorPage": {
+    "message": "An unexpected error ocurred. Please try again later."
+  },
   "navBar": {
     "auth": {
       "signIn": "Sign In",
@@ -12,8 +15,8 @@
     "createForm": "Create New Form",
     "lightMode": "Switch to light mode",
     "darkMode": "Switch to dark mode",
-    "changeLang": "Change language",
-    "openMenu": "Open menu"
+    "languageSwitcher": "Change language",
+    "openMobileMenu": "Open menu"
   },
   "formListPage": {
     "title": "Showing {count, plural, one {# form} other {# forms}}",
@@ -21,12 +24,14 @@
       "searchPlaceholder": "Search forms...",
       "sortBy": "Sort by",
       "sortOptions": {
-        "newest": "Newest",
-        "oldest": "Oldest",
-        "name": "Name",
-        "questions": "Questions",
-        "submissions": "Submissions",
-        "duration": "Duration"
+        "createdAt,desc": "Newest",
+        "createdAt,asc": "Oldest",
+        "questionsCount,asc": "Questions count: ascending",
+        "questionsCount,desc": "Questions count: descending",
+        "submissionsCount,asc": "Submissions count: ascending",
+        "submissionsCount,desc": "Submissions count: descending",
+        "estimatedDuration,asc": "Estimated duration: ascending",
+        "estimatedDuration,desc": "Estimated duration: descending"
       },
       "listView": "List View",
       "gridView": "Grid View"
@@ -36,9 +41,11 @@
     "questions": "{count, plural, one {# question} other {# questions}}",
     "submissions": "{count, plural, one {# submission} other {# submissions}}",
     "end": "You have reached the end of the list.",
-    "loading": "Loading forms..."
+    "loading": "Loading forms...",
+    "empty": "No forms found for given criteria."
   },
   "formDetailsPage": {
+    "loading": "Loading...",
     "banner": {
       "back": "Go Back to Previous Page",
       "moreOptions": "More Options",
@@ -68,6 +75,11 @@
         "multiple": "Multiple Choice",
         "open": "Open Ended"
       }
+    }
+  },
+  "components": {
+    "scrollToTopButton": {
+      "ariaLabel": "Scroll to the top of the page"
     }
   }
 }

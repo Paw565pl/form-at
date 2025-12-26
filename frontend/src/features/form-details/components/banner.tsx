@@ -1,5 +1,6 @@
 "use client";
 
+import { ImageWithFallback } from "@/core/components/image-with-fallback/image-with-fallback";
 import { Button } from "@/core/components/ui/button";
 import {
   Dialog,
@@ -18,14 +19,12 @@ import {
   TooltipTrigger,
 } from "@/core/components/ui/tooltip";
 import { ICONS } from "@/core/config/icons";
-import { FormResponseDto } from "@/core/types/form";
-import { placeholder_image_url } from "@/features/form-list/example-forms";
+import { FormDetailResponseDto } from "@/core/types/form";
 import { useTranslations } from "next-intl";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 interface BannerProps {
-  readonly form: FormResponseDto;
+  readonly form: FormDetailResponseDto;
 }
 
 export const Banner = ({ form }: BannerProps) => {
@@ -35,8 +34,8 @@ export const Banner = ({ form }: BannerProps) => {
   return (
     <section className="relative flex h-48 w-full items-end">
       {/* background image */}
-      <Image
-        src={form.thumbnailKey || placeholder_image_url}
+      <ImageWithFallback
+        src={form.thumbnail}
         alt="Background"
         fill
         style={{ objectFit: "cover" }}
@@ -48,7 +47,11 @@ export const Banner = ({ form }: BannerProps) => {
       <span className="absolute top-4 left-4">
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button size="icon-sm" onClick={() => router.back()}>
+            <Button
+              aria-label={t("back")}
+              size="icon-sm"
+              onClick={() => router.back()}
+            >
               <ICONS.back />
             </Button>
           </TooltipTrigger>
@@ -62,7 +65,7 @@ export const Banner = ({ form }: BannerProps) => {
       <span className="absolute top-4 right-4">
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button size="icon-sm">
+            <Button aria-label={t("moreOptions")} size="icon-sm">
               <ICONS.more />
             </Button>
           </TooltipTrigger>

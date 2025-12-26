@@ -2,10 +2,11 @@ package format.backend.upload.controller;
 
 import format.backend.auth.annotation.IsAuthenticated;
 import format.backend.auth.jwt.KeycloakJwtClaimsExtractor;
-import format.backend.upload.dto.UploadRequestDto;
+import format.backend.upload.dto.BatchUploadRequestDto;
 import format.backend.upload.dto.UploadRequestResponseDto;
 import format.backend.upload.service.UploadService;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -24,9 +25,9 @@ public class UploadController {
 
     @IsAuthenticated
     @PostMapping("/request")
-    public UploadRequestResponseDto getUploadPresignedFormData(
-            @AuthenticationPrincipal Jwt jwt, @Valid @RequestBody UploadRequestDto requestDto) {
-        return uploadService.getUploadPresignedFormData(
+    public List<UploadRequestResponseDto> getUploadPresignedFormData(
+            @AuthenticationPrincipal Jwt jwt, @Valid @RequestBody BatchUploadRequestDto requestDto) {
+        return uploadService.getBatchUploadPresignedFormData(
                 keycloakJwtClaimsExtractor.getClaims(jwt).sub(), requestDto);
     }
 }

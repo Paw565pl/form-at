@@ -1,11 +1,11 @@
 package format.backend.upload.service;
 
-import format.backend.upload.dto.UploadRequestDto;
+import format.backend.upload.dto.BatchUploadRequestDto;
 import format.backend.upload.dto.UploadRequestResponseDto;
 import format.backend.upload.entity.PendingUploadEntity;
-import format.backend.upload.exception.InvalidFileExtensionException;
 import format.backend.upload.properties.MinioProperties;
 import format.backend.upload.repository.PendingUploadRepository;
+import format.backend.upload.validator.ImageExtension;
 import io.minio.BucketExistsArgs;
 import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MakeBucketArgs;
@@ -26,7 +26,6 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -49,12 +48,7 @@ public class UploadService {
     private final PendingUploadRepository pendingUploadRepository;
 
     private static final long MAX_FILE_SIZE = 10L * 1024 * 1024; // 10 MB
-    private static final Map<String, String> validExtensionsToContentTypeMap = Map.ofEntries(
-            Map.entry("png", "image/png"),
-            Map.entry("jpg", "image/jpeg"),
-            Map.entry("jpeg", "image/jpeg"),
-            Map.entry("webp", "image/webp"),
-            Map.entry("avif", "image/avif"));
+    private static final Duration expiryDuration = Duration.ofMinutes(20);
 
     @PostConstruct
     private void createMinioBucket() throws MinioException, IOException, NoSuchAlgorithmException, InvalidKeyException {
@@ -68,33 +62,46 @@ public class UploadService {
     }
 
     @Transactional
-    public UploadRequestResponseDto getUploadPresignedFormData(String userId, UploadRequestDto requestDto) {
-        val fileName = requestDto.fileName().replaceAll("[^A-Za-z0-9._-]", "_").trim();
-        val fileExtension = List.of(fileName.split("\\.")).getLast();
-        if (!validExtensionsToContentTypeMap.containsKey(fileExtension))
-            throw new InvalidFileExtensionException(fileExtension, validExtensionsToContentTypeMap.keySet());
+    public List<UploadRequestResponseDto> getBatchUploadPresignedFormData(
+            String userId, BatchUploadRequestDto requestDto) {
+        val pendingUploads = requestDto.files().stream()
+                .map(r -> {
+                    val fileName =
+                            r.fileName().replaceAll("[^A-Za-z0-9._-]", "_").trim();
+                    val lastDotIndex = fileName.lastIndexOf('.');
+                    val fileExtension = lastDotIndex == -1 ? fileName : fileName.substring(lastDotIndex + 1);
 
-        val key = String.format("%s/%s", UUID.randomUUID(), fileName);
-        val contentType = validExtensionsToContentTypeMap.get(fileExtension);
+                    val key = String.format("%s/%s", UUID.randomUUID(), fileName);
+                    val contentType = ImageExtension.fromStringValue(fileExtension)
+                            .map(ImageExtension::getContentType)
+                            .orElse("*/*");
+                    val expiresAt = Instant.now().plus(expiryDuration);
 
-        val pendingUpload = new PendingUploadEntity(
-                key, fileName, contentType, userId, Instant.now().plus(Duration.ofMinutes(20)));
-        pendingUploadRepository.save(pendingUpload);
+                    return new PendingUploadEntity(key, fileName, contentType, userId, expiresAt);
+                })
+                .toList();
+        pendingUploadRepository.saveAll(pendingUploads);
 
-        val postPolicy = new PostPolicy(
-                minioProperties.getBucketName(), ZonedDateTime.now(Time.UTC).plusMinutes(20));
-        postPolicy.addContentLengthRangeCondition(1, MAX_FILE_SIZE);
-        postPolicy.addEqualsCondition("key", key);
-        postPolicy.addEqualsCondition("filename", fileName);
-        postPolicy.addEqualsCondition(HttpHeaders.CONTENT_TYPE, contentType);
+        return pendingUploads.stream()
+                .map(u -> {
+                    val postPolicy = new PostPolicy(
+                            minioProperties.getBucketName(),
+                            ZonedDateTime.now(Time.UTC).plus(expiryDuration));
+                    postPolicy.addContentLengthRangeCondition(1, MAX_FILE_SIZE);
+                    postPolicy.addEqualsCondition("key", u.getKey());
+                    postPolicy.addEqualsCondition("filename", u.getFileName());
+                    postPolicy.addEqualsCondition(HttpHeaders.CONTENT_TYPE, u.getContentType());
 
-        try {
-            val formData = minioClient.getPresignedPostFormData(postPolicy);
-            return UploadRequestResponseDto.fromFormData(formData, fileName, key, contentType);
-        } catch (MinioException | InvalidKeyException | IOException | NoSuchAlgorithmException e) {
-            log.error("Could not create upload request", e);
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+                    try {
+                        val formData = minioClient.getPresignedPostFormData(postPolicy);
+                        return UploadRequestResponseDto.fromFormData(
+                                formData, u.getFileName(), u.getKey(), u.getContentType());
+                    } catch (MinioException | InvalidKeyException | IOException | NoSuchAlgorithmException e) {
+                        log.error("Could not create upload request", e);
+                        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+                    }
+                })
+                .toList();
     }
 
     public Set<String> getValidUploadKeys(Set<String> keys, String userId) {

@@ -4,8 +4,8 @@ import format.backend.form.entity.FormStatus;
 import format.backend.form.entity.Language;
 import java.time.Duration;
 import java.time.Instant;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public record FormListResponseDto(
         @NonNull String id,

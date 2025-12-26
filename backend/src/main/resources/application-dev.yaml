@@ -1,7 +1,6 @@
 spring:
-  data:
-    mongodb:
-      uri: mongodb://root:password@mongodb:27017/format?authSource=admin
+  mongodb:
+    uri: mongodb://root:password@mongodb:27017/format?authSource=admin&connectTimeoutMS=10000&socketTimeoutMS=30000
 
   security:
     oauth2:
@@ -41,7 +40,6 @@ cors:
 
 minio:
   endpoint: http://minio:9000
-  public-endpoint: http://localhost:9000
   access-key: root
   secret-key: password
   bucket-name: uploads

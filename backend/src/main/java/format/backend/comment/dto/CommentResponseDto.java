@@ -1,8 +1,8 @@
 package format.backend.comment.dto;
 
 import java.time.Instant;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public record CommentResponseDto(
         @NonNull String id,

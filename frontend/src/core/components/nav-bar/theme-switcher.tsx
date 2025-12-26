@@ -15,7 +15,8 @@ export const ThemeSwitcher = () => {
   const t = useTranslations("navBar");
   const { theme, setTheme } = useTheme();
 
-  const [mounted, setMounted] = useState(false); // needed for theme checks
+  // needed for theme checks
+  const [mounted, setMounted] = useState(false);
   // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => setMounted(true), []);
 
@@ -30,6 +31,7 @@ export const ThemeSwitcher = () => {
     <Tooltip>
       <TooltipTrigger asChild>
         <Button
+          aria-label={theme === "dark" ? t("lightMode") : t("darkMode")}
           variant="outline"
           size="icon-sm"
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}

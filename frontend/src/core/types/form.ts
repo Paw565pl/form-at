@@ -1,12 +1,74 @@
-import { QuestionResponseDto } from "@/core/types/question";
-import { User } from "@/features/auth/types/user";
+import {
+  QuestionRequest,
+  QuestionRequestDto,
+  QuestionResponseDto,
+} from "@/core/types/question";
 
-export enum FormStatus {
-  Public = "PUBLIC", // visible to everyone
-  Unpublic = "UNPUBLIC", // visible to people with the link
-  Private = "PRIVATE", // accessed to people with password
-  Draft = "DRAFT", // only visible to the author
-  Closed = "CLOSED", // no longer accepting submissions
+export interface FormListResponseDto {
+  readonly id: string;
+  readonly name: string;
+  readonly slug: string;
+  readonly description: string | null;
+  readonly language: string;
+  readonly status: string;
+  readonly estimatedDuration: string;
+  readonly thumbnail: string | null;
+  readonly allowsQuestionsPreview: boolean;
+  readonly allowsGuestSubmissions: boolean;
+  readonly saveSubmissions: boolean;
+  readonly authorName: string | null;
+  readonly submissionsCount: number;
+  readonly questionsCount: number;
+  readonly createdAt: string;
+  readonly updatedAt: string;
+}
+
+export interface FormFilterOptionsDto {
+  searchQuery?: string | null;
+  language?: Language | null;
+  minEstimatedDuration?: string | null;
+  maxEstimatedDuration?: string | null;
+  allowsGuestSubmissions?: boolean | null;
+}
+
+export const formSortOptions = [
+  "estimatedDuration,asc",
+  "estimatedDuration,desc",
+
+  "questionsCount,asc",
+  "questionsCount,desc",
+
+  "submissionsCount,asc",
+  "submissionsCount,desc",
+
+  "createdAt,asc",
+  "createdAt,desc",
+
+  "updatedAt,asc",
+  "updatedAt,desc",
+] as const;
+
+export type FormSortOption = (typeof formSortOptions)[number];
+
+export interface FormDetailResponseDto {
+  readonly id: string;
+  readonly name: string;
+  readonly slug: string;
+  readonly description: string | null;
+  readonly language: Language;
+  readonly status: FormStatus;
+  readonly shuffleVariant: FormShuffleVariant | null;
+  readonly thanksMessage: string | null;
+  readonly estimatedDuration: string;
+  readonly thumbnail: string | null;
+  readonly allowsQuestionsPreview: boolean;
+  readonly allowsGuestSubmissions: boolean;
+  readonly saveSubmissions: boolean;
+  readonly authorName: string | null;
+  readonly submissionsCount: number;
+  readonly questions: QuestionResponseDto[];
+  readonly createdAt: string;
+  readonly updatedAt: string;
 }
 
 export enum Language {
@@ -14,30 +76,40 @@ export enum Language {
   Pl = "PL",
 }
 
-export enum ShuffleVariant {
-  Questions = "QUESTIONS",
-  Answers = "ANSWERS",
-  Both = "BOTH",
+export enum FormStatus {
+  Draft = "DRAFT",
+  Public = "PUBLIC",
+  Unpublic = "UNPUBLIC",
+  Private = "PRIVATE",
+  Closed = "CLOSED",
 }
 
-export interface FormResponseDto {
-  readonly id: string;
-  readonly name: string;
-  readonly slug: string;
-  readonly description?: string;
-  readonly language: Language;
-  readonly status: FormStatus;
-  readonly shuffleVariant?: ShuffleVariant;
-  readonly thanksMessage?: string;
-  readonly estimatedDuration: string;
-  readonly thumbnailKey?: string;
-  readonly allowsQuestionsPreview: boolean; // allows previewing questions before submission
-  readonly allowsGuestSubmissions: boolean; // allows submissions from guests (not logged in users)
-  readonly saveSubmissions: boolean;
-  readonly authorId: string;
-  readonly author?: User;
-  readonly createdAt: Date;
-  readonly updatedAt: Date;
-  readonly submissionsCount: number;
-  readonly questions: QuestionResponseDto[];
+export enum FormShuffleVariant {
+  Questions = "QUESTIONS",
+  Answers = "ANSWERS",
+  All = "ALL",
+}
+
+export interface FormRequestDto {
+  name: string;
+  description: string | null;
+  language: Language;
+  status: FormStatus;
+  password: string | null;
+  shuffleVariant: FormShuffleVariant | null;
+  thanksMessage: string | null;
+  estimatedDuration: string;
+  thumbnailKey: string | null;
+  allowsQuestionsPreview: boolean;
+  allowsGuestSubmissions: boolean;
+  saveSubmissions: boolean;
+  questions: QuestionRequestDto[];
+}
+
+export interface FormRequest extends Omit<
+  FormRequestDto,
+  "thumbnailKey" | "questions"
+> {
+  thumbnail: File | null;
+  questions: QuestionRequest[];
 }
