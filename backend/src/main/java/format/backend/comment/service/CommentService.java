@@ -13,6 +13,7 @@ import format.backend.comment.entity.CommentEntity;
 import format.backend.comment.exception.CommentNotFoundException;
 import format.backend.comment.mapper.CommentMapper;
 import format.backend.comment.repository.CommentRepository;
+import format.backend.commentRating.repository.CommentRatingRepository;
 import format.backend.form.service.FormService;
 import java.util.Objects;
 import java.util.Optional;
@@ -31,6 +32,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class CommentService {
 
     private final CommentRepository commentRepository;
+    private final CommentRatingRepository commentRatingRepository;
     private final CommentMapper commentMapper;
 
     private final UserService userService;
@@ -110,5 +112,7 @@ public class CommentService {
         if (!(isCommentOwner || isAdmin)) throw new ResponseStatusException(FORBIDDEN);
 
         commentRepository.delete(comment);
+
+        commentRatingRepository.deleteAllByCommentId(comment.getId());
     }
 }

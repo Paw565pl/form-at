@@ -5,7 +5,9 @@ import format.backend.auth.entity.Role;
 import format.backend.auth.entity.UserEntity;
 import format.backend.auth.jwt.KeycloakJwtClaims;
 import format.backend.auth.service.UserService;
+import format.backend.comment.entity.CommentEntity;
 import format.backend.comment.repository.CommentRepository;
+import format.backend.commentRating.repository.CommentRatingRepository;
 import format.backend.core.exception.ValidationException;
 import format.backend.form.dto.FormAccessRequestDto;
 import format.backend.form.dto.FormDetailResponseDto;
@@ -65,6 +67,7 @@ public class FormService {
     private final QuestionMapper questionMapper;
 
     private final CommentRepository commentRepository;
+    private final CommentRatingRepository commentRatingRepository;
     private final SubmissionRepository submissionRepository;
     private final UserService userService;
     private final UploadService uploadService;
@@ -255,10 +258,17 @@ public class FormService {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toUnmodifiableSet());
 
+        val commentIds = commentRepository.findAllByFormId(formEntity.getId(), Pageable.unpaged())
+                .stream()
+                .map(CommentEntity::getId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toUnmodifiableSet());
+
         formRepository.delete(formEntity);
         uploadService.deleteAllByKeys(imageKeys);
 
         commentRepository.deleteAllByFormId(formEntity.getId());
+        commentRatingRepository.deleteAllByCommentIdIn(commentIds);
         submissionRepository.deleteAllByFormId(formEntity.getId());
     }
 
