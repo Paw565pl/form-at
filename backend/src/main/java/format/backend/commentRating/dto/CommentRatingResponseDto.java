@@ -2,7 +2,7 @@ package format.backend.commentRating.dto;
 
 import format.backend.commentRating.entity.RatingType;
 import java.time.Instant;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 public record CommentRatingResponseDto(
         @NonNull String id,
