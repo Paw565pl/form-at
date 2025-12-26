@@ -318,11 +318,7 @@ public class FormService {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toUnmodifiableSet());
 
-        val commentIds = commentRepository.findAllByFormId(formEntity.getId(), Pageable.unpaged())
-                .stream()
-                .map(CommentEntity::getId)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toUnmodifiableSet());
+        val commentIds = commentRepository.findAllIdsByFormId(formEntity.getId());
 
         formRepository.delete(formEntity);
         uploadService.deleteAllByKeys(imageKeys);
