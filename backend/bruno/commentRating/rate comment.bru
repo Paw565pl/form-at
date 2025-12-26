@@ -1,0 +1,27 @@
+meta {
+  name: rate comment
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/v1/forms/:formIdOrSlug/comments/:commentId/rating
+  body: json
+  auth: inherit
+}
+
+params:path {
+  formIdOrSlug: 694de97d09119a831e9beea1
+  commentId: 694de98c09119a831e9beeaa
+}
+
+body:json {
+  {
+    "type": "DOWNVOTE"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

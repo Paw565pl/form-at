@@ -27,11 +27,11 @@ public class CommentRatingEntity {
     private String id;
 
     @DocumentReference(lazy = true)
-    @Field(name = "commentId", targetType = FieldType.OBJECT_ID)
+    @Field(name = "commentId")
     @NonNull private CommentEntity comment;
 
     @DocumentReference(lazy = true)
-    @Field(name = "authorId", targetType = FieldType.OBJECT_ID)
+    @Field(name = "authorId")
     @NonNull private UserEntity author;
 
     @Field(name = "type", targetType = FieldType.INT32)

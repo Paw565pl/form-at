@@ -1,0 +1,21 @@
+meta {
+  name: delete rating
+  type: http
+  seq: 2
+}
+
+delete {
+  url: {{baseUrl}}/api/v1/forms/:formIdOrSlug/comments/:commentId/rating
+  body: none
+  auth: inherit
+}
+
+params:path {
+  formIdOrSlug: 694de97d09119a831e9beea1
+  commentId: 694de98c09119a831e9beeaa
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
