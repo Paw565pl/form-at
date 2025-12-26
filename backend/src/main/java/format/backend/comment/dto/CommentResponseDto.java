@@ -11,7 +11,7 @@ public record CommentResponseDto(
 
         @NonNull String content,
 
-        @NonNull Long ratingCount,
+        @NonNull Long ratingScore,
 
         @NonNull Instant createdAt,
 

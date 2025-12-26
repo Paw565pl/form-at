@@ -43,9 +43,9 @@ public class CommentEntity {
     @Field(name = "content")
     @NonNull private String content;
 
-    @Field(name = "ratingCount")
+    @Field(name = "ratingScore")
     @Setter(AccessLevel.NONE)
-    private @NonNull Long ratingCount = 0L;
+    private @NonNull Long ratingScore = 0L;
 
     @CreatedDate
     @Field("createdAt")

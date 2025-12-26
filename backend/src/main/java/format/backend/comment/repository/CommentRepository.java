@@ -13,10 +13,6 @@ public interface CommentRepository extends MongoRepository<CommentEntity, String
     void deleteAllByFormId(String formId);
 
     @Query("{ '_id': ?0 }")
-    @Update("{ '$inc': { 'ratingCount': 1 } }")
-    void incrementRatingCount(String id);
-
-    @Query("{ '_id': ?0 }")
-    @Update("{ '$inc': { 'ratingCount': -1 } }")
-    void decrementRatingCount(String id);
+    @Update("{ '$inc': { 'ratingScore': ?1 } }")
+    void updateRatingScore(String commentId, int delta);
 }
