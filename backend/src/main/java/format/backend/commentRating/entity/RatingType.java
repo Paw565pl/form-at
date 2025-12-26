@@ -12,9 +12,10 @@ public enum  RatingType {
     private final int value;
 
     public static RatingType fromValue(int value) {
-        for (RatingType t : values()) {
-            if (t.value == value) return t;
-        }
-        throw new IllegalArgumentException("Unknown rating value: " + value);
+        return switch (value) {
+            case 1 -> UPVOTE;
+            case -1 -> DOWNVOTE;
+            default -> throw new IllegalStateException("Invalid rating value: " + value);
+        };
     }
 }

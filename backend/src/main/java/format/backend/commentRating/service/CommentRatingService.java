@@ -45,7 +45,7 @@ public class CommentRatingService {
 
         val user = userService.findOrThrow(keycloakJwtClaims.sub());
 
-        val newType = commentRatingRequestDto.type().getValue();
+        val newValue = commentRatingRequestDto.type().getValue();
 
         val existingRatingOpt = commentRatingRepository.findByCommentIdAndAuthorId(comment.getId(), user.getId());
 
@@ -53,13 +53,13 @@ public class CommentRatingService {
             val existingRating = existingRatingOpt.get();
             val oldType = existingRating.getType();
 
-            if (oldType  == newType) {
+            if (oldType  == newValue) {
                 return commentRatingMapper.toResponseDto(existingRating);
             }
 
-            val delta = newType - oldType;
+            val delta = newValue - oldType;
 
-            existingRating.setType(newType);
+            existingRating.setType(newValue);
             commentRatingRepository.save(existingRating);
             commentRepository.updateRatingScore(comment.getId(), delta);
 
@@ -67,10 +67,10 @@ public class CommentRatingService {
         }
 
         val rating = new CommentRatingEntity(comment, user);
-        rating.setType(newType);
+        rating.setType(newValue);
 
         commentRatingRepository.save(rating);
-        commentRepository.updateRatingScore(comment.getId(), newType);
+        commentRepository.updateRatingScore(comment.getId(), newValue);
 
         return commentRatingMapper.toResponseDto(rating);
     }
