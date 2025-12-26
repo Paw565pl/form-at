@@ -14,7 +14,6 @@ import format.backend.comment_rating.mapper.CommentRatingMapper;
 import format.backend.comment_rating.repository.CommentRatingRepository;
 import format.backend.form.service.FormService;
 import lombok.RequiredArgsConstructor;
-
 import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -37,7 +36,11 @@ public class CommentRatingService {
     }
 
     @Transactional
-    public CommentRatingResponseDto add(String formIdOrSlug, String commentId, KeycloakJwtClaims keycloakJwtClaims, CommentRatingRequestDto commentRatingRequestDto) {
+    public CommentRatingResponseDto add(
+            String formIdOrSlug,
+            String commentId,
+            KeycloakJwtClaims keycloakJwtClaims,
+            CommentRatingRequestDto commentRatingRequestDto) {
         val form = formService.findOrThrow(formIdOrSlug);
         val comment = findOrThrow(commentId);
 
@@ -53,7 +56,7 @@ public class CommentRatingService {
             val existingRating = existingRatingOpt.get();
             val oldType = existingRating.getType();
 
-            if (oldType  == newValue) {
+            if (oldType == newValue) {
                 return commentRatingMapper.toResponseDto(existingRating);
             }
 
@@ -86,8 +89,8 @@ public class CommentRatingService {
 
         val existingRating = commentRatingRepository
                 .findByCommentIdAndAuthorId(comment.getId(), user.getId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "User has not rated this comment"));
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User has not rated this comment"));
 
         int delta = -existingRating.getType();
 
