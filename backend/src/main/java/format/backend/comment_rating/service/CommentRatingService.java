@@ -69,8 +69,7 @@ public class CommentRatingService {
             return commentRatingMapper.toResponseDto(existingRating);
         }
 
-        val rating = new CommentRatingEntity(comment, user);
-        rating.setType(newValue);
+        val rating = commentRatingMapper.toEntity(commentRatingRequestDto, comment, user);
 
         commentRatingRepository.save(rating);
         commentRepository.updateRatingScore(comment.getId(), newValue);
