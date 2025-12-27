@@ -36,21 +36,27 @@ export const UserProfile = ({ username }: UserProfileProps) => {
             <span className="text-2xl font-bold">
               {userProfile.statistics.formsCount}
             </span>
-            <span className="text-muted-foreground text-sm">Forms Created</span>
+            <span className="text-muted-foreground text-sm">
+              {t("formsCreated")}
+            </span>
           </div>
 
           <div className="flex flex-1 flex-col items-center rounded-md border p-4">
             <span className="text-2xl font-bold">
               {userProfile.statistics.submissionsCount}
             </span>
-            <span className="text-muted-foreground text-sm">Submissions</span>
+            <span className="text-muted-foreground text-sm">
+              {t("submissions")}
+            </span>
           </div>
 
           <div className="flex flex-1 flex-col items-center rounded-md border p-4">
             <span className="text-2xl font-bold">
               {userProfile.statistics.commentsCount}
             </span>
-            <span className="text-muted-foreground text-sm">Comments</span>
+            <span className="text-muted-foreground text-sm">
+              {t("comments")}
+            </span>
           </div>
         </div>
       </div>

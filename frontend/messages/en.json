@@ -83,6 +83,9 @@
     }
   },
   "userProfilePage": {
-    "loading": "Loading Profile..."
+    "loading": "Loading Profile...",
+    "formsCreated": "Forms Created",
+    "submissions": "Submissions",
+    "comments": "Comments"
   }
 }
