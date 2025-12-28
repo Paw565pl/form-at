@@ -3,7 +3,6 @@ package format.backend.comment_rating.repository;
 import format.backend.comment_rating.entity.CommentRatingEntity;
 import java.util.Collection;
 import java.util.Optional;
-
 import org.jspecify.annotations.NonNull;
 import org.springframework.data.mongodb.repository.MongoRepository;
 

@@ -57,7 +57,8 @@ public class CommentService {
         return commentRepository.findById(id).orElseThrow(() -> new CommentNotFoundException(id));
     }
 
-    public Page<@NonNull CommentResponseDto> findAll(String formIdOrSlug, @Nullable KeycloakJwtClaims keycloakJwtClaims, Pageable pageable) {
+    public Page<@NonNull CommentResponseDto> findAll(
+            String formIdOrSlug, @Nullable KeycloakJwtClaims keycloakJwtClaims, Pageable pageable) {
         val form = formService.findOrThrow(formIdOrSlug);
         val criteria = Criteria.where("formId").is(new ObjectId(form.getId()));
 
@@ -84,29 +85,35 @@ public class CommentService {
         if (user != null) {
             operations.add(Aggregation.addFields()
                     .addField("userRatings")
-                    .withValue(
-                            ArrayOperators.Filter.filter("userRatings")
-                                    .as("rating")
-                                    .by(ComparisonOperators.Eq.valueOf("$$rating.authorId").equalToValue(user))
-                    )
+                    .withValue(ArrayOperators.Filter.filter("userRatings")
+                            .as("rating")
+                            .by(ComparisonOperators.Eq.valueOf("$$rating.authorId")
+                                    .equalToValue(user)))
                     .build());
         }
 
         operations.add(Aggregation.addFields()
                 .addField("userRating")
-                .withValue(ConditionalOperators.ifNull(
-                        ArrayOperators.ArrayElemAt.arrayOf("userRatings.type").elementAt(0)
-                ).then(0))
+                .withValue(ConditionalOperators.ifNull(ArrayOperators.ArrayElemAt.arrayOf("userRatings.type")
+                                .elementAt(0))
+                        .then(0))
                 .build());
 
         operations.add(Aggregation.project()
-                .and("_id").as("_id")
-                .and("authorName").as("authorName")
-                .and("content").as("content")
-                .and("ratingScore").as("ratingScore")
-                .and("userRating").as("userRating")
-                .and("createdAt").as("createdAt")
-                .and("updatedAt").as("updatedAt"));
+                .and("_id")
+                .as("_id")
+                .and("authorName")
+                .as("authorName")
+                .and("content")
+                .as("content")
+                .and("ratingScore")
+                .as("ratingScore")
+                .and("userRating")
+                .as("userRating")
+                .and("createdAt")
+                .as("createdAt")
+                .and("updatedAt")
+                .as("updatedAt"));
 
         val content = mongoTemplate
                 .aggregate(Aggregation.newAggregation(operations), CommentEntity.class, CommentResponseDto.class)
