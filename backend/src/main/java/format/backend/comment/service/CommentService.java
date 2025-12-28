@@ -112,6 +112,20 @@ public class CommentService {
                 .aggregate(Aggregation.newAggregation(operations), CommentEntity.class, CommentResponseDto.class)
                 .getMappedResults();
 
+        if (keycloakJwtClaims == null) {
+            val adjusted = content.stream()
+                    .map(comment -> new CommentResponseDto(
+                            comment.id(),
+                            comment.authorName(),
+                            comment.content(),
+                            comment.ratingScore(),
+                            0,
+                            comment.createdAt(),
+                            comment.updatedAt()))
+                    .toList();
+            return new PageImpl<>(adjusted, pageable, total);
+        }
+
         return new PageImpl<>(content, pageable, total);
     }
 
