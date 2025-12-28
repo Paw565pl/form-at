@@ -6,7 +6,7 @@ import { AxiosError } from "axios";
 
 const getFetchUserProfileQueryOptions = (username: string) =>
   queryOptions<UserProfileResponseDto, AxiosError<ErrorResponseDto>>({
-    queryKey: ["userProfile", username] as const,
+    queryKey: ["users", username] as const,
     queryFn: async () => {
       const { data } = await apiService.get<UserProfileResponseDto>(
         `/api/v1/users/${username}`,
