@@ -53,6 +53,8 @@ public class CommentService {
     private final UserService userService;
     private final FormService formService;
 
+    private static final String USER_RATINGS_FIELD = "userRatings";
+
     private CommentEntity findOrThrow(String id) {
         return commentRepository.findById(id).orElseThrow(() -> new CommentNotFoundException(id));
     }
@@ -80,12 +82,12 @@ public class CommentService {
                 .withValue(ArrayOperators.arrayOf("author.username").first())
                 .build());
 
-        operations.add(Aggregation.lookup("comment_ratings", "_id", "commentId", "userRatings"));
+        operations.add(Aggregation.lookup("comment_ratings", "_id", "commentId", USER_RATINGS_FIELD));
 
         if (user != null) {
             operations.add(Aggregation.addFields()
-                    .addField("userRatings")
-                    .withValue(ArrayOperators.Filter.filter("userRatings")
+                    .addField(USER_RATINGS_FIELD)
+                    .withValue(ArrayOperators.Filter.filter(USER_RATINGS_FIELD)
                             .as("rating")
                             .by(ComparisonOperators.Eq.valueOf("$$rating.authorId")
                                     .equalToValue(user)))
@@ -94,7 +96,7 @@ public class CommentService {
 
         operations.add(Aggregation.addFields()
                 .addField("userRating")
-                .withValue(ConditionalOperators.ifNull(ArrayOperators.ArrayElemAt.arrayOf("userRatings.type")
+                .withValue(ConditionalOperators.ifNull(ArrayOperators.ArrayElemAt.arrayOf(USER_RATINGS_FIELD + ".type")
                                 .elementAt(0))
                         .then(0))
                 .build());
