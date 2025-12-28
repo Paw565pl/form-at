@@ -48,7 +48,7 @@ export const NavBar = async () => {
       <div className="actions flex items-center gap-2">
         {session && (
           <Button size="sm" asChild className="hidden md:flex">
-            <Link href="/profile">
+            <Link href={`/users/${session?.user?.name}`}>
               <ICONS.user />
               {session?.user?.name}
             </Link>
