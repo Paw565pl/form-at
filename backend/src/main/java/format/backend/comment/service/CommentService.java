@@ -99,21 +99,9 @@ public class CommentService {
                         .then(0))
                 .build());
 
-        operations.add(Aggregation.project()
-                .and("_id")
-                .as("_id")
-                .and("authorName")
-                .as("authorName")
-                .and("content")
-                .as("content")
-                .and("ratingScore")
-                .as("ratingScore")
-                .and("userRating")
-                .as("userRating")
-                .and("createdAt")
-                .as("createdAt")
-                .and("updatedAt")
-                .as("updatedAt"));
+        operations.add(Aggregation.project(
+                "_id", "authorName", "content", "ratingScore",
+                "userRating", "createdAt", "updatedAt"));
 
         val content = mongoTemplate
                 .aggregate(Aggregation.newAggregation(operations), CommentEntity.class, CommentResponseDto.class)
