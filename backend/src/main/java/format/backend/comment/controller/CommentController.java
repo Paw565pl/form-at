@@ -35,8 +35,8 @@ public class CommentController {
     private final CommentService commentService;
 
     @GetMapping
-    public Page<@NonNull CommentResponseDto> findAll(@PathVariable String formIdOrSlug, Pageable pageable) {
-        return commentService.findAll(formIdOrSlug, pageable);
+    public Page<@NonNull CommentResponseDto> findAll(@AuthenticationPrincipal Jwt jwt, @PathVariable String formIdOrSlug, Pageable pageable) {
+        return commentService.findAll(formIdOrSlug, jwt != null ? keycloakJwtClaimsExtractor.getClaims(jwt) : null, pageable);
     }
 
     @IsAuthenticated

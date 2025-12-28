@@ -13,6 +13,8 @@ public record CommentResponseDto(
 
         @NonNull Long ratingScore,
 
+        @NonNull Integer userRating,
+
         @NonNull Instant createdAt,
 
         @NonNull Instant updatedAt) {}

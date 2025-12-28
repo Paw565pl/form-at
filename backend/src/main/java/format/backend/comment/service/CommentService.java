@@ -13,6 +13,7 @@ import format.backend.comment.entity.CommentEntity;
 import format.backend.comment.exception.CommentNotFoundException;
 import format.backend.comment.mapper.CommentMapper;
 import format.backend.comment.repository.CommentRepository;
+import format.backend.comment_rating.entity.CommentRatingEntity;
 import format.backend.comment_rating.repository.CommentRatingRepository;
 import format.backend.form.service.FormService;
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.bson.types.ObjectId;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +32,8 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 import org.springframework.data.mongodb.core.aggregation.ArrayOperators;
+import org.springframework.data.mongodb.core.aggregation.ComparisonOperators;
+import org.springframework.data.mongodb.core.aggregation.ConditionalOperators;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -53,12 +57,14 @@ public class CommentService {
         return commentRepository.findById(id).orElseThrow(() -> new CommentNotFoundException(id));
     }
 
-    public Page<@NonNull CommentResponseDto> findAll(String formIdOrSlug, Pageable pageable) {
+    public Page<@NonNull CommentResponseDto> findAll(String formIdOrSlug, @Nullable KeycloakJwtClaims keycloakJwtClaims, Pageable pageable) {
         val form = formService.findOrThrow(formIdOrSlug);
         val criteria = Criteria.where("formId").is(new ObjectId(form.getId()));
 
         val total = mongoTemplate.count(Query.query(criteria), CommentEntity.class);
         if (total == 0) return Page.empty(pageable);
+
+        val user = keycloakJwtClaims != null ? keycloakJwtClaims.sub() : null;
 
         val operations = new ArrayList<AggregationOperation>();
 
@@ -72,6 +78,35 @@ public class CommentService {
                 .addField("authorName")
                 .withValue(ArrayOperators.arrayOf("author.username").first())
                 .build());
+
+        operations.add(Aggregation.lookup("comment_ratings", "_id", "commentId", "userRatings"));
+
+        if (user != null) {
+            operations.add(Aggregation.addFields()
+                    .addField("userRatings")
+                    .withValue(
+                            ArrayOperators.Filter.filter("userRatings")
+                                    .as("rating")
+                                    .by(ComparisonOperators.Eq.valueOf("$$rating.authorId").equalToValue(user))
+                    )
+                    .build());
+        }
+
+        operations.add(Aggregation.addFields()
+                .addField("userRating")
+                .withValue(ConditionalOperators.ifNull(
+                        ArrayOperators.ArrayElemAt.arrayOf("userRatings.type").elementAt(0)
+                ).then(0))
+                .build());
+
+        operations.add(Aggregation.project()
+                .and("_id").as("_id")
+                .and("authorName").as("authorName")
+                .and("content").as("content")
+                .and("ratingScore").as("ratingScore")
+                .and("userRating").as("userRating")
+                .and("createdAt").as("createdAt")
+                .and("updatedAt").as("updatedAt"));
 
         val content = mongoTemplate
                 .aggregate(Aggregation.newAggregation(operations), CommentEntity.class, CommentResponseDto.class)
@@ -89,7 +124,7 @@ public class CommentService {
         val comment = commentMapper.toEntity(commentRequestDto, form, user);
 
         val saved = commentRepository.save(comment);
-        return commentMapper.toResponseDto(saved, user.getUsername());
+        return commentMapper.toResponseDto(saved, user.getUsername(), 0);
     }
 
     @Transactional
@@ -116,7 +151,12 @@ public class CommentService {
                 .map(UserEntity::getUsername)
                 .orElse(null);
 
-        return commentMapper.toResponseDto(updated, authorName);
+        val userRating = commentRatingRepository
+                .findByCommentIdAndAuthorId(updated.getId(), keycloakJwtClaims.sub())
+                .map(CommentRatingEntity::getType)
+                .orElse(0);
+
+        return commentMapper.toResponseDto(updated, authorName, userRating);
     }
 
     @Transactional

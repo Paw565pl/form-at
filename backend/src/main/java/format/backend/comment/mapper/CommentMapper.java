@@ -14,7 +14,8 @@ import org.mapstruct.MappingConstants;
 public interface CommentMapper {
 
     @Mapping(target = "authorName", source = "authorName")
-    CommentResponseDto toResponseDto(CommentEntity comment, String authorName);
+    @Mapping(target = "userRating", source = "userRating")
+    CommentResponseDto toResponseDto(CommentEntity comment, String authorName, Integer userRating);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "form", source = "form")
