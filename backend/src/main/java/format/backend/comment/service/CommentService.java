@@ -102,8 +102,7 @@ public class CommentService {
                 .build());
 
         operations.add(Aggregation.project(
-                "_id", "authorName", "content", "ratingScore",
-                "userRating", "createdAt", "updatedAt"));
+                "_id", "authorName", "content", "ratingScore", "userRating", "createdAt", "updatedAt"));
 
         val content = mongoTemplate
                 .aggregate(Aggregation.newAggregation(operations), CommentEntity.class, CommentResponseDto.class)
