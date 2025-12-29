@@ -1,24 +1,18 @@
 meta {
-  name: rate comment
+  name: Delete by Form Id or Slug and comment Id
   type: http
-  seq: 1
+  seq: 2
 }
 
-post {
+delete {
   url: {{baseUrl}}/api/v1/forms/:formIdOrSlug/comments/:commentId/rating
-  body: json
+  body: none
   auth: inherit
 }
 
 params:path {
   formIdOrSlug: 694de97d09119a831e9beea1
   commentId: 694de98c09119a831e9beeaa
-}
-
-body:json {
-  {
-    "type": "DOWNVOTE"
-  }
 }
 
 settings {
