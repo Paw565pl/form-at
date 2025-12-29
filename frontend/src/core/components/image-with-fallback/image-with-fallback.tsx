@@ -1,15 +1,17 @@
-import { FormImagePlaceholder } from "@/core/components/form-image-with-fallback/form-image-placeholder";
 import Image, { ImageProps } from "next/image";
+import { ReactNode } from "react";
 
 interface FormImageWithFallbackProps extends Omit<ImageProps, "src"> {
   readonly src: string | null;
+  readonly fallback: ReactNode;
 }
 
-export const FormImageWithFallback = ({
+export const ImageWithFallback = ({
   src,
+  fallback,
   ...props
 }: FormImageWithFallbackProps) => {
-  if (!src) return <FormImagePlaceholder />;
+  if (!src) return fallback;
 
   // alt comes from component consumer
   // eslint-disable-next-line jsx-a11y/alt-text

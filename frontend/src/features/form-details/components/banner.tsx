@@ -1,6 +1,6 @@
 "use client";
 
-import { FormImageWithFallback } from "@/core/components/form-image-with-fallback/form-image-with-fallback";
+import { ImageWithFallback } from "@/core/components/image-with-fallback/image-with-fallback";
 import { Button } from "@/core/components/ui/button";
 import {
   Dialog,
@@ -12,6 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/core/components/ui/dialog";
+import { FormImagePlaceholder } from "@/core/components/ui/form-image-placeholder";
 import { Input } from "@/core/components/ui/input";
 import {
   Tooltip,
@@ -34,8 +35,9 @@ export const Banner = ({ form }: BannerProps) => {
   return (
     <section className="relative flex h-48 w-full items-end">
       {/* background image */}
-      <FormImageWithFallback
+      <ImageWithFallback
         src={form.thumbnail}
+        fallback={<FormImagePlaceholder />}
         alt="Background"
         fill
         style={{ objectFit: "cover" }}
