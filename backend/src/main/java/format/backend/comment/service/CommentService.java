@@ -55,7 +55,7 @@ public class CommentService {
 
     private static final String USER_RATINGS_FIELD = "userRatings";
 
-    private CommentEntity findOrThrow(String id) {
+    public CommentEntity findOrThrow(String id) {
         return commentRepository.findById(id).orElseThrow(() -> new CommentNotFoundException(id));
     }
 

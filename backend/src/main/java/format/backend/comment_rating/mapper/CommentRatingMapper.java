@@ -11,7 +11,6 @@ import org.mapstruct.MappingConstants;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface CommentRatingMapper {
-    
     @Mapping(target = "type", expression = "java(RatingType.fromValue(commentRating.getType()))")
     CommentRatingResponseDto toResponseDto(CommentRatingEntity commentRating);
 

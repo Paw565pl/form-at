@@ -4,9 +4,8 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 import format.backend.auth.jwt.KeycloakJwtClaims;
 import format.backend.auth.service.UserService;
-import format.backend.comment.entity.CommentEntity;
-import format.backend.comment.exception.CommentNotFoundException;
 import format.backend.comment.repository.CommentRepository;
+import format.backend.comment.service.CommentService;
 import format.backend.comment_rating.dto.CommentRatingRequestDto;
 import format.backend.comment_rating.dto.CommentRatingResponseDto;
 import format.backend.comment_rating.entity.RatingType;
@@ -30,10 +29,7 @@ public class CommentRatingService {
 
     private final UserService userService;
     private final FormService formService;
-
-    private CommentEntity findOrThrow(String id) {
-        return commentRepository.findById(id).orElseThrow(() -> new CommentNotFoundException(id));
-    }
+    private final CommentService commentService;
 
     @Transactional
     public CommentRatingResponseDto add(
@@ -42,7 +38,7 @@ public class CommentRatingService {
             KeycloakJwtClaims keycloakJwtClaims,
             CommentRatingRequestDto commentRatingRequestDto) {
         val form = formService.findOrThrow(formIdOrSlug);
-        val comment = findOrThrow(commentId);
+        val comment = commentService.findOrThrow(commentId);
 
         if (!comment.getForm().getId().equals(form.getId())) throw new ResponseStatusException(NOT_FOUND);
 
@@ -93,7 +89,7 @@ public class CommentRatingService {
     @Transactional
     public void delete(String formIdOrSlug, String commentId, KeycloakJwtClaims keycloakJwtClaims) {
         val form = formService.findOrThrow(formIdOrSlug);
-        val comment = findOrThrow(commentId);
+        val comment = commentService.findOrThrow(commentId);
 
         if (!comment.getForm().getId().equals(form.getId())) throw new ResponseStatusException(NOT_FOUND);
 
