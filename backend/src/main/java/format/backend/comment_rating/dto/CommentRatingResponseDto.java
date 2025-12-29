@@ -7,8 +7,6 @@ import org.jspecify.annotations.NonNull;
 public record CommentRatingResponseDto(
         @NonNull String id,
 
-        @NonNull String commentId,
-
         @NonNull RatingType type,
 
         @NonNull Instant createdAt,
