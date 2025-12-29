@@ -1,5 +1,6 @@
 package format.backend.comment_rating.entity;
 
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -11,11 +12,11 @@ public enum RatingType {
 
     private final int value;
 
-    public static RatingType fromValue(int value) {
+    public static Optional<RatingType> fromValue(int value) {
         return switch (value) {
-            case 1 -> UPVOTE;
-            case -1 -> DOWNVOTE;
-            default -> throw new IllegalStateException("Invalid rating value: " + value);
+            case 1 -> Optional.of(UPVOTE);
+            case -1 -> Optional.of(DOWNVOTE);
+            default -> Optional.empty();
         };
     }
 }
