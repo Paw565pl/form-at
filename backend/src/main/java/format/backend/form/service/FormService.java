@@ -317,13 +317,13 @@ public class FormService {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toUnmodifiableSet());
 
-        val commentIds = commentRepository.findAllIdsByFormId(formEntity.getId());
+        val comments = commentRepository.findAllByFormId(formEntity.getId());
 
         formRepository.delete(formEntity);
         uploadService.deleteAllByKeys(imageKeys);
 
         commentRepository.deleteAllByFormId(formEntity.getId());
-        commentRatingRepository.deleteAllByCommentIdIn(commentIds);
+        commentRatingRepository.deleteAllByCommentIn(comments);
         submissionRepository.deleteAllByFormId(formEntity.getId());
     }
 
