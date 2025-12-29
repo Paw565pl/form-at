@@ -11,7 +11,10 @@ import org.mapstruct.MappingConstants;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface CommentRatingMapper {
-    @Mapping(target = "type", expression = "java(RatingType.fromValue(commentRating.getType()))")
+    @Mapping(
+            target = "type",
+            expression =
+                    "java(RatingType.fromValue(commentRating.getType()).orElseThrow(() -> new IllegalStateException(\"Invalid rating type\")))")
     CommentRatingResponseDto toResponseDto(CommentRatingEntity commentRating);
 
     @Mapping(target = "id", ignore = true)
