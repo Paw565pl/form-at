@@ -9,6 +9,7 @@ import format.backend.comment.service.CommentService;
 import format.backend.comment_rating.dto.CommentRatingRequestDto;
 import format.backend.comment_rating.dto.CommentRatingResponseDto;
 import format.backend.comment_rating.entity.RatingType;
+import format.backend.comment_rating.exception.CommentNotRatedByUserException;
 import format.backend.comment_rating.mapper.CommentRatingMapper;
 import format.backend.comment_rating.repository.CommentRatingRepository;
 import format.backend.form.service.FormService;
@@ -97,8 +98,7 @@ public class CommentRatingService {
 
         val existingRating = commentRatingRepository
                 .findByCommentIdAndAuthorId(comment.getId(), user.getId())
-                .orElseThrow(
-                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User has not rated this comment"));
+                .orElseThrow(() -> new CommentNotRatedByUserException(commentId));
 
         val oldType = RatingType.fromValue(existingRating.getType())
                 .orElseThrow(() -> new IllegalStateException("Invalid rating type in database"));
