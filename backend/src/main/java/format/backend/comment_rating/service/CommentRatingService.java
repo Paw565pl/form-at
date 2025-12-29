@@ -9,6 +9,7 @@ import format.backend.comment.exception.CommentNotFoundException;
 import format.backend.comment.repository.CommentRepository;
 import format.backend.comment_rating.dto.CommentRatingRequestDto;
 import format.backend.comment_rating.dto.CommentRatingResponseDto;
+import format.backend.comment_rating.entity.RatingType;
 import format.backend.comment_rating.mapper.CommentRatingMapper;
 import format.backend.comment_rating.repository.CommentRatingRepository;
 import format.backend.form.service.FormService;
@@ -47,23 +48,31 @@ public class CommentRatingService {
 
         val user = userService.findOrThrow(keycloakJwtClaims.sub());
 
-        val newValue = commentRatingRequestDto.type().getValue();
+        val newType = commentRatingRequestDto.type();
 
         val existingRatingOpt = commentRatingRepository.findByCommentIdAndAuthorId(comment.getId(), user.getId());
 
         if (existingRatingOpt.isPresent()) {
             val existingRating = existingRatingOpt.get();
-            val oldType = existingRating.getType();
+            val oldType = RatingType.fromValue(existingRating.getType())
+                    .orElseThrow(() -> new IllegalStateException("Invalid rating type in database"));
 
-            if (oldType == newValue) {
+            if (oldType == newType) {
                 return commentRatingMapper.toResponseDto(existingRating);
             }
 
-            val delta = newValue - oldType;
-
-            existingRating.setType(newValue);
+            existingRating.setType(newType.getValue());
             commentRatingRepository.save(existingRating);
-            commentRepository.updateRatingScore(comment.getId(), delta);
+
+            if (oldType == RatingType.UPVOTE && newType == RatingType.DOWNVOTE) {
+                commentRepository.decrementRatingScore(comment.getId());
+                commentRepository.decrementRatingScore(comment.getId());
+            }
+
+            if (oldType == RatingType.DOWNVOTE && newType == RatingType.UPVOTE) {
+                commentRepository.incrementRatingScore(comment.getId());
+                commentRepository.incrementRatingScore(comment.getId());
+            }
 
             return commentRatingMapper.toResponseDto(existingRating);
         }
@@ -71,7 +80,12 @@ public class CommentRatingService {
         val rating = commentRatingMapper.toEntity(commentRatingRequestDto, comment, user);
 
         commentRatingRepository.save(rating);
-        commentRepository.updateRatingScore(comment.getId(), newValue);
+
+        if (newType == RatingType.UPVOTE) {
+            commentRepository.incrementRatingScore(comment.getId());
+        } else {
+            commentRepository.decrementRatingScore(comment.getId());
+        }
 
         return commentRatingMapper.toResponseDto(rating);
     }
@@ -90,9 +104,15 @@ public class CommentRatingService {
                 .orElseThrow(
                         () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User has not rated this comment"));
 
-        int delta = -existingRating.getType();
+        val oldType = RatingType.fromValue(existingRating.getType())
+                .orElseThrow(() -> new IllegalStateException("Invalid rating type in database"));
 
         commentRatingRepository.delete(existingRating);
-        commentRepository.updateRatingScore(comment.getId(), delta);
+
+        if (oldType == RatingType.UPVOTE) {
+            commentRepository.decrementRatingScore(comment.getId());
+        } else {
+            commentRepository.incrementRatingScore(comment.getId());
+        }
     }
 }

@@ -15,6 +15,10 @@ public interface CommentRepository extends MongoRepository<@NonNull CommentEntit
     List<CommentEntity> findAllByFormId(String formId);
 
     @Query("{ '_id': ?0 }")
-    @Update("{ '$inc': { 'ratingScore': ?1 } }")
-    void updateRatingScore(String commentId, int delta);
+    @Update("{ '$inc': { 'ratingScore': 1 } }")
+    void incrementRatingScore(String commentId);
+
+    @Query("{ '_id': ?0 }")
+    @Update("{ '$inc': { 'ratingScore': -1 } }")
+    void decrementRatingScore(String commentId);
 }
