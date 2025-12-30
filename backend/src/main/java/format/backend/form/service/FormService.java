@@ -119,6 +119,11 @@ public class FormService {
             operations.add(allowsGuestSubmissionsMatch);
         }
 
+        if (filterDto.authorId() != null && !filterDto.authorId().isBlank()) {
+            val authorIdMatch = Aggregation.match(Criteria.where("authorId").is(filterDto.authorId()));
+            operations.add(authorIdMatch);
+        }
+
         val countOperations = Stream.concat(
                         operations.stream(), Stream.of(Aggregation.count().as("count")))
                 .toList();

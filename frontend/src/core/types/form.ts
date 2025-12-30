@@ -1,4 +1,8 @@
-import { QuestionRequestDto, QuestionResponseDto } from "@/core/types/question";
+import {
+  QuestionRequest,
+  QuestionRequestDto,
+  QuestionResponseDto,
+} from "@/core/types/question";
 
 export interface FormListResponseDto {
   readonly id: string;
@@ -110,4 +114,12 @@ export interface FormRequestDto {
   allowsGuestSubmissions: boolean;
   saveSubmissions: boolean;
   questions: QuestionRequestDto[];
+}
+
+export interface FormRequest extends Omit<
+  FormRequestDto,
+  "thumbnailKey" | "questions"
+> {
+  thumbnail: File | null;
+  questions: QuestionRequest[];
 }

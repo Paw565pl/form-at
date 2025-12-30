@@ -34,6 +34,7 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 @CompoundIndex(def = "{'status': 1, 'createdAt': -1, '_id': 1}")
 @CompoundIndex(def = "{'status': 1, 'questionsCount': -1, '_id': 1}")
 @CompoundIndex(def = "{'status': 1, 'submissionsCount': -1, '_id': 1}")
+@CompoundIndex(def = "{'authorId': 1, 'updatedAt': -1, '_id': 1}")
 @Document(collection = "forms")
 public class FormEntity {
 
@@ -100,8 +101,9 @@ public class FormEntity {
     @Setter(AccessLevel.NONE)
     private @NonNull List<@NonNull SubmissionEntity> submissions = new ArrayList<>();
 
-    @Field(name = "authorId")
+    @Indexed
     @DocumentReference(lazy = true)
+    @Field(name = "authorId")
     private @Nullable UserEntity author;
 
     @CreatedDate
