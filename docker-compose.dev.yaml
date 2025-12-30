@@ -30,12 +30,12 @@ services:
       dockerfile: Dockerfile.dev
     restart: on-failure
     ports:
-      - "7000:7000"
+      - "7001:7001"
     environment:
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
       KC_HOSTNAME: localhost
-      KC_HTTP_PORT: 7000
+      KC_HTTP_PORT: 7001
 
   backend:
     build:
@@ -59,26 +59,26 @@ services:
             - .gradle/
             - build/
 
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile.dev
-    restart: on-failure
-    ports:
-      - "3000:3000"
-    env_file:
-      - ./frontend/.env.local
-    depends_on:
-      - backend
-    develop:
-      watch:
-        - action: rebuild
-          path: ./frontend/package.json
-        - action: sync
-          path: ./frontend
-          target: /app/
-          ignore:
-            - node_modules/
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile.dev
+  #   restart: on-failure
+  #   ports:
+  #     - "3000:3000"
+  #   env_file:
+  #     - ./frontend/.env.local
+  #   depends_on:
+  #     - backend
+  #   develop:
+  #     watch:
+  #       - action: rebuild
+  #         path: ./frontend/package.json
+  #       - action: sync
+  #         path: ./frontend
+  #         target: /app/
+  #         ignore:
+  #           - node_modules/
 
 volumes:
   mongodb-data:
