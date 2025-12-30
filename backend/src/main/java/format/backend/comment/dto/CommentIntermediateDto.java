@@ -4,7 +4,7 @@ import java.time.Instant;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-public record CommentIntermediateDto (
+public record CommentIntermediateDto(
         @NonNull String id,
 
         @Nullable String authorName,

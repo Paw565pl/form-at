@@ -106,10 +106,11 @@ public class CommentService {
                         dto.authorName(),
                         dto.content(),
                         dto.ratingScore(),
-                        dto.userRating() != null ? RatingType.fromValue(dto.userRating()).orElse(null) : null,
+                        dto.userRating() != null
+                                ? RatingType.fromValue(dto.userRating()).orElse(null)
+                                : null,
                         dto.createdAt(),
-                        dto.updatedAt()
-                ))
+                        dto.updatedAt()))
                 .toList();
 
         return new PageImpl<>(content, pageable, total);
