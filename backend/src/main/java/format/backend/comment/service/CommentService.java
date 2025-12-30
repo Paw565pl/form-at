@@ -29,11 +29,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
-import org.springframework.data.mongodb.core.aggregation.ArrayOperators;
-import org.springframework.data.mongodb.core.aggregation.ComparisonOperators;
-import org.springframework.data.mongodb.core.aggregation.ConditionalOperators;
+import org.springframework.data.mongodb.core.aggregation.*;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -67,8 +63,7 @@ public class CommentService {
         val total = mongoTemplate.count(Query.query(criteria), CommentEntity.class);
         if (total == 0) return Page.empty(pageable);
 
-        val user = keycloakJwtClaims != null ? keycloakJwtClaims.sub() : null;
-
+        val userId = Optional.ofNullable(keycloakJwtClaims).map(KeycloakJwtClaims::sub);
         val operations = new ArrayList<AggregationOperation>();
 
         operations.add(Aggregation.match(criteria));
@@ -82,45 +77,26 @@ public class CommentService {
                 .withValue(ArrayOperators.arrayOf("author.username").first())
                 .build());
 
-        operations.add(Aggregation.lookup("comment_ratings", "_id", "commentId", USER_RATINGS_FIELD));
+        if (userId.isPresent()) {
+            val commentRatingsLookup = LookupOperation.newLookup()
+                    .from("comment_ratings")
+                    .localField("_id")
+                    .foreignField("commentId")
+                    .pipeline(Aggregation.match(Criteria.where("authorId").is(userId.get())))
+                    .as("userRatings");
+            operations.add(commentRatingsLookup);
 
-        if (user != null) {
-            operations.add(Aggregation.addFields()
-                    .addField(USER_RATINGS_FIELD)
-                    .withValue(ArrayOperators.Filter.filter(USER_RATINGS_FIELD)
-                            .as("rating")
-                            .by(ComparisonOperators.Eq.valueOf("$$rating.authorId")
-                                    .equalToValue(user)))
-                    .build());
+            val addUserRatingField = Aggregation.addFields()
+                    .addField("userRating")
+                    .withValue(
+                            ArrayOperators.arrayOf("userRatings.type").first())
+                    .build();
+            operations.add(addUserRatingField);
         }
-
-        operations.add(Aggregation.addFields()
-                .addField("userRating")
-                .withValue(ConditionalOperators.ifNull(ArrayOperators.ArrayElemAt.arrayOf(USER_RATINGS_FIELD + ".type")
-                                .elementAt(0))
-                        .then(0))
-                .build());
-
-        operations.add(Aggregation.project(
-                "_id", "authorName", "content", "ratingScore", "userRating", "createdAt", "updatedAt"));
 
         val content = mongoTemplate
                 .aggregate(Aggregation.newAggregation(operations), CommentEntity.class, CommentResponseDto.class)
                 .getMappedResults();
-
-        if (keycloakJwtClaims == null) {
-            val adjusted = content.stream()
-                    .map(comment -> new CommentResponseDto(
-                            comment.id(),
-                            comment.authorName(),
-                            comment.content(),
-                            comment.ratingScore(),
-                            0,
-                            comment.createdAt(),
-                            comment.updatedAt()))
-                    .toList();
-            return new PageImpl<>(adjusted, pageable, total);
-        }
 
         return new PageImpl<>(content, pageable, total);
     }
