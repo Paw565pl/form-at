@@ -84,8 +84,8 @@
   },
   "userProfilePage": {
     "loading": "Ładowanie profilu użytkownika...",
-    "formsCreated": "Utworzone formularze",
-    "submissions": "Wypełnione formularze",
-    "comments": "Komentarze"
+    "formsCount": "Utworzone formularze",
+    "submissionsCount": "Wypełnione formularze",
+    "commentsCount": "Komentarze"
   }
 }

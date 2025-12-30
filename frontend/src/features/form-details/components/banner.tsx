@@ -1,6 +1,5 @@
 "use client";
 
-import { ImageWithFallback } from "@/core/components/image-with-fallback/image-with-fallback";
 import { Button } from "@/core/components/ui/button";
 import {
   Dialog,
@@ -12,7 +11,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/core/components/ui/dialog";
-import { FormImagePlaceholder } from "@/core/components/ui/form-image-placeholder";
 import { Input } from "@/core/components/ui/input";
 import {
   Tooltip,
@@ -20,6 +18,7 @@ import {
   TooltipTrigger,
 } from "@/core/components/ui/tooltip";
 import { ICONS } from "@/core/config/icons";
+import { FormImageWithFallback } from "@/core/form-image/form-image-with-fallback";
 import { FormDetailResponseDto } from "@/core/types/form";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
@@ -35,9 +34,8 @@ export const Banner = ({ form }: BannerProps) => {
   return (
     <section className="relative flex h-48 w-full items-end">
       {/* background image */}
-      <ImageWithFallback
+      <FormImageWithFallback
         src={form.thumbnail}
-        fallback={<FormImagePlaceholder />}
         alt="Background"
         fill
         style={{ objectFit: "cover" }}

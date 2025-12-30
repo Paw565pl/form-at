@@ -1,7 +1,7 @@
 import Image, { ImageProps } from "next/image";
 import { ReactNode } from "react";
 
-interface ImageWithFallbackProps extends Omit<ImageProps, "src"> {
+export interface ImageWithFallbackProps extends Omit<ImageProps, "src"> {
   readonly src: string | null;
   readonly fallback: ReactNode;
 }

@@ -1,6 +1,6 @@
 import { apiService } from "@/core/services/api-service";
 import { ErrorResponseDto } from "@/core/types/error-response-dto";
-import { UserProfileResponseDto } from "@/core/types/user-profile";
+import { UserProfileResponseDto } from "@/core/types/user-profile-response-dto";
 import { QueryClient, queryOptions, useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 

@@ -1,7 +1,7 @@
 "use client";
 
+import { Card, CardDescription, CardTitle } from "@/core/components/ui/card";
 import { UserImage } from "@/core/components/user-image/user-image";
-import { StatisticsCard } from "@/features/user-profile/components/statistics-card";
 import { useFetchUserProfile } from "@/features/user-profile/hooks/use-fetch-user-profile";
 import { HttpStatusCode } from "axios";
 import { useTranslations } from "next-intl";
@@ -37,19 +37,25 @@ export const UserProfile = ({ username }: UserProfileProps) => {
         </div>
 
         {/* Statistics */}
-        <div className="flex flex-wrap gap-4">
-          <StatisticsCard
-            value={userProfile.statistics.formsCount}
-            label={t("formsCreated")}
-          />
-          <StatisticsCard
-            value={userProfile.statistics.submissionsCount}
-            label={t("submissions")}
-          />
-          <StatisticsCard
-            value={userProfile.statistics.commentsCount}
-            label={t("comments")}
-          />
+        <div className="flex flex-col gap-4 sm:flex-row">
+          <Card className="flex flex-1 flex-col items-center rounded-md border p-4">
+            <CardTitle>{userProfile.statistics.formsCount}</CardTitle>
+            <CardDescription className="text-center">
+              {t("formsCount")}
+            </CardDescription>
+          </Card>
+          <Card className="flex flex-1 flex-col items-center rounded-md border p-4">
+            <CardTitle>{userProfile.statistics.submissionsCount}</CardTitle>
+            <CardDescription className="text-center">
+              {t("submissionsCount")}
+            </CardDescription>
+          </Card>
+          <Card className="flex flex-1 flex-col items-center rounded-md border p-4">
+            <CardTitle>{userProfile.statistics.commentsCount}</CardTitle>
+            <CardDescription className="text-center">
+              {t("commentsCount")}
+            </CardDescription>
+          </Card>
         </div>
       </div>
     </section>
