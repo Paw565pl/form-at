@@ -14,14 +14,14 @@ export const NavBar = async () => {
   const session = await auth();
 
   return (
-    <nav className="flex w-full justify-between p-2">
+    <nav className="flex w-full justify-between gap-4 p-2">
       <div className="links flex items-center gap-4">
         <div className="text-primary flex items-center text-lg font-semibold">
           <Logo />
           <h2>formAT</h2>
         </div>
 
-        <div className="hidden gap-2 md:flex">
+        <div className="hidden gap-2 lg:flex">
           <Button size="sm" asChild variant="outline">
             <Link href="/">
               <ICONS.home />
@@ -47,7 +47,7 @@ export const NavBar = async () => {
 
       <div className="actions flex items-center gap-2">
         {session && (
-          <Button size="sm" asChild className="hidden md:flex">
+          <Button size="sm" asChild className="hidden lg:flex">
             <Link href={`/users/${session?.user?.name}`}>
               <ICONS.user />
               {session?.user?.name}
@@ -55,7 +55,7 @@ export const NavBar = async () => {
           </Button>
         )}
 
-        <div className="hidden md:inline">
+        <div className="hidden lg:inline">
           <AuthButton />
         </div>
         <ThemeSwitcher />
