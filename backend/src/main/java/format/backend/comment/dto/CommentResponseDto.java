@@ -13,7 +13,7 @@ public record CommentResponseDto(
 
         @NonNull Long ratingScore,
 
-        @NonNull Integer userRating,
+        @Nullable Integer userRating,
 
         @NonNull Instant createdAt,
 
