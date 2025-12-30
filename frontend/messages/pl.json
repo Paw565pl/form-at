@@ -63,7 +63,7 @@
     },
     "password": "Hasło",
     "thanksMessage": "Wiadomość z podziękowaniem dla wypełniających",
-    "bannerImage": "Obraz banera",
+    "thumbnailImage": "Obraz banera",
     "language": "Język",
     "shuffle": "Opcje losowania",
     "shuffleOptions": {
@@ -91,6 +91,7 @@
     "deleteQuestion": "Usuń pytanie",
     "questions": "Pytania",
     "question": "Pytanie",
+    "questionContent": "Treść pytania",
     "questionPlaceholder": "Jaki jest Twój ulubiony kolor?",
     "required": "Wymagane",
     "type": "Typ",

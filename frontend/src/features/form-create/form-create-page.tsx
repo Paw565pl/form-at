@@ -21,17 +21,20 @@ import {
 import { ICONS } from "@/core/config/icons";
 import {
   FormEstimatedDuration,
+  FormRequest,
   FormShuffleVariant,
   FormStatus,
   Language,
 } from "@/core/types/form";
 import { QuestionType } from "@/core/types/question";
+import { useCreateForm } from "@/features/form-create/hooks/use-create-form";
 import {
   ErrorKey,
   formSchema,
 } from "@/features/form-create/schemas/form-schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { FieldError as FieldErrorType } from "react-hook-form";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
@@ -45,13 +48,15 @@ const languageOptions: { label: string; value: Language }[] = [
 // TODO
 // Responsiveness
 // Translating errors
-// Form image banner
+// Form image thumbnail
 // Each question image
 // Weird behavior of questions array errors showing
 // Cleanup
 
 export const FormCreatePage = () => {
   const t = useTranslations("formCreatePage");
+  const router = useRouter();
+  const createForm = useCreateForm();
   const [showQuestions, setShowQuestions] = useState<boolean>(true);
 
   const getTranslatedErrors = (
@@ -74,7 +79,7 @@ export const FormCreatePage = () => {
       allowsQuestionsPreview: false,
       allowsGuestSubmissions: false,
       saveSubmissions: true,
-      imageFile: undefined,
+      thumbnail: undefined,
       questions: [
         {
           content: "",
@@ -117,7 +122,7 @@ export const FormCreatePage = () => {
   };
 
   function onSubmit(data: z.infer<typeof formSchema>) {
-    const request = {
+    const request: FormRequest = {
       ...data,
       name: data.name.trim(),
       description: data.description.trim() === "" ? null : data.description,
@@ -126,9 +131,20 @@ export const FormCreatePage = () => {
         data.thanksMessage.trim() === "" ? null : data.thanksMessage,
       shuffleVariant:
         data.shuffleVariant === "NONE" ? null : data.shuffleVariant,
+      thumbnail: data.thumbnail || null,
+      questions: data.questions.map((q) => {
+        return {
+          ...q,
+          image: q.image || null,
+        };
+      }),
     };
 
-    console.log(request);
+    createForm.mutate(request, {
+      onSuccess: (data) => {
+        router.push(`/forms/${data.slug}`);
+      },
+    });
   }
 
   return (
@@ -142,7 +158,7 @@ export const FormCreatePage = () => {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-4"
       >
-        <div className="grid grid-cols-3 gap-4">
+        <div className="flex flex-col gap-4 md:grid md:grid-cols-3">
           <Card className="col-span-2 gap-4 p-4">
             <Controller
               name="name"
@@ -169,7 +185,7 @@ export const FormCreatePage = () => {
                   />
                   {fieldState.invalid && (
                     <FieldError
-                      className="ml-3"
+                      className="mx-3 max-w-fit"
                       errors={getTranslatedErrors(fieldState.error)}
                     />
                   )}
@@ -200,7 +216,7 @@ export const FormCreatePage = () => {
                   />
                   {fieldState.invalid && (
                     <FieldError
-                      className="ml-3"
+                      className="mx-3 max-w-fit"
                       errors={getTranslatedErrors(fieldState.error)}
                     />
                   )}
@@ -212,7 +228,7 @@ export const FormCreatePage = () => {
               name="status"
               control={form.control}
               render={({ field }) => (
-                <div className="flex items-center gap-4">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
                   <Select
                     name={field.name}
                     onValueChange={(value) => {
@@ -223,8 +239,11 @@ export const FormCreatePage = () => {
                     }}
                     value={field.value}
                   >
-                    <SelectTrigger aria-label="Status">
-                      Status:
+                    <SelectTrigger
+                      aria-label="Status"
+                      className="w-full sm:w-auto"
+                    >
+                      <span className="flex-1 text-left">Status:</span>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -235,7 +254,7 @@ export const FormCreatePage = () => {
                       ))}
                     </SelectContent>
                   </Select>
-                  <p className="text-sm">
+                  <p className="ml-3 text-sm sm:ml-0">
                     {/* eslint-disable-next-line */}
                     {t(`formStatuses.${field.value!}Desc`)}
                   </p>
@@ -259,7 +278,7 @@ export const FormCreatePage = () => {
                     />
                     {fieldState.invalid && (
                       <FieldError
-                        className="ml-3"
+                        className="mx-3 max-w-fit"
                         errors={getTranslatedErrors(fieldState.error)}
                       />
                     )}
@@ -291,7 +310,7 @@ export const FormCreatePage = () => {
                   />
                   {fieldState.invalid && (
                     <FieldError
-                      className="ml-3"
+                      className="mx-3 max-w-fit"
                       errors={getTranslatedErrors(fieldState.error)}
                     />
                   )}
@@ -302,25 +321,26 @@ export const FormCreatePage = () => {
 
           <Card className="gap-4 p-4">
             <Controller
-              name="imageFile"
+              name="thumbnail"
               control={form.control}
               render={({
+                // eslint-disable-next-line
                 field: { value, onChange, ...fieldProps },
                 fieldState,
               }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel
                     className="items-end justify-between px-3"
-                    htmlFor="imageFile"
+                    htmlFor="thumbnail"
                   >
-                    {t("bannerImage")}
+                    {t("thumbnailImage")}
                     <span className="text-muted-foreground text-xs">
                       10MB max
                     </span>
                   </FieldLabel>
                   <Input
                     {...fieldProps}
-                    id="imageFile"
+                    id="thumbnail"
                     aria-invalid={fieldState.invalid}
                     type="file"
                     onChange={(event) =>
@@ -329,7 +349,7 @@ export const FormCreatePage = () => {
                   />
                   {fieldState.invalid && (
                     <FieldError
-                      className="ml-3"
+                      className="mx-3 max-w-fit"
                       errors={getTranslatedErrors(fieldState.error)}
                     />
                   )}
@@ -347,7 +367,7 @@ export const FormCreatePage = () => {
                   value={field.value}
                 >
                   <SelectTrigger className="w-full" aria-label={t("language")}>
-                    <span className="flex-1 text-left">{t("language")}</span>
+                    <span className="flex-1 text-left">{t("language")}:</span>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -371,7 +391,7 @@ export const FormCreatePage = () => {
                   value={field.value}
                 >
                   <SelectTrigger className="w-full" aria-label={t("shuffle")}>
-                    <span className="flex-1 text-left">{t("shuffle")}</span>
+                    <span className="flex-1 text-left">{t("shuffle")}:</span>
                     <SelectValue className="text-primary" />
                   </SelectTrigger>
                   <SelectContent>
@@ -527,27 +547,10 @@ export const FormCreatePage = () => {
 
             return (
               <Card key={question.id} className="gap-4 p-4">
-                <header className="flex items-center gap-8">
-                  <span className="ml-3">
+                <header className="flex items-center justify-between gap-8">
+                  <h2 className="ml-3 font-semibold">
                     {t("question")} {qIdx + 1}.
-                  </span>
-                  <Controller
-                    name={`questions.${qIdx}.isRequired`}
-                    control={form.control}
-                    render={({ field }) => (
-                      <Field className="mr-auto max-w-fit flex-row gap-2">
-                        <Checkbox
-                          id={`questions.${qIdx}.isRequired`}
-                          className="max-w-5"
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                        <FieldLabel htmlFor={`questions.${qIdx}.isRequired`}>
-                          {t("required")}
-                        </FieldLabel>
-                      </Field>
-                    )}
-                  />
+                  </h2>
 
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -568,28 +571,37 @@ export const FormCreatePage = () => {
                   </Tooltip>
                 </header>
 
-                <div className="flex gap-2">
-                  <Controller
-                    name={`questions.${qIdx}.content`}
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                      <Field data-invalid={fieldState.invalid}>
-                        <Input
-                          {...field}
-                          id={`questions.${qIdx}.content`}
-                          aria-invalid={fieldState.invalid}
-                          placeholder={t("questionPlaceholder")}
+                <Controller
+                  name={`questions.${qIdx}.content`}
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel
+                        className="items-end justify-between px-3"
+                        htmlFor={`questions.${qIdx}.content`}
+                      >
+                        {t("questionContent")}
+                        <span className="text-muted-foreground text-xs">
+                          {field.value ? field.value.length : 0}/200
+                        </span>
+                      </FieldLabel>
+                      <Input
+                        {...field}
+                        id={`questions.${qIdx}.content`}
+                        aria-invalid={fieldState.invalid}
+                        placeholder={t("questionPlaceholder")}
+                      />
+                      {fieldState.invalid && (
+                        <FieldError
+                          className="mx-3 max-w-fit"
+                          errors={getTranslatedErrors(fieldState.error)}
                         />
-                        {fieldState.invalid && (
-                          <FieldError
-                            className="ml-3"
-                            errors={getTranslatedErrors(fieldState.error)}
-                          />
-                        )}
-                      </Field>
-                    )}
-                  />
+                      )}
+                    </Field>
+                  )}
+                />
 
+                <div className="-mt-2 flex items-center gap-2">
                   <Controller
                     name={`questions.${qIdx}.type`}
                     control={form.control}
@@ -616,6 +628,57 @@ export const FormCreatePage = () => {
                           ))}
                         </SelectContent>
                       </Select>
+                    )}
+                  />
+
+                  <Controller
+                    name="thumbnail"
+                    control={form.control}
+                    render={({
+                      // eslint-disable-next-line
+                      field: { value, onChange, ...fieldProps },
+                      fieldState,
+                    }) => (
+                      <Field
+                        data-invalid={fieldState.invalid}
+                        className="flex-row items-center"
+                      >
+                        <Input
+                          {...fieldProps}
+                          id="thumbnail"
+                          aria-invalid={fieldState.invalid}
+                          type="file"
+                          onChange={(event) =>
+                            onChange(
+                              event.target.files && event.target.files[0],
+                            )
+                          }
+                        />
+                        {fieldState.invalid && (
+                          <FieldError
+                            className="mx-3 max-w-fit"
+                            errors={getTranslatedErrors(fieldState.error)}
+                          />
+                        )}
+                      </Field>
+                    )}
+                  />
+
+                  <Controller
+                    name={`questions.${qIdx}.isRequired`}
+                    control={form.control}
+                    render={({ field }) => (
+                      <Field className="mr-auto max-w-fit flex-row items-center gap-2">
+                        <Checkbox
+                          id={`questions.${qIdx}.isRequired`}
+                          className="max-w-5"
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                        <FieldLabel htmlFor={`questions.${qIdx}.isRequired`}>
+                          {t("required")}
+                        </FieldLabel>
+                      </Field>
                     )}
                   />
                 </div>
@@ -702,7 +765,7 @@ export const FormCreatePage = () => {
 
                                   {fieldState.invalid && (
                                     <FieldError
-                                      className="ml-3"
+                                      className="mx-3 max-w-fit"
                                       errors={getTranslatedErrors(
                                         fieldState.error,
                                       )}
@@ -718,14 +781,14 @@ export const FormCreatePage = () => {
 
                     {form.formState.errors.questions?.[qIdx]?.answers && (
                       <FieldError
-                        className="ml-3"
+                        className="mx-3 max-w-fit"
                         // TODO: translate this
                         errors={[form.formState.errors.questions[qIdx].answers]}
                       />
                     )}
                     {form.formState.errors.questions?.[qIdx]?.answers?.root && (
                       <FieldError
-                        className="ml-3"
+                        className="mx-3 max-w-fit"
                         errors={getTranslatedErrors(
                           form.formState.errors.questions[qIdx].answers.root,
                         )}
@@ -739,7 +802,7 @@ export const FormCreatePage = () => {
 
         {form.formState.errors.questions && (
           <FieldError
-            className="ml-4"
+            className="mx-4 max-w-fit"
             // TODO: translate this
             errors={[form.formState.errors.questions]}
           />
@@ -748,7 +811,7 @@ export const FormCreatePage = () => {
         {form.formState.errors.questions &&
           form.formState.errors.questions.root && (
             <FieldError
-              className="ml-3"
+              className="mx-3 max-w-fit"
               errors={getTranslatedErrors(form.formState.errors.questions.root)}
             />
           )}

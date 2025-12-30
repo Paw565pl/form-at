@@ -63,7 +63,7 @@
     },
     "password": "Password",
     "thanksMessage": "Thanks Message for Submitters",
-    "bannerImage": "Banner Image",
+    "thumbnailImage": "Thumbnail Image",
     "language": "Language",
     "shuffle": "Shuffle",
     "shuffleOptions": {
@@ -91,6 +91,7 @@
     "deleteQuestion": "Delete Question",
     "questions": "Questions",
     "question": "Question",
+    "questionContent": "Content",
     "questionPlaceholder": "What is your favorite color?",
     "required": "Required",
     "type": "Type",

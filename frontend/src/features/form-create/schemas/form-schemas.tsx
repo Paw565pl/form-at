@@ -32,7 +32,7 @@ const questionSchema = z
     type: z.enum(QuestionType),
     isRequired: z.boolean(),
     answers: z.array(answerSchema).max(6, "answersCountMax"),
-    imageFile: z.instanceof(File).optional(),
+    image: z.instanceof(File).optional(),
   })
   .superRefine((data, ctx) => {
     if (data.type !== QuestionType.Open && data.answers.length < 2) {
@@ -52,18 +52,18 @@ const questionSchema = z
         message: "oneCorrectAnswer",
       });
     }
-    if (data.imageFile) {
-      if (!validImageTypes.includes(data.imageFile.type)) {
+    if (data.image) {
+      if (!validImageTypes.includes(data.image.type)) {
         ctx.addIssue({
-          path: ["imageFile"],
+          path: ["image"],
           code: "custom",
           message: "imageFileType",
         });
       }
 
-      if (data.imageFile.size > maxFileSizeInBytes) {
+      if (data.image.size > maxFileSizeInBytes) {
         ctx.addIssue({
-          path: ["imageFile"],
+          path: ["image"],
           code: "custom",
           message: "imageFileSize",
         });
@@ -96,7 +96,7 @@ export const formSchema = z
     allowsQuestionsPreview: z.boolean(),
     allowsGuestSubmissions: z.boolean(),
     saveSubmissions: z.boolean(),
-    imageFile: z.instanceof(File).optional(),
+    thumbnail: z.instanceof(File).optional(),
     questions: z
       .array(questionSchema)
       .min(3, "questionsCountMin")
@@ -117,18 +117,18 @@ export const formSchema = z
         message: "oneQuestionRequired",
       });
     }
-    if (data.imageFile) {
-      if (!validImageTypes.includes(data.imageFile.type)) {
+    if (data.thumbnail) {
+      if (!validImageTypes.includes(data.thumbnail.type)) {
         ctx.addIssue({
-          path: ["imageFile"],
+          path: ["thumbnail"],
           code: "custom",
           message: "imageFileType",
         });
       }
 
-      if (data.imageFile.size > maxFileSizeInBytes) {
+      if (data.thumbnail.size > maxFileSizeInBytes) {
         ctx.addIssue({
-          path: ["imageFile"],
+          path: ["thumbnail"],
           code: "custom",
           message: "imageFileSize",
         });
