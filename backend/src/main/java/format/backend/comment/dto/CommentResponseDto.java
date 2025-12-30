@@ -1,5 +1,6 @@
 package format.backend.comment.dto;
 
+import format.backend.comment_rating.entity.RatingType;
 import java.time.Instant;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -13,7 +14,7 @@ public record CommentResponseDto(
 
         @NonNull Long ratingScore,
 
-        @Nullable Integer userRating,
+        @Nullable RatingType userRating,
 
         @NonNull Instant createdAt,
 
