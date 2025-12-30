@@ -9,6 +9,15 @@ import { QuestionType } from "@/core/types/question";
 import z from "zod";
 export type ErrorKey = keyof typeof en.formCreatePage.errors;
 
+const maxFileSizeInBytes = 10 * 1024 * 1024;
+const validImageTypes = [
+  "image/png",
+  "image/jpeg",
+  "image/jpg",
+  "image/webp",
+  "image/avif",
+];
+
 const answerSchema = z.object({
   content: z.string().min(3, "answerContentMin").max(200, "answerContentMax"),
   isCorrect: z.boolean(),
@@ -23,6 +32,7 @@ const questionSchema = z
     type: z.enum(QuestionType),
     isRequired: z.boolean(),
     answers: z.array(answerSchema).max(6, "answersCountMax"),
+    imageFile: z.instanceof(File).optional(),
   })
   .superRefine((data, ctx) => {
     if (data.type !== QuestionType.Open && data.answers.length < 2) {
@@ -41,6 +51,23 @@ const questionSchema = z
         code: "custom",
         message: "oneCorrectAnswer",
       });
+    }
+    if (data.imageFile) {
+      if (!validImageTypes.includes(data.imageFile.type)) {
+        ctx.addIssue({
+          path: ["imageFile"],
+          code: "custom",
+          message: "imageFileType",
+        });
+      }
+
+      if (data.imageFile.size > maxFileSizeInBytes) {
+        ctx.addIssue({
+          path: ["imageFile"],
+          code: "custom",
+          message: "imageFileSize",
+        });
+      }
     }
   });
 
@@ -91,16 +118,7 @@ export const formSchema = z
       });
     }
     if (data.imageFile) {
-      const validTypes = [
-        "image/png",
-        "image/jpeg",
-        "image/jpg",
-        "image/webp",
-        "image/avif",
-      ];
-      const maxSizeInBytes = 10 * 1024 * 1024;
-
-      if (!validTypes.includes(data.imageFile.type)) {
+      if (!validImageTypes.includes(data.imageFile.type)) {
         ctx.addIssue({
           path: ["imageFile"],
           code: "custom",
@@ -108,7 +126,7 @@ export const formSchema = z
         });
       }
 
-      if (data.imageFile.size > maxSizeInBytes) {
+      if (data.imageFile.size > maxFileSizeInBytes) {
         ctx.addIssue({
           path: ["imageFile"],
           code: "custom",

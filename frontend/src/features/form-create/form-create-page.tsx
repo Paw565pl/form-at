@@ -79,7 +79,7 @@ export const FormCreatePage = () => {
         {
           content: "",
           type: QuestionType.SingleChoice,
-          isRequired: false,
+          isRequired: true,
           answers: [],
         },
       ],
@@ -315,7 +315,7 @@ export const FormCreatePage = () => {
                   >
                     {t("bannerImage")}
                     <span className="text-muted-foreground text-xs">
-                      10MB max, JPG/PNG
+                      10MB max
                     </span>
                   </FieldLabel>
                   <Input
