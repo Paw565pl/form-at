@@ -86,8 +86,7 @@ public class CommentService {
 
             val addUserRatingField = Aggregation.addFields()
                     .addField("userRating")
-                    .withValue(
-                            ArrayOperators.arrayOf("userRatings.type").first())
+                    .withValue(ArrayOperators.arrayOf("userRatings.type").first())
                     .build();
             operations.add(addUserRatingField);
         }
