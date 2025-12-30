@@ -7,6 +7,7 @@ import format.backend.auth.entity.Role;
 import format.backend.auth.entity.UserEntity;
 import format.backend.auth.jwt.KeycloakJwtClaims;
 import format.backend.auth.service.UserService;
+import format.backend.comment.dto.CommentIntermediateDto;
 import format.backend.comment.dto.CommentRequestDto;
 import format.backend.comment.dto.CommentResponseDto;
 import format.backend.comment.entity.CommentEntity;
@@ -14,6 +15,7 @@ import format.backend.comment.exception.CommentNotFoundException;
 import format.backend.comment.mapper.CommentMapper;
 import format.backend.comment.repository.CommentRepository;
 import format.backend.comment_rating.entity.CommentRatingEntity;
+import format.backend.comment_rating.entity.RatingType;
 import format.backend.comment_rating.repository.CommentRatingRepository;
 import format.backend.form.service.FormService;
 import java.util.ArrayList;
@@ -94,9 +96,21 @@ public class CommentService {
             operations.add(addUserRatingField);
         }
 
-        val content = mongoTemplate
-                .aggregate(Aggregation.newAggregation(operations), CommentEntity.class, CommentResponseDto.class)
+        val intermediateContent = mongoTemplate
+                .aggregate(Aggregation.newAggregation(operations), CommentEntity.class, CommentIntermediateDto.class)
                 .getMappedResults();
+
+        val content = intermediateContent.stream()
+                .map(dto -> new CommentResponseDto(
+                        dto.id(),
+                        dto.authorName(),
+                        dto.content(),
+                        dto.ratingScore(),
+                        dto.userRating() != null ? RatingType.fromValue(dto.userRating()).orElse(null) : null,
+                        dto.createdAt(),
+                        dto.updatedAt()
+                ))
+                .toList();
 
         return new PageImpl<>(content, pageable, total);
     }
@@ -110,7 +124,7 @@ public class CommentService {
         val comment = commentMapper.toEntity(commentRequestDto, form, user);
 
         val saved = commentRepository.save(comment);
-        return commentMapper.toResponseDto(saved, user.getUsername(), 0);
+        return commentMapper.toResponseDto(saved, user.getUsername(), null);
     }
 
     @Transactional
@@ -140,7 +154,8 @@ public class CommentService {
         val userRating = commentRatingRepository
                 .findByCommentIdAndAuthorId(updated.getId(), keycloakJwtClaims.sub())
                 .map(CommentRatingEntity::getType)
-                .orElse(0);
+                .flatMap(RatingType::fromValue)
+                .orElse(null);
 
         return commentMapper.toResponseDto(updated, authorName, userRating);
     }
