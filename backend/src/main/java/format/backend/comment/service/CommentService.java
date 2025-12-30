@@ -49,8 +49,6 @@ public class CommentService {
     private final UserService userService;
     private final FormService formService;
 
-    private static final String USER_RATINGS_FIELD = "userRatings";
-
     public CommentEntity findOrThrow(String id) {
         return commentRepository.findById(id).orElseThrow(() -> new CommentNotFoundException(id));
     }
