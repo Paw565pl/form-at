@@ -27,15 +27,13 @@ export const UserProfile = ({ username }: UserProfileProps) => {
       id="user-profile"
       className="flex w-full flex-col gap-4 px-5 py-10 lg:px-30"
     >
-      <div className="bg-card rounded-lg border p-3 md:p-6">
-        {/* Profile Header */}
-        <div className="flex flex-col items-center gap-2 md:flex-row md:items-start md:gap-4">
-          <UserImage className="h-48 w-48" />
-          <h1 className="text-2xl font-bold md:pt-4 md:text-3xl">
-            {userProfile.username}
-          </h1>
-        </div>
-      </div>
+      {/* Profile Header */}
+      <Card className="flex flex-col items-center gap-2 p-3 md:flex-row md:items-start md:gap-4 md:p-6">
+        <UserImage className="h-48 w-48" />
+        <h1 className="text-2xl font-bold md:pt-4 md:text-3xl">
+          {userProfile.username}
+        </h1>
+      </Card>
 
       {/* Statistics */}
       <div className="flex flex-col gap-4 sm:flex-row">
