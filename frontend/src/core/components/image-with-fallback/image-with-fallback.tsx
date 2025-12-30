@@ -1,7 +1,7 @@
 import Image, { ImageProps } from "next/image";
 import { ReactNode } from "react";
 
-interface FormImageWithFallbackProps extends Omit<ImageProps, "src"> {
+interface ImageWithFallbackProps extends Omit<ImageProps, "src"> {
   readonly src: string | null;
   readonly fallback: ReactNode;
 }
@@ -10,7 +10,7 @@ export const ImageWithFallback = ({
   src,
   fallback,
   ...props
-}: FormImageWithFallbackProps) => {
+}: ImageWithFallbackProps) => {
   if (!src) return fallback;
 
   // alt comes from component consumer
