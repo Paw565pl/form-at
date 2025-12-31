@@ -4,4 +4,4 @@ import format.backend.comment_rating.entity.RatingType;
 import jakarta.validation.constraints.NotNull;
 import org.jspecify.annotations.NonNull;
 
-public record CommentRatingRequestDto(@NotNull @NonNull RatingType type) {}
+public record CommentRatingRequestDto(@NotNull(message = "Comment RatingType must not be null") @NonNull RatingType type) {}
