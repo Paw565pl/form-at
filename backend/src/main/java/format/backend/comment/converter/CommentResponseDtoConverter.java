@@ -2,7 +2,6 @@ package format.backend.comment.converter;
 
 import format.backend.comment.dto.CommentResponseDto;
 import format.backend.comment_rating.entity.RatingType;
-import java.time.Instant;
 import java.util.Date;
 import org.bson.Document;
 import org.bson.types.ObjectId;
