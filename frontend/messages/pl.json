@@ -128,7 +128,8 @@
       "answersCountMax": "Dozwolone jest maksymalnie 6 odpowiedzi.",
       "oneCorrectAnswer": "Co najmniej jedna odpowiedź musi być oznaczona jako poprawna.",
       "answerContentMin": "Treść odpowiedzi musi mieć co najmniej 3 znaki.",
-      "answerContentMax": "Treść odpowiedzi może mieć maksymalnie 200 znaków."
+      "answerContentMax": "Treść odpowiedzi może mieć maksymalnie 200 znaków.",
+      "unexpected": "Wystąpił nieoczekiwany błąd."
     }
   },
   "formDetailsPage": {

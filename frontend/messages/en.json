@@ -128,7 +128,8 @@
       "answersCountMax": "At most 6 answers are allowed.",
       "oneCorrectAnswer": "At least one answer must be marked as correct.",
       "answerContentMin": "Answer content must be at least 3 characters.",
-      "answerContentMax": "Answer content must be at most 200 characters."
+      "answerContentMax": "Answer content must be at most 200 characters.",
+      "unexpected": "An unexpected error occurred."
     }
   },
   "formDetailsPage": {

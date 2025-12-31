@@ -1,4 +1,5 @@
 import { NavBar } from "@/core/components/nav-bar/nav-bar";
+import { Toaster } from "@/core/components/ui/sonner";
 import { ClientProviders } from "@/core/providers/client-providers";
 import { ServerProviders } from "@/core/providers/server-providers";
 import { getLocale } from "next-intl/server";
@@ -19,6 +20,7 @@ export const RootLayout = async ({ children }: PropsWithChildren) => {
           <ClientProviders>
             <NavBar />
             <main className="container mx-auto">{children}</main>
+            <Toaster position="top-right" />
           </ClientProviders>
         </ServerProviders>
       </body>

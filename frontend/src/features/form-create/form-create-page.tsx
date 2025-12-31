@@ -38,6 +38,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { FieldError as FieldErrorType } from "react-hook-form";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import z from "zod";
 
 const languageOptions: { label: string; value: Language }[] = [
@@ -46,10 +47,7 @@ const languageOptions: { label: string; value: Language }[] = [
 ] as const;
 
 // TODO
-// Responsiveness
 // Translating errors
-// Form image thumbnail
-// Each question image
 // Weird behavior of questions array errors showing
 // Cleanup
 
@@ -83,7 +81,7 @@ export const FormCreatePage = () => {
       questions: [
         {
           content: "",
-          type: QuestionType.SingleChoice,
+          type: QuestionType.Open,
           isRequired: true,
           answers: [],
         },
@@ -143,6 +141,9 @@ export const FormCreatePage = () => {
     createForm.mutate(request, {
       onSuccess: (data) => {
         router.push(`/forms/${data.slug}`);
+      },
+      onError: (error) => {
+        toast.error(error?.response?.data?.message || t("errors.unexpected"));
       },
     });
   }
@@ -505,7 +506,7 @@ export const FormCreatePage = () => {
               onClick={() =>
                 appendQuestion({
                   content: "",
-                  type: QuestionType.SingleChoice,
+                  type: QuestionType.Open,
                   isRequired: true,
                   answers: [],
                 })
@@ -601,7 +602,44 @@ export const FormCreatePage = () => {
                   )}
                 />
 
-                <div className="-mt-2 flex items-center gap-2">
+                <Controller
+                  name={`questions.${qIdx}.image`}
+                  control={form.control}
+                  render={({
+                    // eslint-disable-next-line
+                    field: { value, onChange, ...fieldProps },
+                    fieldState,
+                  }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel
+                        className="items-end justify-between px-3"
+                        htmlFor="image"
+                      >
+                        {t("thumbnailImage")}
+                        <span className="text-muted-foreground text-xs">
+                          10MB max
+                        </span>
+                      </FieldLabel>
+                      <Input
+                        {...fieldProps}
+                        id="image"
+                        aria-invalid={fieldState.invalid}
+                        type="file"
+                        onChange={(event) =>
+                          onChange(event.target.files && event.target.files[0])
+                        }
+                      />
+                      {fieldState.invalid && (
+                        <FieldError
+                          className="mx-3 max-w-fit"
+                          errors={getTranslatedErrors(fieldState.error)}
+                        />
+                      )}
+                    </Field>
+                  )}
+                />
+
+                <div className="flex w-full flex-col items-center justify-between gap-4 sm:flex-row">
                   <Controller
                     name={`questions.${qIdx}.type`}
                     control={form.control}
@@ -616,7 +654,10 @@ export const FormCreatePage = () => {
                         }}
                         value={field.value}
                       >
-                        <SelectTrigger aria-label={t("type")}>
+                        <SelectTrigger
+                          aria-label={t("type")}
+                          className="w-full sm:w-auto"
+                        >
                           {t("type")}:
                           <SelectValue />
                         </SelectTrigger>
@@ -632,43 +673,10 @@ export const FormCreatePage = () => {
                   />
 
                   <Controller
-                    name="thumbnail"
-                    control={form.control}
-                    render={({
-                      // eslint-disable-next-line
-                      field: { value, onChange, ...fieldProps },
-                      fieldState,
-                    }) => (
-                      <Field
-                        data-invalid={fieldState.invalid}
-                        className="flex-row items-center"
-                      >
-                        <Input
-                          {...fieldProps}
-                          id="thumbnail"
-                          aria-invalid={fieldState.invalid}
-                          type="file"
-                          onChange={(event) =>
-                            onChange(
-                              event.target.files && event.target.files[0],
-                            )
-                          }
-                        />
-                        {fieldState.invalid && (
-                          <FieldError
-                            className="mx-3 max-w-fit"
-                            errors={getTranslatedErrors(fieldState.error)}
-                          />
-                        )}
-                      </Field>
-                    )}
-                  />
-
-                  <Controller
                     name={`questions.${qIdx}.isRequired`}
                     control={form.control}
                     render={({ field }) => (
-                      <Field className="mr-auto max-w-fit flex-row items-center gap-2">
+                      <Field className="flex-row items-center gap-2">
                         <Checkbox
                           id={`questions.${qIdx}.isRequired`}
                           className="max-w-5"
