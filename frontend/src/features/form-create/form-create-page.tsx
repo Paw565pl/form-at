@@ -12,6 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/core/components/ui/select";
+import { Spinner } from "@/core/components/ui/spinner";
 import { Textarea } from "@/core/components/ui/textarea";
 import {
   Tooltip,
@@ -824,8 +825,12 @@ export const FormCreatePage = () => {
             />
           )}
 
-        <Button type="submit" className="ml-auto w-40">
-          <ICONS.save />
+        <Button
+          type="submit"
+          className="ml-auto w-40"
+          disabled={createForm.isPending}
+        >
+          {createForm.isPending ? <Spinner /> : <ICONS.save />}
           {t("submit")}
         </Button>
 
