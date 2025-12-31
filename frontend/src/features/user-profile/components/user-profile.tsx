@@ -22,7 +22,10 @@ export const UserProfile = ({ username }: UserProfileProps) => {
   } = useFetchUserProfile(username);
   const { data: formPages, isLoading: isFormsLoading } = useFetchFormPages(
     { authorId: userProfile?.id ?? null },
-    { sort: "createdAt,desc" },
+    undefined,
+    {
+      size: 3,
+    },
   );
 
   if (error) {

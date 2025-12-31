@@ -18,13 +18,18 @@ import { AxiosError } from "axios";
 const getFetchFormPagesQueryOptions = (
   formFilterOptionsDto?: FormFilterOptionsDto,
   formSortOptionsDto?: SortOptionsDto<FormSortOption>,
-  pageOptionsDto?: Omit<PageOptionsDto, "page">
+  pageOptionsDto?: Omit<PageOptionsDto, "page">,
 ) =>
   infiniteQueryOptions<
     PaginatedResponseDto<FormListResponseDto>,
     AxiosError<ErrorResponseDto>
   >({
-    queryKey: ["forms", formFilterOptionsDto, formSortOptionsDto, pageOptionsDto] as const,
+    queryKey: [
+      "forms",
+      formFilterOptionsDto,
+      formSortOptionsDto,
+      pageOptionsDto,
+    ] as const,
     queryFn: async ({ pageParam }) => {
       const { data } = await apiService.get<
         PaginatedResponseDto<FormListResponseDto>
@@ -47,18 +52,26 @@ const getFetchFormPagesQueryOptions = (
 export const useFetchFormPages = (
   formFilterOptionsDto?: FormFilterOptionsDto,
   formSortOptionsDto?: SortOptionsDto<FormSortOption>,
-  pageOptionsDto?: Omit<PageOptionsDto, "page">
+  pageOptionsDto?: Omit<PageOptionsDto, "page">,
 ) =>
   useInfiniteQuery(
-    getFetchFormPagesQueryOptions(formFilterOptionsDto, formSortOptionsDto,pageOptionsDto),
+    getFetchFormPagesQueryOptions(
+      formFilterOptionsDto,
+      formSortOptionsDto,
+      pageOptionsDto,
+    ),
   );
 
 export const prefetchFormPages = (
   queryClient: QueryClient,
   formFilterOptionsDto?: FormFilterOptionsDto,
   formSortOptionsDto?: SortOptionsDto<FormSortOption>,
-  pageOptionsDto?: Omit<PageOptionsDto, "page">
+  pageOptionsDto?: Omit<PageOptionsDto, "page">,
 ) =>
   queryClient.prefetchInfiniteQuery(
-    getFetchFormPagesQueryOptions(formFilterOptionsDto, formSortOptionsDto,pageOptionsDto),
+    getFetchFormPagesQueryOptions(
+      formFilterOptionsDto,
+      formSortOptionsDto,
+      pageOptionsDto,
+    ),
   );
