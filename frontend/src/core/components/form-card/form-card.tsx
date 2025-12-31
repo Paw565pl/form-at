@@ -45,8 +45,9 @@ export const FormCard = ({ form, showAuthor = false }: FormCardProps) => {
         <footer className="text-muted-foreground mt-1 flex flex-wrap justify-between text-sm">
           <span>
             {t("questions", { count: form.questionsCount })} •{" "}
-            {t("submissions", { count: form.submissionsCount })} •{" "}
-            {formatDuration(form.estimatedDuration)}
+            {t("submissions", { count: form.submissionsCount })}
+            {form.estimatedDuration &&
+              ` • ${formatDuration(form.estimatedDuration)}`}
           </span>
           <span className="text-muted-foreground text-sm">
             {format.dateTime(new Date(form.createdAt), "long")}

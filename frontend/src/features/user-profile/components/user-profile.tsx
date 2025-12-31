@@ -39,9 +39,9 @@ export const UserProfile = ({ username }: UserProfileProps) => {
     >
       <div className="flex flex-col gap-4 md:flex-row">
         {/* Profile Header */}
-        <Card className="flex flex-1 flex-col items-center gap-2 p-3 md:flex-row md:items-start md:gap-4 md:p-6">
+        <Card className="flex flex-1 flex-col items-center justify-center gap-2 p-3">
           <UserImage className="h-48 w-48" />
-          <h1 className="text-2xl font-bold md:pt-4 md:text-3xl">
+          <h1 className="text-2xl font-bold md:text-3xl">
             {userProfile.username}
           </h1>
         </Card>

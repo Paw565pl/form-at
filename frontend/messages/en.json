@@ -85,8 +85,8 @@
   "userProfilePage": {
     "loadingProfile": "Loading Profile...",
     "usersForms": {
-      "forms": "User's Forms",
-      "loadingForms": "Loading User's Forms...",
+      "forms": "Recently Created User's Forms",
+      "loadingForms": "Loading Recently Created User's Forms...",
       "noForms": "No forms found. Create your first form!",
       "createForm": "Create New Form"
     },

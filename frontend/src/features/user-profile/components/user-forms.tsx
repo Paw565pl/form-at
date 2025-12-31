@@ -39,11 +39,11 @@ export const UserForms = ({ formPages, isFormsLoading }: UserFormsProps) => {
   }
 
   return (
-    <div className="flex flex-1 flex-col gap-2">
+    <div className="flex flex-2 flex-col gap-2">
       <h2 className="text-lg font-bold md:text-xl">{t("forms")}</h2>
       {formPages?.pages.map((page) =>
         page.content
-          .slice(0, 4)
+          .slice(0, 3)
           .map((form) => <FormCard form={form} key={form.id} />),
       )}
     </div>

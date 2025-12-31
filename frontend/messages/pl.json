@@ -85,8 +85,8 @@
   "userProfilePage": {
     "loadingProfile": "Ładowanie profilu użytkownika...",
     "usersForms": {
-      "forms": "Formularze użytkownika",
-      "loadingForms": "Ładowanie formularzy użytkownika...",
+      "forms": "Ostatnio utworzone formularze użytkownika",
+      "loadingForms": "Ładowanie ostatnio utworzonych formularzy użytkownika...",
       "noForms": "Nie znaleziono formularzy. Utwórz swój pierwszy formularz!",
       "createForm": "Utwórz nowy formularz"
     },
