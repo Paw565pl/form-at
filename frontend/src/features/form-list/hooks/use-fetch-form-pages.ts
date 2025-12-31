@@ -5,6 +5,7 @@ import {
   FormListResponseDto,
   FormSortOption,
 } from "@/core/types/form";
+import { PageOptionsDto } from "@/core/types/page-options-dto";
 import { PaginatedResponseDto } from "@/core/types/paginated-response-dto";
 import { SortOptionsDto } from "@/core/types/sort-options-dto";
 import {
@@ -17,12 +18,13 @@ import { AxiosError } from "axios";
 const getFetchFormPagesQueryOptions = (
   formFilterOptionsDto?: FormFilterOptionsDto,
   formSortOptionsDto?: SortOptionsDto<FormSortOption>,
+  pageOptionsDto?: Omit<PageOptionsDto, "page">
 ) =>
   infiniteQueryOptions<
     PaginatedResponseDto<FormListResponseDto>,
     AxiosError<ErrorResponseDto>
   >({
-    queryKey: ["forms", formFilterOptionsDto, formSortOptionsDto] as const,
+    queryKey: ["forms", formFilterOptionsDto, formSortOptionsDto, pageOptionsDto] as const,
     queryFn: async ({ pageParam }) => {
       const { data } = await apiService.get<
         PaginatedResponseDto<FormListResponseDto>
@@ -30,6 +32,7 @@ const getFetchFormPagesQueryOptions = (
         params: {
           ...formFilterOptionsDto,
           ...formSortOptionsDto,
+          ...pageOptionsDto,
           page: pageParam,
         },
       });
@@ -44,16 +47,18 @@ const getFetchFormPagesQueryOptions = (
 export const useFetchFormPages = (
   formFilterOptionsDto?: FormFilterOptionsDto,
   formSortOptionsDto?: SortOptionsDto<FormSortOption>,
+  pageOptionsDto?: Omit<PageOptionsDto, "page">
 ) =>
   useInfiniteQuery(
-    getFetchFormPagesQueryOptions(formFilterOptionsDto, formSortOptionsDto),
+    getFetchFormPagesQueryOptions(formFilterOptionsDto, formSortOptionsDto,pageOptionsDto),
   );
 
 export const prefetchFormPages = (
   queryClient: QueryClient,
   formFilterOptionsDto?: FormFilterOptionsDto,
   formSortOptionsDto?: SortOptionsDto<FormSortOption>,
+  pageOptionsDto?: Omit<PageOptionsDto, "page">
 ) =>
   queryClient.prefetchInfiniteQuery(
-    getFetchFormPagesQueryOptions(formFilterOptionsDto, formSortOptionsDto),
+    getFetchFormPagesQueryOptions(formFilterOptionsDto, formSortOptionsDto,pageOptionsDto),
   );
