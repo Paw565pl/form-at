@@ -7,6 +7,7 @@ import { useFetchFormDetails } from "@/features/form-details/hooks/use-fetch-for
 import { HttpStatusCode } from "axios";
 import { useTranslations } from "next-intl";
 import { notFound } from "next/navigation";
+import { Comments } from "../comments/comments";
 
 interface FormProps {
   readonly formIdOrSlug: string;
@@ -28,6 +29,7 @@ export const Form = ({ formIdOrSlug }: FormProps) => {
       <Banner form={form} />
       <Details form={form} />
       <QuestionList form={form} />
+      <Comments formIdOrSlug={formIdOrSlug} />
     </section>
   );
 };

@@ -20,6 +20,7 @@ import {
   Moon,
   MoreHorizontal,
   PersonStanding,
+  SendHorizonal,
   Sun,
   User,
   X,
@@ -50,4 +51,5 @@ export const ICONS = {
   estimatedDuration: ClockArrowUp,
   privateForm: FileKey2,
   scrollToTop: ChevronUp,
+  send: SendHorizonal,
 } as const;
