@@ -19,11 +19,8 @@ public class CommentResponseDtoConverter implements Converter<@NonNull Document,
                 source.getString("authorName"),
                 source.getString("content"),
                 source.getLong("ratingScore"),
-                userRatingRaw != null
-                        ? RatingType.fromValue(userRatingRaw).orElse(null)
-                        : null,
+                userRatingRaw != null ? RatingType.fromValue(userRatingRaw).orElse(null) : null,
                 source.get("createdAt", Instant.class),
-                source.get("updatedAt", Instant.class)
-        );
+                source.get("updatedAt", Instant.class));
     }
 }

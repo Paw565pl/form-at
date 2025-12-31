@@ -12,9 +12,6 @@ class MongoCustomConversionsConfig {
 
     @Bean
     MongoCustomConversions mongoCustomConversions() {
-        return new MongoCustomConversions(List.of(
-                new LanguageReadConverter(),
-                new CommentResponseDtoConverter()
-        ));
+        return new MongoCustomConversions(List.of(new LanguageReadConverter(), new CommentResponseDtoConverter()));
     }
 }
