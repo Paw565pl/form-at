@@ -1,6 +1,5 @@
 "use client";
 
-import { ImageWithFallback } from "@/core/components/image-with-fallback/image-with-fallback";
 import { Button } from "@/core/components/ui/button";
 import {
   Dialog,
@@ -19,6 +18,7 @@ import {
   TooltipTrigger,
 } from "@/core/components/ui/tooltip";
 import { ICONS } from "@/core/config/icons";
+import { FormImageWithFallback } from "@/core/form-image/form-image-with-fallback";
 import { FormDetailResponseDto } from "@/core/types/form";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
@@ -34,7 +34,7 @@ export const Banner = ({ form }: BannerProps) => {
   return (
     <section className="relative flex h-48 w-full items-end">
       {/* background image */}
-      <ImageWithFallback
+      <FormImageWithFallback
         src={form.thumbnail}
         alt="Background"
         fill
