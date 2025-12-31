@@ -83,7 +83,14 @@
     }
   },
   "userProfilePage": {
-    "loading": "Ładowanie profilu użytkownika...",
+    "loadingProfile": "Ładowanie profilu użytkownika...",
+    "usersForms": {
+      "forms": "Formularze użytkownika",
+      "loadingForms": "Ładowanie formularzy użytkownika...",
+      "noForms": "Nie znaleziono formularzy. Utwórz swój pierwszy formularz!",
+      "createForm": "Utwórz nowy formularz"
+    },
+    "userStatistics": "Statystyki użytkownika",
     "formsCount": "Utworzone formularze",
     "submissionsCount": "Wypełnione formularze",
     "commentsCount": "Komentarze"

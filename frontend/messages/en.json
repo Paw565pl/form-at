@@ -83,7 +83,14 @@
     }
   },
   "userProfilePage": {
-    "loading": "Loading Profile...",
+    "loadingProfile": "Loading Profile...",
+    "usersForms": {
+      "forms": "User's Forms",
+      "loadingForms": "Loading User's Forms...",
+      "noForms": "No forms found. Create your first form!",
+      "createForm": "Create New Form"
+    },
+    "userStatistics": "User's Statistics",
     "formsCount": "Forms Created",
     "submissionsCount": "Submissions",
     "commentsCount": "Comments"
