@@ -21,7 +21,7 @@ export const UserProfile = ({ username }: UserProfileProps) => {
     error,
   } = useFetchUserProfile(username);
   const { data: formPages, isLoading: isFormsLoading } = useFetchFormPages(
-    { authorId: userProfile?.id ?? null },
+    { authorId: userProfile?.id },
     undefined,
     {
       size: 3,
@@ -34,6 +34,8 @@ export const UserProfile = ({ username }: UserProfileProps) => {
   }
 
   if (!userProfile || isProfileLoading) return <p>{t("loadingProfile")}</p>;
+
+  const forms = formPages?.pages.at(0)?.content;
 
   return (
     <section
@@ -49,8 +51,7 @@ export const UserProfile = ({ username }: UserProfileProps) => {
           </h1>
         </Card>
 
-        {/* User's Forms */}
-        <UserForms formPages={formPages} isFormsLoading={isFormsLoading} />
+        <UserForms forms={forms} isLoading={isFormsLoading} />
       </div>
 
       {/* Statistics */}
