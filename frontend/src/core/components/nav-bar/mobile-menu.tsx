@@ -76,7 +76,7 @@ export const MobileMenu = () => {
                   </Link>
                 </Button>
                 <Button size="sm" asChild>
-                  <Link href="/profile">
+                  <Link href={`/users/${session?.user?.name}`}>
                     <ICONS.user />
                     {session?.user?.name}
                   </Link>

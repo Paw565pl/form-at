@@ -81,5 +81,18 @@
     "scrollToTopButton": {
       "ariaLabel": "Scroll to the top of the page"
     }
+  },
+  "userProfilePage": {
+    "loadingProfile": "Loading Profile...",
+    "usersForms": {
+      "forms": "Recently Created User's Forms",
+      "loadingForms": "Loading Recently Created User's Forms...",
+      "noForms": "No forms found. Create your first form!",
+      "createForm": "Create New Form"
+    },
+    "userStatistics": "User's Statistics",
+    "formsCount": "Forms Created",
+    "submissionsCount": "Submissions",
+    "commentsCount": "Comments"
   }
 }
