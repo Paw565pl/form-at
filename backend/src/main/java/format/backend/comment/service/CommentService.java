@@ -7,7 +7,6 @@ import format.backend.auth.entity.Role;
 import format.backend.auth.entity.UserEntity;
 import format.backend.auth.jwt.KeycloakJwtClaims;
 import format.backend.auth.service.UserService;
-import format.backend.comment.dto.CommentIntermediateDto;
 import format.backend.comment.dto.CommentRequestDto;
 import format.backend.comment.dto.CommentResponseDto;
 import format.backend.comment.entity.CommentEntity;
@@ -96,22 +95,9 @@ public class CommentService {
             operations.add(addUserRatingField);
         }
 
-        val intermediateContent = mongoTemplate
-                .aggregate(Aggregation.newAggregation(operations), CommentEntity.class, CommentIntermediateDto.class)
+        val content = mongoTemplate
+                .aggregate(Aggregation.newAggregation(operations), CommentEntity.class, CommentResponseDto.class)
                 .getMappedResults();
-
-        val content = intermediateContent.stream()
-                .map(dto -> new CommentResponseDto(
-                        dto.id(),
-                        dto.authorName(),
-                        dto.content(),
-                        dto.ratingScore(),
-                        dto.userRating() != null
-                                ? RatingType.fromValue(dto.userRating()).orElse(null)
-                                : null,
-                        dto.createdAt(),
-                        dto.updatedAt()))
-                .toList();
 
         return new PageImpl<>(content, pageable, total);
     }
