@@ -1,4 +1,3 @@
 package format.backend.form_rating.service;
 
-public class FormRatingService {
-}
+public class FormRatingService {}

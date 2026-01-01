@@ -1,4 +1,3 @@
 package format.backend.form_rating.mapper;
 
-public interface FormRatingMapper {
-}
+public interface FormRatingMapper {}

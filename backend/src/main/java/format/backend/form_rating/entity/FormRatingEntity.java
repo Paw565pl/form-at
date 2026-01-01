@@ -1,8 +1,8 @@
 package format.backend.form_rating.entity;
 
-
 import format.backend.auth.entity.UserEntity;
 import format.backend.form.entity.FormEntity;
+import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +21,6 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
-import java.time.Instant;
 @Getter
 @Setter
 @RequiredArgsConstructor
@@ -40,8 +39,7 @@ public class FormRatingEntity {
 
     @DocumentReference(lazy = true)
     @Field(name = "authorId")
-    @NonNull
-    private UserEntity author;
+    @NonNull private UserEntity author;
 
     @Field(name = "rating", targetType = FieldType.INT32)
     private Integer rating;
