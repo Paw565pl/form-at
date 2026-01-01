@@ -22,6 +22,8 @@ import {
   PersonStanding,
   SendHorizonal,
   Sun,
+  ThumbsDown,
+  ThumbsUp,
   User,
   X,
 } from "lucide-react";
@@ -52,4 +54,6 @@ export const ICONS = {
   privateForm: FileKey2,
   scrollToTop: ChevronUp,
   send: SendHorizonal,
+  like: ThumbsUp,
+  dislike: ThumbsDown,
 } as const;
