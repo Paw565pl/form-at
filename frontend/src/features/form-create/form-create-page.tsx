@@ -34,6 +34,7 @@ import {
   formSchema,
 } from "@/features/form-create/schemas/form-schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { AxiosError } from "axios";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -46,11 +47,6 @@ const languageOptions: { label: string; value: Language }[] = [
   { label: "English", value: Language.En },
   { label: "Polski", value: Language.Pl },
 ] as const;
-
-// TODO
-// Translating errors
-// Weird behavior of questions array errors showing
-// Cleanup
 
 export const FormCreatePage = () => {
   const t = useTranslations("formCreatePage");
@@ -102,6 +98,16 @@ export const FormCreatePage = () => {
     name: "questions",
   });
 
+  const handleAppendQuestion = () => {
+    appendQuestion({
+      content: "",
+      type: QuestionType.Open,
+      isRequired: true,
+      answers: [],
+    });
+    form.trigger("questions");
+  };
+
   const appendAnswer = (questionIdx: number) => {
     const currentAnswers =
       form.getValues(`questions.${questionIdx}.answers`) || [];
@@ -120,7 +126,7 @@ export const FormCreatePage = () => {
     );
   };
 
-  function onSubmit(data: z.infer<typeof formSchema>) {
+  const onSubmit = (data: z.infer<typeof formSchema>) => {
     const request: FormRequest = {
       ...data,
       name: data.name.trim(),
@@ -144,10 +150,13 @@ export const FormCreatePage = () => {
         router.push(`/forms/${data.slug}`);
       },
       onError: (error) => {
-        toast.error(error?.response?.data?.message || t("errors.unexpected"));
+        toast.error(
+          (error instanceof AxiosError && error.response?.data?.message) ||
+            t("errors.unexpected"),
+        );
       },
     });
-  }
+  };
 
   return (
     <section
@@ -257,8 +266,7 @@ export const FormCreatePage = () => {
                     </SelectContent>
                   </Select>
                   <p className="ml-3 text-sm sm:ml-0">
-                    {/* eslint-disable-next-line */}
-                    {t(`formStatuses.${field.value!}Desc`)}
+                    {t(`formStatuses.${field.value || "PUBLIC"}Desc`)}
                   </p>
                 </div>
               )}
@@ -326,7 +334,7 @@ export const FormCreatePage = () => {
               name="thumbnail"
               control={form.control}
               render={({
-                // eslint-disable-next-line
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 field: { value, onChange, ...fieldProps },
                 fieldState,
               }) => (
@@ -502,18 +510,7 @@ export const FormCreatePage = () => {
           </h1>
 
           <div className="flex gap-2">
-            <Button
-              type="button"
-              onClick={() =>
-                appendQuestion({
-                  content: "",
-                  type: QuestionType.Open,
-                  isRequired: true,
-                  answers: [],
-                })
-              }
-              size="sm"
-            >
+            <Button type="button" onClick={handleAppendQuestion} size="sm">
               <ICONS.add />
               {t("addQuestion")}
             </Button>
@@ -546,7 +543,6 @@ export const FormCreatePage = () => {
         {showQuestions &&
           questions.map((question, qIdx) => {
             const answers = watchedQuestions[qIdx]?.answers || [];
-
             return (
               <Card key={question.id} className="gap-4 p-4">
                 <header className="flex items-center justify-between gap-8">
@@ -607,7 +603,7 @@ export const FormCreatePage = () => {
                   name={`questions.${qIdx}.image`}
                   control={form.control}
                   render={({
-                    // eslint-disable-next-line
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     field: { value, onChange, ...fieldProps },
                     fieldState,
                   }) => (
@@ -692,7 +688,7 @@ export const FormCreatePage = () => {
                   />
                 </div>
 
-                {watchedQuestions[qIdx]?.type != QuestionType.Open && (
+                {watchedQuestions[qIdx]?.type !== QuestionType.Open && (
                   <div className="flex flex-col gap-4">
                     <header className="flex items-center justify-end gap-2">
                       <h2 className="mr-auto ml-3 font-semibold">
@@ -791,8 +787,10 @@ export const FormCreatePage = () => {
                     {form.formState.errors.questions?.[qIdx]?.answers && (
                       <FieldError
                         className="mx-3 max-w-fit"
-                        // TODO: translate this
-                        errors={[form.formState.errors.questions[qIdx].answers]}
+                        errors={getTranslatedErrors(
+                          form.formState.errors.questions[qIdx]
+                            .answers as FieldErrorType,
+                        )}
                       />
                     )}
                     {form.formState.errors.questions?.[qIdx]?.answers?.root && (
@@ -809,11 +807,12 @@ export const FormCreatePage = () => {
             );
           })}
 
-        {form.formState.errors.questions && (
+        {form.formState.errors.questions?.message && (
           <FieldError
             className="mx-4 max-w-fit"
-            // TODO: translate this
-            errors={[form.formState.errors.questions]}
+            errors={getTranslatedErrors(
+              form.formState.errors.questions as FieldErrorType,
+            )}
           />
         )}
 
@@ -833,9 +832,6 @@ export const FormCreatePage = () => {
           {createForm.isPending ? <Spinner /> : <ICONS.save />}
           {t("submit")}
         </Button>
-
-        {/* for debugging */}
-        <pre>{JSON.stringify(form.formState.errors, null, 2)}</pre>
       </form>
     </section>
   );
