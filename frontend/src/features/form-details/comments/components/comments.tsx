@@ -3,11 +3,11 @@ import { Card } from "@/core/components/ui/card";
 import { Input } from "@/core/components/ui/input";
 import { UserImage } from "@/core/components/user-image/user-image";
 import { ICONS } from "@/core/config/icons";
-import { cn } from "@/core/lib/cn";
 import { useSession } from "next-auth/react";
 import { useFormatter } from "next-intl";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useFetchFormCommentsPages } from "../hooks/use-fetch-form-comments-pages";
+import { RatingButtons } from "./rating-buttons";
 
 interface FormCommentsProps {
   readonly formIdOrSlug: string;
@@ -53,37 +53,21 @@ export const Comments = ({ formIdOrSlug }: FormCommentsProps) => {
         {formCommentsPages?.pages.map((page) =>
           page.content.map((comment) => (
             <Card key={comment.id} className="relative flex flex-col p-4">
-              <div className="flex items-center gap-3">
+              <header className="flex items-center gap-3">
                 <UserImage className="h-10 w-10" />
                 <h1 className="text-xl font-bold">{comment.authorName}</h1>
-              </div>
+              </header>
+
               <p className="py-2 text-sm">{comment.content}</p>
+
+              <RatingButtons
+                ratingScore={comment.ratingScore}
+                userRating={comment.userRating}
+              />
+
               <span className="text-muted-foreground absolute right-6 bottom-6 text-xs">
                 {format.dateTime(new Date(comment.createdAt), "long")}
               </span>
-
-              {/* Likes and dislikes */}
-              <div className="flex items-center gap-0.5">
-                {comment.ratingScore ? (
-                  <span className="text-muted-foreground text-sm font-medium">
-                    {comment.ratingScore}
-                  </span>
-                ) : null}
-                <Button variant="ghost" size="icon-sm">
-                  <ICONS.like
-                    className={cn({
-                      "text-primary": comment.userRating === "UPVOTE",
-                    })}
-                  />
-                </Button>
-                <Button variant="ghost" size="icon-sm">
-                  <ICONS.dislike
-                    className={cn({
-                      "text-primary": comment.userRating === "DOWNVOTE",
-                    })}
-                  />
-                </Button>
-              </div>
             </Card>
           )),
         )}

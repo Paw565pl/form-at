@@ -7,3 +7,7 @@ export interface CommentResponseDto {
   readonly createdAt: string;
   readonly updatedAt: string;
 }
+
+export interface CommentRequestDto {
+  readonly content: string;
+}
