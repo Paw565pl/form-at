@@ -1,7 +1,7 @@
 import { authenticatedApiService } from "@/core/services/api-service";
 import { CommentRequestDto, CommentResponseDto } from "@/core/types/comment";
 import { ErrorResponseDto } from "@/core/types/error-response-dto";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
 interface UseCreateCommentParams {
@@ -9,6 +9,8 @@ interface UseCreateCommentParams {
 }
 
 export const useCreateComment = ({ formIdOrSlug }: UseCreateCommentParams) => {
+  const queryClient = useQueryClient();
+
   const mutation = useMutation<
     CommentResponseDto,
     AxiosError<ErrorResponseDto> | Error,
@@ -23,8 +25,8 @@ export const useCreateComment = ({ formIdOrSlug }: UseCreateCommentParams) => {
 
       return data;
     },
-    onSettled: (_, __, ___, _____, { client }) => {
-      client.invalidateQueries({ queryKey: ["comments", formIdOrSlug] });
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: [formIdOrSlug, "comments"] });
     },
   });
 

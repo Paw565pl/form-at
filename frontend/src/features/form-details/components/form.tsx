@@ -7,7 +7,7 @@ import { useFetchFormDetails } from "@/features/form-details/hooks/use-fetch-for
 import { HttpStatusCode } from "axios";
 import { useTranslations } from "next-intl";
 import { notFound } from "next/navigation";
-import { Comments } from "../comments/components/comments";
+import { Comments } from "../comments/comments";
 
 interface FormProps {
   readonly formIdOrSlug: string;

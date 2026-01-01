@@ -2,9 +2,9 @@ import { Card } from "@/core/components/ui/card";
 import { UserImage } from "@/core/components/user-image/user-image";
 import { useFormatter } from "next-intl";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { useFetchFormCommentsPages } from "../hooks/use-fetch-form-comments-pages";
-import { RatingButtons } from "../rating/components/rating-buttons";
-import { AddComments } from "./add-comments";
+import { AddComments } from "./components/add-comments";
+import { useFetchFormCommentsPages } from "./hooks/use-fetch-form-comments-pages";
+import { RatingButtons } from "./rating/components/rating-buttons";
 
 interface FormCommentsProps {
   readonly formIdOrSlug: string;
@@ -49,10 +49,10 @@ export const Comments = ({ formIdOrSlug }: FormCommentsProps) => {
               <p className="py-2 text-sm">{comment.content}</p>
 
               <RatingButtons
-                formIdOrSlug={formIdOrSlug}
-                commentId={comment.id}
                 ratingScore={comment.ratingScore}
                 userRating={comment.userRating}
+                formIdOrSlug={formIdOrSlug}
+                commentId={comment.id}
               />
 
               <span className="text-muted-foreground absolute right-6 bottom-6 text-xs">
