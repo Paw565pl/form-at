@@ -1,15 +1,17 @@
-import { ImagePlaceholder } from "@/core/components/image-with-fallback/image-placeholder";
 import Image, { ImageProps } from "next/image";
+import { ReactNode } from "react";
 
-interface ImageWithFallbackProps extends Omit<ImageProps, "src"> {
+export interface ImageWithFallbackProps extends Omit<ImageProps, "src"> {
   readonly src: string | null;
+  readonly fallback: ReactNode;
 }
 
 export const ImageWithFallback = ({
   src,
+  fallback,
   ...props
 }: ImageWithFallbackProps) => {
-  if (!src) return <ImagePlaceholder />;
+  if (!src) return fallback;
 
   // alt comes from component consumer
   // eslint-disable-next-line jsx-a11y/alt-text
