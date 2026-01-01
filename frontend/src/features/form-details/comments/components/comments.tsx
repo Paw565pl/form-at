@@ -3,6 +3,7 @@ import { Card } from "@/core/components/ui/card";
 import { Input } from "@/core/components/ui/input";
 import { UserImage } from "@/core/components/user-image/user-image";
 import { ICONS } from "@/core/config/icons";
+import { cn } from "@/core/lib/cn";
 import { useSession } from "next-auth/react";
 import { useFormatter } from "next-intl";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -62,12 +63,25 @@ export const Comments = ({ formIdOrSlug }: FormCommentsProps) => {
               </span>
 
               {/* Likes and dislikes */}
-              <div className="flex gap-0.5">
+              <div className="flex items-center gap-0.5">
+                {comment.ratingScore ? (
+                  <span className="text-muted-foreground text-sm font-medium">
+                    {comment.ratingScore}
+                  </span>
+                ) : null}
                 <Button variant="ghost" size="icon-sm">
-                  <ICONS.like />
+                  <ICONS.like
+                    className={cn({
+                      "text-primary": comment.userRating === "UPVOTE",
+                    })}
+                  />
                 </Button>
                 <Button variant="ghost" size="icon-sm">
-                  <ICONS.dislike />
+                  <ICONS.dislike
+                    className={cn({
+                      "text-primary": comment.userRating === "DOWNVOTE",
+                    })}
+                  />
                 </Button>
               </div>
             </Card>

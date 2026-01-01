@@ -1,6 +1,6 @@
-import { apiService } from "@/core/services/api-service";
+import { authenticatedApiService } from "@/core/services/api-service";
+import { CommentResponseDto } from "@/core/types/comment";
 import { ErrorResponseDto } from "@/core/types/error-response-dto";
-import { FormCommentResponseDto } from "@/core/types/form-comment";
 import { PaginatedResponseDto } from "@/core/types/paginated-response-dto";
 import {
   infiniteQueryOptions,
@@ -11,13 +11,13 @@ import { AxiosError } from "axios";
 
 const getFetchFormCommentsPagesQueryOptions = (formIdOrSlug: string) =>
   infiniteQueryOptions<
-    PaginatedResponseDto<FormCommentResponseDto>,
+    PaginatedResponseDto<CommentResponseDto>,
     AxiosError<ErrorResponseDto>
   >({
     queryKey: [formIdOrSlug, "comments"] as const,
     queryFn: async ({ pageParam }) => {
-      const { data } = await apiService.get<
-        PaginatedResponseDto<FormCommentResponseDto>
+      const { data } = await authenticatedApiService.get<
+        PaginatedResponseDto<CommentResponseDto>
       >(`/api/v1/forms/${formIdOrSlug}/comments`, {
         params: {
           page: pageParam,
