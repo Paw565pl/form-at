@@ -35,7 +35,7 @@ public class FormRatingEntity {
 
     @DocumentReference(lazy = true)
     @Field(name = "formId")
-    @NonNull private FormEntity comment;
+    @NonNull private FormEntity form;
 
     @DocumentReference(lazy = true)
     @Field(name = "authorId")
