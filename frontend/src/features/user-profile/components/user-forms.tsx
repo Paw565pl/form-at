@@ -2,20 +2,28 @@ import { FormCard } from "@/core/components/form-card/form-card";
 import { Button } from "@/core/components/ui/button";
 import { Empty, EmptyContent, EmptyHeader } from "@/core/components/ui/empty";
 import { ICONS } from "@/core/config/icons";
-import { FormListResponseDto } from "@/core/types/form";
+import { useFetchFormPages } from "@/features/form-list/hooks/use-fetch-form-pages";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 
 interface UserFormsProps {
-  readonly forms: FormListResponseDto[] | undefined;
-  readonly isLoading: boolean;
+  readonly authorId: string;
 }
 
-export const UserForms = ({ forms, isLoading }: UserFormsProps) => {
+export const UserForms = ({ authorId }: UserFormsProps) => {
   const t = useTranslations("userProfilePage.usersForms");
+  const { data: formPages, isLoading } = useFetchFormPages(
+    { authorId },
+    undefined,
+    {
+      size: 3,
+    },
+  );
 
   if (isLoading)
     return <p className="text-lg font-bold">{t("loadingForms")}</p>;
+
+  const forms = formPages?.pages.at(0)?.content;
 
   if (!forms || forms.length === 0)
     return (

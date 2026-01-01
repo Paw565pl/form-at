@@ -2,7 +2,6 @@
 
 import { Card, CardDescription, CardTitle } from "@/core/components/ui/card";
 import { UserImage } from "@/core/components/user-image/user-image";
-import { useFetchFormPages } from "@/features/form-list/hooks/use-fetch-form-pages";
 import { UserForms } from "@/features/user-profile/components/user-forms";
 import { useFetchUserProfile } from "@/features/user-profile/hooks/use-fetch-user-profile";
 import { HttpStatusCode } from "axios";
@@ -20,13 +19,6 @@ export const UserProfile = ({ username }: UserProfileProps) => {
     isLoading: isProfileLoading,
     error,
   } = useFetchUserProfile(username);
-  const { data: formPages, isLoading: isFormsLoading } = useFetchFormPages(
-    { authorId: userProfile?.id },
-    undefined,
-    {
-      size: 3,
-    },
-  );
 
   if (error) {
     if (error.status === HttpStatusCode.NotFound) return notFound();
@@ -34,8 +26,6 @@ export const UserProfile = ({ username }: UserProfileProps) => {
   }
 
   if (!userProfile || isProfileLoading) return <p>{t("loadingProfile")}</p>;
-
-  const forms = formPages?.pages.at(0)?.content;
 
   return (
     <section
@@ -51,7 +41,7 @@ export const UserProfile = ({ username }: UserProfileProps) => {
           </h1>
         </Card>
 
-        <UserForms forms={forms} isLoading={isFormsLoading} />
+        <UserForms authorId={userProfile.id} />
       </div>
 
       {/* Statistics */}
