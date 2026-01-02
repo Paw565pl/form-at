@@ -42,7 +42,7 @@ public record FormDetailResponseDto(
 
         @NonNull List<@NonNull QuestionResponseDto> questions,
 
-        @NonNull Long ratingCount,
+        @NonNull Long ratingsCount,
 
         @NonNull Double ratingAvg,
 

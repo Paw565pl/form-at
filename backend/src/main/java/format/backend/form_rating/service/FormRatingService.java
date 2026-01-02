@@ -47,7 +47,7 @@ public class FormRatingService {
             formRatingRepository.save(existingRating);
 
             val delta = newRating - oldRating;
-            formRepository.updateRatingSum(form.getId(), delta);
+            formRepository.updateRatingsSum(form.getId(), delta);
 
             return formRatingMapper.toResponseDto(existingRating);
         }
@@ -55,8 +55,8 @@ public class FormRatingService {
         val rating = formRatingMapper.toEntity(formRatingRequestDto, form, user);
         formRatingRepository.save(rating);
 
-        formRepository.updateRatingSum(form.getId(), newRating);
-        formRepository.incrementRatingCount(form.getId());
+        formRepository.updateRatingsSum(form.getId(), newRating);
+        formRepository.incrementRatingsCount(form.getId());
 
         return formRatingMapper.toResponseDto(rating);
     }
@@ -73,8 +73,8 @@ public class FormRatingService {
         formRatingRepository.delete(existingRating);
 
         val ratingValue = existingRating.getRating();
-        formRepository.updateRatingSum(form.getId(), -ratingValue);
+        formRepository.updateRatingsSum(form.getId(), -ratingValue);
 
-        formRepository.decrementRatingCount(form.getId());
+        formRepository.decrementRatingsCount(form.getId());
     }
 }

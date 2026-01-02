@@ -17,16 +17,16 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = QuestionMapper.class)
 public interface FormMapper {
 
-    @Mapping(target = "ratingCount", expression = "java(formEntity.getRatingCount())")
+    @Mapping(target = "ratingsCount", expression = "java(formEntity.getRatingsCount())")
     @Mapping(target = "ratingAvg", expression = "java(Math.round(formEntity.getRatingAvg() * 10) / 10.0)")
     FormListResponseDto toListResponseDto(FormEntity formEntity, String thumbnail, @Nullable String authorName);
 
-    @Mapping(target = "ratingCount", source = "formListAggregationResult.ratingCount")
+    @Mapping(target = "ratingsCount", source = "formListAggregationResult.ratingsCount")
     @Mapping(target = "ratingAvg", source = "formListAggregationResult.ratingAvg")
     FormListResponseDto toListResponseDto(FormListAggregationResult formListAggregationResult, String thumbnail);
 
     @Mapping(target = "questions", source = "questions")
-    @Mapping(target = "ratingCount", expression = "java(formEntity.getRatingCount())")
+    @Mapping(target = "ratingsCount", expression = "java(formEntity.getRatingsCount())")
     @Mapping(target = "ratingAvg", expression = "java(Math.round(formEntity.getRatingAvg() * 10) / 10.0)")
     FormDetailResponseDto toDetailResponseDto(
             FormEntity formEntity, String thumbnail, @Nullable String authorName, List<QuestionResponseDto> questions);
@@ -39,8 +39,8 @@ public interface FormMapper {
     @Mapping(target = "questionsCount", expression = "java(formRequestDto.questions().size())")
     @Mapping(target = "submissionsCount", ignore = true)
     @Mapping(target = "submissions", ignore = true)
-    @Mapping(target = "ratingCount", ignore = true)
-    @Mapping(target = "ratingSum", ignore = true)
+    @Mapping(target = "ratingsCount", ignore = true)
+    @Mapping(target = "ratingsSum", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "version", ignore = true)
@@ -49,8 +49,8 @@ public interface FormMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "questionsCount", expression = "java(formRequestDto.questions().size())")
     @Mapping(target = "submissionsCount", ignore = true)
-    @Mapping(target = "ratingCount", ignore = true)
-    @Mapping(target = "ratingSum", ignore = true)
+    @Mapping(target = "ratingsCount", ignore = true)
+    @Mapping(target = "ratingsSum", ignore = true)
     @Mapping(target = "author", ignore = true)
     @Mapping(target = "submissions", ignore = true)
     @Mapping(target = "createdAt", ignore = true)

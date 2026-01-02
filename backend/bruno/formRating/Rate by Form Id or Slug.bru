@@ -1,0 +1,26 @@
+meta {
+  name: Rate by Form Id or Slug
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/v1/forms/:formIdOrSlug/rating
+  body: json
+  auth: inherit
+}
+
+params:path {
+  formIdOrSlug: 694de97d09119a831e9beea1
+}
+
+body:json {
+  {
+    "rating": 5
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

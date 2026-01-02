@@ -19,16 +19,16 @@ public interface FormRepository extends MongoRepository<@NonNull FormEntity, @No
     void decrementSubmissionsCount(String id);
 
     @Query("{ '_id': ?0 }")
-    @Update("{ '$inc': { 'ratingCount': 1 } }")
-    void incrementRatingCount(String id);
+    @Update("{ '$inc': { 'ratingsCount': 1 } }")
+    void incrementRatingsCount(String id);
 
     @Query("{ '_id': ?0 }")
-    @Update("{ '$inc': { 'ratingCount': -1 } }")
-    void decrementRatingCount(String id);
+    @Update("{ '$inc': { 'ratingsCount': -1 } }")
+    void decrementRatingsCount(String id);
 
     @Query("{ '_id': ?0 }")
-    @Update("{ '$inc': { 'ratingSum': ?1 } }")
-    void updateRatingSum(String id, int delta);
+    @Update("{ '$inc': { 'ratingsSum': ?1 } }")
+    void updateRatingsSum(String id, int delta);
 
     Integer countAllByAuthorId(String authorId);
 }

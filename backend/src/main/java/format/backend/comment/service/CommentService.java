@@ -85,11 +85,11 @@ public class CommentService {
         operations.add(Aggregation.addFields()
                 .addField("ratingAvg")
                 .withValue(ArithmeticOperators.Round.roundValueOf(
-                                ConditionalOperators.when(ComparisonOperators.Eq.valueOf("ratingCount")
+                                ConditionalOperators.when(ComparisonOperators.Eq.valueOf("ratingsCount")
                                                 .equalToValue(0))
                                         .then(0.0)
-                                        .otherwise(ArithmeticOperators.Divide.valueOf("ratingSum")
-                                                .divideBy("ratingCount")))
+                                        .otherwise(ArithmeticOperators.Divide.valueOf("ratingsSum")
+                                                .divideBy("ratingsCount")))
                         .place(1))
                 .build());
 
