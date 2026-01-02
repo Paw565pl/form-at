@@ -30,10 +30,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
-import org.springframework.data.mongodb.core.aggregation.ArrayOperators;
-import org.springframework.data.mongodb.core.aggregation.LookupOperation;
+import org.springframework.data.mongodb.core.aggregation.*;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -78,6 +75,22 @@ public class CommentService {
                 .addField("authorName")
                 .withValue(ArrayOperators.arrayOf("author.username").first())
                 .build());
+
+        operations.add(
+                Aggregation.addFields()
+                        .addField("ratingAvg")
+                        .withValue(
+                                ArithmeticOperators.Round.roundValueOf(
+                                        ConditionalOperators
+                                                .when(ComparisonOperators.Eq.valueOf("ratingCount").equalToValue(0))
+                                                .then(0.0)
+                                                .otherwise(
+                                                        ArithmeticOperators.Divide.valueOf("ratingSum").divideBy("ratingCount")
+                                                )
+                                ).place(1)
+                        )
+                        .build()
+        );
 
         if (userId.isPresent()) {
             val commentRatingsLookup = LookupOperation.newLookup()

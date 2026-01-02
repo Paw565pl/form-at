@@ -34,6 +34,10 @@ public record FormListAggregationResult(
 
         @NonNull Integer questionsCount,
 
+        @NonNull Long ratingCount,
+
+        @NonNull Double ratingAvg,
+
         @NonNull Instant createdAt,
 
         @NonNull Instant updatedAt) {}

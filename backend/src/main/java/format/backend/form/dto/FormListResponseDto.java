@@ -36,6 +36,10 @@ public record FormListResponseDto(
 
         @NonNull Integer questionsCount,
 
+        @NonNull Integer ratingCount,
+
+        @NonNull Double ratingAvg,
+
         @NonNull Instant createdAt,
 
         @NonNull Instant updatedAt) {}

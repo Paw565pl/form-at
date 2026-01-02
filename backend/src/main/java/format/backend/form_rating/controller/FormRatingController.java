@@ -2,8 +2,8 @@ package format.backend.form_rating.controller;
 
 import format.backend.auth.annotation.IsAuthenticated;
 import format.backend.auth.jwt.KeycloakJwtClaimsExtractor;
-import format.backend.comment_rating.dto.CommentRatingResponseDto;
 import format.backend.form_rating.dto.FormRatingRequestDto;
+import format.backend.form_rating.dto.FormRatingResponseDto;
 import format.backend.form_rating.service.FormRatingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class FormRatingController {
     @IsAuthenticated
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CommentRatingResponseDto add(
+    public FormRatingResponseDto add(
             @AuthenticationPrincipal Jwt jwt,
             @PathVariable String formIdOrSlug,
             @Valid @RequestBody FormRatingRequestDto formRatingRequestDto) {

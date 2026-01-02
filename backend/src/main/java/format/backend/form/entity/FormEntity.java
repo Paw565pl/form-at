@@ -101,6 +101,12 @@ public class FormEntity {
     @Setter(AccessLevel.NONE)
     private @NonNull List<@NonNull SubmissionEntity> submissions = new ArrayList<>();
 
+    @Field("ratingCount")
+    private long ratingCount = 0;
+
+    @Field("ratingSum")
+    private long ratingSum = 0;
+
     @Indexed
     @DocumentReference(lazy = true)
     @Field(name = "authorId")
@@ -131,6 +137,11 @@ public class FormEntity {
     @Transient
     public @NonNull Duration getEstimatedDuration() {
         return Duration.ofSeconds(estimatedDurationSeconds);
+    }
+
+    @Transient
+    public double getRatingAvg() {
+        return ratingCount == 0 ? 0.0 : (double) ratingSum / ratingCount;
     }
 
     public void setEstimatedDuration(@NonNull Duration estimatedDuration) {
