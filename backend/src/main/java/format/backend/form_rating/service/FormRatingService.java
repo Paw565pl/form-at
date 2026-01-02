@@ -2,6 +2,7 @@ package format.backend.form_rating.service;
 
 import format.backend.auth.jwt.KeycloakJwtClaims;
 import format.backend.auth.service.UserService;
+import format.backend.comment_rating.exception.CommentNotRatedByUserException;
 import format.backend.form.repository.FormRepository;
 import format.backend.form.service.FormService;
 import format.backend.form_rating.dto.FormRatingRequestDto;
@@ -39,7 +40,7 @@ public class FormRatingService {
 
         if (existingRatingOpt.isPresent()) {
             val existingRating = existingRatingOpt.get();
-            val oldRating = existingRatingOpt.get().getRating();
+            val oldRating = existingRating.getRating();
 
             if (Objects.equals(oldRating, newRating)) {
                 return formRatingMapper.toResponseDto(existingRating);
@@ -47,11 +48,36 @@ public class FormRatingService {
 
             existingRating.setRating(newRating);
             formRatingRepository.save(existingRating);
+
+            val delta = newRating - oldRating;
+            formRepository.updateRatingSum(form.getId(), delta);
+
+            return formRatingMapper.toResponseDto(existingRating);
         }
+
+        val rating = formRatingMapper.toEntity(formRatingRequestDto, form, user);
+        formRatingRepository.save(rating);
+
+        formRepository.updateRatingSum(form.getId(), newRating);
+        formRepository.incrementRatingCount(form.getId());
+
+        return formRatingMapper.toResponseDto(rating);
     }
 
     @Transactional
     public void delete(String formIdOrSlug, KeycloakJwtClaims keycloakJwtClaims) {
+        val form = formService.findOrThrow(formIdOrSlug);
+        val user = userService.findOrThrow(keycloakJwtClaims.sub());
 
+        val existingRating = formRatingRepository
+                .findByFormIdAndAuthorId(form.getId(), user.getId())
+                .orElseThrow(() -> new CommentNotRatedByUserException(formIdOrSlug));
+
+        formRatingRepository.delete(existingRating);
+
+        val ratingValue = existingRating.getRating();
+        formRepository.updateRatingSum(form.getId(), -ratingValue);
+
+        formRepository.decrementRatingCount(form.getId());
     }
 }
