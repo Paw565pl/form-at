@@ -140,8 +140,8 @@ public class FormEntity {
     }
 
     @Transient
-    public double getRatingAvg() {
-        return ratingsCount == 0 ? 0.0 : (double) ratingsSum / ratingsCount;
+    public @Nullable Double getRatingAvg() {
+        return ratingsCount == 0 ? null : (double) ratingsSum / ratingsCount;
     }
 
     public void setEstimatedDuration(@NonNull Duration estimatedDuration) {
