@@ -21,8 +21,8 @@ public interface FormMapper {
     @Mapping(target = "ratingAvg", expression = "java(Math.round(formEntity.getRatingAvg() * 10) / 10.0)")
     FormListResponseDto toListResponseDto(FormEntity formEntity, String thumbnail, @Nullable String authorName);
 
-    @Mapping(target = "ratingCount", source = "ratingCount")
-    @Mapping(target = "ratingAvg", source = "ratingAvg")
+    @Mapping(target = "ratingCount", source = "formListAggregationResult.ratingCount")
+    @Mapping(target = "ratingAvg", source = "formListAggregationResult.ratingAvg")
     FormListResponseDto toListResponseDto(FormListAggregationResult formListAggregationResult, String thumbnail);
 
     @Mapping(target = "questions", source = "questions")
@@ -39,6 +39,8 @@ public interface FormMapper {
     @Mapping(target = "questionsCount", expression = "java(formRequestDto.questions().size())")
     @Mapping(target = "submissionsCount", ignore = true)
     @Mapping(target = "submissions", ignore = true)
+    @Mapping(target = "ratingCount", ignore = true)
+    @Mapping(target = "ratingSum", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "version", ignore = true)
@@ -47,6 +49,8 @@ public interface FormMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "questionsCount", expression = "java(formRequestDto.questions().size())")
     @Mapping(target = "submissionsCount", ignore = true)
+    @Mapping(target = "ratingCount", ignore = true)
+    @Mapping(target = "ratingSum", ignore = true)
     @Mapping(target = "author", ignore = true)
     @Mapping(target = "submissions", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
