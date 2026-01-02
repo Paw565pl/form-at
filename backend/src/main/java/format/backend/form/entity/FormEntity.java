@@ -102,10 +102,10 @@ public class FormEntity {
     private @NonNull List<@NonNull SubmissionEntity> submissions = new ArrayList<>();
 
     @Field("ratingCount")
-    private long ratingsCount = 0;
+    private @NonNull Long ratingsCount = 0L;
 
     @Field("ratingsSum")
-    private long ratingsSum = 0;
+    private @Nullable Long ratingsSum = 0L;
 
     @Indexed
     @DocumentReference(lazy = true)

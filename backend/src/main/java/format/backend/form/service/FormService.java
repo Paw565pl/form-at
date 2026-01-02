@@ -167,7 +167,7 @@ public class FormService {
                 .withValue(ArithmeticOperators.Round.roundValueOf(
                                 ConditionalOperators.when(ComparisonOperators.Eq.valueOf("ratingsCount")
                                                 .equalToValue(0))
-                                        .then(null)
+                                        .then(0.0)
                                         .otherwise(ArithmeticOperators.Divide.valueOf("ratingsSum")
                                                 .divideBy("ratingsCount")))
                         .place(1))
