@@ -32,10 +32,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
-import org.springframework.data.mongodb.core.aggregation.ArithmeticOperators;
 import org.springframework.data.mongodb.core.aggregation.ArrayOperators;
-import org.springframework.data.mongodb.core.aggregation.ComparisonOperators;
-import org.springframework.data.mongodb.core.aggregation.ConditionalOperators;
 import org.springframework.data.mongodb.core.aggregation.LookupOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -80,17 +77,6 @@ public class CommentService {
         operations.add(Aggregation.addFields()
                 .addField("authorName")
                 .withValue(ArrayOperators.arrayOf("author.username").first())
-                .build());
-
-        operations.add(Aggregation.addFields()
-                .addField("ratingAvg")
-                .withValue(ArithmeticOperators.Round.roundValueOf(
-                                ConditionalOperators.when(ComparisonOperators.Eq.valueOf("ratingsCount")
-                                                .equalToValue(0))
-                                        .then(0.0)
-                                        .otherwise(ArithmeticOperators.Divide.valueOf("ratingsSum")
-                                                .divideBy("ratingsCount")))
-                        .place(1))
                 .build());
 
         if (userId.isPresent()) {

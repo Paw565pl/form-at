@@ -44,7 +44,7 @@ public record FormDetailResponseDto(
 
         @NonNull Long ratingsCount,
 
-        @NonNull Double ratingAvg,
+        @Nullable Double ratingAvg,
 
         @NonNull Instant createdAt,
 

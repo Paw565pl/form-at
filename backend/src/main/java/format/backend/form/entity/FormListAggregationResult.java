@@ -36,7 +36,7 @@ public record FormListAggregationResult(
 
         @NonNull Long ratingsCount,
 
-        @NonNull Double ratingAvg,
+        @Nullable Double ratingAvg,
 
         @NonNull Instant createdAt,
 
