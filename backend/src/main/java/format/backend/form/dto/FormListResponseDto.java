@@ -36,7 +36,7 @@ public record FormListResponseDto(
 
         @NonNull Integer questionsCount,
 
-        @NonNull Integer ratingCount,
+        @NonNull Long ratingCount,
 
         @NonNull Double ratingAvg,
 
