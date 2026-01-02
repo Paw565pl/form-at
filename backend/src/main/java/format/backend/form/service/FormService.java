@@ -24,6 +24,7 @@ import format.backend.form.mapper.FormMapper;
 import format.backend.form.mapper.QuestionMapper;
 import format.backend.form.repository.FormRepository;
 import format.backend.form.validator.FormValidator;
+import format.backend.form_rating.repository.FormRatingRepository;
 import format.backend.submission.repository.SubmissionRepository;
 import format.backend.upload.service.UploadService;
 import java.util.ArrayList;
@@ -73,6 +74,7 @@ public class FormService {
     private final CommentRepository commentRepository;
     private final CommentRatingRepository commentRatingRepository;
     private final SubmissionRepository submissionRepository;
+    private final FormRatingRepository formRatingRepository;
     private final UserService userService;
     private final UploadService uploadService;
 
@@ -325,6 +327,7 @@ public class FormService {
         commentRepository.deleteAllByFormId(formEntity.getId());
         commentRatingRepository.deleteAllByCommentIn(comments);
         submissionRepository.deleteAllByFormId(formEntity.getId());
+        formRatingRepository.deleteAllByFormId(formEntity.getId());
     }
 
     @Transactional
