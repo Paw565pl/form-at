@@ -76,21 +76,16 @@ public class CommentService {
                 .withValue(ArrayOperators.arrayOf("author.username").first())
                 .build());
 
-        operations.add(
-                Aggregation.addFields()
-                        .addField("ratingAvg")
-                        .withValue(
-                                ArithmeticOperators.Round.roundValueOf(
-                                        ConditionalOperators
-                                                .when(ComparisonOperators.Eq.valueOf("ratingCount").equalToValue(0))
-                                                .then(0.0)
-                                                .otherwise(
-                                                        ArithmeticOperators.Divide.valueOf("ratingSum").divideBy("ratingCount")
-                                                )
-                                ).place(1)
-                        )
-                        .build()
-        );
+        operations.add(Aggregation.addFields()
+                .addField("ratingAvg")
+                .withValue(ArithmeticOperators.Round.roundValueOf(
+                                ConditionalOperators.when(ComparisonOperators.Eq.valueOf("ratingCount")
+                                                .equalToValue(0))
+                                        .then(0.0)
+                                        .otherwise(ArithmeticOperators.Divide.valueOf("ratingSum")
+                                                .divideBy("ratingCount")))
+                        .place(1))
+                .build());
 
         if (userId.isPresent()) {
             val commentRatingsLookup = LookupOperation.newLookup()

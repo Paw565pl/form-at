@@ -29,16 +29,13 @@ public class FormRatingController {
             @AuthenticationPrincipal Jwt jwt,
             @PathVariable String formIdOrSlug,
             @Valid @RequestBody FormRatingRequestDto formRatingRequestDto) {
-        return formRatingService.add(
-                formIdOrSlug, keycloakJwtClaimsExtractor.getClaims(jwt), formRatingRequestDto);
+        return formRatingService.add(formIdOrSlug, keycloakJwtClaimsExtractor.getClaims(jwt), formRatingRequestDto);
     }
 
     @IsAuthenticated
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(
-            @AuthenticationPrincipal Jwt jwt,
-            @PathVariable String formIdOrSlug) {
+    public void delete(@AuthenticationPrincipal Jwt jwt, @PathVariable String formIdOrSlug) {
         formRatingService.delete(formIdOrSlug, keycloakJwtClaimsExtractor.getClaims(jwt));
     }
 }

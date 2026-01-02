@@ -18,10 +18,7 @@ import org.mapstruct.MappingTarget;
 public interface FormMapper {
 
     @Mapping(target = "ratingCount", expression = "java(formEntity.getRatingCount())")
-    @Mapping(
-            target = "ratingAvg",
-            expression = "java(Math.round(formEntity.getRatingAvg() * 10) / 10.0)"
-    )
+    @Mapping(target = "ratingAvg", expression = "java(Math.round(formEntity.getRatingAvg() * 10) / 10.0)")
     FormListResponseDto toListResponseDto(FormEntity formEntity, String thumbnail, @Nullable String authorName);
 
     @Mapping(target = "ratingCount", source = "ratingCount")
@@ -30,10 +27,7 @@ public interface FormMapper {
 
     @Mapping(target = "questions", source = "questions")
     @Mapping(target = "ratingCount", expression = "java(formEntity.getRatingCount())")
-    @Mapping(
-            target = "ratingAvg",
-            expression = "java(Math.round(formEntity.getRatingAvg() * 10) / 10.0)"
-    )
+    @Mapping(target = "ratingAvg", expression = "java(Math.round(formEntity.getRatingAvg() * 10) / 10.0)")
     FormDetailResponseDto toDetailResponseDto(
             FormEntity formEntity, String thumbnail, @Nullable String authorName, List<QuestionResponseDto> questions);
 

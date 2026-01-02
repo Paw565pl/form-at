@@ -9,12 +9,11 @@ import format.backend.form_rating.dto.FormRatingRequestDto;
 import format.backend.form_rating.dto.FormRatingResponseDto;
 import format.backend.form_rating.mapper.FormRatingMapper;
 import format.backend.form_rating.repository.FormRatingRepository;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -29,9 +28,7 @@ public class FormRatingService {
 
     @Transactional
     public FormRatingResponseDto add(
-            String formIdOrSlug,
-            KeycloakJwtClaims keycloakJwtClaims,
-            FormRatingRequestDto formRatingRequestDto) {
+            String formIdOrSlug, KeycloakJwtClaims keycloakJwtClaims, FormRatingRequestDto formRatingRequestDto) {
         val form = formService.findOrThrow(formIdOrSlug);
         val user = userService.findOrThrow(keycloakJwtClaims.sub());
 
