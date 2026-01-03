@@ -147,6 +147,7 @@ export const FormCreatePage = () => {
 
     createForm.mutate(request, {
       onSuccess: (data) => {
+        toast.success(t("formCreated"));
         router.push(`/forms/${data.slug}`);
       },
       onError: (error) => {

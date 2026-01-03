@@ -108,6 +108,7 @@
     "correct": "Poprawna",
     "deleteAnswer": "Usuń odpowiedź",
     "submit": "Zapisz",
+    "formCreated": "Pomyślnie utworzono formularz!",
     "errors": {
       "formNameMin": "Nazwa formularza musi mieć co najmniej 3 znaki.",
       "formNameMax": "Nazwa formularza może mieć maksymalnie 200 znaków.",

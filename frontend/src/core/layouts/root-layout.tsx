@@ -20,7 +20,7 @@ export const RootLayout = async ({ children }: PropsWithChildren) => {
           <ClientProviders>
             <NavBar />
             <main className="container mx-auto">{children}</main>
-            <Toaster position="top-right" />
+            <Toaster position="top-right" closeButton />
           </ClientProviders>
         </ServerProviders>
       </body>
