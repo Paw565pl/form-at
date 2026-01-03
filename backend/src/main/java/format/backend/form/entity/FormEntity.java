@@ -105,7 +105,7 @@ public class FormEntity {
     private @NonNull Long ratingsCount = 0L;
 
     @Field("ratingsSum")
-    private @Nullable Long ratingsSum = 0L;
+    private @NonNull Long ratingsSum = 0L;
 
     @Indexed
     @DocumentReference(lazy = true)
