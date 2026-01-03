@@ -64,6 +64,7 @@
     "password": "Password",
     "thanksMessage": "Thanks Message for Submitters",
     "thumbnailImage": "Thumbnail Image",
+    "maxImageSize": "10MB max",
     "language": "Language",
     "shuffle": "Shuffle",
     "shuffleOptions": {

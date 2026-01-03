@@ -64,6 +64,7 @@
     "password": "Hasło",
     "thanksMessage": "Wiadomość z podziękowaniem dla wypełniających",
     "thumbnailImage": "Obraz banera",
+    "maxImageSize": "10MB max",
     "language": "Język",
     "shuffle": "Opcje losowania",
     "shuffleOptions": {

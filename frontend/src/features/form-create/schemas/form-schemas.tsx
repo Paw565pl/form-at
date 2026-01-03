@@ -7,16 +7,17 @@ import {
 } from "@/core/types/form";
 import { QuestionType } from "@/core/types/question";
 import z from "zod";
+
 export type ErrorKey = keyof typeof en.formCreatePage.errors;
 
 const maxFileSizeInBytes = 10 * 1024 * 1024;
-const validImageTypes = [
+const validImageTypes: string[] = [
   "image/png",
   "image/jpeg",
   "image/jpg",
   "image/webp",
   "image/avif",
-];
+] as const;
 
 const answerSchema = z.object({
   content: z.string().min(3, "answerContentMin").max(200, "answerContentMax"),

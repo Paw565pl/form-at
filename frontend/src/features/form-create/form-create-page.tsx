@@ -345,7 +345,7 @@ export const FormCreatePage = () => {
                   >
                     {t("thumbnailImage")}
                     <span className="text-muted-foreground text-xs">
-                      10MB max
+                      {t("maxImageSize")}
                     </span>
                   </FieldLabel>
                   <Input
@@ -614,7 +614,7 @@ export const FormCreatePage = () => {
                       >
                         {t("thumbnailImage")}
                         <span className="text-muted-foreground text-xs">
-                          10MB max
+                          {t("maxImageSize")}
                         </span>
                       </FieldLabel>
                       <Input
@@ -784,7 +784,8 @@ export const FormCreatePage = () => {
                       </div>
                     )}
 
-                    {form.formState.errors.questions?.[qIdx]?.answers && (
+                    {form.formState.errors.questions?.[qIdx]?.answers
+                      ?.message && (
                       <FieldError
                         className="mx-3 max-w-fit"
                         errors={getTranslatedErrors(
