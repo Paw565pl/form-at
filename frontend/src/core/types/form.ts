@@ -29,6 +29,7 @@ export interface FormFilterOptionsDto {
   minEstimatedDuration?: string | null;
   maxEstimatedDuration?: string | null;
   allowsGuestSubmissions?: boolean | null;
+  authorId?: string | null;
 }
 
 export const formSortOptions = [

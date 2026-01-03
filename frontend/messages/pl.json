@@ -169,5 +169,18 @@
     "scrollToTopButton": {
       "ariaLabel": "Przewiń na górę strony"
     }
+  },
+  "userProfilePage": {
+    "loadingProfile": "Ładowanie profilu użytkownika...",
+    "usersForms": {
+      "forms": "Ostatnio utworzone formularze użytkownika",
+      "loadingForms": "Ładowanie ostatnio utworzonych formularzy użytkownika...",
+      "noForms": "Nie znaleziono formularzy. Utwórz swój pierwszy formularz!",
+      "createForm": "Utwórz nowy formularz"
+    },
+    "userStatistics": "Statystyki użytkownika",
+    "formsCount": "Utworzone formularze",
+    "submissionsCount": "Wypełnione formularze",
+    "commentsCount": "Komentarze"
   }
 }
