@@ -101,7 +101,7 @@ public class FormEntity {
     @Setter(AccessLevel.NONE)
     private @NonNull List<@NonNull SubmissionEntity> submissions = new ArrayList<>();
 
-    @Field("ratingCount")
+    @Field("ratingsCount")
     private @NonNull Long ratingsCount = 0L;
 
     @Field("ratingsSum")

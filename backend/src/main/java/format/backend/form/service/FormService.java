@@ -49,7 +49,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
+import org.springframework.data.mongodb.core.aggregation.ArithmeticOperators;
 import org.springframework.data.mongodb.core.aggregation.ArrayOperators;
+import org.springframework.data.mongodb.core.aggregation.ComparisonOperators;
+import org.springframework.data.mongodb.core.aggregation.ConditionalOperators;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.http.HttpStatus;
@@ -157,6 +160,15 @@ public class FormService {
         operations.add(Aggregation.addFields()
                 .addField("questionsCount")
                 .withValue(ArrayOperators.arrayOf("questions").length())
+                .build());
+
+        operations.add(Aggregation.addFields()
+                .addField("ratingAvg")
+                .withValue(ConditionalOperators.when(
+                                ComparisonOperators.Eq.valueOf("ratingsCount").equalToValue(0))
+                        .then(0.0)
+                        .otherwise(
+                                ArithmeticOperators.Divide.valueOf("ratingsSum").divideBy("ratingsCount")))
                 .build());
 
         val forms = mongoTemplate

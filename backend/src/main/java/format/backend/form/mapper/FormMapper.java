@@ -27,8 +27,11 @@ public interface FormMapper {
     @Mapping(
             target = "ratingsCount",
             expression =
-                    "java(formListAggregationResult.ratingsCount() == null ? 0 : formListAggregationResult.ratingsCount())")
-    @Mapping(target = "ratingAvg", source = "formListAggregationResult.ratingAvg")
+                    "java(formListAggregationResult.ratingsCount() == null ? 0L : formListAggregationResult.ratingsCount())")
+    @Mapping(
+            target = "ratingAvg",
+            expression =
+                    "java(formListAggregationResult.ratingsCount() == 0 ? null : formListAggregationResult.ratingAvg())")
     FormListResponseDto toListResponseDto(FormListAggregationResult formListAggregationResult, String thumbnail);
 
     @Mapping(target = "questions", source = "questions")
