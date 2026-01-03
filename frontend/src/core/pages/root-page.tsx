@@ -1,7 +1,5 @@
-import { useTranslations } from "next-intl";
+import { redirect } from "next/navigation";
 
 export const RootPage = () => {
-  const t = useTranslations("rootPage");
-
-  return <div>{t("message")}</div>;
+  return redirect("/forms");
 };

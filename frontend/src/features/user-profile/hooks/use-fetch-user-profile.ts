@@ -4,7 +4,7 @@ import { UserProfileResponseDto } from "@/core/types/user-profile-response-dto";
 import { QueryClient, queryOptions, useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
-const getFetchUserProfileQueryOptions = (username: string) =>
+export const getFetchUserProfileQueryOptions = (username: string) =>
   queryOptions<UserProfileResponseDto, AxiosError<ErrorResponseDto>>({
     queryKey: ["users", username] as const,
     queryFn: async () => {
