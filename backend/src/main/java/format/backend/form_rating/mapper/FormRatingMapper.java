@@ -17,7 +17,7 @@ public interface FormRatingMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "form", source = "form")
     @Mapping(target = "author", source = "author")
-    @Mapping(target = "rating", ignore = true)
+    @Mapping(target = "rating", source = "formRatingRequestDto.rating")
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "version", ignore = true)

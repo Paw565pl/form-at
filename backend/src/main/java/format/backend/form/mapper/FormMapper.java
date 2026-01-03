@@ -24,7 +24,10 @@ public interface FormMapper {
                     "java(formEntity.getRatingAvg() == null ? null : Math.round(formEntity.getRatingAvg() * 10) / 10.0)")
     FormListResponseDto toListResponseDto(FormEntity formEntity, String thumbnail, @Nullable String authorName);
 
-    @Mapping(target = "ratingsCount", source = "formListAggregationResult.ratingsCount")
+    @Mapping(
+            target = "ratingsCount",
+            expression =
+                    "java(formListAggregationResult.ratingsCount() == null ? 0 : formListAggregationResult.ratingsCount())")
     @Mapping(target = "ratingAvg", source = "formListAggregationResult.ratingAvg")
     FormListResponseDto toListResponseDto(FormListAggregationResult formListAggregationResult, String thumbnail);
 
