@@ -5,7 +5,7 @@ import {
 } from "@/features/auth/config/protected-routes";
 import { NextResponse } from "next/server";
 
-export const middleware = auth(({ nextUrl, auth }) => {
+export const proxy = auth(({ nextUrl, auth }) => {
   const currentPathName = nextUrl.pathname;
   const protectedRoute = protectedRoutes.find((page) =>
     page.pattern.test(currentPathName),
