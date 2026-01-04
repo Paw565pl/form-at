@@ -20,7 +20,11 @@ const validImageTypes: string[] = [
 ] as const;
 
 const answerSchema = z.object({
-  content: z.string().min(3, "answerContentMin").max(200, "answerContentMax"),
+  content: z
+    .string()
+    .trim()
+    .min(3, "answerContentMin")
+    .max(200, "answerContentMax"),
   isCorrect: z.boolean(),
 });
 
@@ -28,6 +32,7 @@ const questionSchema = z
   .object({
     content: z
       .string()
+      .trim()
       .min(3, "questionContentMin")
       .max(200, "questionContentMax"),
     type: z.enum(QuestionType),
@@ -74,9 +79,10 @@ const questionSchema = z
 
 export const formSchema = z
   .object({
-    name: z.string().min(3, "formNameMin").max(200, "formNameMax"),
+    name: z.string().trim().min(3, "formNameMin").max(200, "formNameMax"),
     description: z
       .string()
+      .trim()
       .min(20, "formDescMin")
       .max(2000, "formDescMax")
       .or(z.literal("")),
@@ -85,11 +91,13 @@ export const formSchema = z
     shuffleVariant: z.enum(FormShuffleVariant).or(z.literal("NONE")),
     password: z
       .string()
+      .trim()
       .min(8, "passwordMin")
       .max(200, "passwordMax")
       .or(z.literal("")),
     thanksMessage: z
       .string()
+      .trim()
       .min(3, "thanksMessageMin")
       .max(500, "thanksMessageMax")
       .or(z.literal("")),

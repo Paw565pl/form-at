@@ -129,11 +129,9 @@ export const FormCreatePage = () => {
   const onSubmit = (data: z.infer<typeof formSchema>) => {
     const request: FormRequest = {
       ...data,
-      name: data.name.trim(),
-      description: data.description.trim() === "" ? null : data.description,
+      description: data.description === "" ? null : data.description,
       password: data.status === FormStatus.Private ? data.password : null,
-      thanksMessage:
-        data.thanksMessage.trim() === "" ? null : data.thanksMessage,
+      thanksMessage: data.thanksMessage === "" ? null : data.thanksMessage,
       shuffleVariant:
         data.shuffleVariant === "NONE" ? null : data.shuffleVariant,
       thumbnail: data.thumbnail || null,
