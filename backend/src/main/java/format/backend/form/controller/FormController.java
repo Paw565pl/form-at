@@ -58,8 +58,14 @@ public class FormController {
 
     @PostMapping("/{idOrSlug}/access")
     public FormDetailResponseDto findPrivateByIdOrSlug(
-            @PathVariable String idOrSlug, @Valid @RequestBody FormAccessRequestDto accessRequestDto) {
-        return formService.findPrivateByIdOrSlug(idOrSlug, accessRequestDto);
+            @AuthenticationPrincipal @Nullable Jwt jwt,
+            @PathVariable String idOrSlug,
+            @Valid @RequestBody FormAccessRequestDto accessRequestDto) {
+        val keycloakJwtClaims = Optional.ofNullable(jwt)
+                .map(keycloakJwtClaimsExtractor::getClaims)
+                .orElse(null);
+
+        return formService.findPrivateByIdOrSlug(keycloakJwtClaims, idOrSlug, accessRequestDto);
     }
 
     @IsAuthenticated

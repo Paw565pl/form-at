@@ -46,6 +46,8 @@ public record FormDetailResponseDto(
 
         @Nullable Double ratingAvg,
 
+        @Nullable Double userRating,
+
         @NonNull Instant createdAt,
 
         @NonNull Instant updatedAt) {}

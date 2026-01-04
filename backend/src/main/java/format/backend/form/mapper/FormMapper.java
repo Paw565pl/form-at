@@ -40,8 +40,13 @@ public interface FormMapper {
             target = "ratingAvg",
             expression =
                     "java(formEntity.getRatingAvg() == null ? null : Math.round(formEntity.getRatingAvg() * 10) / 10.0)")
+    @Mapping(target = "userRating", source = "userRating")
     FormDetailResponseDto toDetailResponseDto(
-            FormEntity formEntity, String thumbnail, @Nullable String authorName, List<QuestionResponseDto> questions);
+            FormEntity formEntity,
+            String thumbnail,
+            @Nullable String authorName,
+            List<QuestionResponseDto> questions,
+            @Nullable Double userRating);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "language", expression = "java(formRequestDto.language().getMongoValue())")
