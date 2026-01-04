@@ -20,10 +20,8 @@ const getMinioRemotePattern = (): RemotePattern => {
 const nextConfig: NextConfig = {
   output: "standalone",
   transpilePackages: ["@t3-oss/env-nextjs", "@t3-oss/env-core"],
+  reactCompiler: true,
   typedRoutes: true,
-  experimental: {
-    reactCompiler: true,
-  },
   images: {
     remotePatterns: [getMinioRemotePattern()],
   },

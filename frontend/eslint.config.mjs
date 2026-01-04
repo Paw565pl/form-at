@@ -1,34 +1,21 @@
 // @ts-check
 
-import { includeIgnoreFile } from "@eslint/compat";
-import { FlatCompat } from "@eslint/eslintrc";
 import eslint from "@eslint/js";
 import tanstackQueryPlugin from "@tanstack/eslint-plugin-query";
+import nextVitals from "eslint-config-next/core-web-vitals";
+import nextTs from "eslint-config-next/typescript";
 import eslintConfigPrettier from "eslint-config-prettier/flat";
 import noRelativeImportPaths from "eslint-plugin-no-relative-import-paths";
-import reactHooks from "eslint-plugin-react-hooks";
-import { defineConfig } from "eslint/config";
-import { fileURLToPath } from "node:url";
-import { dirname } from "path";
+import { defineConfig, globalIgnores } from "eslint/config";
 import tseslint from "typescript-eslint";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
-
-const gitignorePath = fileURLToPath(new URL(".gitignore", import.meta.url));
-
 export default defineConfig(
-  includeIgnoreFile(gitignorePath),
-  ...compat.extends("next/core-web-vitals"),
+  nextVitals,
+  nextTs,
   eslint.configs.recommended,
   tseslint.configs.strict,
   tseslint.configs.stylistic,
-  reactHooks.configs.flat["recommended-latest"],
-  ...tanstackQueryPlugin.configs["flat/recommended"],
+  tanstackQueryPlugin.configs["flat/recommended"],
   {
     plugins: {
       "no-relative-import-paths": noRelativeImportPaths,
@@ -41,4 +28,11 @@ export default defineConfig(
     },
   },
   eslintConfigPrettier,
+  globalIgnores([
+    // Default ignores of eslint-config-next:
+    ".next/**",
+    "out/**",
+    "build/**",
+    "next-env.d.ts",
+  ]),
 );
