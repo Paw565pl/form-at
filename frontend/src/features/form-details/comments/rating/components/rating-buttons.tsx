@@ -1,6 +1,7 @@
 import { Button } from "@/core/components/ui/button";
 import { ICONS } from "@/core/config/icons";
 import { cn } from "@/core/lib/cn";
+import { CommentRatingType } from "@/core/types/comment";
 import { useCreateCommentRating } from "@/features/form-details/comments/rating/hooks/use-create-comment-rating";
 import { useDeleteCommentRating } from "@/features/form-details/comments/rating/hooks/use-delete-comment-rating";
 import { useSession } from "next-auth/react";
@@ -9,7 +10,7 @@ interface RatingButtonsProps {
   readonly formIdOrSlug: string;
   readonly commentId: string;
   readonly ratingScore: number | null;
-  readonly userRating: "UPVOTE" | "DOWNVOTE" | null;
+  readonly userRating: CommentRatingType | null;
 }
 
 export const RatingButtons = ({
@@ -30,8 +31,8 @@ export const RatingButtons = ({
     });
 
   const handleRating = (
-    type: "UPVOTE" | "DOWNVOTE",
-    userRating: "UPVOTE" | "DOWNVOTE" | null,
+    type: CommentRatingType,
+    userRating: CommentRatingType | null,
   ) => {
     if (!session || isPending) return;
     if (userRating === type) {
@@ -53,24 +54,24 @@ export const RatingButtons = ({
       <Button
         variant="ghost"
         size="icon-sm"
-        onClick={() => handleRating("UPVOTE", userRating)}
+        onClick={() => handleRating(CommentRatingType.upvote, userRating)}
         disabled={!session || isPending || isDeleting}
       >
         <ICONS.like
           className={cn({
-            "text-primary": userRating === "UPVOTE",
+            "text-primary": userRating === CommentRatingType.upvote,
           })}
         />
       </Button>
       <Button
         variant="ghost"
         size="icon-sm"
-        onClick={() => handleRating("DOWNVOTE", userRating)}
+        onClick={() => handleRating(CommentRatingType.downvote, userRating)}
         disabled={!session || isPending || isDeleting}
       >
         <ICONS.dislike
           className={cn({
-            "text-primary": userRating === "DOWNVOTE",
+            "text-primary": userRating === CommentRatingType.downvote,
           })}
         />
       </Button>
