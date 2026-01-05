@@ -15,12 +15,14 @@ interface CommentOptionsProps {
   readonly formIdOrSlug: string;
   readonly commentId: string;
   readonly authorName: string;
+  readonly onEdit?: () => void;
 }
 
 export const CommentOptions = ({
   formIdOrSlug,
   commentId,
   authorName,
+  onEdit,
 }: CommentOptionsProps) => {
   const t = useTranslations("formDetailsPage.comments");
   const session = useSession();
@@ -31,7 +33,7 @@ export const CommentOptions = ({
 
   const user = session.data?.user;
 
-  //   TODO: Add proper admin check
+  //   TODO: Add proper owner check
   if (user?.name !== authorName && user?.roles.includes(Role.ADMIN) === false) {
     return null;
   }
@@ -45,7 +47,7 @@ export const CommentOptions = ({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={onEdit}>
             <ICONS.edit />
             {t("edit")}
           </DropdownMenuItem>

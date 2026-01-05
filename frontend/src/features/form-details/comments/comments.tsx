@@ -2,9 +2,11 @@ import { Card } from "@/core/components/ui/card";
 import { UserImage } from "@/core/components/user-image/user-image";
 import { AddComments } from "@/features/form-details/comments/components/add-comments";
 import { CommentOptions } from "@/features/form-details/comments/components/comment-options";
+import { EditComment } from "@/features/form-details/comments/components/edit-comment";
 import { useFetchFormCommentsPages } from "@/features/form-details/comments/hooks/use-fetch-form-comments-pages";
 import { RatingButtons } from "@/features/form-details/comments/rating/components/rating-buttons";
 import { useFormatter, useTranslations } from "next-intl";
+import { useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 interface FormCommentsProps {
@@ -14,6 +16,9 @@ interface FormCommentsProps {
 export const Comments = ({ formIdOrSlug }: FormCommentsProps) => {
   const t = useTranslations("formDetailsPage.comments");
   const format = useFormatter();
+  const [isEditingCommentId, setIsEditingCommentId] = useState<string | null>(
+    null,
+  );
 
   const {
     data: formCommentsPages,
@@ -57,24 +62,37 @@ export const Comments = ({ formIdOrSlug }: FormCommentsProps) => {
                 <h1 className="text-xl font-bold">{comment.authorName}</h1>
               </header>
 
-              <p className="py-2 text-sm">{comment.content}</p>
+              {isEditingCommentId === comment.id ? (
+                <EditComment
+                  formIdOrSlug={formIdOrSlug}
+                  commentId={comment.id}
+                  initialContent={comment.content}
+                  onSuccess={() => setIsEditingCommentId(null)}
+                  onCancel={() => setIsEditingCommentId(null)}
+                />
+              ) : (
+                <>
+                  <p className="py-2 text-sm">{comment.content}</p>
 
-              <RatingButtons
-                ratingScore={comment.ratingScore}
-                userRating={comment.userRating}
-                formIdOrSlug={formIdOrSlug}
-                commentId={comment.id}
-              />
+                  <RatingButtons
+                    ratingScore={comment.ratingScore}
+                    userRating={comment.userRating}
+                    formIdOrSlug={formIdOrSlug}
+                    commentId={comment.id}
+                  />
 
-              <CommentOptions
-                formIdOrSlug={formIdOrSlug}
-                commentId={comment.id}
-                authorName={comment.authorName}
-              />
+                  <CommentOptions
+                    formIdOrSlug={formIdOrSlug}
+                    commentId={comment.id}
+                    authorName={comment.authorName}
+                    onEdit={() => setIsEditingCommentId(comment.id)}
+                  />
 
-              <span className="text-muted-foreground absolute right-6 bottom-6 text-xs">
-                {format.dateTime(new Date(comment.createdAt), "long")}
-              </span>
+                  <span className="text-muted-foreground absolute right-6 bottom-6 text-xs">
+                    {format.dateTime(new Date(comment.createdAt), "long")}
+                  </span>
+                </>
+              )}
             </Card>
           )),
         )}

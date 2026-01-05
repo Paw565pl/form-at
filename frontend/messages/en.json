@@ -79,6 +79,7 @@
     "comments": {
       "add": "Add a Comment",
       "edit": "Edit Comment",
+      "cancel": "Cancel",
       "delete": "Delete Comment",
       "addButton": "Add a Comment",
       "loginToComment": "Log in to comment",
