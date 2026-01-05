@@ -91,6 +91,16 @@ export enum FormShuffleVariant {
   All = "ALL",
 }
 
+export enum FormEstimatedDuration {
+  PT1M = "PT1M",
+  PT5M = "PT5M",
+  PT10M = "PT10M",
+  PT15M = "PT15M",
+  PT30M = "PT30M",
+  PT1H = "PT1H",
+  PT2H = "PT2H",
+}
+
 export interface FormRequestDto {
   name: string;
   description: string | null;
@@ -99,7 +109,7 @@ export interface FormRequestDto {
   password: string | null;
   shuffleVariant: FormShuffleVariant | null;
   thanksMessage: string | null;
-  estimatedDuration: string;
+  estimatedDuration: FormEstimatedDuration;
   thumbnailKey: string | null;
   allowsQuestionsPreview: boolean;
   allowsGuestSubmissions: boolean;

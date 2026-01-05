@@ -24,6 +24,7 @@ const nextConfig: NextConfig = {
   typedRoutes: true,
   images: {
     remotePatterns: [getMinioRemotePattern()],
+    dangerouslyAllowLocalIP: true,
   },
 };
 

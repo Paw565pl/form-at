@@ -1,5 +1,3 @@
-const NewFormPage = () => {
-  return <div>New form page</div>;
-};
+import { FormCreatePage } from "@/features/form-create/form-create-page";
 
-export default NewFormPage;
+export default FormCreatePage;
