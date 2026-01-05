@@ -69,6 +69,7 @@ export const Comments = ({ formIdOrSlug }: FormCommentsProps) => {
               <CommentOptions
                 formIdOrSlug={formIdOrSlug}
                 commentId={comment.id}
+                authorName={comment.authorName}
               />
 
               <span className="text-muted-foreground absolute right-6 bottom-6 text-xs">

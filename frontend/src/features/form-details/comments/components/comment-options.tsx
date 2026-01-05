@@ -6,23 +6,35 @@ import {
   DropdownMenuTrigger,
 } from "@/core/components/ui/dropdown-menu";
 import { ICONS } from "@/core/config/icons";
+import { Role } from "@/features/auth/types/role";
 import { useDeleteComment } from "@/features/form-details/comments/hooks/use-delete-comment";
+import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 
 interface CommentOptionsProps {
   readonly formIdOrSlug: string;
   readonly commentId: string;
+  readonly authorName: string;
 }
 
 export const CommentOptions = ({
   formIdOrSlug,
   commentId,
+  authorName,
 }: CommentOptionsProps) => {
   const t = useTranslations("formDetailsPage.comments");
+  const session = useSession();
   const { mutate: deleteComment, isPending } = useDeleteComment({
     formIdOrSlug,
     commentId,
   });
+
+  const user = session.data?.user;
+
+  //   TODO: Add proper admin check
+  if (user?.name !== authorName && user?.roles.includes(Role.ADMIN) === false) {
+    return null;
+  }
 
   return (
     <span className="absolute top-4 right-4">
