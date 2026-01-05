@@ -32,9 +32,10 @@ export const CommentOptions = ({
   });
 
   const user = session.data?.user;
+  const isUserAuthor = user?.name === authorName;
+  const isUserAdmin = user?.roles.includes(Role.ADMIN);
 
-  //   TODO: Add proper owner check
-  if (user?.name !== authorName && user?.roles.includes(Role.ADMIN) === false) {
+  if (!isUserAuthor && !isUserAdmin) {
     return null;
   }
 
@@ -47,10 +48,12 @@ export const CommentOptions = ({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={onEdit}>
-            <ICONS.edit />
-            {t("edit")}
-          </DropdownMenuItem>
+          {isUserAuthor && (
+            <DropdownMenuItem onClick={onEdit}>
+              <ICONS.edit />
+              {t("edit")}
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem
             onClick={() => deleteComment()}
             disabled={isPending}
