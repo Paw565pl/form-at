@@ -20,7 +20,10 @@ import {
   Moon,
   MoreHorizontal,
   PersonStanding,
+  Plus,
+  Save,
   Sun,
+  Trash,
   User,
   X,
 } from "lucide-react";
@@ -50,4 +53,7 @@ export const ICONS = {
   estimatedDuration: ClockArrowUp,
   privateForm: FileKey2,
   scrollToTop: ChevronUp,
+  save: Save,
+  add: Plus,
+  delete: Trash,
 } as const;
