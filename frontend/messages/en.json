@@ -172,6 +172,8 @@
       "edit": "Edit Comment",
       "cancel": "Cancel",
       "delete": "Delete Comment",
+      "deleteError": "Error deleting comment. Please try again.",
+      "deleteSuccess": "Comment deleted successfully.",
       "addButton": "Add a Comment",
       "loginToComment": "Log in to comment",
       "loading": "Loading comments...",

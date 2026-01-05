@@ -10,6 +10,7 @@ import { Role } from "@/features/auth/types/role";
 import { useDeleteComment } from "@/features/form-details/comments/hooks/use-delete-comment";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 
 interface CommentOptionsProps {
   readonly formIdOrSlug: string;
@@ -26,11 +27,10 @@ export const CommentOptions = ({
 }: CommentOptionsProps) => {
   const t = useTranslations("formDetailsPage.comments");
   const session = useSession();
-  const {
-    mutate: deleteComment,
-    isPending,
-    isError,
-  } = useDeleteComment(formIdOrSlug, commentId);
+  const { mutate: deleteComment, isPending } = useDeleteComment(
+    formIdOrSlug,
+    commentId,
+  );
 
   const user = session.data?.user;
   const isUserAuthor = user?.name === authorName;
@@ -39,6 +39,16 @@ export const CommentOptions = ({
   if (!isUserAuthor && !isUserAdmin) {
     return null;
   }
+
+  const handleDelete = () =>
+    deleteComment(undefined, {
+      onSuccess: () => {
+        toast.success(t("deleteSuccess"));
+      },
+      onError: () => {
+        toast.error(t("deleteError"));
+      },
+    });
 
   return (
     <span className="absolute top-4 right-4">
@@ -56,7 +66,7 @@ export const CommentOptions = ({
             </DropdownMenuItem>
           )}
           <DropdownMenuItem
-            onClick={() => deleteComment()}
+            onClick={handleDelete}
             disabled={isPending}
             variant="destructive"
           >

@@ -172,6 +172,8 @@
       "edit": "Edytuj komentarz",
       "cancel": "Anuluj",
       "delete": "Usuń komentarz",
+      "deleteError": "Błąd podczas usuwania komentarza. Spróbuj ponownie.",
+      "deleteSuccess": "Komentarz został pomyślnie usunięty.",
       "addButton": "Dodaj komentarz",
       "loginToComment": "Zaloguj się, aby dodać komentarz",
       "loading": "Ładowanie komentarzy...",

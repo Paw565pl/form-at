@@ -5,9 +5,9 @@ import {
   CommentRatingResponseDto,
 } from "@/core/types/comment";
 import { ErrorResponseDto } from "@/core/types/error-response-dto";
+import { getFetchFormCommentsPagesQueryOptions } from "@/features/form-details/comments/hooks/use-fetch-form-comments-pages";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { getFetchFormCommentsPagesQueryOptions } from "../../hooks/use-fetch-form-comments-pages";
 
 interface UseCreateCommentRatingParams {
   formIdOrSlug: string;
