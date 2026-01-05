@@ -203,7 +203,7 @@ public class FormService {
         if (userId == null) return null;
         return formRatingRepository
                 .findByFormIdAndAuthorId(formId, userId)
-                .map(r -> (double) r.getRating())
+                .map(r -> (double) r.getValue())
                 .orElse(null);
     }
 

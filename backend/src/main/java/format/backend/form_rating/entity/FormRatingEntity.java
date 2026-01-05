@@ -41,8 +41,8 @@ public class FormRatingEntity {
     @Field(name = "authorId")
     @NonNull private UserEntity author;
 
-    @Field(name = "rating", targetType = FieldType.INT32)
-    private Integer rating;
+    @Field(name = "value", targetType = FieldType.INT32)
+    private Integer value;
 
     @CreatedDate
     @Field("createdAt")

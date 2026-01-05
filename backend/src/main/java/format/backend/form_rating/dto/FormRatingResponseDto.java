@@ -6,7 +6,7 @@ import org.jspecify.annotations.NonNull;
 public record FormRatingResponseDto(
         @NonNull String id,
 
-        @NonNull Integer rating,
+        @NonNull Integer value,
 
         @NonNull Instant createdAt,
 

@@ -2,11 +2,11 @@ package format.backend.form_rating.service;
 
 import format.backend.auth.jwt.KeycloakJwtClaims;
 import format.backend.auth.service.UserService;
-import format.backend.comment_rating.exception.CommentNotRatedByUserException;
 import format.backend.form.repository.FormRepository;
 import format.backend.form.service.FormService;
 import format.backend.form_rating.dto.FormRatingRequestDto;
 import format.backend.form_rating.dto.FormRatingResponseDto;
+import format.backend.form_rating.exception.FormNotRatedByUserException;
 import format.backend.form_rating.mapper.FormRatingMapper;
 import format.backend.form_rating.repository.FormRatingRepository;
 import java.util.Objects;
@@ -32,21 +32,21 @@ public class FormRatingService {
         val form = formService.findOrThrow(formIdOrSlug);
         val user = userService.findOrThrow(keycloakJwtClaims.sub());
 
-        val newRating = formRatingRequestDto.rating();
+        val newRatingValue = formRatingRequestDto.ratingValue();
         val existingRatingOpt = formRatingRepository.findByFormIdAndAuthorId(form.getId(), user.getId());
 
         if (existingRatingOpt.isPresent()) {
             val existingRating = existingRatingOpt.get();
-            val oldRating = existingRating.getRating();
+            val oldRatingValue = existingRating.getValue();
 
-            if (Objects.equals(oldRating, newRating)) {
+            if (Objects.equals(oldRatingValue, newRatingValue)) {
                 return formRatingMapper.toResponseDto(existingRating);
             }
 
-            existingRating.setRating(newRating);
+            existingRating.setValue(newRatingValue);
             formRatingRepository.save(existingRating);
 
-            val delta = newRating - oldRating;
+            val delta = newRatingValue - oldRatingValue;
             formRepository.updateRatingsSum(form.getId(), delta);
 
             return formRatingMapper.toResponseDto(existingRating);
@@ -55,7 +55,7 @@ public class FormRatingService {
         val rating = formRatingMapper.toEntity(formRatingRequestDto, form, user);
         formRatingRepository.save(rating);
 
-        formRepository.updateRatingsSum(form.getId(), newRating);
+        formRepository.updateRatingsSum(form.getId(), newRatingValue);
         formRepository.incrementRatingsCount(form.getId());
 
         return formRatingMapper.toResponseDto(rating);
@@ -68,11 +68,11 @@ public class FormRatingService {
 
         val existingRating = formRatingRepository
                 .findByFormIdAndAuthorId(form.getId(), user.getId())
-                .orElseThrow(() -> new CommentNotRatedByUserException(formIdOrSlug));
+                .orElseThrow(() -> new FormNotRatedByUserException(formIdOrSlug));
 
         formRatingRepository.delete(existingRating);
 
-        val ratingValue = existingRating.getRating();
+        val ratingValue = existingRating.getValue();
         formRepository.updateRatingsSum(form.getId(), -ratingValue);
 
         formRepository.decrementRatingsCount(form.getId());
