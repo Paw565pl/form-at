@@ -77,12 +77,15 @@
       }
     },
     "comments": {
-      "addComment": "Add a Comment",
-      "addCommentButton": "Add a Comment",
+      "add": "Add a Comment",
+      "edit": "Edit Comment",
+      "delete": "Delete Comment",
+      "addButton": "Add a Comment",
       "loginToComment": "Log in to comment",
       "loading": "Loading comments...",
-      "commentContentMin": "Comment must be at least 3 characters",
-      "commentContentMax": "Comment must be 500 characters or less"
+      "contentMin": "Comment must be at least 3 characters",
+      "contentMax": "Comment must be 500 characters or less",
+      "moreOptions": "More Options"
     }
   },
   "components": {

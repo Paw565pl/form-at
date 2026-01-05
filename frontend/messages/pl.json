@@ -77,12 +77,15 @@
       }
     },
     "comments": {
-      "addComment": "Dodaj komentarz",
-      "addCommentButton": "Dodaj komentarz",
+      "add": "Dodaj komentarz",
+      "edit": "Edytuj komentarz",
+      "delete": "Usuń komentarz",
+      "addButton": "Dodaj komentarz",
       "loginToComment": "Zaloguj się, aby dodać komentarz",
       "loading": "Ładowanie komentarzy...",
-      "commentContentMin": "Komentarz musi mieć co najmniej 3 znaki",
-      "commentContentMax": "Komentarz może mieć maksymalnie 500 znaków"
+      "contentMin": "Komentarz musi mieć co najmniej 3 znaki",
+      "contentMax": "Komentarz może mieć maksymalnie 500 znaków",
+      "moreOptions": "Więcej opcji"
     }
   },
   "components": {

@@ -50,14 +50,14 @@ export const AddComments = ({ formIdOrSlug }: AddCommentsProps) => {
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-1">
       <div className="flex items-center gap-1">
         <Input
-          placeholder={session ? t("addComment") : t("loginToComment")}
+          placeholder={session ? t("add") : t("loginToComment")}
           className="w-full"
           disabled={!session || isPending}
           autoComplete="off"
           {...register("content")}
         />
         <Button
-          aria-label={t("addCommentButton")}
+          aria-label={t("addButton")}
           variant="outline"
           disabled={!session || isPending}
           type="submit"

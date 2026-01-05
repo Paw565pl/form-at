@@ -24,6 +24,7 @@ import {
   Sun,
   ThumbsDown,
   ThumbsUp,
+  Trash2,
   User,
   X,
 } from "lucide-react";
@@ -56,4 +57,6 @@ export const ICONS = {
   send: SendHorizonal,
   like: ThumbsUp,
   dislike: ThumbsDown,
+  edit: ClipboardPen,
+  delete: Trash2,
 } as const;

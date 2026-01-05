@@ -5,6 +5,7 @@ import { useFetchFormCommentsPages } from "@/features/form-details/comments/hook
 import { RatingButtons } from "@/features/form-details/comments/rating/components/rating-buttons";
 import { useFormatter, useTranslations } from "next-intl";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { CommentOptions } from "@/features/form-details/comments/components/comment-options";
 
 interface FormCommentsProps {
   readonly formIdOrSlug: string;
@@ -61,6 +62,11 @@ export const Comments = ({ formIdOrSlug }: FormCommentsProps) => {
               <RatingButtons
                 ratingScore={comment.ratingScore}
                 userRating={comment.userRating}
+                formIdOrSlug={formIdOrSlug}
+                commentId={comment.id}
+              />
+
+              <CommentOptions
                 formIdOrSlug={formIdOrSlug}
                 commentId={comment.id}
               />
