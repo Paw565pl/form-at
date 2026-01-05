@@ -6,8 +6,8 @@ import {
   DropdownMenuTrigger,
 } from "@/core/components/ui/dropdown-menu";
 import { ICONS } from "@/core/config/icons";
-import { useTranslations } from "next-intl";
 import { useDeleteComment } from "@/features/form-details/comments/hooks/use-delete-comment";
+import { useTranslations } from "next-intl";
 
 interface CommentOptionsProps {
   readonly formIdOrSlug: string;

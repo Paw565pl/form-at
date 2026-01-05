@@ -9,7 +9,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
-import { FieldError, useForm } from "react-hook-form";
+import { Controller, FieldError, useForm } from "react-hook-form";
 import { z } from "zod";
 
 interface AddCommentsProps {
@@ -30,12 +30,15 @@ export const AddComments = ({ formIdOrSlug }: AddCommentsProps) => {
   };
 
   const {
-    register,
     handleSubmit,
     reset,
+    control,
     formState: { errors },
   } = useForm<CommentFormData>({
     resolver: zodResolver(commentSchema),
+    defaultValues: {
+      content: "",
+    },
   });
 
   const onSubmit = (data: CommentFormData) => {
@@ -49,21 +52,28 @@ export const AddComments = ({ formIdOrSlug }: AddCommentsProps) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-1">
       <div className="flex items-center gap-1">
-        <Input
-          placeholder={session ? t("add") : t("loginToComment")}
-          className="w-full"
-          disabled={!session || isPending}
-          autoComplete="off"
-          {...register("content")}
+        <Controller
+          name="content"
+          control={control}
+          render={({ field }) => (
+            <div className="flex w-full items-center gap-1">
+              <Input
+                {...field}
+                placeholder={session ? t("add") : t("loginToComment")}
+                disabled={!session || isPending}
+                autoComplete="off"
+              />
+              <Button
+                aria-label={t("addButton")}
+                variant="outline"
+                disabled={!session || isPending}
+                type="submit"
+              >
+                <ICONS.send />
+              </Button>
+            </div>
+          )}
         />
-        <Button
-          aria-label={t("addButton")}
-          variant="outline"
-          disabled={!session || isPending}
-          type="submit"
-        >
-          <ICONS.send />
-        </Button>
       </div>
       {errors.content && (
         <p className="text-destructive text-sm">
