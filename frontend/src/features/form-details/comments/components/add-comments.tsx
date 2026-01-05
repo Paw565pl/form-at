@@ -1,15 +1,13 @@
 import { Button } from "@/core/components/ui/button";
 import { Input } from "@/core/components/ui/input";
 import { ICONS } from "@/core/config/icons";
+import { getTranslatedErrors } from "@/core/utils/getTranslatedErrors";
 import { useCreateComment } from "@/features/form-details/comments/hooks/use-create-comment";
-import {
-  commentSchema,
-  ErrorKey,
-} from "@/features/form-details/comments/schemas/comment-schema";
+import { commentSchema } from "@/features/form-details/comments/schemas/comment-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
-import { Controller, FieldError, useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 
 interface AddCommentsProps {
@@ -24,10 +22,6 @@ export const AddComments = ({ formIdOrSlug }: AddCommentsProps) => {
   const { mutate: createComment, isPending } = useCreateComment({
     formIdOrSlug,
   });
-
-  const getTranslatedErrors = (error?: FieldError): { message: string }[] => {
-    return error ? [{ message: t(`${error.message as ErrorKey}`) }] : [];
-  };
 
   const {
     handleSubmit,
@@ -77,7 +71,7 @@ export const AddComments = ({ formIdOrSlug }: AddCommentsProps) => {
       </div>
       {errors.content && (
         <p className="text-destructive text-sm">
-          {getTranslatedErrors(errors.content)[0].message}
+          {getTranslatedErrors(t, errors.content)[0].message}
         </p>
       )}
     </form>

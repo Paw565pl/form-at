@@ -16,9 +16,7 @@ interface FormCommentsProps {
 export const Comments = ({ formIdOrSlug }: FormCommentsProps) => {
   const t = useTranslations("formDetailsPage.comments");
   const format = useFormatter();
-  const [isEditingCommentId, setIsEditingCommentId] = useState<string | null>(
-    null,
-  );
+  const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
 
   const {
     data: formCommentsPages,
@@ -62,13 +60,13 @@ export const Comments = ({ formIdOrSlug }: FormCommentsProps) => {
                 <h1 className="text-xl font-bold">{comment.authorName}</h1>
               </header>
 
-              {isEditingCommentId === comment.id ? (
+              {editingCommentId === comment.id ? (
                 <EditComment
                   formIdOrSlug={formIdOrSlug}
                   commentId={comment.id}
                   initialContent={comment.content}
-                  onSuccess={() => setIsEditingCommentId(null)}
-                  onCancel={() => setIsEditingCommentId(null)}
+                  onSuccess={() => setEditingCommentId(null)}
+                  onCancel={() => setEditingCommentId(null)}
                 />
               ) : (
                 <>
@@ -85,7 +83,7 @@ export const Comments = ({ formIdOrSlug }: FormCommentsProps) => {
                     formIdOrSlug={formIdOrSlug}
                     commentId={comment.id}
                     authorName={comment.authorName}
-                    onEdit={() => setIsEditingCommentId(comment.id)}
+                    onEdit={() => setEditingCommentId(comment.id)}
                   />
 
                   <span className="text-muted-foreground absolute right-6 bottom-6 text-xs">

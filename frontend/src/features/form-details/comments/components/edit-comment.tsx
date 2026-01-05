@@ -2,14 +2,12 @@ import { Button } from "@/core/components/ui/button";
 import { Spinner } from "@/core/components/ui/spinner";
 import { Textarea } from "@/core/components/ui/textarea";
 import { ICONS } from "@/core/config/icons";
+import { getTranslatedErrors } from "@/core/utils/getTranslatedErrors";
 import { useEditComment } from "@/features/form-details/comments/hooks/use-edit-comment";
-import {
-  commentSchema,
-  ErrorKey,
-} from "@/features/form-details/comments/schemas/comment-schema";
+import { commentSchema } from "@/features/form-details/comments/schemas/comment-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
-import { Controller, FieldError, useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 
 interface EditCommentProps {
@@ -34,10 +32,6 @@ export const EditComment = ({
     formIdOrSlug,
     commentId,
   });
-
-  const getTranslatedErrors = (error?: FieldError): { message: string }[] => {
-    return error ? [{ message: t(`${error.message as ErrorKey}`) }] : [];
-  };
 
   const {
     handleSubmit,
@@ -79,7 +73,7 @@ export const EditComment = ({
       />
       {errors.content && (
         <p className="text-destructive text-sm">
-          {getTranslatedErrors(errors.content)[0].message}
+          {getTranslatedErrors(t, errors.content)[0].message}
         </p>
       )}
       <div className="flex gap-2">
