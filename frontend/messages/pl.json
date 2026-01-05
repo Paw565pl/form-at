@@ -108,6 +108,7 @@
     "correct": "Poprawna",
     "deleteAnswer": "Usuń odpowiedź",
     "submit": "Zapisz",
+    "submitting": "Zapisywanie",
     "formCreated": "Pomyślnie utworzono formularz!",
     "errors": {
       "formNameMin": "Nazwa formularza musi mieć co najmniej 3 znaki.",

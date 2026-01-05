@@ -10,14 +10,15 @@ import z from "zod";
 
 export type ErrorKey = keyof typeof en.formCreatePage.errors;
 
-const maxFileSizeInBytes = 10 * 1024 * 1024;
-const validImageTypes: string[] = [
+export const validImageTypes: string[] = [
   "image/png",
   "image/jpeg",
   "image/jpg",
   "image/webp",
   "image/avif",
 ] as const;
+
+const maxFileSizeInBytes = 10 * 1024 * 1024;
 
 const answerSchema = z.object({
   content: z

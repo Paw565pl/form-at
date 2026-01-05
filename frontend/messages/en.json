@@ -108,6 +108,7 @@
     "correct": "Correct",
     "deleteAnswer": "Delete Answer",
     "submit": "Submit",
+    "submitting": "Submitting",
     "formCreated": "Form created successfully!",
     "errors": {
       "formNameMin": "Form name must be at least 3 characters.",

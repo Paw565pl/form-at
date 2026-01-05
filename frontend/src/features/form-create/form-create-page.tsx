@@ -32,6 +32,7 @@ import { useCreateForm } from "@/features/form-create/hooks/use-create-form";
 import {
   ErrorKey,
   formSchema,
+  validImageTypes,
 } from "@/features/form-create/schemas/form-schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AxiosError } from "axios";
@@ -352,6 +353,7 @@ export const FormCreatePage = () => {
                     id="thumbnail"
                     aria-invalid={fieldState.invalid}
                     type="file"
+                    accept={validImageTypes.join(", ")}
                     onChange={(event) =>
                       onChange(event.target.files && event.target.files[0])
                     }
@@ -621,6 +623,7 @@ export const FormCreatePage = () => {
                         id="image"
                         aria-invalid={fieldState.invalid}
                         type="file"
+                        accept={validImageTypes.join(", ")}
                         onChange={(event) =>
                           onChange(event.target.files && event.target.files[0])
                         }
@@ -826,11 +829,14 @@ export const FormCreatePage = () => {
 
         <Button
           type="submit"
-          className="ml-auto w-40"
+          className="ml-auto min-w-40"
           disabled={createForm.isPending}
         >
           {createForm.isPending ? <Spinner /> : <ICONS.save />}
-          {t("submit")}
+          {createForm.isPending ? t("submitting") : t("submit")}
+          {createForm.uploadProgressPercent
+            ? ` (${createForm.uploadProgressPercent}%)`
+            : ""}
         </Button>
       </form>
     </section>

@@ -14,7 +14,7 @@ export const NavBar = async () => {
   const session = await auth();
 
   return (
-    <nav className="bg-background sticky top-0 left-0 flex w-full justify-between gap-4 p-2">
+    <nav className="bg-background sticky top-0 left-0 z-10 flex w-full justify-between gap-4 p-2">
       <div className="links flex items-center gap-4">
         <div className="text-primary flex items-center text-lg font-semibold">
           <Logo />

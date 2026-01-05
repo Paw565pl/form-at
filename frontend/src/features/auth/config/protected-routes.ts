@@ -26,4 +26,6 @@ const createProtectedRoutePattern = {
   }),
 } as const;
 
-export const protectedRoutes: ProtectedRoutePattern[] = [] as const;
+export const protectedRoutes: ProtectedRoutePattern[] = [
+  createProtectedRoutePattern.exact("/forms/new"),
+] as const;
