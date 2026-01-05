@@ -1,16 +1,17 @@
 import { Card } from "@/core/components/ui/card";
 import { UserImage } from "@/core/components/user-image/user-image";
-import { useFormatter } from "next-intl";
+import { AddComments } from "@/features/form-details/comments/components/add-comments";
+import { useFetchFormCommentsPages } from "@/features/form-details/comments/hooks/use-fetch-form-comments-pages";
+import { RatingButtons } from "@/features/form-details/comments/rating/components/rating-buttons";
+import { useFormatter, useTranslations } from "next-intl";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { AddComments } from "./components/add-comments";
-import { useFetchFormCommentsPages } from "./hooks/use-fetch-form-comments-pages";
-import { RatingButtons } from "./rating/components/rating-buttons";
 
 interface FormCommentsProps {
   readonly formIdOrSlug: string;
 }
 
 export const Comments = ({ formIdOrSlug }: FormCommentsProps) => {
+  const t = useTranslations("formDetailsPage.comments");
   const format = useFormatter();
 
   const {
@@ -26,6 +27,15 @@ export const Comments = ({ formIdOrSlug }: FormCommentsProps) => {
       (acc, curr) => acc + curr.content.length,
       0,
     ) || 0;
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col gap-2 pt-4">
+        <AddComments formIdOrSlug={formIdOrSlug} />
+        <p className="text-muted-foreground text-center">{t("loading")}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-2 pt-4">
@@ -62,6 +72,10 @@ export const Comments = ({ formIdOrSlug }: FormCommentsProps) => {
           )),
         )}
       </InfiniteScroll>
+
+      {isFetchingNextPage && (
+        <p className="text-muted-foreground text-center">{t("loading")}</p>
+      )}
     </div>
   );
 };

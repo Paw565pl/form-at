@@ -1,9 +1,9 @@
 import { Button } from "@/core/components/ui/button";
 import { ICONS } from "@/core/config/icons";
 import { cn } from "@/core/lib/cn";
+import { useCreateCommentRating } from "@/features/form-details/comments/rating/hooks/use-create-comment-rating";
+import { useDeleteCommentRating } from "@/features/form-details/comments/rating/hooks/use-delete-comment-rating";
 import { useSession } from "next-auth/react";
-import { useCreateCommentRating } from "../hooks/use-create-comment-rating";
-import { useDeleteCommentRating } from "../hooks/use-delete-comment-rating";
 
 interface RatingButtonsProps {
   readonly formIdOrSlug: string;

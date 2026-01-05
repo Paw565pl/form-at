@@ -14,25 +14,27 @@ export const useDeleteCommentRating = ({
 }: UseDeleteCommentRatingParams) => {
   const queryClient = useQueryClient();
 
-  const mutation = useMutation<void, AxiosError<ErrorResponseDto> | Error>({
-    mutationKey: [
-      "comments",
-      formIdOrSlug,
-      commentId,
-      "rating",
-      "delete",
-    ] as const,
-    mutationFn: async () => {
-      await authenticatedApiService.delete(
-        `/api/v1/forms/${formIdOrSlug}/comments/${commentId}/rating`,
-      );
+  const mutation = useMutation<undefined, AxiosError<ErrorResponseDto> | Error>(
+    {
+      mutationKey: [
+        "comments",
+        formIdOrSlug,
+        commentId,
+        "rating",
+        "delete",
+      ] as const,
+      mutationFn: async () => {
+        await authenticatedApiService.delete(
+          `/api/v1/forms/${formIdOrSlug}/comments/${commentId}/rating`,
+        );
+      },
+      onSettled: () => {
+        queryClient.invalidateQueries({
+          queryKey: [formIdOrSlug, "comments"],
+        });
+      },
     },
-    onSettled: () => {
-      queryClient.invalidateQueries({
-        queryKey: [formIdOrSlug, "comments"],
-      });
-    },
-  });
+  );
 
   return { ...mutation };
 };

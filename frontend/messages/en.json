@@ -75,6 +75,14 @@
         "multiple": "Multiple Choice",
         "open": "Open Ended"
       }
+    },
+    "comments": {
+      "addComment": "Add a Comment",
+      "addCommentButton": "Add a Comment",
+      "loginToComment": "Log in to comment",
+      "loading": "Loading comments...",
+      "commentContentMin": "Comment must be at least 3 characters",
+      "commentContentMax": "Comment must be 500 characters or less"
     }
   },
   "components": {

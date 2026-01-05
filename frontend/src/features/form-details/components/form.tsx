@@ -1,5 +1,6 @@
 "use client";
 
+import { Comments } from "@/features/form-details/comments/comments";
 import { Banner } from "@/features/form-details/components/banner";
 import { Details } from "@/features/form-details/components/details";
 import { QuestionList } from "@/features/form-details/components/question-list/question-list";
@@ -7,7 +8,6 @@ import { useFetchFormDetails } from "@/features/form-details/hooks/use-fetch-for
 import { HttpStatusCode } from "axios";
 import { useTranslations } from "next-intl";
 import { notFound } from "next/navigation";
-import { Comments } from "../comments/comments";
 
 interface FormProps {
   readonly formIdOrSlug: string;

@@ -75,6 +75,14 @@
         "multiple": "Wybór wielokrotny",
         "open": "Odpowiedź otwarta"
       }
+    },
+    "comments": {
+      "addComment": "Dodaj komentarz",
+      "addCommentButton": "Dodaj komentarz",
+      "loginToComment": "Zaloguj się, aby dodać komentarz",
+      "loading": "Ładowanie komentarzy...",
+      "commentContentMin": "Komentarz musi mieć co najmniej 3 znaki",
+      "commentContentMax": "Komentarz może mieć maksymalnie 500 znaków"
     }
   },
   "components": {
