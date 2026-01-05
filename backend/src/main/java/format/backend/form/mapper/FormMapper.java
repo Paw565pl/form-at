@@ -27,7 +27,7 @@ public interface FormMapper {
     @Mapping(
             target = "ratingsCount",
             expression =
-                    "java(formListAggregationResult.ratingsCount() == null ? 0L : formListAggregationResult.ratingsCount())")
+                    "java(formListAggregationResult.ratingsCount())")
     @Mapping(
             target = "ratingAvg",
             expression =
