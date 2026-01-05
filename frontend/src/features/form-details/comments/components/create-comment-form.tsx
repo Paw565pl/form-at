@@ -1,7 +1,7 @@
 import { Button } from "@/core/components/ui/button";
 import { Input } from "@/core/components/ui/input";
 import { ICONS } from "@/core/config/icons";
-import { getTranslatedErrors } from "@/core/utils/getTranslatedErrors";
+import { getTranslatedErrors } from "@/core/utils/get-translated-errors";
 import { useCreateComment } from "@/features/form-details/comments/hooks/use-create-comment";
 import { commentSchema } from "@/features/form-details/comments/schemas/comment-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,18 +10,16 @@ import { useTranslations } from "next-intl";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 
-interface AddCommentsProps {
-  formIdOrSlug: string;
-}
-
 type CommentFormData = z.infer<typeof commentSchema>;
 
-export const AddComments = ({ formIdOrSlug }: AddCommentsProps) => {
+interface CreateCommentFormProps {
+  readonly formIdOrSlug: string;
+}
+
+export const CreateCommentForm = ({ formIdOrSlug }: CreateCommentFormProps) => {
   const t = useTranslations("formDetailsPage.comments");
   const { data: session } = useSession();
-  const { mutate: createComment, isPending } = useCreateComment({
-    formIdOrSlug,
-  });
+  const { mutate: createComment, isPending } = useCreateComment(formIdOrSlug);
 
   const {
     handleSubmit,

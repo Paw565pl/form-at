@@ -1,7 +1,7 @@
 import { Card } from "@/core/components/ui/card";
 import { UserImage } from "@/core/components/user-image/user-image";
-import { AddComments } from "@/features/form-details/comments/components/add-comments";
 import { CommentOptions } from "@/features/form-details/comments/components/comment-options";
+import { CreateCommentForm } from "@/features/form-details/comments/components/create-comment-form";
 import { EditComment } from "@/features/form-details/comments/components/edit-comment";
 import { useFetchFormCommentsPages } from "@/features/form-details/comments/hooks/use-fetch-form-comments-pages";
 import { RatingButtons } from "@/features/form-details/comments/rating/components/rating-buttons";
@@ -9,11 +9,11 @@ import { useFormatter, useTranslations } from "next-intl";
 import { useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-interface FormCommentsProps {
+interface CommentsProps {
   readonly formIdOrSlug: string;
 }
 
-export const Comments = ({ formIdOrSlug }: FormCommentsProps) => {
+export const Comments = ({ formIdOrSlug }: CommentsProps) => {
   const t = useTranslations("formDetailsPage.comments");
   const format = useFormatter();
   const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
@@ -35,7 +35,7 @@ export const Comments = ({ formIdOrSlug }: FormCommentsProps) => {
   if (isLoading) {
     return (
       <div className="flex flex-col gap-2 pt-4">
-        <AddComments formIdOrSlug={formIdOrSlug} />
+        <CreateCommentForm formIdOrSlug={formIdOrSlug} />
         <p className="text-muted-foreground text-center">{t("loading")}</p>
       </div>
     );
@@ -43,7 +43,7 @@ export const Comments = ({ formIdOrSlug }: FormCommentsProps) => {
 
   return (
     <div className="flex flex-col gap-2 pt-4">
-      <AddComments formIdOrSlug={formIdOrSlug} />
+      <CreateCommentForm formIdOrSlug={formIdOrSlug} />
 
       <InfiniteScroll
         dataLength={dataLength}

@@ -9,12 +9,12 @@ import {
 } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
-const getFetchFormCommentsPagesQueryOptions = (formIdOrSlug: string) =>
+export const getFetchFormCommentsPagesQueryOptions = (formIdOrSlug: string) =>
   infiniteQueryOptions<
     PaginatedResponseDto<CommentResponseDto>,
     AxiosError<ErrorResponseDto>
   >({
-    queryKey: [formIdOrSlug, "comments"] as const,
+    queryKey: ["forms", formIdOrSlug, "comments"] as const,
     queryFn: async ({ pageParam }) => {
       const { data } = await authenticatedApiService.get<
         PaginatedResponseDto<CommentResponseDto>

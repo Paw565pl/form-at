@@ -37,10 +37,9 @@ export const RatingButtons = ({
     if (!session || isPending) return;
     if (userRating === type) {
       deleteRating();
-      return;
+    } else {
+      createRating({ type });
     }
-
-    createRating({ type });
   };
 
   return (

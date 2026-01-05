@@ -26,10 +26,11 @@ export const CommentOptions = ({
 }: CommentOptionsProps) => {
   const t = useTranslations("formDetailsPage.comments");
   const session = useSession();
-  const { mutate: deleteComment, isPending } = useDeleteComment({
-    formIdOrSlug,
-    commentId,
-  });
+  const {
+    mutate: deleteComment,
+    isPending,
+    isError,
+  } = useDeleteComment(formIdOrSlug, commentId);
 
   const user = session.data?.user;
   const isUserAuthor = user?.name === authorName;

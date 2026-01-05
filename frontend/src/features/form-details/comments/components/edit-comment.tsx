@@ -2,7 +2,7 @@ import { Button } from "@/core/components/ui/button";
 import { Spinner } from "@/core/components/ui/spinner";
 import { Textarea } from "@/core/components/ui/textarea";
 import { ICONS } from "@/core/config/icons";
-import { getTranslatedErrors } from "@/core/utils/getTranslatedErrors";
+import { getTranslatedErrors } from "@/core/utils/get-translated-errors";
 import { useEditComment } from "@/features/form-details/comments/hooks/use-edit-comment";
 import { commentSchema } from "@/features/form-details/comments/schemas/comment-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -28,10 +28,10 @@ export const EditComment = ({
   onCancel,
 }: EditCommentProps) => {
   const t = useTranslations("formDetailsPage.comments");
-  const { mutate: editComment, isPending } = useEditComment({
+  const { mutate: editComment, isPending } = useEditComment(
     formIdOrSlug,
     commentId,
-  });
+  );
 
   const {
     handleSubmit,

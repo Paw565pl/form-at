@@ -7,10 +7,10 @@ export interface CommentResponseDto {
   readonly id: string;
   readonly authorName: string;
   readonly content: string;
-  readonly ratingScore: number | null;
+  readonly ratingScore: number;
   readonly userRating: CommentRatingType | null;
-  readonly createdAt: Date;
-  readonly updatedAt: Date;
+  readonly createdAt: string;
+  readonly updatedAt: string;
 }
 
 export interface CommentRequestDto {
@@ -20,8 +20,8 @@ export interface CommentRequestDto {
 export interface CommentRatingResponseDto {
   readonly id: string;
   readonly type: CommentRatingType;
-  readonly createdAt: Date;
-  readonly updatedAt: Date;
+  readonly createdAt: string;
+  readonly updatedAt: string;
 }
 
 export interface CommentRatingRequestDto {

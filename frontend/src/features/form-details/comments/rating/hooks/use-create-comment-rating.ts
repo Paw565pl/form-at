@@ -1,11 +1,13 @@
+import { getQueryClient } from "@/core/lib/tanstack-query";
 import { authenticatedApiService } from "@/core/services/api-service";
 import {
   CommentRatingRequestDto,
   CommentRatingResponseDto,
 } from "@/core/types/comment";
 import { ErrorResponseDto } from "@/core/types/error-response-dto";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+import { getFetchFormCommentsPagesQueryOptions } from "../../hooks/use-fetch-form-comments-pages";
 
 interface UseCreateCommentRatingParams {
   formIdOrSlug: string;
@@ -16,11 +18,11 @@ export const useCreateCommentRating = ({
   formIdOrSlug,
   commentId,
 }: UseCreateCommentRatingParams) => {
-  const queryClient = useQueryClient();
+  const queryClient = getQueryClient();
 
   const mutation = useMutation<
     CommentRatingResponseDto,
-    AxiosError<ErrorResponseDto> | Error,
+    AxiosError<ErrorResponseDto>,
     CommentRatingRequestDto
   >({
     mutationKey: [
@@ -40,10 +42,10 @@ export const useCreateCommentRating = ({
     },
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: [formIdOrSlug, "comments"],
+        queryKey: getFetchFormCommentsPagesQueryOptions(formIdOrSlug).queryKey,
       });
     },
   });
 
-  return { ...mutation };
+  return mutation;
 };
