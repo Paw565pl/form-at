@@ -1,11 +1,11 @@
 import { Card } from "@/core/components/ui/card";
 import { UserImage } from "@/core/components/user-image/user-image";
 import { AddComments } from "@/features/form-details/comments/components/add-comments";
+import { CommentOptions } from "@/features/form-details/comments/components/comment-options";
 import { useFetchFormCommentsPages } from "@/features/form-details/comments/hooks/use-fetch-form-comments-pages";
 import { RatingButtons } from "@/features/form-details/comments/rating/components/rating-buttons";
 import { useFormatter, useTranslations } from "next-intl";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { CommentOptions } from "@/features/form-details/comments/components/comment-options";
 
 interface FormCommentsProps {
   readonly formIdOrSlug: string;
