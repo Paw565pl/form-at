@@ -32,7 +32,7 @@ public record FormListAggregationResult(
 
         @NonNull Long submissionsCount,
 
-        @NonNull Long questionsCount,
+        @NonNull Integer questionsCount,
 
         @NonNull Long ratingsCount,
 
