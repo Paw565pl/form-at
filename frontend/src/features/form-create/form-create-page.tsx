@@ -589,6 +589,7 @@ export const FormCreatePage = () => {
                         id={`questions.${qIdx}.content`}
                         aria-invalid={fieldState.invalid}
                         placeholder={t("questionPlaceholder")}
+                        autoComplete="off"
                       />
                       {fieldState.invalid && (
                         <FieldError
