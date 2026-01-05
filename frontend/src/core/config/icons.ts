@@ -20,11 +20,13 @@ import {
   Moon,
   MoreHorizontal,
   PersonStanding,
+  Plus,
+  Save,
   SendHorizonal,
   Sun,
   ThumbsDown,
   ThumbsUp,
-  Trash2,
+  Trash,
   User,
   X,
 } from "lucide-react";
@@ -58,5 +60,7 @@ export const ICONS = {
   like: ThumbsUp,
   dislike: ThumbsDown,
   edit: ClipboardPen,
-  delete: Trash2,
+  save: Save,
+  add: Plus,
+  delete: Trash,
 } as const;
