@@ -1,4 +1,5 @@
 import { Button } from "@/core/components/ui/button";
+import { Field, FieldError } from "@/core/components/ui/field";
 import { Input } from "@/core/components/ui/input";
 import { ICONS } from "@/core/config/icons";
 import { getTranslatedErrors } from "@/core/utils/get-translated-errors";
@@ -21,12 +22,7 @@ export const CreateCommentForm = ({ formIdOrSlug }: CreateCommentFormProps) => {
   const { data: session } = useSession();
   const { mutate: createComment, isPending } = useCreateComment(formIdOrSlug);
 
-  const {
-    handleSubmit,
-    reset,
-    control,
-    formState: { errors },
-  } = useForm<CommentFormData>({
+  const { handleSubmit, reset, control } = useForm<CommentFormData>({
     resolver: zodResolver(commentSchema),
     defaultValues: {
       content: "",
@@ -47,31 +43,35 @@ export const CreateCommentForm = ({ formIdOrSlug }: CreateCommentFormProps) => {
         <Controller
           name="content"
           control={control}
-          render={({ field }) => (
-            <div className="flex w-full items-center gap-1">
-              <Input
-                {...field}
-                placeholder={session ? t("add") : t("loginToComment")}
-                disabled={!session || isPending}
-                autoComplete="off"
-              />
-              <Button
-                aria-label={t("addButton")}
-                variant="outline"
-                disabled={!session || isPending}
-                type="submit"
-              >
-                <ICONS.send />
-              </Button>
-            </div>
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <div className="flex w-full items-center gap-1">
+                <Input
+                  {...field}
+                  placeholder={session ? t("add") : t("loginToComment")}
+                  aria-invalid={fieldState.invalid}
+                  disabled={!session || isPending}
+                  autoComplete="off"
+                />
+                <Button
+                  aria-label={t("addButton")}
+                  variant="outline"
+                  disabled={!session || isPending}
+                  type="submit"
+                >
+                  <ICONS.send />
+                </Button>
+              </div>
+              {fieldState.invalid && (
+                <FieldError
+                  className="mx-3 max-w-fit"
+                  errors={getTranslatedErrors(t, fieldState.error)}
+                />
+              )}
+            </Field>
           )}
         />
       </div>
-      {errors.content && (
-        <p className="text-destructive text-sm">
-          {getTranslatedErrors(t, errors.content)[0].message}
-        </p>
-      )}
     </form>
   );
 };

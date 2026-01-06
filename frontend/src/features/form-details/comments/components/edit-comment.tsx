@@ -1,4 +1,5 @@
 import { Button } from "@/core/components/ui/button";
+import { Field, FieldError } from "@/core/components/ui/field";
 import { Spinner } from "@/core/components/ui/spinner";
 import { Textarea } from "@/core/components/ui/textarea";
 import { ICONS } from "@/core/config/icons";
@@ -33,11 +34,7 @@ export const EditComment = ({
     commentId,
   );
 
-  const {
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm<CommentFormData>({
+  const { handleSubmit, control } = useForm<CommentFormData>({
     resolver: zodResolver(commentSchema),
     defaultValues: {
       content: initialContent,
@@ -60,26 +57,30 @@ export const EditComment = ({
       <Controller
         name="content"
         control={control}
-        render={({ field }) => (
-          <div className="flex flex-col gap-1">
-            <Textarea
-              {...field}
-              placeholder={t("add")}
-              disabled={isPending}
-              autoComplete="off"
-            />
-          </div>
+        render={({ field, fieldState }) => (
+          <Field data-invalid={fieldState.invalid}>
+            <div className="flex flex-col gap-1">
+              <Textarea
+                {...field}
+                placeholder={t("add")}
+                aria-invalid={fieldState.invalid}
+                disabled={isPending}
+                autoComplete="off"
+              />
+            </div>
+            {fieldState.invalid && (
+              <FieldError
+                className="mx-3 max-w-fit"
+                errors={getTranslatedErrors(t, fieldState.error)}
+              />
+            )}
+          </Field>
         )}
       />
-      {errors.content && (
-        <p className="text-destructive text-sm">
-          {getTranslatedErrors(t, errors.content)[0].message}
-        </p>
-      )}
-      <div className="flex gap-2">
+      <div className="flex justify-end gap-2">
         <Button type="submit" disabled={isPending} variant="default">
-          {isPending ? <Spinner /> : <ICONS.check />}
-          {t("edit")}
+          {isPending ? <Spinner /> : <ICONS.save />}
+          {t("save")}
         </Button>
         <Button
           type="button"

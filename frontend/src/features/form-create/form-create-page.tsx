@@ -28,9 +28,9 @@ import {
   Language,
 } from "@/core/types/form";
 import { QuestionType } from "@/core/types/question";
+import { getTranslatedErrors } from "@/core/utils/get-translated-errors";
 import { useCreateForm } from "@/features/form-create/hooks/use-create-form";
 import {
-  ErrorKey,
   formSchema,
   validImageTypes,
 } from "@/features/form-create/schemas/form-schemas";
@@ -54,12 +54,6 @@ export const FormCreatePage = () => {
   const router = useRouter();
   const createForm = useCreateForm();
   const [showQuestions, setShowQuestions] = useState<boolean>(true);
-
-  const getTranslatedErrors = (
-    error?: FieldErrorType,
-  ): { message: string }[] => {
-    return error ? [{ message: t(`errors.${error.message as ErrorKey}`) }] : [];
-  };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -197,7 +191,7 @@ export const FormCreatePage = () => {
                   {fieldState.invalid && (
                     <FieldError
                       className="mx-3 max-w-fit"
-                      errors={getTranslatedErrors(fieldState.error)}
+                      errors={getTranslatedErrors(t, fieldState.error)}
                     />
                   )}
                 </Field>
@@ -228,7 +222,7 @@ export const FormCreatePage = () => {
                   {fieldState.invalid && (
                     <FieldError
                       className="mx-3 max-w-fit"
-                      errors={getTranslatedErrors(fieldState.error)}
+                      errors={getTranslatedErrors(t, fieldState.error)}
                     />
                   )}
                 </Field>
@@ -289,7 +283,7 @@ export const FormCreatePage = () => {
                     {fieldState.invalid && (
                       <FieldError
                         className="mx-3 max-w-fit"
-                        errors={getTranslatedErrors(fieldState.error)}
+                        errors={getTranslatedErrors(t, fieldState.error)}
                       />
                     )}
                   </Field>
@@ -321,7 +315,7 @@ export const FormCreatePage = () => {
                   {fieldState.invalid && (
                     <FieldError
                       className="mx-3 max-w-fit"
-                      errors={getTranslatedErrors(fieldState.error)}
+                      errors={getTranslatedErrors(t, fieldState.error)}
                     />
                   )}
                 </Field>
@@ -361,7 +355,7 @@ export const FormCreatePage = () => {
                   {fieldState.invalid && (
                     <FieldError
                       className="mx-3 max-w-fit"
-                      errors={getTranslatedErrors(fieldState.error)}
+                      errors={getTranslatedErrors(t, fieldState.error)}
                     />
                   )}
                 </Field>
@@ -594,7 +588,7 @@ export const FormCreatePage = () => {
                       {fieldState.invalid && (
                         <FieldError
                           className="mx-3 max-w-fit"
-                          errors={getTranslatedErrors(fieldState.error)}
+                          errors={getTranslatedErrors(t, fieldState.error)}
                         />
                       )}
                     </Field>
@@ -632,7 +626,7 @@ export const FormCreatePage = () => {
                       {fieldState.invalid && (
                         <FieldError
                           className="mx-3 max-w-fit"
-                          errors={getTranslatedErrors(fieldState.error)}
+                          errors={getTranslatedErrors(t, fieldState.error)}
                         />
                       )}
                     </Field>
@@ -775,6 +769,7 @@ export const FormCreatePage = () => {
                                     <FieldError
                                       className="mx-3 max-w-fit"
                                       errors={getTranslatedErrors(
+                                        t,
                                         fieldState.error,
                                       )}
                                     />
@@ -792,6 +787,7 @@ export const FormCreatePage = () => {
                       <FieldError
                         className="mx-3 max-w-fit"
                         errors={getTranslatedErrors(
+                          t,
                           form.formState.errors.questions[qIdx]
                             .answers as FieldErrorType,
                         )}
@@ -801,6 +797,7 @@ export const FormCreatePage = () => {
                       <FieldError
                         className="mx-3 max-w-fit"
                         errors={getTranslatedErrors(
+                          t,
                           form.formState.errors.questions[qIdx].answers.root,
                         )}
                       />
@@ -815,6 +812,7 @@ export const FormCreatePage = () => {
           <FieldError
             className="mx-4 max-w-fit"
             errors={getTranslatedErrors(
+              t,
               form.formState.errors.questions as FieldErrorType,
             )}
           />
@@ -824,7 +822,10 @@ export const FormCreatePage = () => {
           form.formState.errors.questions.root && (
             <FieldError
               className="mx-3 max-w-fit"
-              errors={getTranslatedErrors(form.formState.errors.questions.root)}
+              errors={getTranslatedErrors(
+                t,
+                form.formState.errors.questions.root,
+              )}
             />
           )}
 

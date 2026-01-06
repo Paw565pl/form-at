@@ -170,6 +170,7 @@
     "comments": {
       "add": "Add a Comment",
       "edit": "Edit Comment",
+      "save": "Save Changes",
       "cancel": "Cancel",
       "delete": "Delete Comment",
       "deleteError": "Error deleting comment. Please try again.",
@@ -177,8 +178,8 @@
       "addButton": "Add a Comment",
       "loginToComment": "Log in to comment",
       "loading": "Loading comments...",
-      "contentMin": "Comment must be at least 3 characters",
-      "contentMax": "Comment must be 500 characters or less",
+      "contentMin": "Comment must be at least 3 characters.",
+      "contentMax": "Comment must be 500 characters or less.",
       "moreOptions": "More Options"
     }
   },

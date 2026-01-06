@@ -170,6 +170,7 @@
     "comments": {
       "add": "Dodaj komentarz",
       "edit": "Edytuj komentarz",
+      "save": "Zapisz zmiany",
       "cancel": "Anuluj",
       "delete": "Usuń komentarz",
       "deleteError": "Błąd podczas usuwania komentarza. Spróbuj ponownie.",
@@ -177,8 +178,8 @@
       "addButton": "Dodaj komentarz",
       "loginToComment": "Zaloguj się, aby dodać komentarz",
       "loading": "Ładowanie komentarzy...",
-      "contentMin": "Komentarz musi mieć co najmniej 3 znaki",
-      "contentMax": "Komentarz może mieć maksymalnie 500 znaków",
+      "contentMin": "Komentarz musi mieć co najmniej 3 znaki.",
+      "contentMax": "Komentarz może mieć maksymalnie 500 znaków.",
       "moreOptions": "Więcej opcji"
     }
   },

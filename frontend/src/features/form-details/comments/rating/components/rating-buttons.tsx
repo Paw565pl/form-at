@@ -44,12 +44,6 @@ export const RatingButtons = ({
 
   return (
     <section className="flex items-center gap-0.5">
-      {ratingScore ? (
-        <span className="text-muted-foreground text-sm font-medium">
-          {ratingScore}
-        </span>
-      ) : null}
-
       <Button
         variant="ghost"
         size="icon-sm"
@@ -62,6 +56,9 @@ export const RatingButtons = ({
           })}
         />
       </Button>
+      <span className="text-muted-foreground text-sm font-medium">
+        {ratingScore || 0}
+      </span>
       <Button
         variant="ghost"
         size="icon-sm"
