@@ -78,10 +78,6 @@ export const EditComment = ({
         )}
       />
       <div className="flex justify-end gap-2">
-        <Button type="submit" disabled={isPending} variant="default">
-          {isPending ? <Spinner /> : <ICONS.save />}
-          {t("save")}
-        </Button>
         <Button
           type="button"
           onClick={onCancel}
@@ -89,6 +85,10 @@ export const EditComment = ({
           variant="outline"
         >
           {t("cancel")}
+        </Button>
+        <Button type="submit" disabled={isPending} variant="default">
+          {isPending ? <Spinner /> : <ICONS.save />}
+          {t("save")}
         </Button>
       </div>
     </form>
