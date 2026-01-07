@@ -9,14 +9,15 @@ import { commentSchema } from "@/features/form-details/comments/schemas/comment-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 interface EditCommentProps {
-  formIdOrSlug: string;
-  commentId: string;
-  initialContent: string;
-  onSuccess: () => void;
-  onCancel: () => void;
+  readonly formIdOrSlug: string;
+  readonly commentId: string;
+  readonly initialContent: string;
+  readonly onSuccess: () => void;
+  readonly onCancel: () => void;
 }
 
 type CommentFormData = z.infer<typeof commentSchema>;
@@ -44,7 +45,11 @@ export const EditComment = ({
   const onSubmit = (data: CommentFormData) => {
     editComment(data, {
       onSuccess: () => {
+        toast.success(t("editSuccess"));
         onSuccess();
+      },
+      onError: () => {
+        toast.error(t("editError"));
       },
     });
   };

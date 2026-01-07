@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 type CommentFormData = z.infer<typeof commentSchema>;
@@ -32,7 +33,11 @@ export const CreateCommentForm = ({ formIdOrSlug }: CreateCommentFormProps) => {
   const onSubmit = (data: CommentFormData) => {
     createComment(data, {
       onSuccess: () => {
+        toast.success(t("addSuccess"));
         reset();
+      },
+      onError: () => {
+        toast.error(t("addError"));
       },
     });
   };
