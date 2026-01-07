@@ -7,9 +7,11 @@ import {
 } from "@/core/components/ui/dropdown-menu";
 import { ICONS } from "@/core/config/icons";
 import { Role } from "@/features/auth/types/role";
+import { DeleteCommentDialog } from "@/features/form-details/comments/components/delete-comment-dialog";
 import { useDeleteComment } from "@/features/form-details/comments/hooks/use-delete-comment";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
 import { toast } from "sonner";
 
 interface CommentOptionsProps {
@@ -31,6 +33,7 @@ export const CommentOptions = ({
     formIdOrSlug,
     commentId,
   );
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const user = session.data?.user;
   const isUserAuthor = user?.name === authorName;
@@ -44,6 +47,7 @@ export const CommentOptions = ({
     deleteComment(undefined, {
       onSuccess: () => {
         toast.success(t("deleteSuccess"));
+        setIsDeleteDialogOpen(false);
       },
       onError: () => {
         toast.error(t("deleteError"));
@@ -66,7 +70,7 @@ export const CommentOptions = ({
             </DropdownMenuItem>
           )}
           <DropdownMenuItem
-            onClick={handleDelete}
+            onClick={() => setIsDeleteDialogOpen(true)}
             disabled={isPending}
             variant="destructive"
           >
@@ -75,6 +79,13 @@ export const CommentOptions = ({
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      <DeleteCommentDialog
+        isOpen={isDeleteDialogOpen}
+        isPending={isPending}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        onConfirm={handleDelete}
+      />
     </span>
   );
 };
