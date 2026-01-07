@@ -185,5 +185,23 @@
     "formsCount": "Utworzone formularze",
     "submissionsCount": "Wypełnione formularze",
     "commentsCount": "Komentarze"
+  },
+  "submissionCreatePage": {
+    "loading": "Ładowanie formularza...",
+    "questionTypes": {
+      "SINGLE_CHOICE": "Wybór pojedynczy",
+      "MULTIPLE_CHOICE": "Wybór wielokrotny",
+      "OPEN": "Odpowiedź otwarta"
+    },
+    "fillAnonymously": "Wypełnij anonimowo",
+    "submit": "Wyślij",
+    "submissionCreated": "Pomyślnie przesłano odpowiedź!",
+    "defaultThanksMessage": "Dziękuję za poświęcony czas i wypełnienie formularza.",
+    "errors": {
+      "oneAnswerRequired": "Musisz wybrać co najmniej jedną odpowiedź.",
+      "openAnswerMin": "Odpowiedź musi mieć co najmniej 10 znaków.",
+      "openAnswerMax": "Odpowiedź może mieć maksymalnie 1000 znaków.",
+      "unexpected": "Wystąpił nieoczekiwany błąd."
+    }
   }
 }

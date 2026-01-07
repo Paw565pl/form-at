@@ -185,5 +185,23 @@
     "formsCount": "Forms Created",
     "submissionsCount": "Submissions",
     "commentsCount": "Comments"
+  },
+  "submissionCreatePage": {
+    "loading": "Loading form...",
+    "questionTypes": {
+      "SINGLE_CHOICE": "Single Choice",
+      "MULTIPLE_CHOICE": "Multiple Choice",
+      "OPEN": "Open Ended"
+    },
+    "fillAnonymously": "Fill Anonymously",
+    "submit": "Send",
+    "submissionCreated": "Submission sent successfully!",
+    "defaultThanksMessage": "Thank you for you time and effort in completing the form.",
+    "errors": {
+      "oneAnswerRequired": "You must pick at least one answer.",
+      "openAnswerMin": "Answer must be at least 10 characters.",
+      "openAnswerMax": "Answer must be at most 1000 characters.",
+      "unexpected": "An unexpected error occurred."
+    }
   }
 }
