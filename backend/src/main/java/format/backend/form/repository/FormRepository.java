@@ -18,5 +18,17 @@ public interface FormRepository extends MongoRepository<@NonNull FormEntity, @No
     @Update("{ '$inc': { 'submissionsCount': -1 } }")
     void decrementSubmissionsCount(String id);
 
+    @Query("{ '_id': ?0 }")
+    @Update("{ '$inc': { 'ratingsCount': 1 } }")
+    void incrementRatingsCount(String id);
+
+    @Query("{ '_id': ?0 }")
+    @Update("{ '$inc': { 'ratingsCount': -1 } }")
+    void decrementRatingsCount(String id);
+
+    @Query("{ '_id': ?0 }")
+    @Update("{ '$inc': { 'ratingsSum': ?1 } }")
+    void updateRatingsSum(String id, int delta);
+
     Integer countAllByAuthorId(String authorId);
 }
