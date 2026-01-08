@@ -184,6 +184,8 @@
       "addButton": "Add a Comment",
       "loginToComment": "Log in to comment",
       "ratingError": "Error submitting rating. Please try again.",
+      "ratingLike": "Like",
+      "ratingDislike": "Dislike",
       "loading": "Loading comments...",
       "contentMin": "Comment must be at least 3 characters.",
       "contentMax": "Comment must be 500 characters or less.",

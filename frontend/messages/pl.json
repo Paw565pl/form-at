@@ -184,6 +184,8 @@
       "addButton": "Dodaj komentarz",
       "loginToComment": "Zaloguj się, aby dodać komentarz",
       "ratingError": "Błąd podczas przesyłania oceny. Spróbuj ponownie.",
+      "ratingLike": "Lubię to",
+      "ratingDislike": "Nie lubię tego",
       "loading": "Ładowanie komentarzy...",
       "contentMin": "Komentarz musi mieć co najmniej 3 znaki.",
       "contentMax": "Komentarz może mieć maksymalnie 500 znaków.",

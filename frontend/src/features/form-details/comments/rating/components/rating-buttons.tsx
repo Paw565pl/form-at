@@ -57,7 +57,7 @@ export const RatingButtons = ({
       <Button
         variant="ghost"
         size="icon-sm"
-        aria-label="upvote"
+        aria-label={t("ratingLike")}
         onClick={() => handleRating(CommentRatingType.upvote, userRating)}
         disabled={!session || isPending || isDeleting}
       >
@@ -73,7 +73,7 @@ export const RatingButtons = ({
       <Button
         variant="ghost"
         size="icon-sm"
-        aria-label="downvote"
+        aria-label={t("ratingDislike")}
         onClick={() => handleRating(CommentRatingType.downvote, userRating)}
         disabled={!session || isPending || isDeleting}
       >
