@@ -3,7 +3,6 @@ import { Role } from "@/features/auth/types/role";
 
 export const defaultRedirectPath = "/api/sign-in";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const createProtectedRoutePattern = {
   exact: (
     path: string,

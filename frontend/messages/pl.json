@@ -166,6 +166,30 @@
         "multiple": "Wybór wielokrotny",
         "open": "Odpowiedź otwarta"
       }
+    },
+    "comments": {
+      "add": "Dodaj komentarz",
+      "addSuccess": "Komentarz został pomyślnie dodany.",
+      "addError": "Błąd podczas dodawania komentarza. Spróbuj ponownie.",
+      "edit": "Edytuj komentarz",
+      "editSuccess": "Komentarz został pomyślnie edytowany.",
+      "editError": "Błąd podczas edytowania komentarza. Spróbuj ponownie.",
+      "save": "Zapisz zmiany",
+      "cancel": "Anuluj",
+      "delete": "Usuń komentarz",
+      "deleteError": "Błąd podczas usuwania komentarza. Spróbuj ponownie.",
+      "deleteSuccess": "Komentarz został pomyślnie usunięty.",
+      "deleteDialogTitle": "Usuń komentarz",
+      "deleteDialogDescription": "Czy na pewno chcesz usunąć ten komentarz? Ta akcja jest nieodwracalna.",
+      "addButton": "Dodaj komentarz",
+      "loginToComment": "Zaloguj się, aby dodać komentarz",
+      "ratingError": "Błąd podczas przesyłania oceny. Spróbuj ponownie.",
+      "ratingLike": "Lubię to",
+      "ratingDislike": "Nie lubię tego",
+      "loading": "Ładowanie komentarzy...",
+      "contentMin": "Komentarz musi mieć co najmniej 3 znaki.",
+      "contentMax": "Komentarz może mieć maksymalnie 500 znaków.",
+      "moreOptions": "Więcej opcji"
     }
   },
   "components": {
