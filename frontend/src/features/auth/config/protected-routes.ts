@@ -2,7 +2,7 @@ import { ProtectedRoutePattern } from "@/features/auth/types/protected-route-pat
 import { Role } from "@/features/auth/types/role";
 
 export const defaultRedirectPath = "/api/sign-in";
- 
+
 const createProtectedRoutePattern = {
   exact: (
     path: string,
