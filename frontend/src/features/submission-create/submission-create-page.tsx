@@ -48,7 +48,7 @@ const prepareFormData = (
 
 export const SubmissionCreatePage = async ({
   params,
-}: PageProps<"/forms/[slug]">) => {
+}: PageProps<"/forms/[slug]/submissions/new">) => {
   const { slug } = await params;
 
   const queryClient = getQueryClient();

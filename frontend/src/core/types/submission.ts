@@ -1,15 +1,21 @@
 export interface SubmissionRequestDto {
-  answers: SubmissionAnswerDto[];
+  answers: SubmissionAnswerRequestDto[];
 }
 
-export interface SubmissionAnswerDto {
+export interface SubmissionAnswerRequestDto {
   questionId: string;
   chosenAnswerIds: string[];
   openAnswer: string | null;
 }
 
 export interface SubmissionResponseDto {
-  id: string;
-  answers: SubmissionAnswerDto[];
-  createdAt: string;
+  readonly id: string;
+  readonly answers: SubmissionAnswerResponseDto[];
+  readonly createdAt: string;
+}
+
+export interface SubmissionAnswerResponseDto {
+  readonly questionId: string;
+  readonly chosenAnswerIds: string[];
+  readonly openAnswer: string | null;
 }

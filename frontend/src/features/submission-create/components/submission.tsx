@@ -10,9 +10,10 @@ import { Spinner } from "@/core/components/ui/spinner";
 import { Textarea } from "@/core/components/ui/textarea";
 import { ICONS } from "@/core/config/icons";
 import { FormImageWithFallback } from "@/core/form-image/form-image-with-fallback";
+import { cn } from "@/core/lib/cn";
 import { FormDetailResponseDto } from "@/core/types/form";
 import {
-  SubmissionAnswerDto,
+  SubmissionAnswerRequestDto,
   SubmissionRequestDto,
 } from "@/core/types/submission";
 import { useCreateSubmission } from "@/features/submission-create/hooks/use-create-submission";
@@ -55,6 +56,7 @@ function getTranslatedErrors(
 
 export const Submission = ({ formData }: SubmissionProps) => {
   const t = useTranslations("submissionCreatePage");
+  const gt = useTranslations("global");
   const createSubmission = useCreateSubmission(formData.id);
 
   const form = useForm<z.infer<typeof submissionSchema>>({
@@ -76,10 +78,10 @@ export const Submission = ({ formData }: SubmissionProps) => {
       answers: data.answers
         .filter(
           // filter out empty answers for non-required questions
-          (answer: SubmissionAnswerDto) =>
+          (answer: SubmissionAnswerRequestDto) =>
             answer.chosenAnswerIds.length > 0 || answer.openAnswer !== "",
         )
-        .map((answer: SubmissionAnswerDto) => ({
+        .map((answer: SubmissionAnswerRequestDto) => ({
           questionId: answer.questionId,
           chosenAnswerIds: answer.chosenAnswerIds,
           openAnswer: answer.openAnswer || null,
@@ -156,7 +158,7 @@ export const Submission = ({ formData }: SubmissionProps) => {
                       </h2>
                     </div>
                     <span className="text-muted-foreground ml-3 text-sm">
-                      {t(`questionTypes.${question.type}`)}
+                      {gt(`questionTypes.${question.type}`)}
                     </span>
                   </div>
                 </header>
@@ -220,11 +222,10 @@ export const Submission = ({ formData }: SubmissionProps) => {
                               />
                               <Label
                                 htmlFor={answer.id}
-                                className={
-                                  createSubmission.isPending
-                                    ? "text-muted-foreground cursor-not-allowed"
-                                    : ""
-                                }
+                                className={cn(
+                                  createSubmission.isPending &&
+                                    "text-muted-foreground cursor-not-allowed",
+                                )}
                               >
                                 {answer.content}
                               </Label>
@@ -302,7 +303,9 @@ export const Submission = ({ formData }: SubmissionProps) => {
             <Button
               type="submit"
               className="min-w-40"
-              disabled={createSubmission.isPending}
+              disabled={
+                createSubmission.isPending || createSubmission.isSuccess
+              }
             >
               {createSubmission.isPending ? <Spinner /> : <ICONS.save />}
               {t("submit")}

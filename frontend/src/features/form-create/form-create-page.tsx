@@ -51,6 +51,7 @@ const languageOptions: { label: string; value: Language }[] = [
 
 export const FormCreatePage = () => {
   const t = useTranslations("formCreatePage");
+  const gt = useTranslations("global");
   const router = useRouter();
   const createForm = useCreateForm();
   const [showQuestions, setShowQuestions] = useState<boolean>(true);
@@ -658,7 +659,7 @@ export const FormCreatePage = () => {
                         <SelectContent>
                           {Object.values(QuestionType).map((type) => (
                             <SelectItem key={type} value={type}>
-                              {t(`questionTypes.${type}`)}
+                              {gt(`questionTypes.${type}`)}
                             </SelectItem>
                           ))}
                         </SelectContent>

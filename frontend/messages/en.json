@@ -1,6 +1,10 @@
 {
-  "rootPage": {
-    "message": "Hello world!"
+  "global": {
+    "questionTypes": {
+      "SINGLE_CHOICE": "Single Choice",
+      "MULTIPLE_CHOICE": "Multiple Choice",
+      "OPEN": "Open Ended"
+    }
   },
   "errorPage": {
     "message": "An unexpected error ocurred. Please try again later."
@@ -96,11 +100,6 @@
     "questionPlaceholder": "What is your favorite color?",
     "required": "Required",
     "type": "Type",
-    "questionTypes": {
-      "SINGLE_CHOICE": "Single Choice",
-      "MULTIPLE_CHOICE": "Multiple Choice",
-      "OPEN": "Open Ended"
-    },
     "answers": "Answers",
     "answer": "Answer",
     "addAnswer": "Add Answer",
@@ -160,12 +159,7 @@
       "showQuestions": "Show Questions Preview",
       "hideQuestions": "Hide Questions Preview",
       "noPreviewAllowed": "The author has not allowed questions preview.",
-      "noQuestions": "No questions to display.",
-      "questionTypes": {
-        "single": "Single Choice",
-        "multiple": "Multiple Choice",
-        "open": "Open Ended"
-      }
+      "noQuestions": "No questions to display."
     },
     "comments": {
       "add": "Add a Comment",
@@ -212,11 +206,6 @@
   },
   "submissionCreatePage": {
     "loading": "Loading form...",
-    "questionTypes": {
-      "SINGLE_CHOICE": "Single Choice",
-      "MULTIPLE_CHOICE": "Multiple Choice",
-      "OPEN": "Open Ended"
-    },
     "yourAnswer": "Enter your answer below",
     "submit": "Send",
     "submissionCreated": "Submission sent successfully!",
