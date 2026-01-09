@@ -24,6 +24,7 @@ import format.backend.form.mapper.FormMapper;
 import format.backend.form.mapper.QuestionMapper;
 import format.backend.form.repository.FormRepository;
 import format.backend.form.validator.FormValidator;
+import format.backend.form_rating.repository.FormRatingRepository;
 import format.backend.submission.repository.SubmissionRepository;
 import format.backend.upload.service.UploadService;
 import java.util.ArrayList;
@@ -48,7 +49,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
+import org.springframework.data.mongodb.core.aggregation.ArithmeticOperators;
 import org.springframework.data.mongodb.core.aggregation.ArrayOperators;
+import org.springframework.data.mongodb.core.aggregation.ComparisonOperators;
+import org.springframework.data.mongodb.core.aggregation.ConditionalOperators;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.http.HttpStatus;
@@ -73,6 +77,7 @@ public class FormService {
     private final CommentRepository commentRepository;
     private final CommentRatingRepository commentRatingRepository;
     private final SubmissionRepository submissionRepository;
+    private final FormRatingRepository formRatingRepository;
     private final UserService userService;
     private final UploadService uploadService;
 
@@ -157,6 +162,15 @@ public class FormService {
                 .withValue(ArrayOperators.arrayOf("questions").length())
                 .build());
 
+        operations.add(Aggregation.addFields()
+                .addField("ratingAvg")
+                .withValue(ConditionalOperators.when(
+                                ComparisonOperators.Eq.valueOf("ratingsCount").equalToValue(0))
+                        .then(0.0)
+                        .otherwise(
+                                ArithmeticOperators.Divide.valueOf("ratingsSum").divideBy("ratingsCount")))
+                .build());
+
         val forms = mongoTemplate
                 .aggregate(Aggregation.newAggregation(operations), FormEntity.class, FormListAggregationResult.class)
                 .getMappedResults();
@@ -185,15 +199,24 @@ public class FormService {
         return form.orElseThrow(() -> new FormNotFoundException(idOrSlug));
     }
 
+    private @Nullable Double findUserRating(@Nullable String userId, String formId) {
+        if (userId == null) return null;
+        return formRatingRepository
+                .findByFormIdAndAuthorId(formId, userId)
+                .map(r -> (double) r.getValue())
+                .orElse(null);
+    }
+
     public FormDetailResponseDto findByIdOrSlug(@Nullable KeycloakJwtClaims keycloakJwtClaims, String idOrSlug) {
         val form = findOrThrow(idOrSlug);
         val permitsAnonymousAccess =
                 form.getStatus().equals(FormStatus.PUBLIC) || form.getStatus().equals(FormStatus.UNPUBLIC);
 
+        val userId = Optional.ofNullable(keycloakJwtClaims)
+                .map(KeycloakJwtClaims::sub)
+                .orElse(null);
+
         if (!permitsAnonymousAccess) {
-            val userId = Optional.ofNullable(keycloakJwtClaims)
-                    .map(KeycloakJwtClaims::sub)
-                    .orElse(null);
             if (userId == null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 
             val isAuthor = Optional.ofNullable(form.getAuthor())
@@ -202,20 +225,28 @@ public class FormService {
             if (!isAuthor) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
-        return mapToDetailResponseDto(form);
+        val userRating = findUserRating(userId, form.getId());
+
+        return mapToDetailResponseDto(form, userRating);
     }
 
-    public FormDetailResponseDto findPrivateByIdOrSlug(String idOrSlug, FormAccessRequestDto accessRequestDto) {
+    public FormDetailResponseDto findPrivateByIdOrSlug(
+            @Nullable KeycloakJwtClaims keycloakJwtClaims, String idOrSlug, FormAccessRequestDto accessRequestDto) {
         val formEntity = findOrThrow(idOrSlug);
+        val userId = Optional.ofNullable(keycloakJwtClaims)
+                .map(KeycloakJwtClaims::sub)
+                .orElse(null);
+
+        val userRating = findUserRating(userId, formEntity.getId());
 
         if (!formEntity.getStatus().equals(FormStatus.PRIVATE)) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         if (!passwordEncoder.matches(accessRequestDto.password(), formEntity.getPasswordHash()))
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 
-        return mapToDetailResponseDto(formEntity);
+        return mapToDetailResponseDto(formEntity, userRating);
     }
 
-    private FormDetailResponseDto mapToDetailResponseDto(FormEntity formEntity) {
+    private FormDetailResponseDto mapToDetailResponseDto(FormEntity formEntity, @Nullable Double userRating) {
         val questions = formEntity.getQuestions().stream()
                 .map(q -> questionMapper.toResponseDto(q, uploadService.getFileUrl(q.getImageKey())))
                 .toList();
@@ -224,7 +255,7 @@ public class FormService {
                 .orElse(null);
 
         return formMapper.toDetailResponseDto(
-                formEntity, uploadService.getFileUrl(formEntity.getThumbnailKey()), authorName, questions);
+                formEntity, uploadService.getFileUrl(formEntity.getThumbnailKey()), authorName, questions, userRating);
     }
 
     @Transactional
@@ -241,7 +272,7 @@ public class FormService {
         val formEntity = formMapper.toEntity(requestDto, slug, passwordHash, author);
 
         try {
-            val response = mapToDetailResponseDto(formRepository.save(formEntity));
+            val response = mapToDetailResponseDto(formRepository.save(formEntity), null);
 
             val imageKeys = Stream.concat(
                             Stream.ofNullable(requestDto.thumbnailKey()),
@@ -277,8 +308,10 @@ public class FormService {
 
         val updatedFormEntity = formMapper.updateEntityFromDto(requestDto, oldFormEntity, slug, passwordHash);
 
+        val userRating = findUserRating(keycloakJwtClaims.sub(), updatedFormEntity.getId());
+
         try {
-            val response = mapToDetailResponseDto(formRepository.save(updatedFormEntity));
+            val response = mapToDetailResponseDto(formRepository.save(updatedFormEntity), userRating);
 
             val newImageKeys = Stream.concat(
                             Stream.ofNullable(requestDto.thumbnailKey()),
@@ -325,6 +358,7 @@ public class FormService {
         commentRepository.deleteAllByFormId(formEntity.getId());
         commentRatingRepository.deleteAllByCommentIn(comments);
         submissionRepository.deleteAllByFormId(formEntity.getId());
+        formRatingRepository.deleteAllByFormId(formEntity.getId());
     }
 
     @Transactional

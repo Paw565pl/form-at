@@ -7,7 +7,7 @@ import {
 } from "@/core/components/ui/tooltip";
 import { ICONS } from "@/core/config/icons";
 import { FormDetailResponseDto, FormStatus } from "@/core/types/form";
-import { formatDuration } from "@/core/utils/formatDuration";
+import { formatDuration } from "@/core/utils/format-duration";
 import { useFormatter, useTranslations } from "next-intl";
 
 interface DetailsProps {

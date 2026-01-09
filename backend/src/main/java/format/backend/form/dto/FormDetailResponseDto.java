@@ -42,6 +42,12 @@ public record FormDetailResponseDto(
 
         @NonNull List<@NonNull QuestionResponseDto> questions,
 
+        @NonNull Long ratingsCount,
+
+        @Nullable Double ratingAvg,
+
+        @Nullable Double userRating,
+
         @NonNull Instant createdAt,
 
         @NonNull Instant updatedAt) {}

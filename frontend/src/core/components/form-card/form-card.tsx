@@ -1,6 +1,6 @@
 import { Card } from "@/core/components/ui/card";
 import { FormListResponseDto } from "@/core/types/form";
-import { formatDuration } from "@/core/utils/formatDuration";
+import { formatDuration } from "@/core/utils/format-duration";
 import { useFormatter, useTranslations } from "next-intl";
 import Link from "next/link";
 

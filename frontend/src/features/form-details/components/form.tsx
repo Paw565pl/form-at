@@ -1,5 +1,6 @@
 "use client";
 
+import { Comments } from "@/features/form-details/comments/comments";
 import { Banner } from "@/features/form-details/components/banner";
 import { Details } from "@/features/form-details/components/details";
 import { QuestionList } from "@/features/form-details/components/question-list/question-list";
@@ -28,6 +29,7 @@ export const Form = ({ formIdOrSlug }: FormProps) => {
       <Banner form={form} />
       <Details form={form} />
       <QuestionList form={form} />
+      <Comments formIdOrSlug={formIdOrSlug} />
     </section>
   );
 };

@@ -1,0 +1,20 @@
+meta {
+  name: Delete by Form Id or Slug
+  type: http
+  seq: 2
+}
+
+delete {
+  url: {{baseUrl}}/api/v1/forms/:formIdOrSlug/rating
+  body: none
+  auth: inherit
+}
+
+params:path {
+  formIdOrSlug: 694de97d09119a831e9beea1
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
