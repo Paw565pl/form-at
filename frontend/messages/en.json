@@ -193,6 +193,7 @@
       "MULTIPLE_CHOICE": "Multiple Choice",
       "OPEN": "Open Ended"
     },
+    "yourAnswer": "Enter your answer below",
     "submit": "Send",
     "submissionCreated": "Submission sent successfully!",
     "defaultThanksMessage": "Thank you for you time and effort in completing the form.",

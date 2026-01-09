@@ -3,7 +3,7 @@
 import { Button } from "@/core/components/ui/button";
 import { Card } from "@/core/components/ui/card";
 import { Checkbox } from "@/core/components/ui/checkbox";
-import { Field, FieldError } from "@/core/components/ui/field";
+import { Field, FieldError, FieldLabel } from "@/core/components/ui/field";
 import { Label } from "@/core/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/core/components/ui/radio-group";
 import { Spinner } from "@/core/components/ui/spinner";
@@ -167,9 +167,15 @@ export const Submission = ({ formData }: SubmissionProps) => {
                     control={form.control}
                     render={({ field, fieldState }) => (
                       <Field data-invalid={fieldState.invalid}>
+                        <FieldLabel
+                          htmlFor={`answers.${index}.openAnswer`}
+                          className="text-muted-foreground ml-3"
+                        >
+                          {t("yourAnswer")}
+                        </FieldLabel>
                         <Textarea
                           {...field}
-                          id="open-answer"
+                          id={`answers.${index}.openAnswer`}
                           aria-invalid={fieldState.invalid}
                           autoComplete="off"
                           className="min-h-24"
