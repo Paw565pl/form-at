@@ -193,7 +193,6 @@
       "MULTIPLE_CHOICE": "Multiple Choice",
       "OPEN": "Open Ended"
     },
-    "fillAnonymously": "Fill Anonymously",
     "submit": "Send",
     "submissionCreated": "Submission sent successfully!",
     "defaultThanksMessage": "Thank you for you time and effort in completing the form.",

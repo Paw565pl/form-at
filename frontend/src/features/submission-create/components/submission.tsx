@@ -20,22 +20,16 @@ import { submissionSchema } from "@/features/submission-create/schemas/submissio
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AxiosError } from "axios";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
 import type { FieldError as FieldErrorType } from "react-hook-form";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
 
-// TODO
-// translating errors
-// fill anonymously functionality (?)
-// cleanup
-
 interface SubmissionProps {
   readonly formData: FormDetailResponseDto;
 }
 
-// temp
+// temp -----------------------------------------------------
 import en from "@/../messages/en.json";
 
 function getTranslatedErrors(
@@ -57,11 +51,11 @@ function getTranslatedErrors(
       ]
     : [];
 }
+// ----------------------------------------------------------
 
 export const Submission = ({ formData }: SubmissionProps) => {
   const t = useTranslations("submissionCreatePage");
   const createSubmission = useCreateSubmission(formData.id);
-  const [fillAnonymously, setFillAnonymously] = useState(false);
 
   const form = useForm<z.infer<typeof submissionSchema>>({
     resolver: zodResolver(submissionSchema),
@@ -149,14 +143,19 @@ export const Submission = ({ formData }: SubmissionProps) => {
                     </div>
                   )}
 
-                  <div className="flex gap-1">
-                    <span className="text-muted-foreground">{index + 1}.</span>
-                    <h2 className="font-medium">{question.content}</h2>
-
-                    {question.isRequired && (
-                      <span className="text-muted-foreground">*</span>
-                    )}
-                    <span className="text-muted-foreground ml-auto text-sm">
+                  <div className="flex flex-col flex-wrap gap-1 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="flex gap-1">
+                      <span className="text-muted-foreground">
+                        {index + 1}.
+                      </span>
+                      <h2 className="font-medium">
+                        {question.content}{" "}
+                        {question.isRequired && (
+                          <span className="text-muted-foreground">*</span>
+                        )}
+                      </h2>
+                    </div>
+                    <span className="text-muted-foreground ml-3 text-sm">
                       {t(`questionTypes.${question.type}`)}
                     </span>
                   </div>
@@ -185,7 +184,6 @@ export const Submission = ({ formData }: SubmissionProps) => {
                               "submissionCreatePage",
                               fieldState.error,
                             )}
-                            // errors={[fieldState.error]} // translate this
                           />
                         )}
                       </Field>
@@ -230,8 +228,11 @@ export const Submission = ({ formData }: SubmissionProps) => {
                         {fieldState.invalid && (
                           <FieldError
                             className="mx-3 max-w-fit"
-                            // errors={getTranslatedErrors(fieldState.error)}
-                            errors={[fieldState.error]} // translate this
+                            errors={getTranslatedErrors(
+                              t,
+                              "submissionCreatePage",
+                              fieldState.error,
+                            )}
                           />
                         )}
                       </Field>
@@ -276,8 +277,11 @@ export const Submission = ({ formData }: SubmissionProps) => {
                         {fieldState.invalid && (
                           <FieldError
                             className="mx-3 max-w-fit"
-                            // errors={getTranslatedErrors(fieldState.error)}
-                            errors={[fieldState.error]} // translate this
+                            errors={getTranslatedErrors(
+                              t,
+                              "submissionCreatePage",
+                              fieldState.error,
+                            )}
                           />
                         )}
                       </Field>
@@ -289,15 +293,6 @@ export const Submission = ({ formData }: SubmissionProps) => {
           })}
 
           <footer className="flex justify-end gap-4">
-            <div className="flex items-center gap-2">
-              <Checkbox
-                id="fillAnonymously"
-                className="max-w-5"
-                checked={fillAnonymously}
-                onCheckedChange={() => setFillAnonymously(!fillAnonymously)}
-              />
-              <Label htmlFor="fillAnonymously">{t("fillAnonymously")}</Label>
-            </div>
             <Button
               type="submit"
               className="min-w-40"
@@ -317,11 +312,6 @@ export const Submission = ({ formData }: SubmissionProps) => {
           <p>{formData.thanksMessage || t("defaultThanksMessage")}</p>
         </Card>
       )}
-
-      {/* debugging */}
-      {/* <pre>{JSON.stringify(form.watch(), null, 2)}</pre> */}
-      {/* <pre>{JSON.stringify(form.formState.errors, null, 2)}</pre> */}
-      {/* <pre>{JSON.stringify(formData, null, 2)}</pre> */}
     </section>
   );
 };
