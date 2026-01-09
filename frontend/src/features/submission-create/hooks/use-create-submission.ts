@@ -13,7 +13,7 @@ export const useCreateSubmission = (formIdOrSlug: string) => {
     AxiosError<ErrorResponseDto>,
     SubmissionRequestDto
   >({
-    mutationKey: ["submissions", formIdOrSlug, "create"] as const,
+    mutationKey: ["forms", formIdOrSlug, "submissions", "create"] as const,
     mutationFn: async (request) => {
       const { data } = await authenticatedApiService.post(
         `/api/v1/forms/${formIdOrSlug}/submissions`,

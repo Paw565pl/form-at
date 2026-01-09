@@ -32,6 +32,7 @@ interface SubmissionProps {
 
 // temp -----------------------------------------------------
 import en from "@/../messages/en.json";
+import { useState } from "react";
 
 function getTranslatedErrors(
   translator: ReturnType<typeof useTranslations>,
@@ -58,6 +59,7 @@ export const Submission = ({ formData }: SubmissionProps) => {
   const t = useTranslations("submissionCreatePage");
   const gt = useTranslations("global");
   const createSubmission = useCreateSubmission(formData.id);
+  const [submissionComplete, setSubmissionComplete] = useState(false);
 
   const form = useForm<z.infer<typeof submissionSchema>>({
     resolver: zodResolver(submissionSchema),
@@ -88,14 +90,21 @@ export const Submission = ({ formData }: SubmissionProps) => {
         })),
     };
 
-    createSubmission.mutate(request, {
-      onError: (error) => {
-        toast.error(
-          (error instanceof AxiosError && error.response?.data?.message) ||
-            t("errors.unexpected"),
-        );
-      },
-    });
+    if (formData.saveSubmissions) {
+      createSubmission.mutate(request, {
+        onError: (error) => {
+          toast.error(
+            (error instanceof AxiosError && error.response?.data?.message) ||
+              t("errors.unexpected"),
+          );
+        },
+        onSuccess: () => {
+          setSubmissionComplete(true);
+        },
+      });
+    } else {
+      setSubmissionComplete(true);
+    }
   };
 
   return (
@@ -123,181 +132,172 @@ export const Submission = ({ formData }: SubmissionProps) => {
         </Card>
       </header>
 
-      {!createSubmission.isSuccess && (
+      {!submissionComplete && (
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-col gap-4"
         >
-          {formData.questions.map((question, index) => {
-            return (
-              <Card key={question.id} className="gap-2 p-4">
-                <header className="flex flex-col gap-4">
-                  {question.image && (
-                    <div className="relative h-60">
-                      <FormImageWithFallback
-                        src={question.image}
-                        alt="Background"
-                        fill
-                        style={{ objectFit: "contain" }}
-                        preload
-                        className="rounded-md"
-                      />
-                    </div>
-                  )}
-
-                  <div className="flex flex-col flex-wrap gap-1 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="flex gap-1">
-                      <span className="text-muted-foreground">
-                        {index + 1}.
-                      </span>
-                      <h2 className="font-medium">
-                        {question.content}{" "}
-                        {question.isRequired && (
-                          <span className="text-muted-foreground">*</span>
-                        )}
-                      </h2>
-                    </div>
-                    <span className="text-muted-foreground ml-3 text-sm">
-                      {gt(`questionTypes.${question.type}`)}
-                    </span>
+          {formData.questions.map((question, index) => (
+            <Card key={question.id} className="gap-2 p-4">
+              <header className="flex flex-col gap-4">
+                {question.image && (
+                  <div className="relative h-60">
+                    <FormImageWithFallback
+                      src={question.image}
+                      alt="Background"
+                      fill
+                      style={{ objectFit: "contain" }}
+                      preload
+                      className="rounded-md"
+                    />
                   </div>
-                </header>
+                )}
 
-                {question.type === "OPEN" && (
-                  <Controller
-                    name={`answers.${index}.openAnswer`}
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                      <Field data-invalid={fieldState.invalid}>
-                        <FieldLabel
-                          htmlFor={`answers.${index}.openAnswer`}
-                          className="text-muted-foreground ml-3"
-                        >
-                          {t("yourAnswer")}
-                        </FieldLabel>
-                        <Textarea
-                          {...field}
-                          id={`answers.${index}.openAnswer`}
-                          aria-invalid={fieldState.invalid}
-                          autoComplete="off"
-                          className="min-h-24"
-                          disabled={createSubmission.isPending}
-                          maxLength={1000}
+                <div className="flex flex-col flex-wrap gap-1 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex gap-1">
+                    <span className="text-muted-foreground">{index + 1}.</span>
+                    <h2 className="font-medium">
+                      {question.content}{" "}
+                      {question.isRequired && (
+                        <span className="text-muted-foreground">*</span>
+                      )}
+                    </h2>
+                  </div>
+                  <span className="text-muted-foreground ml-3 text-sm">
+                    {gt(`questionTypes.${question.type}`)}
+                  </span>
+                </div>
+              </header>
+
+              {question.type === "OPEN" && (
+                <Controller
+                  name={`answers.${index}.openAnswer`}
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel
+                        htmlFor={`answers.${index}.openAnswer`}
+                        className="text-muted-foreground ml-3"
+                      >
+                        {t("yourAnswer")}
+                      </FieldLabel>
+                      <Textarea
+                        {...field}
+                        id={`answers.${index}.openAnswer`}
+                        aria-invalid={fieldState.invalid}
+                        autoComplete="off"
+                        className="max-h-100 min-h-24"
+                        disabled={createSubmission.isPending}
+                        maxLength={1000}
+                      />
+                      {fieldState.invalid && (
+                        <FieldError
+                          className="mx-3 max-w-fit"
+                          errors={getTranslatedErrors(
+                            t,
+                            "submissionCreatePage",
+                            fieldState.error,
+                          )}
                         />
-                        {fieldState.invalid && (
-                          <FieldError
-                            className="mx-3 max-w-fit"
-                            errors={getTranslatedErrors(
-                              t,
-                              "submissionCreatePage",
-                              fieldState.error,
-                            )}
-                          />
-                        )}
-                      </Field>
-                    )}
-                  />
-                )}
+                      )}
+                    </Field>
+                  )}
+                />
+              )}
 
-                {question.type === "SINGLE_CHOICE" && (
-                  <Controller
-                    name={`answers.${index}.chosenAnswerIds`}
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                      <Field data-invalid={fieldState.invalid}>
-                        <RadioGroup
-                          disabled={createSubmission.isPending}
-                          onValueChange={(value) => {
-                            field.onChange([value]);
-                          }}
-                        >
-                          {question.answers.map((answer) => (
-                            <div
-                              key={answer.id}
-                              className="flex items-center gap-2"
+              {question.type === "SINGLE_CHOICE" && (
+                <Controller
+                  name={`answers.${index}.chosenAnswerIds`}
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <RadioGroup
+                        disabled={createSubmission.isPending}
+                        onValueChange={(value) => {
+                          field.onChange([value]);
+                        }}
+                      >
+                        {question.answers.map((answer) => (
+                          <div
+                            key={answer.id}
+                            className="flex items-center gap-2"
+                          >
+                            <RadioGroupItem value={answer.id} id={answer.id} />
+                            <Label
+                              htmlFor={answer.id}
+                              className={cn(
+                                createSubmission.isPending &&
+                                  "text-muted-foreground cursor-not-allowed",
+                              )}
                             >
-                              <RadioGroupItem
-                                value={answer.id}
-                                id={answer.id}
-                              />
-                              <Label
-                                htmlFor={answer.id}
-                                className={cn(
-                                  createSubmission.isPending &&
-                                    "text-muted-foreground cursor-not-allowed",
-                                )}
-                              >
-                                {answer.content}
-                              </Label>
-                            </div>
-                          ))}
-                        </RadioGroup>
-                        {fieldState.invalid && (
-                          <FieldError
-                            className="mx-3 max-w-fit"
-                            errors={getTranslatedErrors(
-                              t,
-                              "submissionCreatePage",
-                              fieldState.error,
-                            )}
-                          />
-                        )}
-                      </Field>
-                    )}
-                  />
-                )}
+                              {answer.content}
+                            </Label>
+                          </div>
+                        ))}
+                      </RadioGroup>
+                      {fieldState.invalid && (
+                        <FieldError
+                          className="mx-3 max-w-fit"
+                          errors={getTranslatedErrors(
+                            t,
+                            "submissionCreatePage",
+                            fieldState.error,
+                          )}
+                        />
+                      )}
+                    </Field>
+                  )}
+                />
+              )}
 
-                {question.type === "MULTIPLE_CHOICE" && (
-                  <Controller
-                    name={`answers.${index}.chosenAnswerIds`}
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                      <Field data-invalid={fieldState.invalid}>
-                        <div className="flex flex-col gap-2">
-                          {question.answers.map((answer) => (
-                            <div
-                              key={answer.id}
-                              className="flex items-center gap-2"
-                            >
-                              <Checkbox
-                                checked={field.value.includes(answer.id)}
-                                id={answer.id}
-                                disabled={createSubmission.isPending}
-                                onCheckedChange={(checked) => {
-                                  if (checked) {
-                                    field.onChange([...field.value, answer.id]);
-                                  } else {
-                                    field.onChange(
-                                      field.value.filter(
-                                        (id) => id !== answer.id,
-                                      ),
-                                    );
-                                  }
-                                }}
-                              />
-                              <Label htmlFor={answer.id}>
-                                {answer.content}
-                              </Label>
-                            </div>
-                          ))}
-                        </div>
-                        {fieldState.invalid && (
-                          <FieldError
-                            className="mx-3 max-w-fit"
-                            errors={getTranslatedErrors(
-                              t,
-                              "submissionCreatePage",
-                              fieldState.error,
-                            )}
-                          />
-                        )}
-                      </Field>
-                    )}
-                  />
-                )}
-              </Card>
-            );
-          })}
+              {question.type === "MULTIPLE_CHOICE" && (
+                <Controller
+                  name={`answers.${index}.chosenAnswerIds`}
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <div className="flex flex-col gap-2">
+                        {question.answers.map((answer) => (
+                          <div
+                            key={answer.id}
+                            className="flex items-center gap-2"
+                          >
+                            <Checkbox
+                              checked={field.value.includes(answer.id)}
+                              id={answer.id}
+                              disabled={createSubmission.isPending}
+                              onCheckedChange={(checked) => {
+                                if (checked) {
+                                  field.onChange([...field.value, answer.id]);
+                                } else {
+                                  field.onChange(
+                                    field.value.filter(
+                                      (id) => id !== answer.id,
+                                    ),
+                                  );
+                                }
+                              }}
+                            />
+                            <Label htmlFor={answer.id}>{answer.content}</Label>
+                          </div>
+                        ))}
+                      </div>
+                      {fieldState.invalid && (
+                        <FieldError
+                          className="mx-3 max-w-fit"
+                          errors={getTranslatedErrors(
+                            t,
+                            "submissionCreatePage",
+                            fieldState.error,
+                          )}
+                        />
+                      )}
+                    </Field>
+                  )}
+                />
+              )}
+            </Card>
+          ))}
 
           <footer className="flex justify-end gap-4">
             <Button
@@ -314,7 +314,7 @@ export const Submission = ({ formData }: SubmissionProps) => {
         </form>
       )}
 
-      {createSubmission.isSuccess && (
+      {submissionComplete && (
         <Card className="flex flex-col gap-5 p-6 text-center">
           <ICONS.check className="text-primary border-primary mx-auto h-12 w-12 rounded-full border-2 p-2" />
           <h2 className="mb-2 text-xl font-medium">{t("submissionCreated")}</h2>

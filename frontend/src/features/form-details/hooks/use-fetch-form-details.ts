@@ -4,7 +4,7 @@ import { FormDetailResponseDto } from "@/core/types/form";
 import { QueryClient, queryOptions, useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
-const getFetchFormDetailsQueryOptions = (idOrSlug: string) =>
+export const getFetchFormDetailsQueryOptions = (idOrSlug: string) =>
   queryOptions<FormDetailResponseDto, AxiosError<ErrorResponseDto>>({
     queryKey: ["forms", idOrSlug] as const,
     queryFn: async () => {
