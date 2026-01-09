@@ -20,6 +20,7 @@ import {
   TooltipTrigger,
 } from "@/core/components/ui/tooltip";
 import { ICONS } from "@/core/config/icons";
+import { cn } from "@/core/lib/cn";
 import {
   FormEstimatedDuration,
   FormRequest,
@@ -28,21 +29,21 @@ import {
   Language,
 } from "@/core/types/form";
 import { QuestionType } from "@/core/types/question";
-import { getTranslatedErrors } from "@/core/utils/get-translated-errors";
 import { useCreateForm } from "@/features/form-create/hooks/use-create-form";
 import {
-  formSchema,
+  getFormSchema,
   validImageTypes,
-} from "@/features/form-create/schemas/form-schemas";
+} from "@/features/form-create/schemas/form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AxiosError } from "axios";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import type { FieldError as FieldErrorType } from "react-hook-form";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
+
+type FormData = z.infer<ReturnType<typeof getFormSchema>>;
 
 const languageOptions: { label: string; value: Language }[] = [
   { label: "English", value: Language.En },
@@ -55,7 +56,8 @@ export const FormCreatePage = () => {
   const createForm = useCreateForm();
   const [showQuestions, setShowQuestions] = useState<boolean>(true);
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const formSchema = getFormSchema((e) => t(`errors.${e}`));
+  const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
@@ -121,7 +123,7 @@ export const FormCreatePage = () => {
     );
   };
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
+  const onSubmit = (data: FormData) => {
     const request: FormRequest = {
       ...data,
       description: data.description === "" ? null : data.description,
@@ -130,12 +132,10 @@ export const FormCreatePage = () => {
       shuffleVariant:
         data.shuffleVariant === "NONE" ? null : data.shuffleVariant,
       thumbnail: data.thumbnail || null,
-      questions: data.questions.map((q) => {
-        return {
-          ...q,
-          image: q.image || null,
-        };
-      }),
+      questions: data.questions.map((q) => ({
+        ...q,
+        image: q.image || null,
+      })),
     };
 
     createForm.mutate(request, {
@@ -191,7 +191,7 @@ export const FormCreatePage = () => {
                   {fieldState.invalid && (
                     <FieldError
                       className="mx-3 max-w-fit"
-                      errors={getTranslatedErrors(t, fieldState.error)}
+                      errors={[fieldState.error]}
                     />
                   )}
                 </Field>
@@ -209,7 +209,8 @@ export const FormCreatePage = () => {
                   >
                     {t("description")}
                     <span className="text-muted-foreground text-xs">
-                      {field.value ? field.value.length : 0}/2000
+                      {field.value ? field.value.length : 0}/
+                      {formSchema.shape.description.def.options[0].maxLength}
                     </span>
                   </FieldLabel>
                   <Textarea
@@ -222,7 +223,7 @@ export const FormCreatePage = () => {
                   {fieldState.invalid && (
                     <FieldError
                       className="mx-3 max-w-fit"
-                      errors={getTranslatedErrors(t, fieldState.error)}
+                      errors={[fieldState.error]}
                     />
                   )}
                 </Field>
@@ -283,7 +284,7 @@ export const FormCreatePage = () => {
                     {fieldState.invalid && (
                       <FieldError
                         className="mx-3 max-w-fit"
-                        errors={getTranslatedErrors(t, fieldState.error)}
+                        errors={[fieldState.error]}
                       />
                     )}
                   </Field>
@@ -302,7 +303,8 @@ export const FormCreatePage = () => {
                   >
                     {t("thanksMessage")}
                     <span className="text-muted-foreground text-xs">
-                      {field.value ? field.value.length : 0}/500
+                      {field.value ? field.value.length : 0}/
+                      {formSchema.shape.thanksMessage.def.options[0].maxLength}
                     </span>
                   </FieldLabel>
                   <Textarea
@@ -315,7 +317,7 @@ export const FormCreatePage = () => {
                   {fieldState.invalid && (
                     <FieldError
                       className="mx-3 max-w-fit"
-                      errors={getTranslatedErrors(t, fieldState.error)}
+                      errors={[fieldState.error]}
                     />
                   )}
                 </Field>
@@ -355,7 +357,7 @@ export const FormCreatePage = () => {
                   {fieldState.invalid && (
                     <FieldError
                       className="mx-3 max-w-fit"
-                      errors={getTranslatedErrors(t, fieldState.error)}
+                      errors={[fieldState.error]}
                     />
                   )}
                 </Field>
@@ -516,13 +518,18 @@ export const FormCreatePage = () => {
                   variant="outline"
                   size="icon-sm"
                   type="button"
-                  onClick={() => setShowQuestions(!showQuestions)}
+                  onClick={() =>
+                    setShowQuestions((prevShowQuestions) => !prevShowQuestions)
+                  }
                   aria-label={
                     showQuestions ? t("hideQuestions") : t("showQuestions")
                   }
                 >
                   <ICONS.expandDown
-                    className={`transition-transform ${showQuestions ? "rotate-180" : ""}`}
+                    className={cn(
+                      "transition-transform",
+                      showQuestions && "rotate-180",
+                    )}
                   />
                 </Button>
               </TooltipTrigger>
@@ -575,7 +582,11 @@ export const FormCreatePage = () => {
                       >
                         {t("questionContent")}
                         <span className="text-muted-foreground text-xs">
-                          {field.value ? field.value.length : 0}/200
+                          {field.value ? field.value.length : 0}/
+                          {
+                            formSchema.shape.questions.element.shape.content
+                              .maxLength
+                          }
                         </span>
                       </FieldLabel>
                       <Input
@@ -588,7 +599,7 @@ export const FormCreatePage = () => {
                       {fieldState.invalid && (
                         <FieldError
                           className="mx-3 max-w-fit"
-                          errors={getTranslatedErrors(t, fieldState.error)}
+                          errors={[fieldState.error]}
                         />
                       )}
                     </Field>
@@ -626,7 +637,7 @@ export const FormCreatePage = () => {
                       {fieldState.invalid && (
                         <FieldError
                           className="mx-3 max-w-fit"
-                          errors={getTranslatedErrors(t, fieldState.error)}
+                          errors={[fieldState.error]}
                         />
                       )}
                     </Field>
@@ -642,9 +653,8 @@ export const FormCreatePage = () => {
                         name={field.name}
                         onValueChange={(value) => {
                           field.onChange(value);
-                          if (value === QuestionType.Open) {
+                          if (value === QuestionType.Open)
                             form.setValue(`questions.${qIdx}.answers`, []);
-                          }
                         }}
                         value={field.value}
                       >
@@ -694,9 +704,7 @@ export const FormCreatePage = () => {
                       <Button
                         size="sm"
                         type="button"
-                        onClick={() => {
-                          appendAnswer(qIdx);
-                        }}
+                        onClick={() => appendAnswer(qIdx)}
                         disabled={answers.length >= 6}
                       >
                         <ICONS.add />
@@ -706,7 +714,7 @@ export const FormCreatePage = () => {
 
                     {answers.length > 0 && (
                       <div className="flex flex-col gap-4">
-                        {answers.map((answer, aIdx) => (
+                        {answers.map((_, aIdx) => (
                           <div key={aIdx} className="flex flex-col gap-2">
                             <header className="ml-3 flex items-end gap-8">
                               <span className="text-sm">
@@ -768,10 +776,7 @@ export const FormCreatePage = () => {
                                   {fieldState.invalid && (
                                     <FieldError
                                       className="mx-3 max-w-fit"
-                                      errors={getTranslatedErrors(
-                                        t,
-                                        fieldState.error,
-                                      )}
+                                      errors={[fieldState.error]}
                                     />
                                   )}
                                 </Field>
@@ -786,20 +791,15 @@ export const FormCreatePage = () => {
                       ?.message && (
                       <FieldError
                         className="mx-3 max-w-fit"
-                        errors={getTranslatedErrors(
-                          t,
-                          form.formState.errors.questions[qIdx]
-                            .answers as FieldErrorType,
-                        )}
+                        errors={[form.formState.errors.questions[qIdx].answers]}
                       />
                     )}
                     {form.formState.errors.questions?.[qIdx]?.answers?.root && (
                       <FieldError
                         className="mx-3 max-w-fit"
-                        errors={getTranslatedErrors(
-                          t,
+                        errors={[
                           form.formState.errors.questions[qIdx].answers.root,
-                        )}
+                        ]}
                       />
                     )}
                   </div>
@@ -811,10 +811,7 @@ export const FormCreatePage = () => {
         {form.formState.errors.questions?.message && (
           <FieldError
             className="mx-4 max-w-fit"
-            errors={getTranslatedErrors(
-              t,
-              form.formState.errors.questions as FieldErrorType,
-            )}
+            errors={[form.formState.errors.questions]}
           />
         )}
 
@@ -822,10 +819,7 @@ export const FormCreatePage = () => {
           form.formState.errors.questions.root && (
             <FieldError
               className="mx-3 max-w-fit"
-              errors={getTranslatedErrors(
-                t,
-                form.formState.errors.questions.root,
-              )}
+              errors={[form.formState.errors.questions.root]}
             />
           )}
 

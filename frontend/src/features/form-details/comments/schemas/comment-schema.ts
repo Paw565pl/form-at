@@ -1,8 +1,13 @@
-import en from "@root/messages/en.json";
+import { Messages } from "next-intl";
 import z from "zod";
 
-export type ErrorKey = keyof typeof en.formDetailsPage.comments;
+type ErrorKey = keyof Messages["formDetailsPage"]["comments"]["errors"];
 
-export const commentSchema = z.object({
-  content: z.string().trim().min(3, "contentMin").max(500, "contentMax"),
-});
+export const getCommentSchema = (t: (errorKey: ErrorKey) => string) =>
+  z.object({
+    content: z
+      .string()
+      .trim()
+      .min(3, t("contentMin"))
+      .max(500, t("contentMax")),
+  });

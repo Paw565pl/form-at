@@ -187,9 +187,11 @@
       "ratingLike": "Lubię to",
       "ratingDislike": "Nie lubię tego",
       "loading": "Ładowanie komentarzy...",
-      "contentMin": "Komentarz musi mieć co najmniej 3 znaki.",
-      "contentMax": "Komentarz może mieć maksymalnie 500 znaków.",
-      "moreOptions": "Więcej opcji"
+      "moreOptions": "Więcej opcji",
+      "errors": {
+        "contentMin": "Komentarz musi mieć co najmniej 3 znaki.",
+        "contentMax": "Komentarz może mieć maksymalnie 500 znaków."
+      }
     }
   },
   "components": {

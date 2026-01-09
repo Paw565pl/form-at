@@ -187,9 +187,11 @@
       "ratingLike": "Like",
       "ratingDislike": "Dislike",
       "loading": "Loading comments...",
-      "contentMin": "Comment must be at least 3 characters.",
-      "contentMax": "Comment must be 500 characters or less.",
-      "moreOptions": "More Options"
+      "moreOptions": "More Options",
+      "errors": {
+        "contentMin": "Comment must be at least 3 characters.",
+        "contentMax": "Comment must be 500 characters or less."
+      }
     }
   },
   "components": {

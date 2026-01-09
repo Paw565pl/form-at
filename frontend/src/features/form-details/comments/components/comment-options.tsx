@@ -39,9 +39,7 @@ export const CommentOptions = ({
   const isUserAuthor = user?.name === authorName;
   const isUserAdmin = user?.roles.includes(Role.ADMIN);
 
-  if (!isUserAuthor && !isUserAdmin) {
-    return null;
-  }
+  if (!isUserAuthor && !isUserAdmin) return null;
 
   const handleDelete = () =>
     deleteComment(undefined, {

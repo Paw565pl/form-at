@@ -2,9 +2,8 @@ import { Button } from "@/core/components/ui/button";
 import { Field, FieldError } from "@/core/components/ui/field";
 import { Input } from "@/core/components/ui/input";
 import { ICONS } from "@/core/config/icons";
-import { getTranslatedErrors } from "@/core/utils/get-translated-errors";
 import { useCreateComment } from "@/features/form-details/comments/hooks/use-create-comment";
-import { commentSchema } from "@/features/form-details/comments/schemas/comment-schema";
+import { getCommentSchema } from "@/features/form-details/comments/schemas/comment-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
@@ -12,7 +11,7 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-type CommentFormData = z.infer<typeof commentSchema>;
+type CommentFormData = z.infer<ReturnType<typeof getCommentSchema>>;
 
 interface CreateCommentFormProps {
   readonly formIdOrSlug: string;
@@ -20,9 +19,11 @@ interface CreateCommentFormProps {
 
 export const CreateCommentForm = ({ formIdOrSlug }: CreateCommentFormProps) => {
   const t = useTranslations("formDetailsPage.comments");
+
   const { data: session } = useSession();
   const { mutate: createComment, isPending } = useCreateComment(formIdOrSlug);
 
+  const commentSchema = getCommentSchema((e) => t(`errors.${e}`));
   const { handleSubmit, reset, control } = useForm<CommentFormData>({
     resolver: zodResolver(commentSchema),
     defaultValues: {
@@ -70,7 +71,7 @@ export const CreateCommentForm = ({ formIdOrSlug }: CreateCommentFormProps) => {
               {fieldState.invalid && (
                 <FieldError
                   className="mx-3 max-w-fit"
-                  errors={getTranslatedErrors(t, fieldState.error)}
+                  errors={[fieldState.error]}
                 />
               )}
             </Field>
