@@ -1,4 +1,4 @@
-import { authenticatedApiService } from "@/core/services/api-service";
+import { apiService } from "@/core/services/api-service";
 import { minioService } from "@/core/services/minio-service";
 import { ErrorResponseDto } from "@/core/types/error-response-dto";
 import {
@@ -43,10 +43,7 @@ export const useCreateForm = () => {
           imageKey: q.image ? (result.filesToKeys.get(q.image) ?? null) : null,
         })),
       };
-      const { data } = await authenticatedApiService.post(
-        "/api/v1/forms",
-        requestDto,
-      );
+      const { data } = await apiService.post("/api/v1/forms", requestDto);
 
       return data;
     },

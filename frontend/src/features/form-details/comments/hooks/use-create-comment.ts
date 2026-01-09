@@ -1,5 +1,5 @@
 import { getQueryClient } from "@/core/lib/tanstack-query";
-import { authenticatedApiService } from "@/core/services/api-service";
+import { apiService } from "@/core/services/api-service";
 import { CommentRequestDto, CommentResponseDto } from "@/core/types/comment";
 import { ErrorResponseDto } from "@/core/types/error-response-dto";
 import { getFetchFormCommentsPagesQueryOptions } from "@/features/form-details/comments/hooks/use-fetch-form-comments-pages";
@@ -16,7 +16,7 @@ export const useCreateComment = (formIdOrSlug: string) => {
   >({
     mutationKey: ["comments", formIdOrSlug, "create"] as const,
     mutationFn: async (request) => {
-      const { data } = await authenticatedApiService.post(
+      const { data } = await apiService.post(
         `/api/v1/forms/${formIdOrSlug}/comments`,
         request,
       );
