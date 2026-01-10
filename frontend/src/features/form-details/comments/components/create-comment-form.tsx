@@ -25,13 +25,7 @@ export const CreateCommentForm = ({ formIdOrSlug }: CreateCommentFormProps) => {
   const { mutate: createComment, isPending } = useCreateComment(formIdOrSlug);
 
   const commentSchema = getCommentSchema(t);
-  const {
-    handleSubmit,
-    reset,
-    control,
-    trigger,
-    formState: { errors },
-  } = useForm<CommentFormData>({
+  const form = useForm<CommentFormData>({
     resolver: zodResolver(commentSchema),
     defaultValues: {
       content: "",
@@ -40,14 +34,14 @@ export const CreateCommentForm = ({ formIdOrSlug }: CreateCommentFormProps) => {
 
   // manually trigger validation if locale has changed
   useEffect(() => {
-    if (Object.keys(errors).length > 0) trigger();
-  }, [trigger, errors, t]);
+    if (Object.keys(form.formState.errors).length > 0) form.trigger();
+  }, [form, t]);
 
   const onSubmit = (data: CommentFormData) => {
     createComment(data, {
       onSuccess: () => {
         toast.success(t("addSuccess"));
-        reset();
+        form.reset();
       },
       onError: () => {
         toast.error(t("addError"));
@@ -56,11 +50,14 @@ export const CreateCommentForm = ({ formIdOrSlug }: CreateCommentFormProps) => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-1">
+    <form
+      onSubmit={form.handleSubmit(onSubmit)}
+      className="flex flex-col gap-1"
+    >
       <div className="flex items-center gap-1">
         <Controller
           name="content"
-          control={control}
+          control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
               <div className="flex w-full items-center gap-1">

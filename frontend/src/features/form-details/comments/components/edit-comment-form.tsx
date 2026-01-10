@@ -36,12 +36,7 @@ export const EditCommentForm = ({
   );
 
   const commentSchema = getCommentSchema(t);
-  const {
-    handleSubmit,
-    control,
-    trigger,
-    formState: { errors },
-  } = useForm<CommentFormData>({
+  const form = useForm<CommentFormData>({
     resolver: zodResolver(commentSchema),
     defaultValues: {
       content: initialContent,
@@ -50,8 +45,8 @@ export const EditCommentForm = ({
 
   // manually trigger validation if locale has changed
   useEffect(() => {
-    if (Object.keys(errors).length > 0) trigger();
-  }, [trigger, errors, t]);
+    if (Object.keys(form.formState.errors).length > 0) form.trigger();
+  }, [form, t]);
 
   const onSubmit = (data: CommentFormData) => {
     editComment(data, {
@@ -67,12 +62,12 @@ export const EditCommentForm = ({
 
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={form.handleSubmit(onSubmit)}
       className="flex flex-col gap-2 py-2"
     >
       <Controller
         name="content"
-        control={control}
+        control={form.control}
         render={({ field, fieldState }) => (
           <Field data-invalid={fieldState.invalid}>
             <div className="flex flex-col gap-1">
