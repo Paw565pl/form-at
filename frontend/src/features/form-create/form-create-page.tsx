@@ -83,7 +83,7 @@ export const FormCreatePage = () => {
     },
   });
 
-  // manually trigger validation if there are any errors and locale has changed
+  // manually trigger validation if locale has changed
   useEffect(() => {
     if (Object.keys(form.formState.errors).length > 0) form.trigger();
   }, [form, t]);

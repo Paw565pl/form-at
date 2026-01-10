@@ -38,7 +38,7 @@ export const CreateCommentForm = ({ formIdOrSlug }: CreateCommentFormProps) => {
     },
   });
 
-  // manually trigger validation if there are any errors and locale has changed
+  // manually trigger validation if locale has changed
   useEffect(() => {
     if (Object.keys(errors).length > 0) trigger();
   }, [trigger, errors, t]);
