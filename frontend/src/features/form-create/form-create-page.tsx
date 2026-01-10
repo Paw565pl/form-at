@@ -38,7 +38,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { AxiosError } from "axios";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
@@ -82,6 +82,11 @@ export const FormCreatePage = () => {
       ],
     },
   });
+
+  // manually trigger validation if there are any errors and locale has changed
+  useEffect(() => {
+    if (Object.keys(form.formState.errors).length > 0) form.trigger();
+  }, [form, t]);
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const watchedQuestions = form.watch("questions") || [];

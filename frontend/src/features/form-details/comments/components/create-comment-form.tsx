@@ -7,6 +7,7 @@ import { getCommentSchema } from "@/features/form-details/comments/schemas/comme
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
+import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -24,12 +25,23 @@ export const CreateCommentForm = ({ formIdOrSlug }: CreateCommentFormProps) => {
   const { mutate: createComment, isPending } = useCreateComment(formIdOrSlug);
 
   const commentSchema = getCommentSchema((e) => t(`errors.${e}`));
-  const { handleSubmit, reset, control } = useForm<CommentFormData>({
+  const {
+    handleSubmit,
+    reset,
+    control,
+    trigger,
+    formState: { errors },
+  } = useForm<CommentFormData>({
     resolver: zodResolver(commentSchema),
     defaultValues: {
       content: "",
     },
   });
+
+  // manually trigger validation if there are any errors and locale has changed
+  useEffect(() => {
+    if (Object.keys(errors).length > 0) trigger();
+  }, [trigger, errors, t]);
 
   const onSubmit = (data: CommentFormData) => {
     createComment(data, {

@@ -7,6 +7,7 @@ import { useEditComment } from "@/features/form-details/comments/hooks/use-edit-
 import { getCommentSchema } from "@/features/form-details/comments/schemas/comment-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
+import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -35,12 +36,22 @@ export const EditComment = ({
   );
 
   const commentSchema = getCommentSchema((e) => t(`errors.${e}`));
-  const { handleSubmit, control } = useForm<CommentFormData>({
+  const {
+    handleSubmit,
+    control,
+    trigger,
+    formState: { errors },
+  } = useForm<CommentFormData>({
     resolver: zodResolver(commentSchema),
     defaultValues: {
       content: initialContent,
     },
   });
+
+  // manually trigger validation if there are any errors and locale has changed
+  useEffect(() => {
+    if (Object.keys(errors).length > 0) trigger();
+  }, [trigger, errors, t]);
 
   const onSubmit = (data: CommentFormData) => {
     editComment(data, {
