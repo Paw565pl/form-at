@@ -189,8 +189,8 @@
       "loading": "Ładowanie komentarzy...",
       "moreOptions": "Więcej opcji",
       "errors": {
-        "contentMin": "Komentarz musi mieć co najmniej 3 znaki.",
-        "contentMax": "Komentarz może mieć maksymalnie 500 znaków."
+        "contentMin": "Komentarz musi mieć co najmniej {count} znaki.",
+        "contentMax": "Komentarz może mieć maksymalnie {count} znaków."
       }
     }
   },
