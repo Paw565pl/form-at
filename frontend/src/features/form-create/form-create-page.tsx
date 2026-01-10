@@ -239,9 +239,8 @@ export const FormCreatePage = () => {
                     name={field.name}
                     onValueChange={(value) => {
                       field.onChange(value);
-                      if (value !== FormStatus.Private) {
+                      if (value !== FormStatus.Private)
                         form.setValue("password", "");
-                      }
                     }}
                     value={field.value}
                   >
