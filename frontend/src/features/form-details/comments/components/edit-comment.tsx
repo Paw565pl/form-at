@@ -35,7 +35,7 @@ export const EditComment = ({
     commentId,
   );
 
-  const commentSchema = getCommentSchema((e) => t(`errors.${e}`));
+  const commentSchema = getCommentSchema(t);
   const {
     handleSubmit,
     control,

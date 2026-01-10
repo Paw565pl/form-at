@@ -1,13 +1,15 @@
-import { Messages } from "next-intl";
+import { useTranslations } from "next-intl";
 import z from "zod";
 
-type ErrorKey = keyof Messages["formDetailsPage"]["comments"]["errors"];
+type TranslateError = ReturnType<
+  typeof useTranslations<"formDetailsPage.comments">
+>;
 
-export const getCommentSchema = (t: (errorKey: ErrorKey) => string) =>
+export const getCommentSchema = (t: TranslateError) =>
   z.object({
     content: z
       .string()
       .trim()
-      .min(3, t("contentMin"))
-      .max(500, t("contentMax")),
+      .min(3, t("errors.contentMin", { count: "3" }))
+      .max(500, t("errors.contentMax", { count: "500" })),
   });

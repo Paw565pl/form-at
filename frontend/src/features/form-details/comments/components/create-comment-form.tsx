@@ -24,7 +24,7 @@ export const CreateCommentForm = ({ formIdOrSlug }: CreateCommentFormProps) => {
   const { data: session } = useSession();
   const { mutate: createComment, isPending } = useCreateComment(formIdOrSlug);
 
-  const commentSchema = getCommentSchema((e) => t(`errors.${e}`));
+  const commentSchema = getCommentSchema(t);
   const {
     handleSubmit,
     reset,

@@ -5,11 +5,10 @@ import {
   Language,
 } from "@/core/types/form";
 import { QuestionType } from "@/core/types/question";
-import { Messages } from "next-intl";
+import { useTranslations } from "next-intl";
 import z from "zod";
 
-type ErrorKey = keyof Messages["formCreatePage"]["errors"];
-type TError = (errorKey: ErrorKey) => string;
+type TranslateError = ReturnType<typeof useTranslations<"formCreatePage">>;
 
 export const validImageTypes: string[] = [
   "image/png",
@@ -21,27 +20,29 @@ export const validImageTypes: string[] = [
 
 const maxFileSizeInBytes = 10 * 1024 * 1024;
 
-const getAnswerSchema = (t: TError) =>
+const getAnswerSchema = (t: TranslateError) =>
   z.object({
     content: z
       .string()
       .trim()
-      .min(3, t("answerContentMin"))
-      .max(200, t("answerContentMax")),
+      .min(3, t("errors.answerContentMin", { count: "3" }))
+      .max(200, t("errors.answerContentMax", { count: "200" })),
     isCorrect: z.boolean(),
   });
 
-const getQuestionSchema = (t: TError) =>
+const getQuestionSchema = (t: TranslateError) =>
   z
     .object({
       content: z
         .string()
         .trim()
-        .min(3, t("questionContentMin"))
-        .max(200, t("questionContentMax")),
+        .min(3, t("errors.questionContentMin", { count: "3" }))
+        .max(200, t("errors.questionContentMax", { count: "200" })),
       type: z.enum(QuestionType),
       isRequired: z.boolean(),
-      answers: z.array(getAnswerSchema(t)).max(6, t("answersCountMax")),
+      answers: z
+        .array(getAnswerSchema(t))
+        .max(6, t("errors.answersCountMax", { count: "6" })),
       image: z.instanceof(File).optional(),
     })
     .superRefine((data, ctx) => {
@@ -49,7 +50,7 @@ const getQuestionSchema = (t: TError) =>
         ctx.addIssue({
           path: ["answers"],
           code: "custom",
-          message: t("answersCountMin"),
+          message: t("errors.answersCountMin", { count: "2" }),
         });
       }
       if (
@@ -59,7 +60,7 @@ const getQuestionSchema = (t: TError) =>
         ctx.addIssue({
           path: ["answers"],
           code: "custom",
-          message: t("oneCorrectAnswer"),
+          message: t("errors.oneCorrectAnswer"),
         });
       }
       if (data.image) {
@@ -67,7 +68,7 @@ const getQuestionSchema = (t: TError) =>
           ctx.addIssue({
             path: ["image"],
             code: "custom",
-            message: t("imageFileType"),
+            message: t("errors.imageFileType"),
           });
         }
 
@@ -75,25 +76,25 @@ const getQuestionSchema = (t: TError) =>
           ctx.addIssue({
             path: ["image"],
             code: "custom",
-            message: t("imageFileSize"),
+            message: t("errors.imageFileSize", { size: "10 MB" }),
           });
         }
       }
     });
 
-export const getFormSchema = (t: TError) =>
+export const getFormSchema = (t: TranslateError) =>
   z
     .object({
       name: z
         .string()
         .trim()
-        .min(3, t("formNameMin"))
-        .max(200, t("formNameMax")),
+        .min(3, t("errors.formNameMin", { count: "3" }))
+        .max(200, t("errors.formNameMax", { count: "200" })),
       description: z
         .string()
         .trim()
-        .min(20, t("formDescMin"))
-        .max(2000, t("formDescMax"))
+        .min(20, t("errors.formDescMin", { count: "20" }))
+        .max(2000, t("errors.formDescMax", { count: "2000" }))
         .or(z.literal("")),
       language: z.enum(Language),
       status: z.enum(FormStatus),
@@ -101,14 +102,14 @@ export const getFormSchema = (t: TError) =>
       password: z
         .string()
         .trim()
-        .min(8, t("passwordMin"))
-        .max(200, t("passwordMax"))
+        .min(8, t("errors.passwordMin", { count: "8" }))
+        .max(200, t("errors.passwordMax", { count: "200" }))
         .or(z.literal("")),
       thanksMessage: z
         .string()
         .trim()
-        .min(3, t("thanksMessageMin"))
-        .max(500, t("thanksMessageMax"))
+        .min(3, t("errors.thanksMessageMin", { count: "3" }))
+        .max(500, t("errors.thanksMessageMax", { count: "500" }))
         .or(z.literal("")),
       estimatedDuration: z.enum(FormEstimatedDuration),
       allowsQuestionsPreview: z.boolean(),
@@ -117,22 +118,22 @@ export const getFormSchema = (t: TError) =>
       thumbnail: z.instanceof(File).optional(),
       questions: z
         .array(getQuestionSchema(t))
-        .min(3, t("questionsCountMin"))
-        .max(100, t("questionsCountMax")),
+        .min(3, t("errors.questionsCountMin", { count: "3" }))
+        .max(100, t("errors.questionsCountMax", { count: "100" })),
     })
     .superRefine((data, ctx) => {
       if (data.status === FormStatus.Private && !data.password) {
         ctx.addIssue({
           path: ["password"],
           code: "custom",
-          message: t("passwordRequired"),
+          message: t("errors.passwordRequired"),
         });
       }
       if (!data.questions.some((q) => q.isRequired)) {
         ctx.addIssue({
           path: ["questions"],
           code: "custom",
-          message: t("oneQuestionRequired"),
+          message: t("errors.oneQuestionRequired"),
         });
       }
       if (data.thumbnail) {
@@ -140,7 +141,7 @@ export const getFormSchema = (t: TError) =>
           ctx.addIssue({
             path: ["thumbnail"],
             code: "custom",
-            message: t("imageFileType"),
+            message: t("errors.imageFileType"),
           });
         }
 
@@ -148,7 +149,7 @@ export const getFormSchema = (t: TError) =>
           ctx.addIssue({
             path: ["thumbnail"],
             code: "custom",
-            message: t("imageFileSize"),
+            message: t("errors.imageFileSize", { size: "10 MB" }),
           });
         }
       }

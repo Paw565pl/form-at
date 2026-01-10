@@ -56,7 +56,7 @@ export const FormCreatePage = () => {
   const createForm = useCreateForm();
   const [showQuestions, setShowQuestions] = useState<boolean>(true);
 
-  const formSchema = getFormSchema((e) => t(`errors.${e}`));
+  const formSchema = getFormSchema(t);
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
