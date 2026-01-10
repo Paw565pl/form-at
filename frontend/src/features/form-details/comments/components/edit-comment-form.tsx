@@ -22,7 +22,7 @@ interface EditCommentProps {
 
 type CommentFormData = z.infer<ReturnType<typeof getCommentSchema>>;
 
-export const EditComment = ({
+export const EditCommentForm = ({
   formIdOrSlug,
   commentId,
   initialContent,
