@@ -1,4 +1,4 @@
-import { authenticatedApiService } from "@/core/services/api-service";
+import { apiService } from "@/core/services/api-service";
 import { CommentResponseDto } from "@/core/types/comment";
 import { ErrorResponseDto } from "@/core/types/error-response-dto";
 import { PaginatedResponseDto } from "@/core/types/paginated-response-dto";
@@ -16,7 +16,7 @@ export const getFetchFormCommentsPagesQueryOptions = (formIdOrSlug: string) =>
   >({
     queryKey: ["forms", formIdOrSlug, "comments"] as const,
     queryFn: async ({ pageParam }) => {
-      const { data } = await authenticatedApiService.get<
+      const { data } = await apiService.get<
         PaginatedResponseDto<CommentResponseDto>
       >(`/api/v1/forms/${formIdOrSlug}/comments`, {
         params: {

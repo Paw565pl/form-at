@@ -2,17 +2,17 @@ import { Button } from "@/core/components/ui/button";
 import { Field, FieldError } from "@/core/components/ui/field";
 import { Input } from "@/core/components/ui/input";
 import { ICONS } from "@/core/config/icons";
-import { getTranslatedErrors } from "@/core/utils/get-translated-errors";
 import { useCreateComment } from "@/features/form-details/comments/hooks/use-create-comment";
-import { commentSchema } from "@/features/form-details/comments/schemas/comment-schema";
+import { getCommentSchema } from "@/features/form-details/comments/schemas/comment-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
+import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-type CommentFormData = z.infer<typeof commentSchema>;
+type CommentFormData = z.infer<ReturnType<typeof getCommentSchema>>;
 
 interface CreateCommentFormProps {
   readonly formIdOrSlug: string;
@@ -20,21 +20,28 @@ interface CreateCommentFormProps {
 
 export const CreateCommentForm = ({ formIdOrSlug }: CreateCommentFormProps) => {
   const t = useTranslations("formDetailsPage.comments");
+
   const { data: session } = useSession();
   const { mutate: createComment, isPending } = useCreateComment(formIdOrSlug);
 
-  const { handleSubmit, reset, control } = useForm<CommentFormData>({
+  const commentSchema = getCommentSchema(t);
+  const form = useForm<CommentFormData>({
     resolver: zodResolver(commentSchema),
     defaultValues: {
       content: "",
     },
   });
 
+  // manually trigger validation if locale has changed
+  useEffect(() => {
+    if (Object.keys(form.formState.errors).length > 0) form.trigger();
+  }, [form, t]);
+
   const onSubmit = (data: CommentFormData) => {
     createComment(data, {
       onSuccess: () => {
         toast.success(t("addSuccess"));
-        reset();
+        form.reset();
       },
       onError: () => {
         toast.error(t("addError"));
@@ -43,11 +50,14 @@ export const CreateCommentForm = ({ formIdOrSlug }: CreateCommentFormProps) => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-1">
+    <form
+      onSubmit={form.handleSubmit(onSubmit)}
+      className="flex flex-col gap-1"
+    >
       <div className="flex items-center gap-1">
         <Controller
           name="content"
-          control={control}
+          control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
               <div className="flex w-full items-center gap-1">
@@ -70,7 +80,7 @@ export const CreateCommentForm = ({ formIdOrSlug }: CreateCommentFormProps) => {
               {fieldState.invalid && (
                 <FieldError
                   className="mx-3 max-w-fit"
-                  errors={getTranslatedErrors(t, fieldState.error)}
+                  errors={[fieldState.error]}
                 />
               )}
             </Field>

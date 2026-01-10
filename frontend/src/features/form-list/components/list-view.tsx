@@ -1,4 +1,4 @@
-import { FormCard } from "@/core/components/form-card/form-card";
+import { FormListItem } from "@/core/components/form-card/form-card";
 import { useFetchFormPages } from "@/features/form-list/hooks/use-fetch-form-pages";
 import {
   formFilterSearchParams,
@@ -37,7 +37,7 @@ export const ListView = () => {
       >
         {formPages?.pages.map((page) =>
           page.content.map((form) => (
-            <FormCard form={form} key={form.id} showAuthor />
+            <FormListItem form={form} key={form.id} showAuthor />
           )),
         )}
       </InfiniteScroll>

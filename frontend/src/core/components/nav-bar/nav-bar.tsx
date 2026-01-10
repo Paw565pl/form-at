@@ -18,7 +18,7 @@ export const NavBar = async () => {
       <div className="links flex items-center gap-4">
         <div className="text-primary flex items-center text-lg font-semibold">
           <Logo />
-          <h2>formAT</h2>
+          <h1>formAT</h1>
         </div>
 
         <div className="hidden gap-2 lg:flex">

@@ -1,0 +1,156 @@
+import {
+  FormEstimatedDuration,
+  FormShuffleVariant,
+  FormStatus,
+  Language,
+} from "@/core/types/form";
+import { QuestionType } from "@/core/types/question";
+import { useTranslations } from "next-intl";
+import z from "zod";
+
+type TranslateError = ReturnType<typeof useTranslations<"formCreatePage">>;
+
+export const validImageTypes: string[] = [
+  "image/png",
+  "image/jpeg",
+  "image/jpg",
+  "image/webp",
+  "image/avif",
+] as const;
+
+const maxFileSizeInBytes = 10 * 1024 * 1024;
+
+const getAnswerSchema = (t: TranslateError) =>
+  z.object({
+    content: z
+      .string()
+      .trim()
+      .min(3, t("errors.answerContentMin", { count: "3" }))
+      .max(200, t("errors.answerContentMax", { count: "200" })),
+    isCorrect: z.boolean(),
+  });
+
+const getQuestionSchema = (t: TranslateError) =>
+  z
+    .object({
+      content: z
+        .string()
+        .trim()
+        .min(3, t("errors.questionContentMin", { count: "3" }))
+        .max(200, t("errors.questionContentMax", { count: "200" })),
+      type: z.enum(QuestionType),
+      isRequired: z.boolean(),
+      answers: z
+        .array(getAnswerSchema(t))
+        .max(6, t("errors.answersCountMax", { count: "6" })),
+      image: z.instanceof(File).optional(),
+    })
+    .superRefine((data, ctx) => {
+      if (data.type !== QuestionType.Open && data.answers.length < 2) {
+        ctx.addIssue({
+          path: ["answers"],
+          code: "custom",
+          message: t("errors.answersCountMin", { count: "2" }),
+        });
+      }
+      if (
+        !data.answers.some((a) => a.isCorrect) &&
+        data.type !== QuestionType.Open
+      ) {
+        ctx.addIssue({
+          path: ["answers"],
+          code: "custom",
+          message: t("errors.oneCorrectAnswer"),
+        });
+      }
+      if (data.image) {
+        if (!validImageTypes.includes(data.image.type)) {
+          ctx.addIssue({
+            path: ["image"],
+            code: "custom",
+            message: t("errors.imageFileType"),
+          });
+        }
+
+        if (data.image.size > maxFileSizeInBytes) {
+          ctx.addIssue({
+            path: ["image"],
+            code: "custom",
+            message: t("errors.imageFileSize", { size: "10 MB" }),
+          });
+        }
+      }
+    });
+
+export const getFormSchema = (t: TranslateError) =>
+  z
+    .object({
+      name: z
+        .string()
+        .trim()
+        .min(3, t("errors.formNameMin", { count: "3" }))
+        .max(200, t("errors.formNameMax", { count: "200" })),
+      description: z
+        .string()
+        .trim()
+        .min(20, t("errors.formDescMin", { count: "20" }))
+        .max(2000, t("errors.formDescMax", { count: "2000" }))
+        .or(z.literal("")),
+      language: z.enum(Language),
+      status: z.enum(FormStatus),
+      shuffleVariant: z.enum(FormShuffleVariant).or(z.literal("NONE")),
+      password: z
+        .string()
+        .trim()
+        .min(8, t("errors.passwordMin", { count: "8" }))
+        .max(200, t("errors.passwordMax", { count: "200" }))
+        .or(z.literal("")),
+      thanksMessage: z
+        .string()
+        .trim()
+        .min(3, t("errors.thanksMessageMin", { count: "3" }))
+        .max(500, t("errors.thanksMessageMax", { count: "500" }))
+        .or(z.literal("")),
+      estimatedDuration: z.enum(FormEstimatedDuration),
+      allowsQuestionsPreview: z.boolean(),
+      allowsGuestSubmissions: z.boolean(),
+      saveSubmissions: z.boolean(),
+      thumbnail: z.instanceof(File).optional(),
+      questions: z
+        .array(getQuestionSchema(t))
+        .min(3, t("errors.questionsCountMin", { count: "3" }))
+        .max(100, t("errors.questionsCountMax", { count: "100" })),
+    })
+    .superRefine((data, ctx) => {
+      if (data.status === FormStatus.Private && !data.password) {
+        ctx.addIssue({
+          path: ["password"],
+          code: "custom",
+          message: t("errors.passwordRequired"),
+        });
+      }
+      if (!data.questions.some((q) => q.isRequired)) {
+        ctx.addIssue({
+          path: ["questions"],
+          code: "custom",
+          message: t("errors.oneQuestionRequired"),
+        });
+      }
+      if (data.thumbnail) {
+        if (!validImageTypes.includes(data.thumbnail.type)) {
+          ctx.addIssue({
+            path: ["thumbnail"],
+            code: "custom",
+            message: t("errors.imageFileType"),
+          });
+        }
+
+        if (data.thumbnail.size > maxFileSizeInBytes) {
+          ctx.addIssue({
+            path: ["thumbnail"],
+            code: "custom",
+            message: t("errors.imageFileSize", { size: "10 MB" }),
+          });
+        }
+      }
+    });
