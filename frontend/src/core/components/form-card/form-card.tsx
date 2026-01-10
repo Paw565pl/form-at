@@ -9,12 +9,12 @@ interface FormCardProps {
   showAuthor?: boolean;
 }
 
-export const FormCard = ({ form, showAuthor = false }: FormCardProps) => {
+export const FormListItem = ({ form, showAuthor = false }: FormCardProps) => {
   const t = useTranslations("formListPage");
   const format = useFormatter();
 
   return (
-    <Link href={{ pathname: `/forms/${form.id}` }} key={form.id}>
+    <Link href={`/forms/${form.id}`} key={form.id}>
       <Card
         key={form.id}
         className="hover:border-primary gap-1 p-3 transition-all"
@@ -22,7 +22,7 @@ export const FormCard = ({ form, showAuthor = false }: FormCardProps) => {
         <header
           className={
             showAuthor
-              ? "flex flex-wrap items-center justify-between gap-1"
+              ? "flex flex-wrap items-center justify-between gap-2"
               : "font-semibold"
           }
         >

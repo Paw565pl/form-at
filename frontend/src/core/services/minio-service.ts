@@ -1,6 +1,6 @@
 import { getClientEnv } from "@/core/lib/env/client-env";
 import { serverEnv } from "@/core/lib/env/server-env";
-import { authenticatedApiService } from "@/core/services/api-service";
+import { apiService } from "@/core/services/api-service";
 import axios from "axios";
 
 interface FileUploadRequestDto {
@@ -57,9 +57,10 @@ class MinioService {
       const uploadRequestDto: FileUploadRequestDto = {
         files: nonEmptyFiles.map((f) => ({ fileName: f.name })),
       };
-      const { data: uploadsMetadata } = await authenticatedApiService.post<
-        UploadMetadata[]
-      >("/api/v1/upload/request", uploadRequestDto);
+      const { data: uploadsMetadata } = await apiService.post<UploadMetadata[]>(
+        "/api/v1/upload/request",
+        uploadRequestDto,
+      );
 
       if (uploadsMetadata.length !== nonEmptyFiles.length)
         return {

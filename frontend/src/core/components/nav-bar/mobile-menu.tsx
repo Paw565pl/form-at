@@ -43,7 +43,7 @@ export const MobileMenu = () => {
           <header className="flex items-center justify-between">
             <div className="text-primary flex items-center text-lg font-semibold">
               <Logo />
-              <h2>formAT</h2>
+              <h1>formAT</h1>
             </div>
             <Button
               variant="ghost"

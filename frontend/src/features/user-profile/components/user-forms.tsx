@@ -1,4 +1,4 @@
-import { FormCard } from "@/core/components/form-card/form-card";
+import { FormListItem } from "@/core/components/form-card/form-card";
 import { Button } from "@/core/components/ui/button";
 import { Empty, EmptyContent, EmptyHeader } from "@/core/components/ui/empty";
 import { ICONS } from "@/core/config/icons";
@@ -44,7 +44,7 @@ export const UserForms = ({ authorId }: UserFormsProps) => {
     <div className="flex flex-2 flex-col gap-2">
       <h2 className="text-lg font-bold md:text-xl">{t("forms")}</h2>
       {forms?.map((form) => (
-        <FormCard form={form} key={form.id} />
+        <FormListItem form={form} key={form.id} />
       ))}
     </div>
   );

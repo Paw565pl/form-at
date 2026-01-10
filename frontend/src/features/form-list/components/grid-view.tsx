@@ -55,7 +55,7 @@ export const GridView = () => {
                 </div>
 
                 <div className="flex h-full flex-col gap-2 p-3">
-                  <header className="bg-card flex flex-wrap items-center justify-between">
+                  <header className="bg-card flex flex-wrap items-center justify-between gap-2">
                     <h1 className="font-medium">{form.name}</h1>
                     <span className="text-muted-foreground text-sm">
                       {form.authorName

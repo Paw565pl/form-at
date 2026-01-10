@@ -1,4 +1,4 @@
-import { authenticatedApiService } from "@/core/services/api-service";
+import { apiService } from "@/core/services/api-service";
 import { minioService } from "@/core/services/minio-service";
 import { ErrorResponseDto } from "@/core/types/error-response-dto";
 import {
@@ -42,7 +42,7 @@ export const useUpdateForm = (idOrSlug: string) => {
           imageKey: q.image ? (result.filesToKeys.get(q.image) ?? null) : null,
         })),
       };
-      const { data } = await authenticatedApiService.put(
+      const { data } = await apiService.put(
         `/api/v1/forms/${idOrSlug}`,
         requestDto,
       );

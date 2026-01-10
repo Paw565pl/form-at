@@ -2,7 +2,7 @@ import { Card } from "@/core/components/ui/card";
 import { UserImage } from "@/core/components/user-image/user-image";
 import { CommentOptions } from "@/features/form-details/comments/components/comment-options";
 import { CreateCommentForm } from "@/features/form-details/comments/components/create-comment-form";
-import { EditComment } from "@/features/form-details/comments/components/edit-comment";
+import { EditCommentForm } from "@/features/form-details/comments/components/edit-comment-form";
 import { useFetchFormCommentsPages } from "@/features/form-details/comments/hooks/use-fetch-form-comments-pages";
 import { RatingButtons } from "@/features/form-details/comments/rating/components/rating-buttons";
 import { useFormatter, useTranslations } from "next-intl";
@@ -61,7 +61,7 @@ export const Comments = ({ formIdOrSlug }: CommentsProps) => {
               </header>
 
               {editedCommentId === comment.id ? (
-                <EditComment
+                <EditCommentForm
                   formIdOrSlug={formIdOrSlug}
                   commentId={comment.id}
                   initialContent={comment.content}

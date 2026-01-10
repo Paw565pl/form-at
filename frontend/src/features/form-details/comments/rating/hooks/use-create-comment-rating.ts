@@ -1,5 +1,5 @@
 import { getQueryClient } from "@/core/lib/tanstack-query";
-import { authenticatedApiService } from "@/core/services/api-service";
+import { apiService } from "@/core/services/api-service";
 import {
   CommentRatingRequestDto,
   CommentRatingResponseDto,
@@ -33,7 +33,7 @@ export const useCreateCommentRating = ({
       "create",
     ] as const,
     mutationFn: async (request) => {
-      const { data } = await authenticatedApiService.post(
+      const { data } = await apiService.post(
         `/api/v1/forms/${formIdOrSlug}/comments/${commentId}/rating`,
         request,
       );

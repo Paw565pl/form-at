@@ -3,11 +3,11 @@ import { Field, FieldError } from "@/core/components/ui/field";
 import { Spinner } from "@/core/components/ui/spinner";
 import { Textarea } from "@/core/components/ui/textarea";
 import { ICONS } from "@/core/config/icons";
-import { getTranslatedErrors } from "@/core/utils/get-translated-errors";
 import { useEditComment } from "@/features/form-details/comments/hooks/use-edit-comment";
-import { commentSchema } from "@/features/form-details/comments/schemas/comment-schema";
+import { getCommentSchema } from "@/features/form-details/comments/schemas/comment-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
+import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -20,9 +20,9 @@ interface EditCommentProps {
   readonly onCancel: () => void;
 }
 
-type CommentFormData = z.infer<typeof commentSchema>;
+type CommentFormData = z.infer<ReturnType<typeof getCommentSchema>>;
 
-export const EditComment = ({
+export const EditCommentForm = ({
   formIdOrSlug,
   commentId,
   initialContent,
@@ -35,12 +35,18 @@ export const EditComment = ({
     commentId,
   );
 
-  const { handleSubmit, control } = useForm<CommentFormData>({
+  const commentSchema = getCommentSchema(t);
+  const form = useForm<CommentFormData>({
     resolver: zodResolver(commentSchema),
     defaultValues: {
       content: initialContent,
     },
   });
+
+  // manually trigger validation if locale has changed
+  useEffect(() => {
+    if (Object.keys(form.formState.errors).length > 0) form.trigger();
+  }, [form, t]);
 
   const onSubmit = (data: CommentFormData) => {
     editComment(data, {
@@ -56,12 +62,12 @@ export const EditComment = ({
 
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={form.handleSubmit(onSubmit)}
       className="flex flex-col gap-2 py-2"
     >
       <Controller
         name="content"
-        control={control}
+        control={form.control}
         render={({ field, fieldState }) => (
           <Field data-invalid={fieldState.invalid}>
             <div className="flex flex-col gap-1">
@@ -76,7 +82,7 @@ export const EditComment = ({
             {fieldState.invalid && (
               <FieldError
                 className="mx-3 max-w-fit"
-                errors={getTranslatedErrors(t, fieldState.error)}
+                errors={[fieldState.error]}
               />
             )}
           </Field>
