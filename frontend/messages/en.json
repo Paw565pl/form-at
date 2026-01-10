@@ -214,8 +214,8 @@
     "defaultThanksMessage": "Thank you for you time and effort in completing the form.",
     "errors": {
       "oneAnswerRequired": "You must pick at least one answer.",
-      "openAnswerMin": "Answer must be at least 10 characters.",
-      "openAnswerMax": "Answer must be at most 1000 characters.",
+      "openAnswerMin": "Answer must be at least {count} characters.",
+      "openAnswerMax": "Answer must be at most {count} characters.",
       "unexpected": "An unexpected error occurred."
     }
   }

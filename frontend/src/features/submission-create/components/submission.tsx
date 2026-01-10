@@ -17,43 +17,20 @@ import {
   SubmissionRequestDto,
 } from "@/core/types/submission";
 import { useCreateSubmission } from "@/features/submission-create/hooks/use-create-submission";
-import { submissionSchema } from "@/features/submission-create/schemas/submission-schemas";
+import { getSubmissionSchema } from "@/features/submission-create/schemas/submission-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AxiosError } from "axios";
 import { useTranslations } from "next-intl";
-import type { FieldError as FieldErrorType } from "react-hook-form";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
 
+type FormData = z.infer<ReturnType<typeof getSubmissionSchema>>;
+
 interface SubmissionProps {
   readonly formData: FormDetailResponseDto;
 }
-
-// temp -----------------------------------------------------
-import en from "@/../messages/en.json";
-import { useState } from "react";
-
-function getTranslatedErrors(
-  translator: ReturnType<typeof useTranslations>,
-  pageName: keyof typeof en,
-  error?: FieldErrorType,
-): { message: string }[] {
-  const pageMessages = en[pageName];
-  if (!("errors" in pageMessages)) {
-    throw new Error(`No errors found for page: ${pageName}`);
-  }
-  type ErrorKey = keyof (typeof pageMessages)["errors"];
-
-  return error
-    ? [
-        {
-          message: translator(`errors.${error.message as ErrorKey}`),
-        },
-      ]
-    : [];
-}
-// ----------------------------------------------------------
 
 export const Submission = ({ formData }: SubmissionProps) => {
   const t = useTranslations("submissionCreatePage");
@@ -61,8 +38,9 @@ export const Submission = ({ formData }: SubmissionProps) => {
   const createSubmission = useCreateSubmission(formData.id);
   const [submissionComplete, setSubmissionComplete] = useState(false);
 
-  const form = useForm<z.infer<typeof submissionSchema>>({
-    resolver: zodResolver(submissionSchema),
+  const formSchema = getSubmissionSchema(t);
+  const form = useForm<FormData>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
       answers: formData.questions.map((q) => ({
         questionId: q.id,
@@ -74,7 +52,12 @@ export const Submission = ({ formData }: SubmissionProps) => {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof submissionSchema>) => {
+  // manually trigger validation if locale has changed
+  useEffect(() => {
+    if (Object.keys(form.formState.errors).length > 0) form.trigger();
+  }, [form, t]);
+
+  const onSubmit = (data: FormData) => {
     const request: SubmissionRequestDto = {
       ...data,
       answers: data.answers
@@ -193,11 +176,7 @@ export const Submission = ({ formData }: SubmissionProps) => {
                       {fieldState.invalid && (
                         <FieldError
                           className="mx-3 max-w-fit"
-                          errors={getTranslatedErrors(
-                            t,
-                            "submissionCreatePage",
-                            fieldState.error,
-                          )}
+                          errors={[fieldState.error]}
                         />
                       )}
                     </Field>
@@ -238,11 +217,7 @@ export const Submission = ({ formData }: SubmissionProps) => {
                       {fieldState.invalid && (
                         <FieldError
                           className="mx-3 max-w-fit"
-                          errors={getTranslatedErrors(
-                            t,
-                            "submissionCreatePage",
-                            fieldState.error,
-                          )}
+                          errors={[fieldState.error]}
                         />
                       )}
                     </Field>
@@ -285,11 +260,7 @@ export const Submission = ({ formData }: SubmissionProps) => {
                       {fieldState.invalid && (
                         <FieldError
                           className="mx-3 max-w-fit"
-                          errors={getTranslatedErrors(
-                            t,
-                            "submissionCreatePage",
-                            fieldState.error,
-                          )}
+                          errors={[fieldState.error]}
                         />
                       )}
                     </Field>

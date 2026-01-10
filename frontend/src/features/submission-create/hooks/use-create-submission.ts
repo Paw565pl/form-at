@@ -1,4 +1,4 @@
-import { authenticatedApiService } from "@/core/services/api-service";
+import { apiService } from "@/core/services/api-service";
 import { ErrorResponseDto } from "@/core/types/error-response-dto";
 import {
   SubmissionRequestDto,
@@ -15,7 +15,7 @@ export const useCreateSubmission = (formIdOrSlug: string) => {
   >({
     mutationKey: ["forms", formIdOrSlug, "submissions", "create"] as const,
     mutationFn: async (request) => {
-      const { data } = await authenticatedApiService.post(
+      const { data } = await apiService.post(
         `/api/v1/forms/${formIdOrSlug}/submissions`,
         request,
       );

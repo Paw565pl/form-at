@@ -16,9 +16,9 @@ export const SubmissionCreatePage = async ({
 
   const queryClient = getQueryClient();
   await prefetchFormDetails(queryClient, slug);
-  const formData = queryClient.getQueryData<FormDetailResponseDto>([
+  const formData = queryClient.getQueryData<FormDetailResponseDto>(
     getFetchFormDetailsQueryOptions(slug).queryKey,
-  ]);
+  );
 
   if (!formData) return notFound();
 

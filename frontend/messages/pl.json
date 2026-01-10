@@ -214,8 +214,8 @@
     "defaultThanksMessage": "Dziękuję za poświęcony czas i wypełnienie formularza.",
     "errors": {
       "oneAnswerRequired": "Musisz wybrać co najmniej jedną odpowiedź.",
-      "openAnswerMin": "Odpowiedź musi mieć co najmniej 10 znaków.",
-      "openAnswerMax": "Odpowiedź może mieć maksymalnie 1000 znaków.",
+      "openAnswerMin": "Odpowiedź musi mieć co najmniej {count} znaków.",
+      "openAnswerMax": "Odpowiedź może mieć maksymalnie {count} znaków.",
       "unexpected": "Wystąpił nieoczekiwany błąd."
     }
   }
