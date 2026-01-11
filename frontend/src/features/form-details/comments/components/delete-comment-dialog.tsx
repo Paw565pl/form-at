@@ -1,37 +1,39 @@
-import { Button } from "@/core/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/core/components/ui/dialog";
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/core/components/ui/alert-dialog";
+import { Button } from "@/core/components/ui/button";
 import { useTranslations } from "next-intl";
 
-interface DeleteCommentDialogProps {
+interface DeleteCommentAlertDialogProps {
   readonly isOpen: boolean;
   readonly isPending: boolean;
   readonly onClose: () => void;
   readonly onConfirm: () => void;
 }
 
-export const DeleteCommentDialog = ({
+export const DeleteCommentAlertDialog = ({
   isOpen,
   isPending,
   onClose,
   onConfirm,
-}: DeleteCommentDialogProps) => {
+}: DeleteCommentAlertDialogProps) => {
   const t = useTranslations("formDetailsPage.comments");
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{t("deleteDialogTitle")}</DialogTitle>
-          <DialogDescription>{t("deleteDialogDescription")}</DialogDescription>
-        </DialogHeader>
-        <DialogFooter>
+    <AlertDialog open={isOpen} onOpenChange={onClose}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>{t("deleteDialogTitle")}</AlertDialogTitle>
+          <AlertDialogDescription>
+            {t("deleteDialogDescription")}
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
           <Button variant="outline" onClick={onClose}>
             {t("cancel")}
           </Button>
@@ -42,8 +44,8 @@ export const DeleteCommentDialog = ({
           >
             {t("delete")}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 };
