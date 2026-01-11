@@ -158,7 +158,9 @@
     },
     "rating": {
       "ratingError": "Error submitting rating. Please try again.",
-      "ratingDeleted": "Rating deleted successfully."
+      "ratingDeleted": "Rating deleted successfully.",
+      "ratingAvg": "Average Rating: {rating}",
+      "ratingsCount": "{count, plural, one {# rating} other {# ratings}}"
     },
     "questionList": {
       "showQuestions": "Show Questions Preview",

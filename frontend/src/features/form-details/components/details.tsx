@@ -8,8 +8,8 @@ import {
 import { ICONS } from "@/core/config/icons";
 import { FormDetailResponseDto, FormStatus } from "@/core/types/form";
 import { formatDuration } from "@/core/utils/format-duration";
-import { useFormatter, useTranslations } from "next-intl";
 import { FormRating } from "@/features/form-details/rating/form-rating";
+import { useFormatter, useTranslations } from "next-intl";
 
 interface DetailsProps {
   readonly form: FormDetailResponseDto;
@@ -45,6 +45,7 @@ export const Details = ({ form }: DetailsProps) => {
 
       <FormRating
         formIdOrSlug={form.slug}
+        ratingsCount={form.ratingsCount}
         userRating={form.userRating}
         ratingAvg={form.ratingAvg || 0}
       />

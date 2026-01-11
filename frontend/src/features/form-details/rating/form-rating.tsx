@@ -1,19 +1,21 @@
+import { StarButton } from "@/features/form-details/rating/components/star-button";
+import { useCreateFormRating } from "@/features/form-details/rating/hooks/use-create-form-rating";
+import { useDeleteFormRating } from "@/features/form-details/rating/hooks/use-delete-form-rating";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { toast } from "sonner";
-import { StarButton } from "@/features/form-details/rating/components/star-button";
-import { useCreateFormRating } from "@/features/form-details/rating/hooks/use-create-form-rating";
-import { useDeleteFormRating } from "@/features/form-details/rating/hooks/use-delete-form-rating";
 
 interface FormRatingProps {
   readonly formIdOrSlug: string;
+  readonly ratingsCount: number;
   readonly userRating: number | null;
   readonly ratingAvg: number;
 }
 
 export const FormRating = ({
   formIdOrSlug,
+  ratingsCount,
   userRating,
   ratingAvg,
 }: FormRatingProps) => {
@@ -93,7 +95,8 @@ export const FormRating = ({
           );
         })}
       </div>
-      <p>Average Rating: {ratingAvg}</p>
+      <p>{t("ratingAvg", { rating: ratingAvg.toString() })}</p>
+      <p>{t("ratingsCount", { count: ratingsCount })}</p>
     </section>
   );
 };
