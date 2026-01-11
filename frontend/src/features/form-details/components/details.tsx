@@ -9,6 +9,7 @@ import { ICONS } from "@/core/config/icons";
 import { FormDetailResponseDto, FormStatus } from "@/core/types/form";
 import { formatDuration } from "@/core/utils/format-duration";
 import { useFormatter, useTranslations } from "next-intl";
+import { FormRating } from "../rating/hooks/form-rating";
 
 interface DetailsProps {
   readonly form: FormDetailResponseDto;
@@ -41,6 +42,8 @@ export const Details = ({ form }: DetailsProps) => {
           })}
         </Badge>
       </header>
+
+      <FormRating />
 
       {form.description && <p>{form.description}</p>}
 

@@ -24,6 +24,7 @@ import {
   Plus,
   Save,
   SendHorizonal,
+  Star,
   Sun,
   ThumbsDown,
   ThumbsUp,
@@ -64,4 +65,5 @@ export const ICONS = {
   save: Save,
   add: Plus,
   delete: Trash,
+  star: Star,
 } as const;
