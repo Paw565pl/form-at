@@ -156,6 +156,9 @@
       "privateForm": "Formularz zabezpieczony kodem",
       "createdAt": "Utworzono {date}"
     },
+    "rating": {
+      "ratingError": "Błąd podczas przesyłania oceny. Spróbuj ponownie."
+    },
     "questionList": {
       "showQuestions": "Pokaż podgląd pytań",
       "hideQuestions": "Ukryj podgląd pytań",

@@ -43,7 +43,7 @@ export const Details = ({ form }: DetailsProps) => {
         </Badge>
       </header>
 
-      <FormRating />
+      <FormRating formIdOrSlug={form.slug} userRating={form.userRating} />
 
       {form.description && <p>{form.description}</p>}
 

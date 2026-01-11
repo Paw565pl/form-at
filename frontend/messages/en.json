@@ -156,6 +156,9 @@
       "privateForm": "Form Requires Code",
       "createdAt": "Created {date}"
     },
+    "rating": {
+      "ratingError": "Error submitting rating. Please try again."
+    },
     "questionList": {
       "showQuestions": "Show Questions Preview",
       "hideQuestions": "Hide Questions Preview",

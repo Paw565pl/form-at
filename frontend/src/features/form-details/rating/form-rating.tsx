@@ -1,60 +1,49 @@
-import { ICONS } from "@/core/config/icons";
-import { cn } from "@/core/lib/cn";
+import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
+import { toast } from "sonner";
+import { StarButton } from "./components/star-button";
+import { useCreateFormRating } from "./hooks/use-create-form-rating";
+import { useDeleteFormRating } from "./hooks/use-delete-form-rating";
 
-const StarButton = ({
-  fillFraction,
-  isHovered,
-  onMouseEnter,
-  onMouseLeave,
-  onClick,
-}: {
-  fillFraction: number;
-  isHovered: boolean;
-  onMouseEnter: () => void;
-  onMouseLeave: () => void;
-  onClick: () => void;
-}) => {
-  return (
-    <button
-      className="relative flex cursor-pointer items-center justify-center transition-transform hover:scale-110"
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-      onClick={onClick}
-    >
-      <div className="relative inline-block">
-        {/* Background (empty) star */}
-        <ICONS.star
-          className={`transition-opacity ${
-            isHovered ? "text-primary opacity-100" : "opacity-30"
-          }`}
-        />
+interface FormRatingProps {
+  readonly formIdOrSlug: string;
+  readonly userRating: number | null;
+}
 
-        {/* Filled star overlay */}
-        {(fillFraction > 0 || isHovered) && (
-          <div
-            className={cn(
-              "absolute top-0 left-0 overflow-hidden transition-all",
-              isHovered ? "text-primary" : null,
-            )}
-            style={{
-              width: isHovered ? "100%" : `${fillFraction * 100}%`,
-            }}
-          >
-            <ICONS.star />
-          </div>
-        )}
-      </div>
-    </button>
-  );
-};
-
-export const FormRating = () => {
-  const [rating, setRating] = useState(4.3);
+export const FormRating = ({ formIdOrSlug, userRating }: FormRatingProps) => {
+  const t = useTranslations("formDetailsPage.rating");
+  const { data: session } = useSession();
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
+  const { mutate: createRating, isPending: isCreating } =
+    useCreateFormRating(formIdOrSlug);
+  const { mutate: deleteRating, isPending: isDeleting } =
+    useDeleteFormRating(formIdOrSlug);
+
+  const isPending = isCreating || isDeleting;
+
   const handleStarClick = (index: number) => {
-    setRating(index + 1);
+    if (!session || isPending) return;
+
+    const newRating = index + 1;
+
+    if (userRating === newRating) {
+      deleteRating(undefined, {
+        onError: () => {
+          toast.error(t("ratingError"));
+        },
+      });
+    } else {
+      createRating(
+        { ratingValue: newRating },
+        {
+          onError: () => {
+            toast.error(t("ratingError"));
+          },
+        },
+      );
+    }
   };
 
   const handleStarHover = (index: number) => {
@@ -72,7 +61,9 @@ export const FormRating = () => {
           const fillFraction =
             hoveredIndex !== null
               ? 0
-              : Math.round(Math.min(Math.max(rating - index, 0), 1) * 10) / 10;
+              : Math.round(
+                  Math.min(Math.max((userRating ?? 0) - index, 0), 1) * 10,
+                ) / 10;
           const isHovered = hoveredIndex !== null && index <= hoveredIndex;
 
           return (
@@ -83,11 +74,12 @@ export const FormRating = () => {
               onMouseEnter={() => handleStarHover(index)}
               onMouseLeave={handleMouseLeave}
               onClick={() => handleStarClick(index)}
+              disabled={!session || isPending}
             />
           );
         })}
       </div>
-      <p>Rating: {rating}</p>
+      <p>Rating: {userRating ?? 0}</p>
     </section>
   );
 };
