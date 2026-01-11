@@ -160,7 +160,7 @@
       "ratingError": "Błąd podczas przesyłania oceny. Spróbuj ponownie.",
       "ratingDeleted": "Ocena została pomyślnie usunięta.",
       "ratingAvg": "Średnia ocena: {rating}",
-      "ratingsCount": "{count, plural, one {# ocena} other {# ocen}}"
+      "ratingsCount": "{count, plural, one {# ocena} few {# oceny} other {# ocen}}"
     },
     "questionList": {
       "showQuestions": "Pokaż podgląd pytań",

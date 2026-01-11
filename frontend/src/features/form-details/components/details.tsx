@@ -33,7 +33,7 @@ export const Details = ({ form }: DetailsProps) => {
           </Tooltip>
         )}
 
-        <h1 className="line-clamp-2 max-w-2xl text-2xl">{form.name}</h1>
+        <h1 className="line-clamp-2 max-w-2xl text-3xl">{form.name}</h1>
 
         {/* TODO take submission date from user's submission data */}
         <Badge className="text-wrap md:ml-auto">

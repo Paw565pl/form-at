@@ -65,38 +65,43 @@ export const FormRating = ({
   };
 
   return (
-    <section className="flex gap-3">
-      <div className="flex">
-        {[0, 1, 2, 3, 4].map((index) => {
-          let fillFraction = 0;
-          if (hoveredIndex === null) {
-            // If user has rated, show their rating; otherwise show average
-            if (userRating !== null) {
-              fillFraction = index < userRating ? 1 : 0;
-            } else {
-              fillFraction =
-                Math.round(Math.min(Math.max(ratingAvg - index, 0), 1) * 10) /
-                10;
-            }
-          }
-          const isHovered = hoveredIndex !== null && index <= hoveredIndex;
+    <section className="flex items-center gap-3">
+      <p className="text-4xl">{ratingAvg.toFixed(1)}</p>
 
-          return (
-            <StarButton
-              key={index}
-              fillFraction={fillFraction}
-              userRating={userRating}
-              isHovered={isHovered}
-              onMouseEnter={() => handleStarHover(index)}
-              onMouseLeave={handleMouseLeave}
-              onClick={() => handleStarClick(index)}
-              disabled={!session || isPending}
-            />
-          );
-        })}
+      <div className="flex flex-col items-center gap-1">
+        <div className="flex">
+          {[0, 1, 2, 3, 4].map((index) => {
+            let fillFraction = 0;
+            if (hoveredIndex === null) {
+              // If user has rated, show their rating; otherwise show average
+              if (userRating !== null) {
+                fillFraction = index < userRating ? 1 : 0;
+              } else {
+                fillFraction =
+                  Math.round(Math.min(Math.max(ratingAvg - index, 0), 1) * 10) /
+                  10;
+              }
+            }
+            const isHovered = hoveredIndex !== null && index <= hoveredIndex;
+
+            return (
+              <StarButton
+                key={index}
+                fillFraction={fillFraction}
+                userRating={userRating}
+                isHovered={isHovered}
+                onMouseEnter={() => handleStarHover(index)}
+                onMouseLeave={handleMouseLeave}
+                onClick={() => handleStarClick(index)}
+                disabled={!session || isPending}
+              />
+            );
+          })}
+        </div>
+        <p className="text-muted-foreground text-sm">
+          {t("ratingsCount", { count: ratingsCount })}
+        </p>
       </div>
-      <p>{t("ratingAvg", { rating: ratingAvg.toString() })}</p>
-      <p>{t("ratingsCount", { count: ratingsCount })}</p>
     </section>
   );
 };
