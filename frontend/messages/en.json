@@ -157,7 +157,8 @@
       "createdAt": "Created {date}"
     },
     "rating": {
-      "ratingError": "Error submitting rating. Please try again."
+      "ratingError": "Error submitting rating. Please try again.",
+      "ratingDeleted": "Rating deleted successfully."
     },
     "questionList": {
       "showQuestions": "Show Questions Preview",

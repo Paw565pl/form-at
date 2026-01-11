@@ -71,7 +71,7 @@ export interface FormDetailResponseDto {
   readonly submissionsCount: number;
   readonly questions: QuestionResponseDto[];
   readonly ratingsCount: number;
-  readonly averageRating: number | null;
+  readonly ratingAvg: number | null;
   readonly userRating: number | null;
   readonly createdAt: string;
   readonly updatedAt: string;

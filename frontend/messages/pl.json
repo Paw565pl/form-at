@@ -157,7 +157,8 @@
       "createdAt": "Utworzono {date}"
     },
     "rating": {
-      "ratingError": "Błąd podczas przesyłania oceny. Spróbuj ponownie."
+      "ratingError": "Błąd podczas przesyłania oceny. Spróbuj ponownie.",
+      "ratingDeleted": "Ocena została pomyślnie usunięta."
     },
     "questionList": {
       "showQuestions": "Pokaż podgląd pytań",

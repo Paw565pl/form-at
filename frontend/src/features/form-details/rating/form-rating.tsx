@@ -2,16 +2,21 @@ import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { toast } from "sonner";
-import { StarButton } from "./components/star-button";
-import { useCreateFormRating } from "./hooks/use-create-form-rating";
-import { useDeleteFormRating } from "./hooks/use-delete-form-rating";
+import { StarButton } from "@/features/form-details/rating/components/star-button";
+import { useCreateFormRating } from "@/features/form-details/rating/hooks/use-create-form-rating";
+import { useDeleteFormRating } from "@/features/form-details/rating/hooks/use-delete-form-rating";
 
 interface FormRatingProps {
   readonly formIdOrSlug: string;
   readonly userRating: number | null;
+  readonly ratingAvg: number;
 }
 
-export const FormRating = ({ formIdOrSlug, userRating }: FormRatingProps) => {
+export const FormRating = ({
+  formIdOrSlug,
+  userRating,
+  ratingAvg,
+}: FormRatingProps) => {
   const t = useTranslations("formDetailsPage.rating");
   const { data: session } = useSession();
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -30,6 +35,9 @@ export const FormRating = ({ formIdOrSlug, userRating }: FormRatingProps) => {
 
     if (userRating === newRating) {
       deleteRating(undefined, {
+        onSuccess: () => {
+          toast.success(t("ratingDeleted"));
+        },
         onError: () => {
           toast.error(t("ratingError"));
         },
@@ -58,18 +66,24 @@ export const FormRating = ({ formIdOrSlug, userRating }: FormRatingProps) => {
     <section className="flex gap-3">
       <div className="flex">
         {[0, 1, 2, 3, 4].map((index) => {
-          const fillFraction =
-            hoveredIndex !== null
-              ? 0
-              : Math.round(
-                  Math.min(Math.max((userRating ?? 0) - index, 0), 1) * 10,
-                ) / 10;
+          let fillFraction = 0;
+          if (hoveredIndex === null) {
+            // If user has rated, show their rating; otherwise show average
+            if (userRating !== null) {
+              fillFraction = index < userRating ? 1 : 0;
+            } else {
+              fillFraction =
+                Math.round(Math.min(Math.max(ratingAvg - index, 0), 1) * 10) /
+                10;
+            }
+          }
           const isHovered = hoveredIndex !== null && index <= hoveredIndex;
 
           return (
             <StarButton
               key={index}
               fillFraction={fillFraction}
+              userRating={userRating}
               isHovered={isHovered}
               onMouseEnter={() => handleStarHover(index)}
               onMouseLeave={handleMouseLeave}
@@ -79,7 +93,7 @@ export const FormRating = ({ formIdOrSlug, userRating }: FormRatingProps) => {
           );
         })}
       </div>
-      <p>Rating: {userRating ?? 0}</p>
+      <p>Average Rating: {ratingAvg}</p>
     </section>
   );
 };

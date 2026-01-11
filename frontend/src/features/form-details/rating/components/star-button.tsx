@@ -3,6 +3,7 @@ import { cn } from "@/core/lib/cn";
 
 interface StarButtonProps {
   readonly fillFraction: number;
+  readonly userRating: number | null;
   readonly isHovered: boolean;
   readonly onMouseEnter: () => void;
   readonly onMouseLeave: () => void;
@@ -11,6 +12,7 @@ interface StarButtonProps {
 }
 
 export const StarButton = ({
+  userRating,
   fillFraction,
   isHovered,
   onMouseEnter,
@@ -29,9 +31,10 @@ export const StarButton = ({
       <div className="relative inline-block">
         {/* Background (empty) star */}
         <ICONS.star
-          className={`transition-opacity ${
-            isHovered ? "text-primary opacity-100" : "opacity-30"
-          }`}
+          className={cn(
+            "transition-opacity",
+            isHovered ? "text-primary opacity-100" : "opacity-30",
+          )}
         />
 
         {/* Filled star overlay */}
@@ -39,7 +42,9 @@ export const StarButton = ({
           <div
             className={cn(
               "absolute top-0 left-0 overflow-hidden transition-all",
-              isHovered ? "text-primary" : null,
+              isHovered || (userRating !== null && fillFraction === 1)
+                ? "text-primary"
+                : null,
             )}
             style={{
               width: isHovered ? "100%" : `${fillFraction * 100}%`,
