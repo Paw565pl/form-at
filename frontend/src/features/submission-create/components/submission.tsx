@@ -36,7 +36,7 @@ export const Submission = ({ formData }: SubmissionProps) => {
   const t = useTranslations("submissionCreatePage");
   const gt = useTranslations("global");
   const createSubmission = useCreateSubmission(formData.id);
-  const [submissionComplete, setSubmissionComplete] = useState(false);
+  const [isSubmissionComplete, setIsSubmissionComplete] = useState(false);
 
   const formSchema = getSubmissionSchema(t);
   const form = useForm<FormData>({
@@ -82,11 +82,11 @@ export const Submission = ({ formData }: SubmissionProps) => {
           );
         },
         onSuccess: () => {
-          setSubmissionComplete(true);
+          setIsSubmissionComplete(true);
         },
       });
     } else {
-      setSubmissionComplete(true);
+      setIsSubmissionComplete(true);
     }
   };
 
@@ -115,7 +115,7 @@ export const Submission = ({ formData }: SubmissionProps) => {
         </Card>
       </header>
 
-      {!submissionComplete && (
+      {!isSubmissionComplete && (
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-col gap-4"
@@ -285,7 +285,7 @@ export const Submission = ({ formData }: SubmissionProps) => {
         </form>
       )}
 
-      {submissionComplete && (
+      {isSubmissionComplete && (
         <Card className="flex flex-col gap-5 p-6 text-center">
           <ICONS.check className="text-primary border-primary mx-auto h-12 w-12 rounded-full border-2 p-2" />
           <h2 className="mb-2 text-xl font-medium">{t("submissionCreated")}</h2>
