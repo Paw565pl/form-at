@@ -11,6 +11,11 @@
     "message": "Wystąpił nieoczekiwany błąd. Wróć na stronę główną, aby kontynuować przeglądanie.",
     "returnButton": "Wróć na stronę główną"
   },
+  "notFoundPage": {
+    "header": "Ta strona nie istnieje",
+    "message": "Przepraszamy, nie mogliśmy znaleźć strony, której szukasz. Mogła zostać przeniesiona lub usunięta.",
+    "returnButton": "Wróć na stronę główną"
+  },
   "navBar": {
     "auth": {
       "signIn": "Zaloguj się",

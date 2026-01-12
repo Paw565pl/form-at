@@ -9,6 +9,7 @@ import {
   ClockArrowUp,
   CornerUpLeft,
   FileKey2,
+  FileQuestion,
   Globe,
   HatGlasses,
   Home,
@@ -66,4 +67,5 @@ export const ICONS = {
   add: Plus,
   delete: Trash,
   error: AlertTriangle,
+  notFound: FileQuestion,
 } as const;
