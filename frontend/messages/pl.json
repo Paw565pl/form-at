@@ -216,6 +216,7 @@
       "oneAnswerRequired": "Musisz wybrać co najmniej jedną odpowiedź.",
       "openAnswerMin": "Odpowiedź musi mieć co najmniej {count} znaków.",
       "openAnswerMax": "Odpowiedź może mieć maksymalnie {count} znaków.",
+      "submissionExists": "Ten formularz został już przez Ciebie wypełniony.",
       "unexpected": "Wystąpił nieoczekiwany błąd."
     }
   }

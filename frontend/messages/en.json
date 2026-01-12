@@ -216,6 +216,7 @@
       "oneAnswerRequired": "You must pick at least one answer.",
       "openAnswerMin": "Answer must be at least {count} characters.",
       "openAnswerMax": "Answer must be at most {count} characters.",
+      "submissionExists": "You have already submitted this form.",
       "unexpected": "An unexpected error occurred."
     }
   }

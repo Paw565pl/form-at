@@ -27,5 +27,5 @@ const createProtectedRoutePattern = {
 
 export const protectedRoutes: ProtectedRoutePattern[] = [
   createProtectedRoutePattern.exact("/forms/new"),
-  createProtectedRoutePattern.exact("/forms/.*/submissions/new"),
+  createProtectedRoutePattern.exact("/forms/[^/]+/submissions/new"),
 ] as const;

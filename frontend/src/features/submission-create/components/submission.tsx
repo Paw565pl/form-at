@@ -19,7 +19,7 @@ import {
 import { useCreateSubmission } from "@/features/submission-create/hooks/use-create-submission";
 import { getSubmissionSchema } from "@/features/submission-create/schemas/submission-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AxiosError } from "axios";
+import { HttpStatusCode } from "axios";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -76,10 +76,13 @@ export const Submission = ({ formData }: SubmissionProps) => {
     if (formData.saveSubmissions) {
       createSubmission.mutate(request, {
         onError: (error) => {
-          toast.error(
-            (error instanceof AxiosError && error.response?.data?.message) ||
-              t("errors.unexpected"),
-          );
+          if (error.status === HttpStatusCode.Conflict) {
+            toast.error(t("errors.submissionExists"));
+          } else {
+            toast.error(
+              error.response?.data?.message || t("errors.unexpected"),
+            );
+          }
         },
         onSuccess: () => {
           setIsSubmissionComplete(true);
