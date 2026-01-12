@@ -289,8 +289,10 @@ export const Submission = ({ formData }: SubmissionProps) => {
       )}
 
       {isSubmissionComplete && (
-        <Card className="flex flex-col gap-5 p-6 text-center">
-          <ICONS.check className="text-primary border-primary mx-auto h-12 w-12 rounded-full border-2 p-2" />
+        <Card className="flex flex-col items-center justify-center gap-5 p-6">
+          <div className="bg-primary/10 flex h-16 w-16 items-center justify-center rounded-full">
+            <ICONS.check className="text-primary h-10 w-10" />
+          </div>
           <h2 className="mb-2 text-xl font-medium">{t("submissionCreated")}</h2>
           <p>{formData.thanksMessage || t("defaultThanksMessage")}</p>
         </Card>
