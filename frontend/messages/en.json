@@ -1,6 +1,10 @@
 {
-  "rootPage": {
-    "message": "Hello world!"
+  "global": {
+    "questionTypes": {
+      "SINGLE_CHOICE": "Single Choice",
+      "MULTIPLE_CHOICE": "Multiple Choice",
+      "OPEN": "Open Ended"
+    }
   },
   "errorPage": {
     "header": "Whoops! Something went wrong.",
@@ -98,11 +102,6 @@
     "questionPlaceholder": "What is your favorite color?",
     "required": "Required",
     "type": "Type",
-    "questionTypes": {
-      "SINGLE_CHOICE": "Single Choice",
-      "MULTIPLE_CHOICE": "Multiple Choice",
-      "OPEN": "Open Ended"
-    },
     "answers": "Answers",
     "answer": "Answer",
     "addAnswer": "Add Answer",
@@ -162,12 +161,7 @@
       "showQuestions": "Show Questions Preview",
       "hideQuestions": "Hide Questions Preview",
       "noPreviewAllowed": "The author has not allowed questions preview.",
-      "noQuestions": "No questions to display.",
-      "questionTypes": {
-        "single": "Single Choice",
-        "multiple": "Multiple Choice",
-        "open": "Open Ended"
-      }
+      "noQuestions": "No questions to display."
     },
     "comments": {
       "add": "Add a Comment",
@@ -213,5 +207,20 @@
     "formsCount": "Forms Created",
     "submissionsCount": "Submissions",
     "commentsCount": "Comments"
+  },
+  "submissionCreatePage": {
+    "loading": "Loading form...",
+    "yourAnswer": "Enter your answer below",
+    "submit": "Send",
+    "submissionCreated": "Submission sent successfully!",
+    "defaultThanksMessage": "Thank you for your time and effort in completing the form.",
+    "backToDetails": "Back to Form Details",
+    "errors": {
+      "oneAnswerRequired": "You must pick at least one answer.",
+      "openAnswerMin": "Answer must be at least {count} characters.",
+      "openAnswerMax": "Answer must be at most {count} characters.",
+      "submissionExists": "You have already submitted this form.",
+      "unexpected": "An unexpected error occurred."
+    }
   }
 }

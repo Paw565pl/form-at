@@ -1,6 +1,10 @@
 {
-  "rootPage": {
-    "message": "Witaj świecie!"
+  "global": {
+    "questionTypes": {
+      "SINGLE_CHOICE": "Wybór pojedynczy",
+      "MULTIPLE_CHOICE": "Wybór wielokrotny",
+      "OPEN": "Odpowiedź otwarta"
+    }
   },
   "errorPage": {
     "header": "Ups! Coś poszło nie tak.",
@@ -98,11 +102,6 @@
     "questionPlaceholder": "Jaki jest Twój ulubiony kolor?",
     "required": "Wymagane",
     "type": "Typ",
-    "questionTypes": {
-      "SINGLE_CHOICE": "Wybór pojedynczy",
-      "MULTIPLE_CHOICE": "Wybór wielokrotny",
-      "OPEN": "Odpowiedź otwarta"
-    },
     "answers": "Odpowiedzi",
     "answer": "Odpowiedź",
     "addAnswer": "Dodaj odpowiedź",
@@ -162,12 +161,7 @@
       "showQuestions": "Pokaż podgląd pytań",
       "hideQuestions": "Ukryj podgląd pytań",
       "noPreviewAllowed": "Autor nie zezwolił na podgląd pytań.",
-      "noQuestions": "Brak pytań do wyświetlenia.",
-      "questionTypes": {
-        "single": "Wybór pojedynczy",
-        "multiple": "Wybór wielokrotny",
-        "open": "Odpowiedź otwarta"
-      }
+      "noQuestions": "Brak pytań do wyświetlenia."
     },
     "comments": {
       "add": "Dodaj komentarz",
@@ -213,5 +207,20 @@
     "formsCount": "Utworzone formularze",
     "submissionsCount": "Wypełnione formularze",
     "commentsCount": "Komentarze"
+  },
+  "submissionCreatePage": {
+    "loading": "Ładowanie formularza...",
+    "yourAnswer": "Wpisz swoją odpowiedź poniżej",
+    "submit": "Wyślij",
+    "submissionCreated": "Pomyślnie przesłano odpowiedź!",
+    "defaultThanksMessage": "Dziękuję za poświęcony czas i wypełnienie formularza.",
+    "backToDetails": "Powrót do strony formularza",
+    "errors": {
+      "oneAnswerRequired": "Musisz wybrać co najmniej jedną odpowiedź.",
+      "openAnswerMin": "Odpowiedź musi mieć co najmniej {count} znaków.",
+      "openAnswerMax": "Odpowiedź może mieć maksymalnie {count} znaków.",
+      "submissionExists": "Ten formularz został już przez Ciebie wypełniony.",
+      "unexpected": "Wystąpił nieoczekiwany błąd."
+    }
   }
 }
