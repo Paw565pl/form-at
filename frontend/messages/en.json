@@ -11,6 +11,11 @@
     "message": "We encountered an unexpected error. Please return to the homepage to continue browsing.",
     "returnButton": "Return to Homepage"
   },
+  "notFoundPage": {
+    "header": "Page Not Found",
+    "message": "Sorry, we couldn't find the page you're looking for. It might have been moved or deleted.",
+    "returnButton": "Back to Homepage"
+  },
   "navBar": {
     "auth": {
       "signIn": "Sign In",
