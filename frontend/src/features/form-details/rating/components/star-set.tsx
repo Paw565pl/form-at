@@ -1,10 +1,10 @@
+import { StarButton } from "@/features/form-details/rating/components/star-button";
+import { useCreateFormRating } from "@/features/form-details/rating/hooks/use-create-form-rating";
+import { useDeleteFormRating } from "@/features/form-details/rating/hooks/use-delete-form-rating";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { toast } from "sonner";
-import { useCreateFormRating } from "@/features/form-details/rating/hooks/use-create-form-rating";
-import { useDeleteFormRating } from "@/features/form-details/rating/hooks/use-delete-form-rating";
-import { StarButton } from "@/features/form-details/rating/components/star-button";
 
 interface StarSetProps {
   readonly formIdOrSlug: string;
