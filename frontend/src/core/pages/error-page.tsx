@@ -16,8 +16,8 @@ export const ErrorPage = (_: ErrorPageProps) => {
 
   return (
     <section className="flex w-full flex-1 flex-col items-center justify-center gap-4 px-4 text-center">
-      <div className="bg-destructive/10 flex h-20 w-20 items-center justify-center rounded-full">
-        <ICONS.error className="text-destructive h-10 w-10" />
+      <div className="bg-destructive/10 flex size-20 items-center justify-center rounded-full">
+        <ICONS.error className="text-destructive size-10" />
       </div>
 
       <div className="space-y-2">
