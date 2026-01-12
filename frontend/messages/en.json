@@ -3,7 +3,9 @@
     "message": "Hello world!"
   },
   "errorPage": {
-    "message": "An unexpected error ocurred. Please try again later."
+    "header": "Whoops! Something went wrong.",
+    "message": "We encountered an unexpected error. Please return to the homepage to continue browsing.",
+    "returnButton": "Return to Homepage"
   },
   "navBar": {
     "auth": {
