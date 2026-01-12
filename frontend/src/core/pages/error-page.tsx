@@ -21,10 +21,8 @@ export const ErrorPage = (_: ErrorPageProps) => {
       </div>
 
       <div className="space-y-2">
-        <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl">
-          {t("header")}
-        </h1>
-        <p className="text-muted-foreground max-w-lg text-balance md:text-lg">
+        <h1 className="text-2xl font-bold tracking-tighter">{t("header")}</h1>
+        <p className="text-muted-foreground max-w-lg text-balance">
           {t("message")}
         </p>
       </div>
