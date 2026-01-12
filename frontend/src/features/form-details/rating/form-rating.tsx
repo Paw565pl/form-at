@@ -1,5 +1,5 @@
 import { useTranslations } from "next-intl";
-import { StarSet } from "./components/star-set";
+import { StarSet } from "@/features/form-details/rating/components/star-set";
 
 interface FormRatingProps {
   readonly formIdOrSlug: string;
