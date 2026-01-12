@@ -21,7 +21,7 @@ import { getSubmissionSchema } from "@/features/submission-create/schemas/submis
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HttpStatusCode } from "axios";
 import { useTranslations } from "next-intl";
-import Link from "next/dist/client/link";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
