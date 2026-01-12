@@ -211,13 +211,14 @@
     "yourAnswer": "Enter your answer below",
     "submit": "Send",
     "submissionCreated": "Submission sent successfully!",
-    "defaultThanksMessage": "Thank you for you time and effort in completing the form.",
+    "defaultThanksMessage": "Thank you for your time and effort in completing the form.",
     "errors": {
       "oneAnswerRequired": "You must pick at least one answer.",
       "openAnswerMin": "Answer must be at least {count} characters.",
       "openAnswerMax": "Answer must be at most {count} characters.",
       "submissionExists": "You have already submitted this form.",
       "unexpected": "An unexpected error occurred."
-    }
+    },
+    "backToDetails": "Back to Form Details"
   }
 }

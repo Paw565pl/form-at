@@ -21,6 +21,7 @@ import { getSubmissionSchema } from "@/features/submission-create/schemas/submis
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HttpStatusCode } from "axios";
 import { useTranslations } from "next-intl";
+import Link from "next/dist/client/link";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -293,8 +294,15 @@ export const Submission = ({ formData }: SubmissionProps) => {
           <div className="bg-primary/10 flex h-16 w-16 items-center justify-center rounded-full">
             <ICONS.check className="text-primary h-10 w-10" />
           </div>
-          <h2 className="mb-2 text-xl font-medium">{t("submissionCreated")}</h2>
-          <p>{formData.thanksMessage || t("defaultThanksMessage")}</p>
+          <div className="flex flex-col items-center gap-2">
+            <h2 className="mb-2 text-xl font-medium">
+              {t("submissionCreated")}
+            </h2>
+            <p>{formData.thanksMessage || t("defaultThanksMessage")}</p>
+          </div>
+          <Button size="sm" asChild variant="default">
+            <Link href={`/forms/${formData.slug}`}>{t("backToDetails")}</Link>
+          </Button>
         </Card>
       )}
     </section>

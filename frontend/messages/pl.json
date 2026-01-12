@@ -218,6 +218,7 @@
       "openAnswerMax": "Odpowiedź może mieć maksymalnie {count} znaków.",
       "submissionExists": "Ten formularz został już przez Ciebie wypełniony.",
       "unexpected": "Wystąpił nieoczekiwany błąd."
-    }
+    },
+    "backToDetails": "Powrót do strony formularza"
   }
 }
