@@ -1,4 +1,5 @@
 import {
+  AlertTriangle,
   BadgeQuestionMark,
   Check,
   ChevronDown,
@@ -64,4 +65,5 @@ export const ICONS = {
   save: Save,
   add: Plus,
   delete: Trash,
+  error: AlertTriangle,
 } as const;

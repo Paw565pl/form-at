@@ -3,7 +3,9 @@
     "message": "Witaj świecie!"
   },
   "errorPage": {
-    "message": "Wystąpił niespodziewany błąd. Spróbuj ponownie później."
+    "header": "Ups! Coś poszło nie tak.",
+    "message": "Wystąpił nieoczekiwany błąd. Wróć na stronę główną, aby kontynuować przeglądanie.",
+    "returnButton": "Wróć na stronę główną"
   },
   "navBar": {
     "auth": {
