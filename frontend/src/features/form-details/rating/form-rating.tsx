@@ -66,7 +66,7 @@ export const FormRating = ({
 
   return (
     <section className="flex items-center gap-3">
-      <p className="text-4xl">{ratingAvg.toFixed(1)}</p>
+      <header className="text-4xl">{ratingAvg.toFixed(1)}</header>
 
       <div className="flex flex-col items-center gap-1">
         <div className="flex">
