@@ -17,9 +17,7 @@ export const FormRating = ({
   const t = useTranslations("formDetailsPage.rating");
 
   return (
-    <section className="flex items-center gap-3">
-      <header className="text-4xl">{ratingAvg.toFixed(1)}</header>
-
+    <section className="ml-auto flex items-center gap-3">
       <div className="flex flex-col items-center gap-1">
         <StarSet
           formIdOrSlug={formIdOrSlug}
@@ -27,7 +25,7 @@ export const FormRating = ({
           ratingAvg={ratingAvg}
         />
         <p className="text-muted-foreground text-sm">
-          {t("ratingsCount", { count: ratingsCount })}
+          {ratingAvg.toFixed(1)} ({t("ratingsCount", { count: ratingsCount })})
         </p>
       </div>
     </section>

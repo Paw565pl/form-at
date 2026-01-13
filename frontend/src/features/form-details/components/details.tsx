@@ -1,4 +1,3 @@
-import { Badge } from "@/core/components/ui/badge";
 import { Card } from "@/core/components/ui/card";
 import {
   Tooltip,
@@ -35,20 +34,13 @@ export const Details = ({ form }: DetailsProps) => {
 
         <h1 className="line-clamp-2 max-w-2xl text-3xl">{form.name}</h1>
 
-        {/* TODO take submission date from user's submission data */}
-        <Badge className="text-wrap md:ml-auto">
-          {t("formFinished", {
-            finishedAt: format.dateTime(new Date(), "long"),
-          })}
-        </Badge>
+        <FormRating
+          formIdOrSlug={form.slug}
+          ratingsCount={form.ratingsCount}
+          userRating={form.userRating}
+          ratingAvg={form.ratingAvg || 0}
+        />
       </header>
-
-      <FormRating
-        formIdOrSlug={form.slug}
-        ratingsCount={form.ratingsCount}
-        userRating={form.userRating}
-        ratingAvg={form.ratingAvg || 0}
-      />
 
       {form.description && <p>{form.description}</p>}
 

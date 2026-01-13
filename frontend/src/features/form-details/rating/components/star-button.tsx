@@ -1,5 +1,4 @@
 import { ICONS } from "@/core/config/icons";
-import { cn } from "@/core/lib/cn";
 
 interface StarButtonProps {
   readonly fillFraction: number;
@@ -30,23 +29,12 @@ export const StarButton = ({
     >
       <div className="relative inline-block">
         {/* Background (empty) star */}
-        <ICONS.rate
-          className={cn(
-            "transition-opacity",
-            isHovered && !userRating
-              ? "text-primary opacity-100"
-              : "opacity-30",
-          )}
-        />
+        <ICONS.rate className="opacity-30 transition-opacity" />
 
         {/* User Filled Star */}
         {userRating && fillFraction === 1 && (
-          <div
-            className={cn(
-              "text-primary absolute top-0 left-0 overflow-hidden transition-all",
-            )}
-          >
-            <ICONS.rate />
+          <div className="text-primary absolute top-0 left-0 overflow-hidden transition-all">
+            <ICONS.rate fill="var(--primary)" />
           </div>
         )}
 

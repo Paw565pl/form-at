@@ -145,9 +145,10 @@
     "loading": "Loading...",
     "banner": {
       "back": "Go Back to Previous Page",
-      "moreOptions": "More Options",
+      "formFinished": "Completed on {finishedAt}",
       "fillOutForm": "Fill Out the Form",
       "enterTheCode": "Enter the Form Code",
+      "moreOptions": "More Options",
       "codeDescription": "This form is private, ask the form author for the access code.",
       "code": "Code",
       "cancel": "Cancel",
@@ -155,7 +156,6 @@
       "fillAnonymously": "Fill Anonymously"
     },
     "details": {
-      "formFinished": "Completed on {finishedAt}",
       "questionsCount": "{count, plural, one {# question} other {# questions}}",
       "submissionsCount": "{count, plural, one {# submission} other {# submissions}}",
       "estimatedTime": "{time} to complete",
