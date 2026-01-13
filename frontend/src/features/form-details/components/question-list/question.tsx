@@ -1,4 +1,4 @@
-import { QuestionResponseDto, QuestionType } from "@/core/types/question";
+import { QuestionResponseDto } from "@/core/types/question";
 import { useTranslations } from "next-intl";
 
 interface QuestionProps {
@@ -7,13 +7,7 @@ interface QuestionProps {
 }
 
 export const Question = ({ question, index }: QuestionProps) => {
-  const t = useTranslations("formDetailsPage.questionList");
-
-  const questionTypes: Record<QuestionType, string> = {
-    SINGLE_CHOICE: t("questionTypes.single"),
-    MULTIPLE_CHOICE: t("questionTypes.multiple"),
-    OPEN: t("questionTypes.open"),
-  } as const;
+  const gt = useTranslations("global");
 
   return (
     <div className="flex w-full items-center gap-2">
@@ -25,7 +19,7 @@ export const Question = ({ question, index }: QuestionProps) => {
         </span>
       </p>
       <p className="text-muted-foreground ml-auto text-sm">
-        {questionTypes[question.type]}
+        {gt(`questionTypes.${question.type}`)}
       </p>
     </div>
   );

@@ -1,4 +1,5 @@
 import {
+  AlertTriangle,
   BadgeQuestionMark,
   Check,
   ChevronDown,
@@ -8,6 +9,7 @@ import {
   ClockArrowUp,
   CornerUpLeft,
   FileKey2,
+  FileQuestion,
   Globe,
   HatGlasses,
   Home,
@@ -65,5 +67,7 @@ export const ICONS = {
   save: Save,
   add: Plus,
   delete: Trash,
+  error: AlertTriangle,
+  notFound: FileQuestion,
   star: Star,
 } as const;

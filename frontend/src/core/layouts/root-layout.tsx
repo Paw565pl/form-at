@@ -15,11 +15,13 @@ export const RootLayout = async ({ children }: PropsWithChildren) => {
       <head>
         <PublicEnvScript />
       </head>
-      <body>
+      <body className="flex min-h-screen flex-col">
         <ServerProviders>
           <ClientProviders>
             <NavBar />
-            <main className="container mx-auto">{children}</main>
+            <main className="container mx-auto flex flex-1 flex-col">
+              {children}
+            </main>
             <Toaster position="top-right" closeButton />
           </ClientProviders>
         </ServerProviders>
