@@ -21,18 +21,20 @@ export const Details = ({ form }: DetailsProps) => {
   return (
     <Card className="flex w-full flex-col gap-4 rounded-t-none p-4">
       <header className="flex flex-wrap items-center gap-2 md:flex-row">
-        {form.status === FormStatus.Private && (
-          <Tooltip>
-            <TooltipTrigger>
-              <ICONS.privateForm />
-            </TooltipTrigger>
-            <TooltipContent side="bottom">
-              <span>{t("privateForm")}</span>
-            </TooltipContent>
-          </Tooltip>
-        )}
+        <div className="flex items-center gap-2">
+          {form.status === FormStatus.Private && (
+            <Tooltip>
+              <TooltipTrigger>
+                <ICONS.privateForm />
+              </TooltipTrigger>
+              <TooltipContent side="bottom">
+                <span>{t("privateForm")}</span>
+              </TooltipContent>
+            </Tooltip>
+          )}
 
-        <h1 className="line-clamp-2 max-w-2xl text-3xl">{form.name}</h1>
+          <h1 className="line-clamp-2 max-w-2xl text-3xl">{form.name}</h1>
+        </div>
 
         <FormRating
           formIdOrSlug={form.slug}
