@@ -30,27 +30,35 @@ export const StarButton = ({
     >
       <div className="relative inline-block">
         {/* Background (empty) star */}
-        <ICONS.star
+        <ICONS.rate
           className={cn(
             "transition-opacity",
-            isHovered ? "text-primary opacity-100" : "opacity-30",
+            isHovered && !userRating
+              ? "text-primary opacity-100"
+              : "opacity-30",
           )}
         />
 
-        {/* Filled star overlay */}
-        {(fillFraction > 0 || isHovered) && (
+        {/* User Filled Star */}
+        {userRating && fillFraction === 1 && (
           <div
             className={cn(
-              "absolute top-0 left-0 overflow-hidden transition-all",
-              isHovered || (userRating !== null && fillFraction === 1)
-                ? "text-primary"
-                : null,
+              "text-primary absolute top-0 left-0 overflow-hidden transition-all",
             )}
+          >
+            <ICONS.rate />
+          </div>
+        )}
+
+        {/* Filled star overlay */}
+        {(fillFraction > 0 || isHovered) && !userRating && (
+          <div
+            className="absolute top-0 left-0 overflow-hidden transition-all"
             style={{
               width: isHovered ? "100%" : `${fillFraction * 100}%`,
             }}
           >
-            <ICONS.star />
+            <ICONS.rate />
           </div>
         )}
       </div>

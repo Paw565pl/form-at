@@ -12,17 +12,6 @@ interface StarSetProps {
   readonly ratingAvg: number;
 }
 
-const calculatePartialFill = (ratingAvg: number, starIndex: number): number => {
-  const fillAmount = ratingAvg - starIndex;
-  if (fillAmount <= 0) {
-    return 0;
-  }
-  if (fillAmount >= 1) {
-    return 1;
-  }
-  return Math.round(fillAmount * 10) / 10;
-};
-
 export const StarSet = ({
   formIdOrSlug,
   userRating,
@@ -77,7 +66,14 @@ export const StarSet = ({
     }
 
     // Otherwise show the average rating with partial fills
-    return calculatePartialFill(ratingAvg, starIndex);
+    const fillAmount = ratingAvg - starIndex;
+    if (fillAmount <= 0) {
+      return 0;
+    }
+    if (fillAmount >= 1) {
+      return 1;
+    }
+    return Math.round(fillAmount * 10) / 10;
   };
 
   return (

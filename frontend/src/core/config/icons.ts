@@ -69,5 +69,5 @@ export const ICONS = {
   delete: Trash,
   error: AlertTriangle,
   notFound: FileQuestion,
-  star: Star,
+  rate: Star,
 } as const;
