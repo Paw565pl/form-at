@@ -8,6 +8,7 @@ interface StarButtonProps {
   readonly onMouseLeave: () => void;
   readonly onClick: () => void;
   readonly disabled?: boolean;
+  readonly ariaLabel?: string;
 }
 
 export const StarButton = ({
@@ -18,12 +19,14 @@ export const StarButton = ({
   onMouseLeave,
   onClick,
   disabled = false,
+  ariaLabel,
 }: StarButtonProps) => {
   return (
     <button
       className="relative flex cursor-pointer items-center justify-center transition-transform hover:scale-110 disabled:cursor-not-allowed disabled:opacity-50"
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
+      aria-label={ariaLabel}
       onClick={onClick}
       disabled={disabled}
     >

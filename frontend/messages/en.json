@@ -166,7 +166,8 @@
       "ratingError": "Error submitting rating. Please try again.",
       "ratingDeleted": "Rating deleted successfully.",
       "ratingAvg": "Average Rating: {rating}",
-      "ratingsCount": "{count, plural, one {# rating} few {# ratings} other {# ratings}}"
+      "ratingsCount": "{count, plural, one {# rating} few {# ratings} other {# ratings}}",
+      "starAriaLabel": "{starNumber, plural, one {Rate 1 star} few {Rate # stars} other {Rate # stars}}"
     },
     "questionList": {
       "showQuestions": "Show Questions Preview",

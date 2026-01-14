@@ -7,7 +7,7 @@ import {
 } from "@/core/components/ui/dropdown-menu";
 import { ICONS } from "@/core/config/icons";
 import { Role } from "@/features/auth/types/role";
-import { DeleteCommentAlertDialog } from "@/features/form-details/comments/components/delete-comment-dialog";
+import { DeleteCommentAlertDialog } from "@/features/form-details/comments/components/delete-comment-alert-dialog";
 import { useDeleteComment } from "@/features/form-details/comments/hooks/use-delete-comment";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";

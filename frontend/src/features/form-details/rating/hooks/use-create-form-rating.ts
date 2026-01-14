@@ -6,6 +6,7 @@ import {
   FormRatingResponseDto,
 } from "@/core/types/rating";
 
+import { getFetchFormDetailsQueryOptions } from "@/features/form-details/hooks/use-fetch-form-details";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
@@ -28,7 +29,7 @@ export const useCreateFormRating = (formIdOrSlug: string) => {
     },
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: ["forms", formIdOrSlug],
+        queryKey: getFetchFormDetailsQueryOptions(formIdOrSlug).queryKey,
       });
     },
   });
