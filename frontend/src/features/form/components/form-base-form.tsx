@@ -30,7 +30,6 @@ import {
   Language,
 } from "@/core/types/form";
 import { QuestionType } from "@/core/types/question";
-import { useCreateForm } from "@/features/form-create/hooks/use-create-form";
 import {
   getFormSchema,
   validImageTypes,
@@ -44,6 +43,9 @@ import z from "zod";
 type FormData = z.infer<ReturnType<typeof getFormSchema>>;
 
 interface FormBaseFormProps {
+  readonly pageTitle: string;
+  readonly isPending: boolean;
+  readonly uploadProgressPercent: number | null;
   readonly onSubmit: (request: FormRequest) => void;
   readonly defaultValues?: FormDetailResponseDto;
 }
@@ -54,13 +56,15 @@ const languageOptions: { label: string; value: Language }[] = [
 ] as const;
 
 export const FormBaseForm = ({
+  pageTitle,
+  isPending,
+  uploadProgressPercent,
   onSubmit,
   defaultValues,
 }: FormBaseFormProps) => {
-  const t = useTranslations("formCreatePage");
+  const t = useTranslations("formBaseForm");
   const gt = useTranslations("global");
 
-  const createForm = useCreateForm();
   const [showQuestions, setShowQuestions] = useState<boolean>(true);
 
   const formSchema = getFormSchema(t);
@@ -164,7 +168,7 @@ export const FormBaseForm = ({
       id="form-create"
       className="flex w-full flex-col gap-4 px-5 py-10 lg:px-30"
     >
-      <h1 className="ml-4 text-xl font-bold">{t("pageTitle")}</h1>
+      <h1 className="ml-4 text-xl font-bold">{pageTitle}</h1>
 
       <form
         onSubmit={form.handleSubmit(internalOnSubmit)}
@@ -829,16 +833,10 @@ export const FormBaseForm = ({
             />
           )}
 
-        <Button
-          type="submit"
-          className="ml-auto min-w-40"
-          disabled={createForm.isPending}
-        >
-          {createForm.isPending ? <Spinner /> : <ICONS.save />}
-          {createForm.isPending ? t("submitting") : t("submit")}
-          {createForm.uploadProgressPercent
-            ? ` (${createForm.uploadProgressPercent}%)`
-            : ""}
+        <Button type="submit" className="ml-auto min-w-40" disabled={isPending}>
+          {isPending ? <Spinner /> : <ICONS.save />}
+          {isPending ? t("submitting") : t("submit")}
+          {uploadProgressPercent ? ` (${uploadProgressPercent}%)` : ""}
         </Button>
       </form>
     </section>

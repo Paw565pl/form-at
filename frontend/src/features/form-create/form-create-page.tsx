@@ -10,23 +10,35 @@ import { toast } from "sonner";
 
 export const FormCreatePage = () => {
   const t = useTranslations("formCreatePage");
+
   const router = useRouter();
-  const createForm = useCreateForm();
+  const {
+    mutate: createForm,
+    isPending,
+    uploadProgressPercent,
+  } = useCreateForm();
 
   const onSubmit = (request: FormRequest) => {
-    createForm.mutate(request, {
+    createForm(request, {
       onSuccess: (data) => {
-        toast.success(t("formCreated"));
+        toast.success(t("successMessage"));
         router.push(`/forms/${data.slug}`);
       },
       onError: (error) => {
         toast.error(
           (error instanceof AxiosError && error.response?.data?.message) ||
-            t("errors.unexpected"),
+            t("errorMessage"),
         );
       },
     });
   };
 
-  return <FormBaseForm onSubmit={onSubmit} />;
+  return (
+    <FormBaseForm
+      pageTitle={t("pageTitle")}
+      isPending={isPending}
+      uploadProgressPercent={uploadProgressPercent}
+      onSubmit={onSubmit}
+    />
+  );
 };
