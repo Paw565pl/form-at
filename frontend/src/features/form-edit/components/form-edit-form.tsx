@@ -53,6 +53,7 @@ export const FormEditForm = ({ slug }: FormEditFormProps) => {
       isPending={isPending}
       uploadProgressPercent={uploadProgressPercent}
       onSubmit={onSubmit}
+      defaultValues={formDetails}
     />
   );
 };
