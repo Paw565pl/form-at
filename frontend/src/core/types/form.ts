@@ -60,7 +60,7 @@ export interface FormDetailResponseDto {
   readonly status: FormStatus;
   readonly shuffleVariant: FormShuffleVariant | null;
   readonly thanksMessage: string | null;
-  readonly estimatedDuration: string;
+  readonly estimatedDuration: FormEstimatedDuration;
   readonly thumbnail: string | null;
   readonly allowsQuestionsPreview: boolean;
   readonly allowsGuestSubmissions: boolean;
