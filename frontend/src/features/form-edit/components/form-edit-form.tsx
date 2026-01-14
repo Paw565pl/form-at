@@ -29,7 +29,7 @@ export const FormEditForm = ({ slug }: FormEditFormProps) => {
     else throw error;
   }
 
-  if (isLoading || !formDetails) return <p>Loading...</p>; // TODO: add translation
+  if (isLoading || !formDetails) return <p>{t("loading")}</p>;
 
   const onSubmit = (request: FormRequest) => {
     updateForm(request, {
