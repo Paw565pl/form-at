@@ -25,10 +25,11 @@ export const FormCreatePage = () => {
         router.push(`/forms/${data.slug}`);
       },
       onError: (error) => {
-        toast.error(
-          (error instanceof AxiosError && error.response?.data?.message) ||
-            t("errorMessage"),
-        );
+        if (error instanceof AxiosError) {
+          toast.error(error.response?.data.message);
+        } else {
+          toast.error(t("errorMessage"));
+        }
       },
     });
   };
