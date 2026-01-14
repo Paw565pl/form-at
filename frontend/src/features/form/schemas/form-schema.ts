@@ -8,7 +8,7 @@ import { QuestionType } from "@/core/types/question";
 import { useTranslations } from "next-intl";
 import z from "zod";
 
-type TranslateError = ReturnType<typeof useTranslations<"formCreatePage">>;
+type TranslateError = ReturnType<typeof useTranslations<"formBaseForm">>;
 
 export const validImageTypes: string[] = [
   "image/png",
