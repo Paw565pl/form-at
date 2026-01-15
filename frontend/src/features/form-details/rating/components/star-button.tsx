@@ -1,4 +1,5 @@
 import { ICONS } from "@/core/config/icons";
+import { cn } from "@/core/lib/cn";
 
 interface StarButtonProps {
   readonly fillFraction: number;
@@ -37,14 +38,17 @@ export const StarButton = ({
         {/* User Filled Star */}
         {userRating && fillFraction === 1 && (
           <div className="text-primary absolute top-0 left-0 overflow-hidden transition-all">
-            <ICONS.rate fill="var(--primary)" />
+            <ICONS.rate fill={isHovered ? "var(--card)" : "var(--primary)"} />
           </div>
         )}
 
         {/* Filled star overlay */}
         {(fillFraction > 0 || isHovered) && !userRating && (
           <div
-            className="absolute top-0 left-0 overflow-hidden transition-all"
+            className={cn(
+              "absolute top-0 left-0 overflow-hidden transition-all",
+              isHovered ? "text-primary" : null,
+            )}
             style={{
               width: isHovered ? "100%" : `${fillFraction * 100}%`,
             }}
