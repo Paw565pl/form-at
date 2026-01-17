@@ -80,6 +80,7 @@ public class SubmissionService {
         if (total == 0) return Page.empty(pageable);
 
         val operations = new ArrayList<AggregationOperation>();
+
         operations.add(Aggregation.match(Criteria.where("formId").is(form.getId())));
         operations.add(Aggregation.sort(Sort.by(Sort.Order.desc("_id"))));
         operations.add(Aggregation.skip(pageable.getOffset()));
@@ -159,7 +160,9 @@ public class SubmissionService {
             val savedSubmissionEntity = submissionRepository.save(submissionEntity);
             formService.incrementSubmissionsCountById(form.getId());
 
-            return submissionMapper.toResponseDto(savedSubmissionEntity, user != null ? user.getUsername() : null);
+            val authorName = user != null ? user.getUsername() : null;
+
+            return submissionMapper.toResponseDto(savedSubmissionEntity, authorName);
         } catch (DataIntegrityViolationException e) {
             throw new SubmissionAlreadyCreatedForUserException(formIdOrSlug);
         }
