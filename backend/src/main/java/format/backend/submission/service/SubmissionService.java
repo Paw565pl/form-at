@@ -30,13 +30,13 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 import org.springframework.data.mongodb.core.aggregation.ArrayOperators;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -78,9 +78,11 @@ public class SubmissionService {
                 .withValue(ArrayOperators.ArrayElemAt.arrayOf("author.username").elementAt(0))
                 .build());
         operations.add(Aggregation.project("answers", "createdAt", "authorName")
-                .and("_id").as("id"));
+                .and("_id")
+                .as("id"));
 
-        val countOperations = List.of(Aggregation.match(Criteria.where("formId").is(form.getId())),
+        val countOperations = List.of(
+                Aggregation.match(Criteria.where("formId").is(form.getId())),
                 Aggregation.count().as("count"));
 
         final long total = Optional.ofNullable(mongoTemplate
@@ -91,11 +93,9 @@ public class SubmissionService {
 
         if (total == 0) return Page.empty(pageable);
 
-        val results = mongoTemplate.aggregate(
-                Aggregation.newAggregation(operations),
-                SubmissionEntity.class,
-                SubmissionResponseDto.class
-        ).getMappedResults();
+        val results = mongoTemplate
+                .aggregate(Aggregation.newAggregation(operations), SubmissionEntity.class, SubmissionResponseDto.class)
+                .getMappedResults();
 
         return new PageImpl<>(results, pageable, total);
     }
