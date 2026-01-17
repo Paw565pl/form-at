@@ -67,6 +67,18 @@ public class SubmissionService {
         val isAdmin = keycloakJwtClaims.roles().contains(Role.ADMIN);
         if (!(isFormOwner || isAdmin)) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 
+        val countOperations = List.of(
+                Aggregation.match(Criteria.where("formId").is(form.getId())),
+                Aggregation.count().as("count"));
+
+        final long total = Optional.ofNullable(mongoTemplate
+                        .aggregate(Aggregation.newAggregation(countOperations), SubmissionEntity.class, Document.class)
+                        .getUniqueMappedResult())
+                .map(d -> (long) d.getInteger("count"))
+                .orElse(0L);
+
+        if (total == 0) return Page.empty(pageable);
+
         val operations = new ArrayList<AggregationOperation>();
         operations.add(Aggregation.match(Criteria.where("formId").is(form.getId())));
         operations.add(Aggregation.sort(Sort.by(Sort.Order.desc("_id"))));
@@ -80,18 +92,6 @@ public class SubmissionService {
         operations.add(Aggregation.project("answers", "createdAt", "authorName")
                 .and("_id")
                 .as("id"));
-
-        val countOperations = List.of(
-                Aggregation.match(Criteria.where("formId").is(form.getId())),
-                Aggregation.count().as("count"));
-
-        final long total = Optional.ofNullable(mongoTemplate
-                        .aggregate(Aggregation.newAggregation(countOperations), SubmissionEntity.class, Document.class)
-                        .getUniqueMappedResult())
-                .map(d -> (long) d.getInteger("count"))
-                .orElse(0L);
-
-        if (total == 0) return Page.empty(pageable);
 
         val results = mongoTemplate
                 .aggregate(Aggregation.newAggregation(operations), SubmissionEntity.class, SubmissionResponseDto.class)
@@ -159,11 +159,7 @@ public class SubmissionService {
             val savedSubmissionEntity = submissionRepository.save(submissionEntity);
             formService.incrementSubmissionsCountById(form.getId());
 
-            val authorName = Optional.ofNullable(savedSubmissionEntity.getAuthor())
-                    .map(UserEntity::getUsername)
-                    .orElse(null);
-
-            return submissionMapper.toResponseDto(savedSubmissionEntity, authorName);
+            return submissionMapper.toResponseDto(savedSubmissionEntity, user != null ? user.getUsername() : null);
         } catch (DataIntegrityViolationException e) {
             throw new SubmissionAlreadyCreatedForUserException(formIdOrSlug);
         }
