@@ -26,6 +26,7 @@ import {
   Plus,
   Save,
   SendHorizonal,
+  Star,
   Sun,
   ThumbsDown,
   ThumbsUp,
@@ -68,4 +69,5 @@ export const ICONS = {
   delete: Trash,
   error: AlertTriangle,
   notFound: FileQuestion,
+  rate: Star,
 } as const;
