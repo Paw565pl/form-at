@@ -233,7 +233,7 @@ export const FormBaseForm = ({
                     id="description"
                     aria-invalid={fieldState.invalid}
                     autoComplete="off"
-                    className="min-h-24"
+                    className="max-h-100 min-h-24"
                   />
                   {fieldState.invalid && (
                     <FieldError
@@ -326,7 +326,7 @@ export const FormBaseForm = ({
                     id="thanksMessage"
                     aria-invalid={fieldState.invalid}
                     autoComplete="off"
-                    className="min-h-24"
+                    className="max-h-100 min-h-24"
                   />
                   {fieldState.invalid && (
                     <FieldError
