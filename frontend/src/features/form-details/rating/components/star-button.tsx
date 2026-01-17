@@ -37,8 +37,13 @@ export const StarButton = ({
 
         {/* User Filled Star */}
         {userRating && fillFraction === 1 && (
-          <div className="text-primary absolute top-0 left-0 overflow-hidden transition-all">
-            <ICONS.rate fill={isHovered ? "var(--card)" : "var(--primary)"} />
+          <div
+            className={cn(
+              "absolute top-0 left-0 overflow-hidden transition-all",
+              isHovered ? "text-light-primary" : "text-primary",
+            )}
+          >
+            <ICONS.rate fill={isHovered ? "var(--card" : "var(--primary)"} />
           </div>
         )}
 
@@ -47,7 +52,7 @@ export const StarButton = ({
           <div
             className={cn(
               "absolute top-0 left-0 overflow-hidden transition-all",
-              isHovered ? "text-primary" : null,
+              isHovered ? "text-light-primary" : "text-primary",
             )}
             style={{
               width: isHovered ? "100%" : `${fillFraction * 100}%`,
