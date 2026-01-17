@@ -19,6 +19,8 @@ export interface FormListResponseDto {
   readonly authorName: string | null;
   readonly submissionsCount: number;
   readonly questionsCount: number;
+  readonly ratingsCount: number;
+  readonly averageRating: number | null;
   readonly createdAt: string;
   readonly updatedAt: string;
 }
@@ -68,6 +70,9 @@ export interface FormDetailResponseDto {
   readonly authorName: string | null;
   readonly submissionsCount: number;
   readonly questions: QuestionResponseDto[];
+  readonly ratingsCount: number;
+  readonly ratingAvg: number | null;
+  readonly userRating: number | null;
   readonly createdAt: string;
   readonly updatedAt: string;
 }
