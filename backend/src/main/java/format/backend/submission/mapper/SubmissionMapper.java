@@ -13,7 +13,8 @@ import org.mapstruct.MappingConstants;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface SubmissionMapper {
 
-    SubmissionResponseDto toResponseDto(SubmissionEntity submissionEntity);
+    @Mapping(target = "authorName", source = "authorName")
+    SubmissionResponseDto toResponseDto(SubmissionEntity submissionEntity, @Nullable String authorName);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "form", source = "form")
