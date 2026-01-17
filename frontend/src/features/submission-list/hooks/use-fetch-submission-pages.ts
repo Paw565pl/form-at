@@ -11,18 +11,18 @@ import {
 import { AxiosError } from "axios";
 
 const getFetchSubmissionPagesQueryOptions = (
-  idOrSlug: string,
+  formIdOrSlug: string,
   pageOptionsDto?: Omit<PageOptionsDto, "page">,
 ) =>
   infiniteQueryOptions<
     PaginatedResponseDto<SubmissionResponseDto>,
     AxiosError<ErrorResponseDto>
   >({
-    queryKey: ["forms", idOrSlug, "submissions", pageOptionsDto] as const,
+    queryKey: ["forms", formIdOrSlug, "submissions", pageOptionsDto] as const,
     queryFn: async ({ pageParam }) => {
       const { data } = await apiService.get<
         PaginatedResponseDto<SubmissionResponseDto>
-      >(`/api/v1/forms/${idOrSlug}/submissions`, {
+      >(`/api/v1/forms/${formIdOrSlug}/submissions`, {
         params: {
           ...pageOptionsDto,
           page: pageParam,
@@ -37,18 +37,18 @@ const getFetchSubmissionPagesQueryOptions = (
   });
 
 export const useFetchSubmissionPages = (
-  idOrSlug: string,
+  formIdOrSlug: string,
   pageOptionsDto?: Omit<PageOptionsDto, "page">,
 ) =>
   useInfiniteQuery(
-    getFetchSubmissionPagesQueryOptions(idOrSlug, pageOptionsDto),
+    getFetchSubmissionPagesQueryOptions(formIdOrSlug, pageOptionsDto),
   );
 
 export const prefetchSubmissionPages = (
   queryClient: QueryClient,
-  idOrSlug: string,
+  formIdOrSlug: string,
   pageOptionsDto?: Omit<PageOptionsDto, "page">,
 ) =>
   queryClient.prefetchInfiniteQuery(
-    getFetchSubmissionPagesQueryOptions(idOrSlug, pageOptionsDto),
+    getFetchSubmissionPagesQueryOptions(formIdOrSlug, pageOptionsDto),
   );
