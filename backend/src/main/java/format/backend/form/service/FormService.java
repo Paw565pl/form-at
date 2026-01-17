@@ -301,6 +301,12 @@ public class FormService {
         val errors = formValidator.validate(requestDto, keycloakJwtClaims.sub());
         if (!errors.isEmpty()) throw new ValidationException(errors);
 
+        val oldImageKeys = Stream.concat(
+                        Stream.ofNullable(oldFormEntity.getThumbnailKey()),
+                        oldFormEntity.getQuestions().stream().map(QuestionEntity::getImageKey))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toUnmodifiableSet());
+
         val slug = slugify.slugify(requestDto.name());
         val passwordHash = Optional.ofNullable(requestDto.password())
                 .map(passwordEncoder::encode)
@@ -308,23 +314,24 @@ public class FormService {
 
         val updatedFormEntity = formMapper.updateEntityFromDto(requestDto, oldFormEntity, slug, passwordHash);
 
-        val userRating = findUserRating(keycloakJwtClaims.sub(), updatedFormEntity.getId());
-
         try {
-            val response = mapToDetailResponseDto(formRepository.save(updatedFormEntity), userRating);
+            val savedFormEntity = formRepository.save(updatedFormEntity);
+            val userRating = findUserRating(keycloakJwtClaims.sub(), updatedFormEntity.getId());
 
-            val newImageKeys = Stream.concat(
+            val response = mapToDetailResponseDto(savedFormEntity, userRating);
+            val requestImageKeys = Stream.concat(
                             Stream.ofNullable(requestDto.thumbnailKey()),
                             requestDto.questions().stream().map(QuestionRequestDto::imageKey))
                     .filter(Objects::nonNull)
                     .collect(Collectors.toUnmodifiableSet());
+
+            val newImageKeys = requestImageKeys.stream()
+                    .filter(k -> !oldImageKeys.contains(k))
+                    .collect(Collectors.toUnmodifiableSet());
             uploadService.commitUploads(newImageKeys);
 
-            val outdatedImageKeys = Stream.concat(
-                            Stream.ofNullable(oldFormEntity.getThumbnailKey()),
-                            oldFormEntity.getQuestions().stream().map(QuestionEntity::getImageKey))
-                    .filter(Objects::nonNull)
-                    .filter(k -> !newImageKeys.contains(k))
+            val outdatedImageKeys = oldImageKeys.stream()
+                    .filter(k -> !requestImageKeys.contains(k))
                     .collect(Collectors.toUnmodifiableSet());
             uploadService.deleteAllByKeys(outdatedImageKeys);
 
