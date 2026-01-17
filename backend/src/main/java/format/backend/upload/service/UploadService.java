@@ -104,19 +104,9 @@ public class UploadService {
                 .toList();
     }
 
-    public Set<String> getValidUploadKeys(Set<String> keys, String userId) {
+    public Set<String> getValidUploadKeys(Set<String> keys) {
         if (keys.isEmpty()) return Set.of();
-
-        return pendingUploadRepository.findAllByKeyIn(keys).stream()
-                .filter(pendingUpload -> {
-                    val userIdMatch = pendingUpload.getUserId().equals(userId);
-                    val isNotExpired = pendingUpload.getExpiresAt().isAfter(Instant.now());
-                    if (!userIdMatch || !isNotExpired) return false;
-
-                    return isUploaded(pendingUpload.getKey());
-                })
-                .map(PendingUploadEntity::getKey)
-                .collect(Collectors.toUnmodifiableSet());
+        return keys.stream().filter(this::isUploaded).collect(Collectors.toUnmodifiableSet());
     }
 
     private boolean isUploaded(String key) {

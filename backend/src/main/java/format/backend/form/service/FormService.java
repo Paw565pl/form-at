@@ -260,7 +260,7 @@ public class FormService {
 
     @Transactional
     public FormDetailResponseDto create(KeycloakJwtClaims keycloakJwtClaims, FormRequestDto requestDto) {
-        val errors = formValidator.validate(requestDto, keycloakJwtClaims.sub());
+        val errors = formValidator.validate(requestDto);
         if (!errors.isEmpty()) throw new ValidationException(errors);
 
         val slug = slugify.slugify(requestDto.name());
@@ -298,7 +298,7 @@ public class FormService {
         val isAdmin = keycloakJwtClaims.roles().contains(Role.ADMIN);
         if (!(isFormOwner || isAdmin)) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 
-        val errors = formValidator.validate(requestDto, keycloakJwtClaims.sub());
+        val errors = formValidator.validate(requestDto);
         if (!errors.isEmpty()) throw new ValidationException(errors);
 
         val oldImageKeys = Stream.concat(
