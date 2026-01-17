@@ -132,9 +132,7 @@ export const Submission = ({ formData }: SubmissionProps) => {
                       src={question.image}
                       alt="Background"
                       fill
-                      style={{ objectFit: "contain" }}
-                      preload
-                      className="rounded-md"
+                      className="rounded-md object-contain"
                     />
                   </div>
                 )}
