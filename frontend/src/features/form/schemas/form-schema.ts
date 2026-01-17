@@ -43,7 +43,9 @@ const getQuestionSchema = (t: TranslateError) =>
       answers: z
         .array(getAnswerSchema(t))
         .max(6, t("errors.answersCountMax", { count: "6" })),
-      image: z.instanceof(File).optional(),
+      // file is new file selected by user
+      // string is existing url
+      image: z.file().or(z.string()).optional(),
     })
     .superRefine((data, ctx) => {
       if (data.type !== QuestionType.Open && data.answers.length < 2) {
@@ -63,7 +65,7 @@ const getQuestionSchema = (t: TranslateError) =>
           message: t("errors.oneCorrectAnswer"),
         });
       }
-      if (data.image) {
+      if (data.image instanceof File) {
         if (!validImageTypes.includes(data.image.type)) {
           ctx.addIssue({
             path: ["image"],
@@ -115,7 +117,9 @@ export const getFormSchema = (t: TranslateError) =>
       allowsQuestionsPreview: z.boolean(),
       allowsGuestSubmissions: z.boolean(),
       saveSubmissions: z.boolean(),
-      thumbnail: z.instanceof(File).optional(),
+      // file is new file selected by user
+      // string is existing url
+      thumbnail: z.file().or(z.string()).optional(),
       questions: z
         .array(getQuestionSchema(t))
         .min(3, t("errors.questionsCountMin", { count: "3" }))
@@ -136,7 +140,7 @@ export const getFormSchema = (t: TranslateError) =>
           message: t("errors.oneQuestionRequired"),
         });
       }
-      if (data.thumbnail) {
+      if (data.thumbnail instanceof File) {
         if (!validImageTypes.includes(data.thumbnail.type)) {
           ctx.addIssue({
             path: ["thumbnail"],

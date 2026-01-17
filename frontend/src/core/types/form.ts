@@ -121,6 +121,8 @@ export interface FormRequest extends Omit<
   FormRequestDto,
   "thumbnailKey" | "questions"
 > {
-  thumbnail: File | null;
+  // file is new file selected by user
+  // string is existing url
+  thumbnail: File | string | null;
   questions: QuestionRequest[];
 }

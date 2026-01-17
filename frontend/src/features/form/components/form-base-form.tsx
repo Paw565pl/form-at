@@ -36,6 +36,7 @@ import {
 } from "@/features/form/schemas/form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import z from "zod";
@@ -81,11 +82,13 @@ export const FormBaseForm = ({
     allowsQuestionsPreview: defaultValues?.allowsQuestionsPreview ?? false,
     allowsGuestSubmissions: defaultValues?.allowsGuestSubmissions ?? false,
     saveSubmissions: defaultValues?.saveSubmissions ?? true,
-    thumbnail: undefined, // TODO: add somewhere preview of images
+    thumbnail: defaultValues?.thumbnail ?? undefined,
     questions:
       defaultValues?.questions && defaultValues.questions.length !== 0
-        ? // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          defaultValues.questions.map(({ image, ...q }) => q) // TODO: add somewhere preview of images
+        ? defaultValues.questions.map((q) => ({
+            ...q,
+            image: q.image ?? undefined,
+          }))
         : [
             {
               content: "",
@@ -106,6 +109,7 @@ export const FormBaseForm = ({
   }, [form, t]);
 
   // eslint-disable-next-line react-hooks/incompatible-library
+  const watchedThumbnail = form.watch("thumbnail");
   const watchedQuestions = form.watch("questions") || [];
 
   const {
@@ -336,6 +340,26 @@ export const FormBaseForm = ({
           </Card>
 
           <Card className="gap-4 p-4">
+            {typeof watchedThumbnail === "string" && (
+              <div className="relative h-64">
+                <Image
+                  src={watchedThumbnail}
+                  alt={t("existingImageAlt")}
+                  fill
+                  className="rounded-md object-contain"
+                />
+                <Button
+                  type="button"
+                  variant="destructive"
+                  aria-label={t("deleteImageButtonAriaLabel")}
+                  className="bg-destructive/30 dark:bg-destructive/30 hover:bg-destructive/50 absolute top-2 right-2 flex size-8 items-center justify-center rounded-full"
+                  onClick={() => form.setValue("thumbnail", undefined)}
+                >
+                  <ICONS.delete className="text-destructive size-4" />
+                </Button>
+              </div>
+            )}
+
             <Controller
               name="thumbnail"
               control={form.control}
@@ -354,16 +378,38 @@ export const FormBaseForm = ({
                       {t("maxImageSize")}
                     </span>
                   </FieldLabel>
-                  <Input
-                    {...fieldProps}
-                    id="thumbnail"
-                    aria-invalid={fieldState.invalid}
-                    type="file"
-                    accept={validImageTypes.join(", ")}
-                    onChange={(event) =>
-                      onChange(event.target.files && event.target.files[0])
-                    }
-                  />
+
+                  <div className="flex items-center gap-2">
+                    <Input
+                      {...fieldProps}
+                      id="thumbnail"
+                      aria-invalid={fieldState.invalid}
+                      type="file"
+                      accept={validImageTypes.join(", ")}
+                      onChange={(event) =>
+                        onChange(event.target.files && event.target.files[0])
+                      }
+                    />
+
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      aria-label={t("resetImageInputButtonAriaLabel")}
+                      onClick={(e) => {
+                        if (typeof defaultValues?.thumbnail === "string") {
+                          form.setValue("thumbnail", defaultValues.thumbnail);
+                        }
+
+                        const fileInput = e.currentTarget
+                          .closest("div")
+                          ?.querySelector<HTMLInputElement>("input[type=file]");
+                        if (fileInput) fileInput.value = "";
+                      }}
+                    >
+                      <ICONS.reset />
+                    </Button>
+                  </div>
+
                   {fieldState.invalid && (
                     <FieldError
                       className="mx-3 max-w-fit"
@@ -616,6 +662,28 @@ export const FormBaseForm = ({
                   )}
                 />
 
+                {typeof question.image === "string" && (
+                  <div className="relative h-48">
+                    <Image
+                      src={question.image}
+                      alt={t("existingImageAlt")}
+                      fill
+                      className="rounded-md object-contain"
+                    />
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      aria-label={t("deleteImageButtonAriaLabel")}
+                      className="bg-destructive/30 dark:bg-destructive/30 hover:bg-destructive/50 absolute top-2 right-2 flex size-8 items-center justify-center rounded-full"
+                      onClick={() =>
+                        form.setValue(`questions.${qIdx}.image`, undefined)
+                      }
+                    >
+                      <ICONS.delete className="text-destructive size-4" />
+                    </Button>
+                  </div>
+                )}
+
                 <Controller
                   name={`questions.${qIdx}.image`}
                   control={form.control}
@@ -627,23 +695,55 @@ export const FormBaseForm = ({
                     <Field data-invalid={fieldState.invalid}>
                       <FieldLabel
                         className="items-end justify-between px-3"
-                        htmlFor="image"
+                        htmlFor={`questions.${qIdx}.image`}
                       >
                         {t("thumbnailImage")}
                         <span className="text-muted-foreground text-xs">
                           {t("maxImageSize")}
                         </span>
                       </FieldLabel>
-                      <Input
-                        {...fieldProps}
-                        id="image"
-                        aria-invalid={fieldState.invalid}
-                        type="file"
-                        accept={validImageTypes.join(", ")}
-                        onChange={(event) =>
-                          onChange(event.target.files && event.target.files[0])
-                        }
-                      />
+
+                      <div className="flex items-center gap-2">
+                        <Input
+                          {...fieldProps}
+                          id={`questions.${qIdx}.image`}
+                          aria-invalid={fieldState.invalid}
+                          type="file"
+                          accept={validImageTypes.join(", ")}
+                          onChange={(event) =>
+                            onChange(
+                              event.target.files && event.target.files[0],
+                            )
+                          }
+                        />
+
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          aria-label={t("resetImageInputButtonAriaLabel")}
+                          onClick={(e) => {
+                            if (
+                              typeof defaultValues?.questions[qIdx].image ===
+                              "string"
+                            ) {
+                              form.setValue(
+                                `questions.${qIdx}.image`,
+                                defaultValues?.questions[qIdx].image,
+                              );
+                            }
+
+                            const fileInput = e.currentTarget
+                              .closest("div")
+                              ?.querySelector<HTMLInputElement>(
+                                "input[type=file]",
+                              );
+                            if (fileInput) fileInput.value = "";
+                          }}
+                        >
+                          <ICONS.reset />
+                        </Button>
+                      </div>
+
                       {fieldState.invalid && (
                         <FieldError
                           className="mx-3 max-w-fit"
