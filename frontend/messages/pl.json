@@ -234,5 +234,12 @@
       "submissionExists": "Ten formularz został już przez Ciebie wypełniony.",
       "unexpected": "Wystąpił nieoczekiwany błąd."
     }
+  },
+  "submissionListPage": {
+    "title": "Wyświetlanie {count, plural, one {# odpowiedzi} other {# odpowiedzi}} dla {formName}",
+    "end": "Dotarłeś do końca listy.",
+    "loading": "Ładowanie odpowiedzi...",
+    "empty": "Nikt jeszcze nie wypełnił tego formularza.",
+    "createdAt": "Przesłano {date}"
   }
 }

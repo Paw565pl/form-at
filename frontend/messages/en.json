@@ -234,5 +234,12 @@
       "submissionExists": "You have already submitted this form.",
       "unexpected": "An unexpected error occurred."
     }
+  },
+  "submissionListPage": {
+    "title": "Showing {count, plural, one {# submission} other {# submissions}} for {formName}",
+    "end": "You have reached the end of the list.",
+    "loading": "Loading submissions...",
+    "empty": "Nobody has completed this form yet.",
+    "createdAt": "Submitted at {date}"
   }
 }

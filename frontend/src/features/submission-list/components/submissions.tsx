@@ -1,30 +1,39 @@
 "use client";
 
 import { ScrollToTopButton } from "@/core/components/scroll-to-top-button/scroll-to-top-button";
+import { Card } from "@/core/components/ui/card";
 import { useFetchFormDetails } from "@/features/form-details/hooks/use-fetch-form-details";
-import { useTranslations } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
+import Link from "next/link";
+import InfiniteScroll from "react-infinite-scroll-component";
 import { useFetchSubmissionPages } from "../hooks/use-fetch-submission-pages";
-import { ListView } from "./list-view";
-import { SubmissionResponseDto } from "@/core/types/submission";
 
 interface SubmissionsProps {
   readonly formIdOrSlug: string;
 }
 
 export const Submissions = ({ formIdOrSlug }: SubmissionsProps) => {
-  const t = useTranslations("formListPage");
-  const { data: submissionPages, error } =
-    useFetchSubmissionPages(formIdOrSlug);
-
+  const t = useTranslations("submissionListPage");
+  const format = useFormatter();
+  const {
+    data: submissionPages,
+    error,
+    isLoading,
+    isFetchingNextPage,
+    fetchNextPage,
+    hasNextPage,
+  } = useFetchSubmissionPages(formIdOrSlug);
   const { data: formData } = useFetchFormDetails(formIdOrSlug);
-  console.log(formData);
+
   if (error) throw error;
-  if (!formData) return <p>{t("loading")}</p>;
 
   const totalElements = submissionPages?.pages.at(0)?.page.totalElements || 0;
-  console.log(submissionPages);
 
-
+  const dataLength =
+    submissionPages?.pages.reduce(
+      (acc, curr) => acc + curr.content.length,
+      0,
+    ) || 0;
 
   return (
     <section
@@ -33,12 +42,53 @@ export const Submissions = ({ formIdOrSlug }: SubmissionsProps) => {
     >
       <header className="mb-2 flex flex-wrap items-center justify-between gap-4">
         <h1 className="ml-4 text-xl font-bold">
-          {/* {t("title", { count: totalElements })} */}
-          Showing {` ${totalElements} `}submissions for {formData.name}
+          {t("title", { count: totalElements, formName: formData.name })}
         </h1>
       </header>
 
-      <ListView formIdOrSlug={formIdOrSlug} />
+      <InfiniteScroll
+        dataLength={dataLength}
+        next={fetchNextPage}
+        hasMore={hasNextPage}
+        loader={null}
+        className="flex flex-col gap-2"
+      >
+        {submissionPages?.pages.map((page) =>
+          page.content.map((submission) => (
+            <Link
+              href={`/forms/${formIdOrSlug}/submissions/${submission.id}`}
+              key={submission.id}
+            >
+              <Card
+                key={submission.id}
+                className="hover:border-primary flex-row justify-between p-4 transition-all"
+              >
+                <p className="font-semibold">AUTHORNAME</p>
+                <span className="text-muted-foreground">
+                  {t("createdAt", {
+                    date: format.dateTime(
+                      new Date(submission.createdAt),
+                      "long",
+                    ),
+                  })}
+                </span>
+              </Card>
+            </Link>
+          )),
+        )}
+      </InfiniteScroll>
+
+      {submissionPages?.pages.at(0)?.content.length == 0 && (
+        <p className="p-4 text-center">{t("empty")}</p>
+      )}
+
+      {(isLoading || isFetchingNextPage) && <p>{t("loading")}</p>}
+
+      {!isLoading && !hasNextPage && (
+        <p className="text-muted-foreground p-4 text-center text-sm">
+          {t("end")}
+        </p>
+      )}
 
       <ScrollToTopButton />
     </section>
