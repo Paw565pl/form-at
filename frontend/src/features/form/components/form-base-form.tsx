@@ -344,20 +344,26 @@ export const FormBaseForm = ({
               <div className="relative h-64">
                 <Image
                   src={watchedThumbnail}
-                  alt={t("existingImageAlt")}
+                  alt={t("thumbnailImage")}
                   fill
                   className="rounded-md object-contain"
                 />
-                <Button
-                  type="button"
-                  size="icon-sm"
-                  variant="destructive"
-                  aria-label={t("deleteImageButtonAriaLabel")}
-                  className="absolute top-2 right-2 flex items-center justify-center"
-                  onClick={() => form.setValue("thumbnail", undefined)}
-                >
-                  <ICONS.delete />
-                </Button>
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      type="button"
+                      size="icon-sm"
+                      variant="destructive"
+                      aria-label={t("deleteImageButton")}
+                      className="absolute top-2 right-2 flex items-center justify-center"
+                      onClick={() => form.setValue("thumbnail", undefined)}
+                    >
+                      <ICONS.delete />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>{t("deleteImageButton")}</TooltipContent>
+                </Tooltip>
               </div>
             )}
 
@@ -392,23 +398,35 @@ export const FormBaseForm = ({
                       }
                     />
 
-                    <Button
-                      type="button"
-                      variant="outline"
-                      aria-label={t("resetImageInputButtonAriaLabel")}
-                      onClick={(e) => {
-                        if (typeof defaultValues?.thumbnail === "string") {
-                          form.setValue("thumbnail", defaultValues.thumbnail);
-                        }
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          aria-label={t("resetImageInputButton")}
+                          onClick={(e) => {
+                            if (typeof defaultValues?.thumbnail === "string") {
+                              form.setValue(
+                                "thumbnail",
+                                defaultValues.thumbnail,
+                              );
+                            }
 
-                        const fileInput = e.currentTarget
-                          .closest("div")
-                          ?.querySelector<HTMLInputElement>("input[type=file]");
-                        if (fileInput) fileInput.value = "";
-                      }}
-                    >
-                      <ICONS.reset />
-                    </Button>
+                            const fileInput = e.currentTarget
+                              .closest("div")
+                              ?.querySelector<HTMLInputElement>(
+                                "input[type=file]",
+                              );
+                            if (fileInput) fileInput.value = "";
+                          }}
+                        >
+                          <ICONS.reset />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        {t("resetImageInputButton")}
+                      </TooltipContent>
+                    </Tooltip>
                   </div>
 
                   {fieldState.invalid && (
@@ -667,22 +685,30 @@ export const FormBaseForm = ({
                   <div className="relative h-48">
                     <Image
                       src={question.image}
-                      alt={t("existingImageAlt")}
+                      alt={t("existingQuestionImageAlt", {
+                        number: (qIdx + 1).toString(),
+                      })}
                       fill
                       className="rounded-md object-contain"
                     />
-                    <Button
-                      type="button"
-                      size="icon-sm"
-                      variant="destructive"
-                      aria-label={t("deleteImageButtonAriaLabel")}
-                      className="absolute top-2 right-2 flex items-center justify-center"
-                      onClick={() =>
-                        form.setValue(`questions.${qIdx}.image`, undefined)
-                      }
-                    >
-                      <ICONS.delete />
-                    </Button>
+
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          type="button"
+                          size="icon-sm"
+                          variant="destructive"
+                          aria-label={t("deleteImageButton")}
+                          className="absolute top-2 right-2 flex items-center justify-center"
+                          onClick={() =>
+                            form.setValue(`questions.${qIdx}.image`, undefined)
+                          }
+                        >
+                          <ICONS.delete />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>{t("deleteImageButton")}</TooltipContent>
+                    </Tooltip>
                   </div>
                 )}
 
@@ -719,31 +745,38 @@ export const FormBaseForm = ({
                           }
                         />
 
-                        <Button
-                          type="button"
-                          variant="outline"
-                          aria-label={t("resetImageInputButtonAriaLabel")}
-                          onClick={(e) => {
-                            if (
-                              typeof defaultValues?.questions[qIdx].image ===
-                              "string"
-                            ) {
-                              form.setValue(
-                                `questions.${qIdx}.image`,
-                                defaultValues?.questions[qIdx].image,
-                              );
-                            }
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              aria-label={t("resetImageInputButton")}
+                              onClick={(e) => {
+                                if (
+                                  typeof defaultValues?.questions[qIdx]
+                                    .image === "string"
+                                ) {
+                                  form.setValue(
+                                    `questions.${qIdx}.image`,
+                                    defaultValues?.questions[qIdx].image,
+                                  );
+                                }
 
-                            const fileInput = e.currentTarget
-                              .closest("div")
-                              ?.querySelector<HTMLInputElement>(
-                                "input[type=file]",
-                              );
-                            if (fileInput) fileInput.value = "";
-                          }}
-                        >
-                          <ICONS.reset />
-                        </Button>
+                                const fileInput = e.currentTarget
+                                  .closest("div")
+                                  ?.querySelector<HTMLInputElement>(
+                                    "input[type=file]",
+                                  );
+                                if (fileInput) fileInput.value = "";
+                              }}
+                            >
+                              <ICONS.reset />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            {t("resetImageInputButton")}
+                          </TooltipContent>
+                        </Tooltip>
                       </div>
 
                       {fieldState.invalid && (
