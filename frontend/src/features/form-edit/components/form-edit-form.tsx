@@ -2,7 +2,7 @@
 
 import { FormRequest } from "@/core/types/form";
 import { useFetchFormDetails } from "@/features/form-details/hooks/use-fetch-form-details";
-import { useUpdateForm } from "@/features/form-edit/hooks/use-update.form";
+import { useUpdateForm } from "@/features/form-edit/hooks/use-update-form";
 import { FormBaseForm } from "@/features/form/components/form-base-form";
 import { AxiosError, HttpStatusCode } from "axios";
 import { useTranslations } from "next-intl";
