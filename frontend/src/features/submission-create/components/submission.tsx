@@ -105,9 +105,8 @@ export const Submission = ({ formData }: SubmissionProps) => {
             src={formData.thumbnail}
             alt="Background"
             fill
-            style={{ objectFit: "cover" }}
             preload
-            className="rounded-t-md"
+            className="rounded-t-md object-cover"
           />
         </div>
 

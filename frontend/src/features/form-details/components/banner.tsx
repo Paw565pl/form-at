@@ -38,9 +38,7 @@ export const Banner = ({ form }: BannerProps) => {
         src={form.thumbnail}
         alt="Background"
         fill
-        style={{ objectFit: "cover" }}
-        priority
-        className="rounded-t-md"
+        className="rounded-t-md object-cover"
       />
 
       {/* go back button */}
