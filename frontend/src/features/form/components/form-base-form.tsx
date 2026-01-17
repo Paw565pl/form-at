@@ -350,12 +350,13 @@ export const FormBaseForm = ({
                 />
                 <Button
                   type="button"
+                  size="icon-sm"
                   variant="destructive"
                   aria-label={t("deleteImageButtonAriaLabel")}
-                  className="bg-destructive/30 dark:bg-destructive/30 hover:bg-destructive/50 absolute top-2 right-2 flex size-8 items-center justify-center rounded-full"
+                  className="absolute top-2 right-2 flex items-center justify-center"
                   onClick={() => form.setValue("thumbnail", undefined)}
                 >
-                  <ICONS.delete className="text-destructive size-4" />
+                  <ICONS.delete />
                 </Button>
               </div>
             )}
@@ -393,7 +394,7 @@ export const FormBaseForm = ({
 
                     <Button
                       type="button"
-                      variant="secondary"
+                      variant="outline"
                       aria-label={t("resetImageInputButtonAriaLabel")}
                       onClick={(e) => {
                         if (typeof defaultValues?.thumbnail === "string") {
@@ -672,14 +673,15 @@ export const FormBaseForm = ({
                     />
                     <Button
                       type="button"
+                      size="icon-sm"
                       variant="destructive"
                       aria-label={t("deleteImageButtonAriaLabel")}
-                      className="bg-destructive/30 dark:bg-destructive/30 hover:bg-destructive/50 absolute top-2 right-2 flex size-8 items-center justify-center rounded-full"
+                      className="absolute top-2 right-2 flex items-center justify-center"
                       onClick={() =>
                         form.setValue(`questions.${qIdx}.image`, undefined)
                       }
                     >
-                      <ICONS.delete className="text-destructive size-4" />
+                      <ICONS.delete />
                     </Button>
                   </div>
                 )}
@@ -719,7 +721,7 @@ export const FormBaseForm = ({
 
                         <Button
                           type="button"
-                          variant="secondary"
+                          variant="outline"
                           aria-label={t("resetImageInputButtonAriaLabel")}
                           onClick={(e) => {
                             if (
