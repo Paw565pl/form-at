@@ -6,7 +6,7 @@ import { useFetchFormDetails } from "@/features/form-details/hooks/use-fetch-for
 import { useFormatter, useTranslations } from "next-intl";
 import Link from "next/link";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { useFetchSubmissionPages } from "../hooks/use-fetch-submission-pages";
+import { useFetchSubmissionPages } from "@/features/submission-list/hooks/use-fetch-submission-pages";
 
 interface SubmissionsProps {
   readonly formIdOrSlug: string;
