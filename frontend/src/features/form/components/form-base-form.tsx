@@ -346,7 +346,7 @@ export const FormBaseForm = ({
                   src={watchedThumbnail}
                   alt={t("thumbnailImage")}
                   fill
-                  className="rounded-md object-contain"
+                  className="rounded-md object-fill"
                 />
 
                 <Tooltip>
