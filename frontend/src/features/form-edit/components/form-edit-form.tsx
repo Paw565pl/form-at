@@ -17,7 +17,11 @@ export const FormEditForm = ({ slug }: FormEditFormProps) => {
   const t = useTranslations("formEditPage");
 
   const router = useRouter();
-  const { data: formDetails, isLoading, error } = useFetchFormDetails(slug);
+  const {
+    data: formDetails,
+    isLoading,
+    error,
+  } = useFetchFormDetails(slug, { subscribed: false });
   const {
     mutate: updateForm,
     isPending,
