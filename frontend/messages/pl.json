@@ -153,7 +153,13 @@
       "code": "Kod",
       "cancel": "Anuluj",
       "confirm": "Potwierdź",
-      "fillAnonymously": "Wypełnij anonimowo"
+      "fillAnonymously": "Wypełnij anonimowo",
+      "edit": "Edytuj formularz",
+      "delete": "Usuń formularz",
+      "deleteDialogTitle": "Usuń formularz",
+      "deleteDialogDescription": "Czy na pewno chcesz usunąć ten formularz? Ta akcja jest nieodwracalna.",
+      "deleteError": "Błąd podczas usuwania formularza. Spróbuj ponownie.",
+      "deleteSuccess": "Formularz został pomyślnie usunięty."
     },
     "details": {
       "questionsCount": "{count, plural, one {# pytanie} few {# pytania} many {# pytań} other {# pytań}}",

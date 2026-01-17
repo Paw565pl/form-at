@@ -21,6 +21,7 @@ import {
 import { ICONS } from "@/core/config/icons";
 import { FormImageWithFallback } from "@/core/form-image/form-image-with-fallback";
 import { FormDetailResponseDto } from "@/core/types/form";
+import { FormOptions } from "@/features/form-details/components/form-options";
 import { useFormatter, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 
@@ -41,7 +42,7 @@ export const Banner = ({ form }: BannerProps) => {
         alt="Background"
         fill
         style={{ objectFit: "cover" }}
-        priority
+        preload
         className="rounded-t-md"
       />
 
@@ -106,18 +107,7 @@ export const Banner = ({ form }: BannerProps) => {
         )}
 
         {/* more options */}
-        <span>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button aria-label={t("moreOptions")}>
-                <ICONS.more />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="bottom">
-              <span>{t("moreOptions")}</span>
-            </TooltipContent>
-          </Tooltip>
-        </span>
+        <FormOptions slug={form.slug} authorName={form.authorName} />
       </div>
     </section>
   );
