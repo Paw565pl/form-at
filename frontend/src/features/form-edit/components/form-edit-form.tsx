@@ -35,7 +35,7 @@ export const FormEditForm = ({ slug }: FormEditFormProps) => {
     updateForm(request, {
       onSuccess: (data) => {
         toast.success(t("successMessage"));
-        router.push(`/forms/${data.slug}`);
+        router.replace(`/forms/${data.slug}`);
       },
       onError: (error) => {
         if (error instanceof AxiosError) {
