@@ -43,7 +43,7 @@ export const StarButton = ({
               isHovered ? "brightness-175" : null,
             )}
           >
-            <ICONS.rate fill={isHovered ? "none" : "var(--primary)"} />
+            <ICONS.rate className={isHovered ? "fill-none" : "fill-primary"} />
           </div>
         )}
 
