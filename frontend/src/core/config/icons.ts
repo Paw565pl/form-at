@@ -27,6 +27,7 @@ import {
   RotateCcw,
   Save,
   SendHorizonal,
+  Star,
   Sun,
   ThumbsDown,
   ThumbsUp,
@@ -69,5 +70,6 @@ export const ICONS = {
   delete: Trash,
   error: AlertTriangle,
   notFound: FileQuestion,
+  rate: Star,
   reset: RotateCcw,
 } as const;

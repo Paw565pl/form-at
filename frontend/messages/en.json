@@ -156,9 +156,10 @@
     "loading": "Loading...",
     "banner": {
       "back": "Go Back to Previous Page",
-      "moreOptions": "More Options",
+      "formFinished": "Completed on {finishedAt}",
       "fillOutForm": "Fill Out the Form",
       "enterTheCode": "Enter the Form Code",
+      "moreOptions": "More Options",
       "codeDescription": "This form is private, ask the form author for the access code.",
       "code": "Code",
       "cancel": "Cancel",
@@ -166,12 +167,18 @@
       "fillAnonymously": "Fill Anonymously"
     },
     "details": {
-      "formFinished": "Completed on {finishedAt}",
       "questionsCount": "{count, plural, one {# question} other {# questions}}",
       "submissionsCount": "{count, plural, one {# submission} other {# submissions}}",
       "estimatedTime": "{time} to complete",
       "privateForm": "Form Requires Code",
       "createdAt": "Created {date}"
+    },
+    "rating": {
+      "ratingError": "Error submitting rating. Please try again.",
+      "ratingDeleted": "Rating deleted successfully.",
+      "ratingAvg": "Average Rating: {rating}",
+      "ratingsCount": "{count, plural, one {# rating} few {# ratings} other {# ratings}}",
+      "starAriaLabel": "{starNumber, plural, one {Rate 1 star} few {Rate # stars} other {Rate # stars}}"
     },
     "questionList": {
       "showQuestions": "Show Questions Preview",

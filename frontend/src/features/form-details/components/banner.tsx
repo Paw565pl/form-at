@@ -1,5 +1,6 @@
 "use client";
 
+import { Badge } from "@/core/components/ui/badge";
 import { Button } from "@/core/components/ui/button";
 import {
   Dialog,
@@ -20,7 +21,7 @@ import {
 import { ICONS } from "@/core/config/icons";
 import { FormImageWithFallback } from "@/core/form-image/form-image-with-fallback";
 import { FormDetailResponseDto } from "@/core/types/form";
-import { useTranslations } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 
 interface BannerProps {
@@ -28,6 +29,7 @@ interface BannerProps {
 }
 
 export const Banner = ({ form }: BannerProps) => {
+  const format = useFormatter();
   const t = useTranslations("formDetailsPage.banner");
   const router = useRouter();
 
@@ -59,19 +61,13 @@ export const Banner = ({ form }: BannerProps) => {
         </Tooltip>
       </span>
 
-      {/* more options */}
-      <span className="absolute top-4 right-4">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button aria-label={t("moreOptions")} size="icon-sm">
-              <ICONS.more />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent side="bottom">
-            <span>{t("moreOptions")}</span>
-          </TooltipContent>
-        </Tooltip>
-      </span>
+      {/* User's submission date */}
+      {/* TODO take submission date from user's submission data */}
+      <Badge className="absolute top-4 right-4">
+        {t("formFinished", {
+          finishedAt: format.dateTime(new Date(), "long"),
+        })}
+      </Badge>
 
       <div className="absolute right-2 bottom-2 flex flex-col items-end gap-2 md:right-4 md:bottom-4 md:flex-row">
         <Dialog>
@@ -106,6 +102,20 @@ export const Banner = ({ form }: BannerProps) => {
             {t("fillAnonymously")}
           </Button>
         )}
+
+        {/* more options */}
+        <span>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button aria-label={t("moreOptions")}>
+                <ICONS.more />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">
+              <span>{t("moreOptions")}</span>
+            </TooltipContent>
+          </Tooltip>
+        </span>
       </div>
     </section>
   );
