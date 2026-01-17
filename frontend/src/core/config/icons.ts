@@ -24,6 +24,7 @@ import {
   Pen,
   PersonStanding,
   Plus,
+  RotateCcw,
   Save,
   SendHorizonal,
   Sun,
@@ -68,4 +69,5 @@ export const ICONS = {
   delete: Trash,
   error: AlertTriangle,
   notFound: FileQuestion,
+  reset: RotateCcw,
 } as const;
