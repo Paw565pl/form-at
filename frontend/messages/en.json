@@ -228,6 +228,7 @@
     "submissionCreated": "Submission sent successfully!",
     "defaultThanksMessage": "Thank you for your time and effort in completing the form.",
     "backToDetails": "Back to Form Details",
+    "questionImageAlt": "Question {number} image",
     "errors": {
       "oneAnswerRequired": "You must pick at least one answer.",
       "openAnswerMin": "Answer must be at least {count} characters.",

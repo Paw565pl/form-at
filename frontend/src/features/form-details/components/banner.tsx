@@ -36,7 +36,7 @@ export const Banner = ({ form }: BannerProps) => {
       {/* background image */}
       <FormImageWithFallback
         src={form.thumbnail}
-        alt="Background"
+        alt={form.name}
         fill
         className="rounded-t-md object-cover"
       />
