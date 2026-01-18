@@ -8,6 +8,7 @@ import { useFetchFormDetails } from "@/features/form-details/hooks/use-fetch-for
 import { HttpStatusCode } from "axios";
 import { useTranslations } from "next-intl";
 import { notFound } from "next/navigation";
+import { PrivateFormDialog } from "./private-form-dialog";
 
 interface FormProps {
   readonly formIdOrSlug: string;
@@ -19,6 +20,8 @@ export const Form = ({ formIdOrSlug }: FormProps) => {
 
   if (error) {
     if (error.status === HttpStatusCode.NotFound) return notFound();
+    if (error.status === HttpStatusCode.Forbidden)
+      return <PrivateFormDialog formIdOrSlug={formIdOrSlug} />;
     else throw error;
   }
 

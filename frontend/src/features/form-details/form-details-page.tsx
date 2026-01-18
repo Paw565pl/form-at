@@ -9,6 +9,7 @@ export const FormDetailsPage = async ({
   params,
 }: PageProps<"/forms/[slug]">) => {
   const { slug } = await params;
+  // const session = await getSession();
 
   const queryClient = getQueryClient();
   await Promise.all([
@@ -16,6 +17,12 @@ export const FormDetailsPage = async ({
     prefetchFormCommentsPages(queryClient, slug),
     prefetchMySubmission(queryClient, slug),
   ]);
+
+  // const formData = queryClient.getQueryData<FormDetailResponseDto>(
+  //   getFetchFormDetailsQueryOptions(slug).queryKey,
+  // );
+
+  // if (!formData) return notFound();
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
