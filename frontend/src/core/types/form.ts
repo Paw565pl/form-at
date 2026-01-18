@@ -62,7 +62,7 @@ export interface FormDetailResponseDto {
   readonly status: FormStatus;
   readonly shuffleVariant: FormShuffleVariant | null;
   readonly thanksMessage: string | null;
-  readonly estimatedDuration: string;
+  readonly estimatedDuration: FormEstimatedDuration;
   readonly thumbnail: string | null;
   readonly allowsQuestionsPreview: boolean;
   readonly allowsGuestSubmissions: boolean;
@@ -126,6 +126,8 @@ export interface FormRequest extends Omit<
   FormRequestDto,
   "thumbnailKey" | "questions"
 > {
-  thumbnail: File | null;
+  // file is new file selected by user
+  // string is existing url
+  thumbnail: File | string | null;
   questions: QuestionRequest[];
 }

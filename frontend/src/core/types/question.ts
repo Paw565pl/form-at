@@ -24,5 +24,7 @@ export interface QuestionRequestDto {
 }
 
 export interface QuestionRequest extends Omit<QuestionRequestDto, "imageKey"> {
-  image: File | null;
+  // file is new file selected by user
+  // string is existing url
+  image: File | string | null;
 }

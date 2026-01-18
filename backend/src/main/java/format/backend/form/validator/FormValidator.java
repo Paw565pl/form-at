@@ -25,12 +25,12 @@ public class FormValidator {
 
     private final UploadService uploadService;
 
-    public Map<String, List<String>> validate(FormRequestDto form, String userId) {
+    public Map<String, List<String>> validate(FormRequestDto form) {
         val errors = new HashMap<String, List<String>>();
 
         validatePassword(form).ifPresent(e -> errors.put(e.getKey(), e.getValue()));
         validateRequiredQuestionsCount(form).ifPresent(e -> errors.put(e.getKey(), e.getValue()));
-        validateQuestionsAndUploads(form, userId).forEach(e -> errors.put(e.getKey(), e.getValue()));
+        validateQuestionsAndUploads(form).forEach(e -> errors.put(e.getKey(), e.getValue()));
 
         return Collections.unmodifiableMap(errors);
     }
@@ -55,7 +55,7 @@ public class FormValidator {
         return Optional.of(Map.entry("questions", List.of(message)));
     }
 
-    private List<Map.Entry<String, List<String>>> validateQuestionsAndUploads(FormRequestDto form, String userId) {
+    private List<Map.Entry<String, List<String>>> validateQuestionsAndUploads(FormRequestDto form) {
         val errors = new ArrayList<Map.Entry<String, List<String>>>();
 
         val thumbnailKey = form.thumbnailKey();
@@ -65,7 +65,7 @@ public class FormValidator {
                         Stream.of(thumbnailKey), questions.stream().map(QuestionRequestDto::imageKey))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toUnmodifiableSet());
-        val validUploadKeys = uploadService.getValidUploadKeys(uploadKeys, userId);
+        val validUploadKeys = uploadService.getValidUploadKeys(uploadKeys);
 
         val isThumbnailUploaded =
                 Optional.ofNullable(thumbnailKey).map(validUploadKeys::contains).orElse(true);

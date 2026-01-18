@@ -26,7 +26,7 @@ export const useCreateForm = () => {
       const files: File[] = [
         request.thumbnail,
         ...request.questions.map((q) => q.image),
-      ].filter((f) => f !== null);
+      ].filter((f) => f instanceof File);
 
       const result = await minioService.upload(files, (percent) =>
         setUploadProgressPercent(percent),
@@ -35,12 +35,16 @@ export const useCreateForm = () => {
 
       const requestDto: FormRequestDto = {
         ...request,
-        thumbnailKey: request.thumbnail
-          ? (result.filesToKeys.get(request.thumbnail) ?? null)
-          : null,
+        thumbnailKey:
+          request.thumbnail instanceof File
+            ? (result.filesToKeys.get(request.thumbnail) ?? null)
+            : null,
         questions: request.questions.map((q) => ({
           ...q,
-          imageKey: q.image ? (result.filesToKeys.get(q.image) ?? null) : null,
+          imageKey:
+            q.image instanceof File
+              ? (result.filesToKeys.get(q.image) ?? null)
+              : null,
         })),
       };
       const { data } = await apiService.post("/api/v1/forms", requestDto);
