@@ -10,6 +10,24 @@ import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useState } from "react";
 
+const resolveFileKey = (
+  urlOrFile: File | string | null,
+  filesToKeys: Readonly<Map<File, string>>,
+): string | null => {
+  if (urlOrFile === null) return null;
+  if (urlOrFile instanceof File) return filesToKeys.get(urlOrFile) ?? null;
+
+  // parse url and return key only
+  try {
+    const url = new URL(urlOrFile);
+    const key = url.pathname.split("/").slice(2).join("/");
+
+    return key;
+  } catch {
+    return null;
+  }
+};
+
 export const useUpdateForm = (idOrSlug: string) => {
   const [uploadProgressPercent, setUploadProgressPercent] = useState<
     number | null
@@ -25,7 +43,7 @@ export const useUpdateForm = (idOrSlug: string) => {
       const files: File[] = [
         request.thumbnail,
         ...request.questions.map((q) => q.image),
-      ].filter((f) => f !== null);
+      ].filter((f) => f instanceof File);
 
       const result = await minioService.upload(files, (percent) =>
         setUploadProgressPercent(percent),
@@ -34,12 +52,10 @@ export const useUpdateForm = (idOrSlug: string) => {
 
       const requestDto: FormRequestDto = {
         ...request,
-        thumbnailKey: request.thumbnail
-          ? (result.filesToKeys.get(request.thumbnail) ?? null)
-          : null,
+        thumbnailKey: resolveFileKey(request.thumbnail, result.filesToKeys),
         questions: request.questions.map((q) => ({
           ...q,
-          imageKey: q.image ? (result.filesToKeys.get(q.image) ?? null) : null,
+          imageKey: resolveFileKey(q.image, result.filesToKeys),
         })),
       };
       const { data } = await apiService.put(

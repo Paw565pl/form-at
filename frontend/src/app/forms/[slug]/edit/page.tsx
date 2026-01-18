@@ -1,5 +1,3 @@
-const Edit = () => {
-  return <div>Edit</div>;
-};
+import { FormEditPage } from "@/features/form-edit/form-edit-page";
 
-export default Edit;
+export default FormEditPage;

@@ -55,8 +55,7 @@
     "loading": "Ładowanie formularzy...",
     "empty": "Brak formularzy dla wybranych kryteriów wyszukiwania."
   },
-  "formCreatePage": {
-    "pageTitle": "Utwórz nowy formularz",
+  "formBaseForm": {
     "name": "Nazwa",
     "namePlaceholder": "Mój wspaniały formularz",
     "description": "Opis",
@@ -75,6 +74,9 @@
     "password": "Hasło",
     "thanksMessage": "Wiadomość z podziękowaniem dla wypełniających",
     "thumbnailImage": "Obraz banera",
+    "existingQuestionImageAlt": "Podgląd istniejącego obrazu pytania {number}",
+    "deleteImageButton": "Usuń obraz",
+    "resetImageInputButton": "Zresetuj pole wyboru obrazu",
     "maxImageSize": "10MB max",
     "language": "Język",
     "shuffle": "Opcje losowania",
@@ -115,7 +117,6 @@
     "deleteAnswer": "Usuń odpowiedź",
     "submit": "Zapisz",
     "submitting": "Zapisywanie",
-    "formCreated": "Pomyślnie utworzono formularz!",
     "errors": {
       "formNameMin": "Nazwa formularza musi mieć co najmniej {count} znaki.",
       "formNameMax": "Nazwa formularza może mieć maksymalnie {count} znaków.",
@@ -137,9 +138,19 @@
       "answersCountMax": "Dozwolone jest maksymalnie {count} odpowiedzi.",
       "oneCorrectAnswer": "Co najmniej jedna odpowiedź musi być oznaczona jako poprawna.",
       "answerContentMin": "Treść odpowiedzi musi mieć co najmniej {count} znaki.",
-      "answerContentMax": "Treść odpowiedzi może mieć maksymalnie {count} znaków.",
-      "unexpected": "Wystąpił nieoczekiwany błąd."
+      "answerContentMax": "Treść odpowiedzi może mieć maksymalnie {count} znaków."
     }
+  },
+  "formCreatePage": {
+    "pageTitle": "Utwórz nowy formularz",
+    "successMessage": "Pomyślnie utworzono formularz!",
+    "errorMessage": "Wystąpił nieoczekiwany błąd."
+  },
+  "formEditPage": {
+    "pageTitle": "Edytuj formularz",
+    "loading": "Ładowanie...",
+    "successMessage": "Pomyślnie zapisano formularz!",
+    "errorMessage": "Wystąpił nieoczekiwany błąd."
   },
   "formDetailsPage": {
     "loading": "Ładowanie...",
@@ -233,6 +244,7 @@
     "submissionCreated": "Pomyślnie przesłano odpowiedź!",
     "defaultThanksMessage": "Dziękuję za poświęcony czas i wypełnienie formularza.",
     "backToDetails": "Powrót do strony formularza",
+    "questionImageAlt": "Zdjęcie pytania {number}",
     "errors": {
       "oneAnswerRequired": "Musisz wybrać co najmniej jedną odpowiedź.",
       "openAnswerMin": "Odpowiedź musi mieć co najmniej {count} znaków.",

@@ -27,11 +27,9 @@ export const Banner = ({ form }: BannerProps) => {
       {/* background image */}
       <FormImageWithFallback
         src={form.thumbnail}
-        alt="Background"
+        alt={form.name}
         fill
-        style={{ objectFit: "cover" }}
-        preload
-        className="rounded-t-md"
+        className="rounded-t-md object-cover"
       />
 
       {/* go back button */}
