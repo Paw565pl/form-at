@@ -3,6 +3,7 @@ import { prefetchFormCommentsPages } from "@/features/form-details/comments/hook
 import { Form } from "@/features/form-details/components/form";
 import { prefetchFormDetails } from "@/features/form-details/hooks/use-fetch-form-details";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { prefetchMySubmission } from "./my-submission/hooks/use-fetch-my-submission";
 
 export const FormDetailsPage = async ({
   params,
@@ -13,6 +14,7 @@ export const FormDetailsPage = async ({
   await Promise.all([
     prefetchFormDetails(queryClient, slug),
     prefetchFormCommentsPages(queryClient, slug),
+    prefetchMySubmission(queryClient, slug),
   ]);
 
   return (

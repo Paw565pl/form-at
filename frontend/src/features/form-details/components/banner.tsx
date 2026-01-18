@@ -1,6 +1,5 @@
 "use client";
 
-import { Badge } from "@/core/components/ui/badge";
 import { Button } from "@/core/components/ui/button";
 import {
   Dialog,
@@ -22,15 +21,15 @@ import { ICONS } from "@/core/config/icons";
 import { FormImageWithFallback } from "@/core/form-image/form-image-with-fallback";
 import { FormDetailResponseDto } from "@/core/types/form";
 import { FormOptions } from "@/features/form-details/components/form-options";
-import { useFormatter, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
+import { UserSubmissionDateBadge } from "./user-submission-date-badge";
 
 interface BannerProps {
   readonly form: FormDetailResponseDto;
 }
 
 export const Banner = ({ form }: BannerProps) => {
-  const format = useFormatter();
   const t = useTranslations("formDetailsPage.banner");
   const router = useRouter();
 
@@ -64,13 +63,7 @@ export const Banner = ({ form }: BannerProps) => {
         </Tooltip>
       </span>
 
-      {/* User's submission date */}
-      {/* TODO take submission date from user's submission data */}
-      <Badge className="absolute top-4 right-4">
-        {t("formFinished", {
-          finishedAt: format.dateTime(new Date(), "long"),
-        })}
-      </Badge>
+      <UserSubmissionDateBadge formIdOrSlug={form.id} />
 
       <div className="absolute right-2 bottom-2 flex flex-col items-end gap-2 md:right-4 md:bottom-4 md:flex-row">
         <Dialog>
