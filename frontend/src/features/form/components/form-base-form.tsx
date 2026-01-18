@@ -402,6 +402,7 @@ export const FormBaseForm = ({
                       <TooltipTrigger asChild>
                         <Button
                           type="button"
+                          size="icon"
                           variant="outline"
                           aria-label={t("resetImageInputButton")}
                           onClick={(e) => {
@@ -749,6 +750,7 @@ export const FormBaseForm = ({
                           <TooltipTrigger asChild>
                             <Button
                               type="button"
+                              size="icon"
                               variant="outline"
                               aria-label={t("resetImageInputButton")}
                               onClick={(e) => {
