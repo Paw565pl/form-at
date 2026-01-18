@@ -90,9 +90,6 @@ public class SubmissionService {
                 .addField("authorName")
                 .withValue(ArrayOperators.ArrayElemAt.arrayOf("author.username").elementAt(0))
                 .build());
-        operations.add(Aggregation.project("answers", "createdAt", "authorName")
-                .and("_id")
-                .as("id"));
 
         val results = mongoTemplate
                 .aggregate(Aggregation.newAggregation(operations), SubmissionEntity.class, SubmissionResponseDto.class)
