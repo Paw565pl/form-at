@@ -154,16 +154,25 @@
   },
   "formDetailsPage": {
     "loading": "Ładowanie...",
-    "banner": {
-      "back": "Wróć do poprzedniej strony",
-      "formFinished": "Wypełniono {finishedAt}",
-      "fillOutForm": "Wypełnij formularz",
+    "privateForm": {
       "enterTheCode": "Wprowadź kod do formularza",
-      "moreOptions": "Więcej opcji",
       "codeDescription": "Ten formularz jest prywatny, poproś autora formularza o kod dostępu.",
       "code": "Kod",
       "cancel": "Anuluj",
       "confirm": "Potwierdź",
+      "errors": {
+        "contentMin": "Kod musi mieć co najmniej {count} znaków.",
+        "contentMax": "Kod może mieć maksymalnie {count} znaków.",
+        "invalidCode": "Nieprawidłowy kod. Spróbuj ponownie."
+      }
+    },
+    "banner": {
+      "cancel": "Anuluj",
+      "confirm": "Potwierdź",
+      "fillOutForm": "Wypełnij formularz",
+      "back": "Wróć do poprzedniej strony",
+      "formFinished": "Wypełniono {finishedAt}",
+      "moreOptions": "Więcej opcji",
       "fillAnonymously": "Wypełnij anonimowo",
       "edit": "Edytuj formularz",
       "delete": "Usuń formularz",

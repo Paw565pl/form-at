@@ -5,10 +5,10 @@ import { Banner } from "@/features/form-details/components/banner";
 import { Details } from "@/features/form-details/components/details";
 import { QuestionList } from "@/features/form-details/components/question-list/question-list";
 import { useFetchFormDetails } from "@/features/form-details/hooks/use-fetch-form-details";
+import { PrivateForm } from "@/features/form-details/private-form/private-form";
 import { HttpStatusCode } from "axios";
 import { useTranslations } from "next-intl";
 import { notFound } from "next/navigation";
-import { PrivateFormDialog } from "./private-form-dialog";
 
 interface FormProps {
   readonly formIdOrSlug: string;
@@ -20,8 +20,11 @@ export const Form = ({ formIdOrSlug }: FormProps) => {
 
   if (error) {
     if (error.status === HttpStatusCode.NotFound) return notFound();
-    if (error.status === HttpStatusCode.Forbidden)
-      return <PrivateFormDialog formIdOrSlug={formIdOrSlug} />;
+    if (
+      error.status === HttpStatusCode.Forbidden ||
+      error.status === HttpStatusCode.Unauthorized
+    )
+      return <PrivateForm formIdOrSlug={formIdOrSlug} />;
     else throw error;
   }
 

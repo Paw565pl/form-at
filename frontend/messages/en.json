@@ -153,17 +153,26 @@
     "errorMessage": "An unexpected error occurred."
   },
   "formDetailsPage": {
-    "loading": "Loading...",
-    "banner": {
-      "back": "Go Back to Previous Page",
-      "formFinished": "Completed on {finishedAt}",
-      "fillOutForm": "Fill Out the Form",
+    "privateForm": {
       "enterTheCode": "Enter the Form Code",
-      "moreOptions": "More Options",
       "codeDescription": "This form is private, ask the form author for the access code.",
       "code": "Code",
       "cancel": "Cancel",
       "confirm": "Confirm",
+      "errors": {
+        "contentMin": "Code must be at least {count} characters.",
+        "contentMax": "Code must be at most {count} characters.",
+        "invalidCode": "Invalid code. Please try again."
+      }
+    },
+    "loading": "Loading...",
+    "banner": {
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "fillOutForm": "Fill Out the Form",
+      "back": "Go Back to Previous Page",
+      "formFinished": "Completed on {finishedAt}",
+      "moreOptions": "More Options",
       "fillAnonymously": "Fill Anonymously",
       "edit": "Edit Form",
       "delete": "Delete Form",

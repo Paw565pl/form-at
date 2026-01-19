@@ -1,6 +1,6 @@
 import { Badge } from "@/core/components/ui/badge";
+import { useFetchMySubmission } from "@/features/form-details/my-submission/hooks/use-fetch-my-submission";
 import { useFormatter, useTranslations } from "next-intl";
-import { useFetchMySubmission } from "../my-submission/hooks/use-fetch-my-submission";
 
 interface UserSubmissionDateBadgeProps {
   readonly formIdOrSlug: string;

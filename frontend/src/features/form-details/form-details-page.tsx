@@ -2,14 +2,13 @@ import { getQueryClient } from "@/core/lib/tanstack-query";
 import { prefetchFormCommentsPages } from "@/features/form-details/comments/hooks/use-fetch-form-comments-pages";
 import { Form } from "@/features/form-details/components/form";
 import { prefetchFormDetails } from "@/features/form-details/hooks/use-fetch-form-details";
+import { prefetchMySubmission } from "@/features/form-details/my-submission/hooks/use-fetch-my-submission";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import { prefetchMySubmission } from "./my-submission/hooks/use-fetch-my-submission";
 
 export const FormDetailsPage = async ({
   params,
 }: PageProps<"/forms/[slug]">) => {
   const { slug } = await params;
-  // const session = await getSession();
 
   const queryClient = getQueryClient();
   await Promise.all([
@@ -17,12 +16,6 @@ export const FormDetailsPage = async ({
     prefetchFormCommentsPages(queryClient, slug),
     prefetchMySubmission(queryClient, slug),
   ]);
-
-  // const formData = queryClient.getQueryData<FormDetailResponseDto>(
-  //   getFetchFormDetailsQueryOptions(slug).queryKey,
-  // );
-
-  // if (!formData) return notFound();
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>

@@ -10,9 +10,9 @@ import { ICONS } from "@/core/config/icons";
 import { FormImageWithFallback } from "@/core/form-image/form-image-with-fallback";
 import { FormDetailResponseDto } from "@/core/types/form";
 import { FormOptions } from "@/features/form-details/components/form-options";
+import { UserSubmissionDateBadge } from "@/features/form-details/components/user-submission-date-badge";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { UserSubmissionDateBadge } from "./user-submission-date-badge";
 
 interface BannerProps {
   readonly form: FormDetailResponseDto;
