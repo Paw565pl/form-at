@@ -24,6 +24,7 @@ import {
   Pen,
   PersonStanding,
   Plus,
+  RotateCcw,
   Save,
   SendHorizonal,
   Star,
@@ -70,4 +71,5 @@ export const ICONS = {
   error: AlertTriangle,
   notFound: FileQuestion,
   rate: Star,
+  reset: RotateCcw,
 } as const;

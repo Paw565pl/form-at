@@ -55,8 +55,7 @@
     "loading": "Loading forms...",
     "empty": "No forms found for given criteria."
   },
-  "formCreatePage": {
-    "pageTitle": "Create New Form",
+  "formBaseForm": {
     "name": "Name",
     "namePlaceholder": "My Awesome Form",
     "description": "Description",
@@ -75,6 +74,9 @@
     "password": "Password",
     "thanksMessage": "Thanks Message for Submitters",
     "thumbnailImage": "Thumbnail Image",
+    "existingQuestionImageAlt": "Question {number} existing image",
+    "deleteImageButton": "Delete image",
+    "resetImageInputButton": "Reset image input",
     "maxImageSize": "10MB max",
     "language": "Language",
     "shuffle": "Shuffle",
@@ -115,7 +117,6 @@
     "deleteAnswer": "Delete Answer",
     "submit": "Submit",
     "submitting": "Submitting",
-    "formCreated": "Form created successfully!",
     "errors": {
       "formNameMin": "Form name must be at least {count} characters.",
       "formNameMax": "Form name must be at most {count} characters.",
@@ -137,9 +138,19 @@
       "answersCountMax": "At most {count} answers are allowed.",
       "oneCorrectAnswer": "At least one answer must be marked as correct.",
       "answerContentMin": "Answer content must be at least {count} characters.",
-      "answerContentMax": "Answer content must be at most {count} characters.",
-      "unexpected": "An unexpected error occurred."
+      "answerContentMax": "Answer content must be at most {count} characters."
     }
+  },
+  "formCreatePage": {
+    "pageTitle": "Create New Form",
+    "successMessage": "Form created successfully!",
+    "errorMessage": "An unexpected error occurred."
+  },
+  "formEditPage": {
+    "pageTitle": "Edit Form",
+    "loading": "Loading...",
+    "successMessage": "Form updated successfully!",
+    "errorMessage": "An unexpected error occurred."
   },
   "formDetailsPage": {
     "loading": "Loading...",
@@ -227,6 +238,7 @@
     "submissionCreated": "Submission sent successfully!",
     "defaultThanksMessage": "Thank you for your time and effort in completing the form.",
     "backToDetails": "Back to Form Details",
+    "questionImageAlt": "Question {number} image",
     "errors": {
       "oneAnswerRequired": "You must pick at least one answer.",
       "openAnswerMin": "Answer must be at least {count} characters.",
