@@ -19,7 +19,7 @@ export const Details = ({ form }: DetailsProps) => {
   const t = useTranslations("formDetailsPage.details");
 
   return (
-    <Card className="flex w-full flex-col gap-4 rounded-t-none p-4">
+    <Card className="flex h-full min-h-50 w-full flex-col justify-between gap-4 rounded-t-none p-4">
       <header className="flex flex-wrap items-center gap-2 md:flex-row">
         <div className="flex items-center gap-2">
           {form.status === FormStatus.Private && (
