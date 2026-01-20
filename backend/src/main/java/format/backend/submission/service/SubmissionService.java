@@ -56,16 +56,18 @@ public class SubmissionService {
     private final FormService formService;
     private final UserService userService;
 
+    private void isOwnerOrAdminCheck(Optional<UserEntity> author, KeycloakJwtClaims keycloakJwtClaims) {
+        val isFormOwner = author.map(a -> Objects.equals(a.getId(), keycloakJwtClaims.sub()))
+                .orElse(false);
+        val isAdmin = keycloakJwtClaims.roles().contains(Role.ADMIN);
+        if (!(isFormOwner || isAdmin)) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+    }
+
     public Page<@NonNull SubmissionResponseDto> findAllByFormIdOrSlug(
             KeycloakJwtClaims keycloakJwtClaims, String formIdOrSlug, Pageable pageable) {
         val form = formService.findOrThrow(formIdOrSlug);
         if (!form.getSaveSubmissions()) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-
-        val isFormOwner = Optional.ofNullable(form.getAuthor())
-                .map(a -> Objects.equals(a.getId(), keycloakJwtClaims.sub()))
-                .orElse(false);
-        val isAdmin = keycloakJwtClaims.roles().contains(Role.ADMIN);
-        if (!(isFormOwner || isAdmin)) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        isOwnerOrAdminCheck(Optional.ofNullable(form.getAuthor()), keycloakJwtClaims);
 
         val countOperations = List.of(
                 Aggregation.match(Criteria.where("formId").is(form.getId())),
@@ -98,6 +100,22 @@ public class SubmissionService {
         return new PageImpl<>(results, pageable, total);
     }
 
+    public SubmissionResponseDto findByFormIdOrSlugAndSubmissionId(
+            KeycloakJwtClaims keycloakJwtClaims, String formIdOrSlug, String submissionId) {
+        val form = formService.findOrThrow(formIdOrSlug);
+        if (!form.getSaveSubmissions()) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        isOwnerOrAdminCheck(Optional.ofNullable(form.getAuthor()), keycloakJwtClaims);
+
+        val submission = submissionRepository
+                .findByIdAndFormId(submissionId, form.getId())
+                .orElseThrow(() -> new SubmissionNotFoundException(submissionId));
+        val authorName = Optional.ofNullable(submission.getAuthor())
+                .map(UserEntity::getUsername)
+                .orElse(null);
+
+        return submissionMapper.toResponseDto(submission, authorName);
+    }
+
     public SubmissionResponseDto findByFormIdOrSlugAndAuthorId(
             KeycloakJwtClaims keycloakJwtClaims, String formIdOrSlug) {
         val form = formService.findOrThrow(formIdOrSlug);
@@ -106,7 +124,6 @@ public class SubmissionService {
         val submission = submissionRepository
                 .findByFormIdAndAuthorId(form.getId(), keycloakJwtClaims.sub())
                 .orElseThrow(() -> new SubmissionNotFoundForUserException(formIdOrSlug));
-
         val authorName = Optional.ofNullable(submission.getAuthor())
                 .map(UserEntity::getUsername)
                 .orElse(null);
@@ -169,12 +186,7 @@ public class SubmissionService {
     public void delete(KeycloakJwtClaims keycloakJwtClaims, String formIdOrSlug, String submissionId) {
         val form = formService.findOrThrow(formIdOrSlug);
         if (!form.getSaveSubmissions()) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-
-        val isFormOwner = Optional.ofNullable(form.getAuthor())
-                .map(a -> Objects.equals(a.getId(), keycloakJwtClaims.sub()))
-                .orElse(false);
-        val isAdmin = keycloakJwtClaims.roles().contains(Role.ADMIN);
-        if (!(isFormOwner || isAdmin)) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        isOwnerOrAdminCheck(Optional.ofNullable(form.getAuthor()), keycloakJwtClaims);
 
         val submission = submissionRepository
                 .findById(submissionId)

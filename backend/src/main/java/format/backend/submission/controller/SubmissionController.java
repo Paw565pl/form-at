@@ -42,6 +42,14 @@ public class SubmissionController {
     }
 
     @IsAuthenticated
+    @GetMapping("/{submissionId}")
+    public SubmissionResponseDto findByFormIdOrSlugAndSubmissionId(
+            @AuthenticationPrincipal Jwt jwt, @PathVariable String formIdOrSlug, @PathVariable String submissionId) {
+        return submissionService.findByFormIdOrSlugAndSubmissionId(
+                keycloakJwtClaimsExtractor.getClaims(jwt), formIdOrSlug, submissionId);
+    }
+
+    @IsAuthenticated
     @GetMapping("/me")
     public SubmissionResponseDto findByFormIdOrSlugAndAuthorId(
             @AuthenticationPrincipal Jwt jwt, @PathVariable String formIdOrSlug) {

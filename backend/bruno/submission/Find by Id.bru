@@ -1,10 +1,10 @@
 meta {
-  name: Delete by Id
+  name: Find by Id
   type: http
-  seq: 5
+  seq: 2
 }
 
-delete {
+get {
   url: {{baseUrl}}/api/v1/forms/:formIdOrSlug/submissions/:submissionId
   body: none
   auth: inherit
