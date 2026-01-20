@@ -3,6 +3,4 @@ package format.backend.submission.dto;
 import java.util.List;
 
 public record SubmissionStatisticsResponseDto(
-        String questionId, List<AnswersStatisticsResponseDto> submissionStatistics) {}
-
-record AnswersStatisticsResponseDto(String answerId, Integer totalCount) {}
+        String questionId, List<SubmissionAnswersStatisticsResponseDto> submissionStatistics) {}
