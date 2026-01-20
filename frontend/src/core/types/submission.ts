@@ -10,6 +10,7 @@ export interface SubmissionAnswerRequestDto {
 
 export interface SubmissionResponseDto {
   readonly id: string;
+  readonly authorName: string | null;
   readonly answers: SubmissionAnswerResponseDto[];
   readonly createdAt: string;
 }
