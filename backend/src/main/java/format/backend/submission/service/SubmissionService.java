@@ -10,6 +10,7 @@ import format.backend.form.entity.QuestionEntity;
 import format.backend.form.service.FormService;
 import format.backend.submission.dto.SubmissionRequestDto;
 import format.backend.submission.dto.SubmissionResponseDto;
+import format.backend.submission.dto.SubmissionStatisticsResponseDto;
 import format.backend.submission.entity.SubmissionEntity;
 import format.backend.submission.exception.SubmissionAlreadyCreatedForUserException;
 import format.backend.submission.exception.SubmissionNotFoundException;
@@ -56,19 +57,25 @@ public class SubmissionService {
     private final FormService formService;
     private final UserService userService;
 
+    private static final String FORM_ID_FIELD = "formId";
+    private static final String QUESTION_ID_FIELD = "questionId";
+    private static final String CHOSEN_ANSWER_IDS_FIELD = "answers.chosenAnswerIds";
+
+    private void isOwnerOrAdminCheck(Optional<UserEntity> author, KeycloakJwtClaims keycloakJwtClaims) {
+        val isFormOwner = author.map(a -> Objects.equals(a.getId(), keycloakJwtClaims.sub()))
+                .orElse(false);
+        val isAdmin = keycloakJwtClaims.roles().contains(Role.ADMIN);
+        if (!(isFormOwner || isAdmin)) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+    }
+
     public Page<@NonNull SubmissionResponseDto> findAllByFormIdOrSlug(
             KeycloakJwtClaims keycloakJwtClaims, String formIdOrSlug, Pageable pageable) {
         val form = formService.findOrThrow(formIdOrSlug);
         if (!form.getSaveSubmissions()) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-
-        val isFormOwner = Optional.ofNullable(form.getAuthor())
-                .map(a -> Objects.equals(a.getId(), keycloakJwtClaims.sub()))
-                .orElse(false);
-        val isAdmin = keycloakJwtClaims.roles().contains(Role.ADMIN);
-        if (!(isFormOwner || isAdmin)) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        isOwnerOrAdminCheck(Optional.ofNullable(form.getAuthor()), keycloakJwtClaims);
 
         val countOperations = List.of(
-                Aggregation.match(Criteria.where("formId").is(form.getId())),
+                Aggregation.match(Criteria.where(FORM_ID_FIELD).is(form.getId())),
                 Aggregation.count().as("count"));
 
         final long total = Optional.ofNullable(mongoTemplate
@@ -76,19 +83,18 @@ public class SubmissionService {
                         .getUniqueMappedResult())
                 .map(d -> (long) d.getInteger("count"))
                 .orElse(0L);
-
         if (total == 0) return Page.empty(pageable);
 
         val operations = new ArrayList<AggregationOperation>();
 
-        operations.add(Aggregation.match(Criteria.where("formId").is(form.getId())));
+        operations.add(Aggregation.match(Criteria.where(FORM_ID_FIELD).is(form.getId())));
         operations.add(Aggregation.sort(Sort.by(Sort.Order.desc("_id"))));
         operations.add(Aggregation.skip(pageable.getOffset()));
         operations.add(Aggregation.limit(pageable.getPageSize()));
         operations.add(Aggregation.lookup("users", "authorId", "_id", "author"));
         operations.add(Aggregation.addFields()
                 .addField("authorName")
-                .withValue(ArrayOperators.ArrayElemAt.arrayOf("author.username").elementAt(0))
+                .withValue(ArrayOperators.arrayOf("author.username").first())
                 .build());
 
         val results = mongoTemplate
@@ -96,6 +102,57 @@ public class SubmissionService {
                 .getMappedResults();
 
         return new PageImpl<>(results, pageable, total);
+    }
+
+    public SubmissionResponseDto findByFormIdOrSlugAndSubmissionId(
+            KeycloakJwtClaims keycloakJwtClaims, String formIdOrSlug, String submissionId) {
+        val form = formService.findOrThrow(formIdOrSlug);
+        if (!form.getSaveSubmissions()) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        isOwnerOrAdminCheck(Optional.ofNullable(form.getAuthor()), keycloakJwtClaims);
+
+        val submission = submissionRepository
+                .findByIdAndFormId(submissionId, form.getId())
+                .orElseThrow(() -> new SubmissionNotFoundException(submissionId));
+        val authorName = Optional.ofNullable(submission.getAuthor())
+                .map(UserEntity::getUsername)
+                .orElse(null);
+
+        return submissionMapper.toResponseDto(submission, authorName);
+    }
+
+    public List<SubmissionStatisticsResponseDto> findSubmissionsStatisticsByFormIdOrSlug(
+            KeycloakJwtClaims keycloakJwtClaims, String formIdOrSlug) {
+        val form = formService.findOrThrow(formIdOrSlug);
+        if (!form.getSaveSubmissions()) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        isOwnerOrAdminCheck(Optional.ofNullable(form.getAuthor()), keycloakJwtClaims);
+
+        val operations = new ArrayList<AggregationOperation>();
+
+        operations.add(Aggregation.match(Criteria.where(FORM_ID_FIELD)
+                .is(form.getId())
+                .and("answers.chosenAnswerIds.0")
+                .exists(true)));
+        operations.add(Aggregation.unwind("answers"));
+        operations.add(Aggregation.match(Criteria.where(CHOSEN_ANSWER_IDS_FIELD).ne(List.of())));
+        operations.add(Aggregation.unwind(CHOSEN_ANSWER_IDS_FIELD));
+        operations.add(Aggregation.group("answers.questionId", CHOSEN_ANSWER_IDS_FIELD)
+                .count()
+                .as("totalCount"));
+        operations.add(Aggregation.project()
+                .and("_id.questionId")
+                .as(QUESTION_ID_FIELD)
+                .and("_id.chosenAnswerIds")
+                .as("entry.answerId")
+                .and("totalCount")
+                .as("entry.totalCount")
+                .andExclude("_id"));
+        operations.add(Aggregation.group(QUESTION_ID_FIELD).push("entry").as("submissionStatistics"));
+        operations.add(Aggregation.project().and("_id").as(QUESTION_ID_FIELD).andInclude("submissionStatistics"));
+
+        val results = mongoTemplate.aggregate(
+                Aggregation.newAggregation(operations), SubmissionEntity.class, SubmissionStatisticsResponseDto.class);
+
+        return results.getMappedResults();
     }
 
     public SubmissionResponseDto findByFormIdOrSlugAndAuthorId(
@@ -106,7 +163,6 @@ public class SubmissionService {
         val submission = submissionRepository
                 .findByFormIdAndAuthorId(form.getId(), keycloakJwtClaims.sub())
                 .orElseThrow(() -> new SubmissionNotFoundForUserException(formIdOrSlug));
-
         val authorName = Optional.ofNullable(submission.getAuthor())
                 .map(UserEntity::getUsername)
                 .orElse(null);
@@ -169,12 +225,7 @@ public class SubmissionService {
     public void delete(KeycloakJwtClaims keycloakJwtClaims, String formIdOrSlug, String submissionId) {
         val form = formService.findOrThrow(formIdOrSlug);
         if (!form.getSaveSubmissions()) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-
-        val isFormOwner = Optional.ofNullable(form.getAuthor())
-                .map(a -> Objects.equals(a.getId(), keycloakJwtClaims.sub()))
-                .orElse(false);
-        val isAdmin = keycloakJwtClaims.roles().contains(Role.ADMIN);
-        if (!(isFormOwner || isAdmin)) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        isOwnerOrAdminCheck(Optional.ofNullable(form.getAuthor()), keycloakJwtClaims);
 
         val submission = submissionRepository
                 .findById(submissionId)

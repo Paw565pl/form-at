@@ -10,7 +10,7 @@ plugins {
     id("com.diffplug.spotless") version "8.1.0"
 }
 
-if (gradle.startParameter.taskNames.any { it.contains("bootJar") }) {
+if (project.hasProperty("aot")) {
     apply(plugin = "org.springframework.boot.aot")
 }
 
