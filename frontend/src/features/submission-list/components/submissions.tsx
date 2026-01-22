@@ -1,12 +1,14 @@
 "use client";
 
 import { ScrollToTopButton } from "@/core/components/scroll-to-top-button/scroll-to-top-button";
+import { Button } from "@/core/components/ui/button";
 import { Card } from "@/core/components/ui/card";
+import { ICONS } from "@/core/config/icons";
 import { useFetchFormDetails } from "@/features/form-details/hooks/use-fetch-form-details";
+import { useFetchSubmissionPages } from "@/features/submission-list/hooks/use-fetch-submission-pages";
 import { useFormatter, useTranslations } from "next-intl";
 import Link from "next/link";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { useFetchSubmissionPages } from "@/features/submission-list/hooks/use-fetch-submission-pages";
 
 interface SubmissionsProps {
   readonly formIdOrSlug: string;
@@ -15,6 +17,7 @@ interface SubmissionsProps {
 export const Submissions = ({ formIdOrSlug }: SubmissionsProps) => {
   const t = useTranslations("submissionListPage");
   const format = useFormatter();
+
   const {
     data: submissionPages,
     error,
@@ -26,6 +29,7 @@ export const Submissions = ({ formIdOrSlug }: SubmissionsProps) => {
   const { data: formData } = useFetchFormDetails(formIdOrSlug);
 
   if (error) throw error;
+  if (!formData) return <p>{t("loading")}</p>;
 
   const totalElements = submissionPages?.pages.at(0)?.page.totalElements || 0;
 
@@ -44,6 +48,13 @@ export const Submissions = ({ formIdOrSlug }: SubmissionsProps) => {
         <h1 className="ml-4 text-xl font-bold">
           {t("title", { count: totalElements, formName: formData.name })}
         </h1>
+
+        <Button size="sm" asChild>
+          <Link href={`/forms/${formIdOrSlug}/statistics`}>
+            <ICONS.statistics />
+            {t("viewStatistics")}
+          </Link>
+        </Button>
       </header>
 
       <InfiniteScroll
@@ -63,7 +74,9 @@ export const Submissions = ({ formIdOrSlug }: SubmissionsProps) => {
                 key={submission.id}
                 className="hover:border-primary flex-row justify-between p-4 transition-all"
               >
-                <p className="font-semibold">AUTHORNAME</p>
+                <p className="font-semibold">
+                  {submission.authorName || t("unknownAuthor")}
+                </p>
                 <span className="text-muted-foreground">
                   {t("createdAt", {
                     date: format.dateTime(
