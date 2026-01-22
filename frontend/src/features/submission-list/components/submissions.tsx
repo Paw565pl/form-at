@@ -35,6 +35,8 @@ export const Submissions = ({ formIdOrSlug }: SubmissionsProps) => {
     else throw error;
   }
 
+  if (!formData) return <p>{t("loading")}</p>;
+
   const totalElements = submissionPages?.pages.at(0)?.page.totalElements || 0;
 
   const dataLength =
