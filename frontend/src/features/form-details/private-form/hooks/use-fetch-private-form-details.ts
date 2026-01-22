@@ -1,7 +1,12 @@
 import { apiService } from "@/core/services/api-service";
 import { ErrorResponseDto } from "@/core/types/error-response-dto";
 import { FormDetailResponseDto } from "@/core/types/form";
-import { queryOptions, useQuery, UseQueryOptions } from "@tanstack/react-query";
+import {
+  QueryClient,
+  queryOptions,
+  useQuery,
+  UseQueryOptions,
+} from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
 export const getFetchPrivateFormDetailsQueryOptions = (
@@ -34,3 +39,12 @@ export const useFetchPrivateFormDetails = (
   >,
 ) =>
   useQuery(getFetchPrivateFormDetailsQueryOptions(idOrSlug, password, options));
+
+export const prefetchPrivateFormDetails = (
+  queryClient: QueryClient,
+  idOrSlug: string,
+  password: string,
+) =>
+  queryClient.prefetchQuery(
+    getFetchPrivateFormDetailsQueryOptions(idOrSlug, password),
+  );
