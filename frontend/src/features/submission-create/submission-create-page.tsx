@@ -1,13 +1,11 @@
 import { getQueryClient } from "@/core/lib/tanstack-query";
 import { FormDetailResponseDto } from "@/core/types/form";
 import { shuffleFormData } from "@/core/utils/shuffle-form-data";
-import {
-  getFetchFormDetailsQueryOptions,
-  prefetchFormDetails,
-} from "@/features/form-details/hooks/use-fetch-form-details";
+import { prefetchFormDetails } from "@/features/form-details/hooks/use-fetch-form-details";
 import { Submission } from "@/features/submission-create/components/submission";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { notFound } from "next/navigation";
+import { getFetchPrivateFormDetailsQueryOptions } from "../form-details/private-form/hooks/use-fetch-private-form-details";
 
 export const SubmissionCreatePage = async ({
   params,
@@ -17,12 +15,12 @@ export const SubmissionCreatePage = async ({
   const queryClient = getQueryClient();
   await prefetchFormDetails(queryClient, slug);
   const formData = queryClient.getQueryData<FormDetailResponseDto>(
-    getFetchFormDetailsQueryOptions(slug).queryKey,
+    getFetchPrivateFormDetailsQueryOptions(slug, "").queryKey,
   );
 
   if (!formData) return notFound();
 
-  const preparedFormData = shuffleFormData(formData);
+  const preparedFormData = shuffleFormData(formData!);
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
