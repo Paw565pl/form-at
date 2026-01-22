@@ -5,13 +5,13 @@ import {
   getFetchFormDetailsQueryOptions,
   prefetchFormDetails,
 } from "@/features/form-details/hooks/use-fetch-form-details";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import { notFound } from "next/navigation";
 import { SubmissionDetails } from "@/features/submission-details/components/submission-details";
 import {
   getFetchSubmissionDetailsQueryOptions,
   prefetchSubmissionDetails,
 } from "@/features/submission-details/hooks/use-fetch-submission-details";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { notFound } from "next/navigation";
 
 export const SubmissionDetailsPage = async ({
   params,
@@ -19,8 +19,10 @@ export const SubmissionDetailsPage = async ({
   const { slug, submissionId } = await params;
 
   const queryClient = getQueryClient();
-  await prefetchFormDetails(queryClient, slug);
-  await prefetchSubmissionDetails(queryClient, slug, submissionId);
+  await Promise.all([
+    prefetchFormDetails(queryClient, slug),
+    prefetchSubmissionDetails(queryClient, slug, submissionId),
+  ]);
 
   const formData = queryClient.getQueryData<FormDetailResponseDto>(
     getFetchFormDetailsQueryOptions(slug).queryKey,
