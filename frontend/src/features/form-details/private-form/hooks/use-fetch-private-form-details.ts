@@ -1,12 +1,7 @@
 import { apiService } from "@/core/services/api-service";
 import { ErrorResponseDto } from "@/core/types/error-response-dto";
 import { FormDetailResponseDto } from "@/core/types/form";
-import {
-  QueryClient,
-  queryOptions,
-  useQuery,
-  UseQueryOptions,
-} from "@tanstack/react-query";
+import { queryOptions, useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
 export const getFetchPrivateFormDetailsQueryOptions = (
@@ -18,6 +13,7 @@ export const getFetchPrivateFormDetailsQueryOptions = (
   >,
 ) =>
   queryOptions<FormDetailResponseDto, AxiosError<ErrorResponseDto>>({
+    // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: ["forms", idOrSlug, "access"] as const,
     queryFn: async () => {
       const { data } = await apiService.post<FormDetailResponseDto>(
@@ -39,12 +35,3 @@ export const useFetchPrivateFormDetails = (
   >,
 ) =>
   useQuery(getFetchPrivateFormDetailsQueryOptions(idOrSlug, password, options));
-
-export const prefetchPrivateFormDetails = (
-  queryClient: QueryClient,
-  idOrSlug: string,
-  password: string,
-) =>
-  queryClient.prefetchQuery(
-    getFetchPrivateFormDetailsQueryOptions(idOrSlug, password),
-  );

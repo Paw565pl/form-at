@@ -1,7 +1,7 @@
 import { getQueryClient } from "@/core/lib/tanstack-query";
 import { prefetchFormDetails } from "@/features/form-details/hooks/use-fetch-form-details";
+import { SubmissionCreateGate } from "@/features/submission-create/components/submission-create-gate";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import { SubmissionCreateGate } from "./components/submission-create-gate";
 
 export const SubmissionCreatePage = async ({
   params,
