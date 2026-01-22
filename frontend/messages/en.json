@@ -257,6 +257,7 @@
     "viewStatistics": "Form Statistics"
   },
   "submissionDetailsPage": {
+    "loading": "Loading submission details...",
     "submissionBy": "Submission by {authorName}",
     "submissionByUnknown": "Submission by Unknown User",
     "backToSubmissions": "Back to Submissions List",

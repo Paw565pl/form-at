@@ -12,24 +12,25 @@ import {
 } from "@/core/components/ui/tooltip";
 import { ICONS } from "@/core/config/icons";
 import { cn } from "@/core/lib/cn";
-import { FormDetailResponseDto } from "@/core/types/form";
-import { SubmissionResponseDto } from "@/core/types/submission";
+import { useFetchFormDetails } from "@/features/form-details/hooks/use-fetch-form-details";
 import { DeleteSubmissionAlertDialog } from "@/features/submission-details/components/delete-submission-alert-dialog";
 import { useDeleteSubmission } from "@/features/submission-details/hooks/use-delete-submission";
+import { useFetchSubmissionDetails } from "@/features/submission-details/hooks/use-fetch-submission-details";
+import { HttpStatusCode } from "axios";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
 interface SubmissionDetailsProps {
-  readonly formData: FormDetailResponseDto;
-  readonly submissionData: SubmissionResponseDto;
+  readonly formIdOrSlug: string;
+  readonly submissionId: string;
 }
 
 export const SubmissionDetails = ({
-  formData,
-  submissionData,
+  formIdOrSlug,
+  submissionId,
 }: SubmissionDetailsProps) => {
   const t = useTranslations("submissionDetailsPage");
   const gt = useTranslations("global");
@@ -37,16 +38,38 @@ export const SubmissionDetails = ({
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const { mutate: deleteSubmission, isPending } = useDeleteSubmission(
-    formData.slug,
-    submissionData.id,
+    formIdOrSlug,
+    submissionId,
   );
+
+  const {
+    data: formData,
+    isLoading: isFormLoading,
+    error: formError,
+  } = useFetchFormDetails(formIdOrSlug);
+  const {
+    data: submissionData,
+    isLoading: isSubmissionLoading,
+    error: submissionError,
+  } = useFetchSubmissionDetails(formIdOrSlug, submissionId);
+
+  if (formError) {
+    if (formError.status === HttpStatusCode.NotFound) return notFound();
+    else throw formError;
+  } else if (submissionError) {
+    if (submissionError.status === HttpStatusCode.NotFound) return notFound();
+    else throw submissionError;
+  }
+
+  if (!formData || !submissionData || isFormLoading || isSubmissionLoading)
+    return <p>{t("loading")}</p>;
 
   const handleDelete = () =>
     deleteSubmission(undefined, {
       onSuccess: () => {
         toast.success(t("deleteSuccess"));
         setIsDeleteDialogOpen(false);
-        router.push(`/forms/${formData.slug}/submissions`);
+        router.push(`/forms/${formIdOrSlug}/submissions`);
       },
       onError: () => {
         toast.error(t("deleteError"));
@@ -62,7 +85,7 @@ export const SubmissionDetails = ({
         <Tooltip>
           <TooltipTrigger asChild>
             <Button asChild size="icon-sm" aria-label={t("backToSubmissions")}>
-              <Link href={`/forms/${formData.slug}/submissions`}>
+              <Link href={`/forms/${formIdOrSlug}/submissions`}>
                 <ICONS.back />
               </Link>
             </Button>

@@ -6,8 +6,10 @@ import { Card } from "@/core/components/ui/card";
 import { ICONS } from "@/core/config/icons";
 import { useFetchFormDetails } from "@/features/form-details/hooks/use-fetch-form-details";
 import { useFetchSubmissionPages } from "@/features/submission-list/hooks/use-fetch-submission-pages";
+import { HttpStatusCode } from "axios";
 import { useFormatter, useTranslations } from "next-intl";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 interface SubmissionsProps {
@@ -28,8 +30,10 @@ export const Submissions = ({ formIdOrSlug }: SubmissionsProps) => {
   } = useFetchSubmissionPages(formIdOrSlug);
   const { data: formData } = useFetchFormDetails(formIdOrSlug);
 
-  if (error) throw error;
-  if (!formData) return <p>{t("loading")}</p>;
+  if (error) {
+    if (error.status === HttpStatusCode.NotFound) return notFound();
+    else throw error;
+  }
 
   const totalElements = submissionPages?.pages.at(0)?.page.totalElements || 0;
 

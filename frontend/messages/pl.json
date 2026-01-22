@@ -257,6 +257,7 @@
     "viewStatistics": "Statystyki formularza"
   },
   "submissionDetailsPage": {
+    "loading": "Ładowanie odpowiedzi...",
     "submissionBy": "Odpowiedź użytkownika {authorName}",
     "submissionByUnknown": "Odpowiedź nieznanego użytkownika",
     "backToSubmissions": "Powrót do listy odpowiedzi",
