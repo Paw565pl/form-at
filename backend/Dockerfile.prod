@@ -9,7 +9,9 @@ RUN chmod u+x ./gradlew && ./gradlew dependencies --no-daemon
 
 COPY . .
 
-RUN ./gradlew --no-daemon clean bootJar
+RUN ./gradlew --no-daemon clean bootJar -Paot && \
+    mv build/libs/*.jar app.jar && \
+    java -Djarmode=tools -jar app.jar extract --layers --destination extracted
 
 FROM bellsoft/liberica-runtime-container:jre-25-cds-glibc
 
@@ -19,7 +21,10 @@ RUN apk --no-cache add curl && \
     addgroup --system spring && \
     adduser --system --disabled-password --ingroup spring --home /home/spring spring
 
-COPY --from=builder --chown=spring /app/build/libs/*.jar /app/app.jar
+COPY --from=builder --chown=spring /app/extracted/dependencies/ ./
+COPY --from=builder --chown=spring /app/extracted/spring-boot-loader/ ./
+COPY --from=builder --chown=spring /app/extracted/snapshot-dependencies/ ./
+COPY --from=builder --chown=spring /app/extracted/application/ ./
 
 USER spring:spring
 

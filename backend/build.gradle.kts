@@ -4,13 +4,13 @@ plugins {
     java
     idea
     id("org.springframework.boot") version "4.0.1"
-    id("org.springframework.boot.aot") version "4.0.0" apply false
+    id("org.springframework.boot.aot") version "4.0.1" apply false
     id("io.spring.dependency-management") version "1.1.7"
     id("se.solrike.sonarlint") version "2.2.0"
     id("com.diffplug.spotless") version "8.1.0"
 }
 
-if (gradle.startParameter.taskNames.any { it.contains("bootJar") }) {
+if (project.hasProperty("aot")) {
     apply(plugin = "org.springframework.boot.aot")
 }
 
@@ -39,14 +39,14 @@ spotless {
         removeUnusedImports()
         importOrder()
         cleanthat()
-        palantirJavaFormat("2.83.0")
+        palantirJavaFormat("2.85.0")
         trimTrailingWhitespace()
         leadingTabsToSpaces()
         endWithNewline()
         formatAnnotations()
     }
 
-    val prettierVersion = "3.7.3"
+    val prettierVersion = "3.7.4"
 
     yaml {
         target("src/**/*.yaml")
@@ -70,10 +70,10 @@ repositories {
 }
 
 val mapstructVersion = "1.6.3"
-val springdocVersion = "3.0.0"
+val springdocVersion = "3.0.1"
 val slugifyVersion = "3.0.7"
 val minioVersion = "8.6.0"
-val restAssuredVersion = "5.5.6"
+val restAssuredVersion = "6.0.0"
 val dataFakerVersion = "2.5.3"
 val sonarlintVersion = "8.9.4.40912"
 

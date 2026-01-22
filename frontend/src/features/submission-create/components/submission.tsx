@@ -103,11 +103,10 @@ export const Submission = ({ formData }: SubmissionProps) => {
         <div className="relative h-48">
           <FormImageWithFallback
             src={formData.thumbnail}
-            alt="Background"
+            alt={formData.name}
             fill
-            style={{ objectFit: "cover" }}
             preload
-            className="rounded-t-md"
+            className="rounded-t-md object-cover"
           />
         </div>
 
@@ -131,11 +130,11 @@ export const Submission = ({ formData }: SubmissionProps) => {
                   <div className="relative h-60">
                     <FormImageWithFallback
                       src={question.image}
-                      alt="Background"
+                      alt={t("questionImageAlt", {
+                        number: (index + 1).toString(),
+                      })}
                       fill
-                      style={{ objectFit: "contain" }}
-                      preload
-                      className="rounded-md"
+                      className="rounded-md object-contain"
                     />
                   </div>
                 )}

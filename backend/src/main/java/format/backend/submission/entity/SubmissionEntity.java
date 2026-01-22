@@ -33,6 +33,7 @@ public class SubmissionEntity {
     @Field(name = "_id", targetType = FieldType.OBJECT_ID)
     private String id;
 
+    @Indexed
     @DocumentReference(lazy = true)
     @Field(name = "formId")
     private @NonNull FormEntity form;
