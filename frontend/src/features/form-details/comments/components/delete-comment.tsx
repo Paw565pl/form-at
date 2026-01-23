@@ -11,9 +11,9 @@ import {
 } from "@/core/components/ui/alert-dialog";
 import { DropdownMenuItem } from "@/core/components/ui/dropdown-menu";
 import { ICONS } from "@/core/config/icons";
+import { useDeleteComment } from "@/features/form-details/comments/hooks/use-delete-comment";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
-import { useDeleteComment } from "../hooks/use-delete-comment";
 
 interface DeleteCommentAlertDialogProps {
   readonly formIdOrSlug: string;
