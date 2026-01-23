@@ -155,7 +155,7 @@
     "submit": "Submit",
     "submitting": "Submitting",
     "cancel": "Cancel",
-    "continue": "Update",
+    "continue": "Save",
     "updateDialogTitle": "Are you sure you want to update this form?",
     "updateDialogDescription": "All prior submissions will be deleted. This action cannot be undone."
   },
