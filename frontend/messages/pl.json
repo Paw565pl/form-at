@@ -246,5 +246,26 @@
       "submissionExists": "Ten formularz został już przez Ciebie wypełniony.",
       "unexpected": "Wystąpił nieoczekiwany błąd."
     }
+  },
+  "submissionListPage": {
+    "title": "Wyświetlanie {count, plural, one {# odpowiedzi} other {# odpowiedzi}} dla {formName}",
+    "end": "Dotarłeś do końca listy.",
+    "loading": "Ładowanie odpowiedzi...",
+    "empty": "Nikt jeszcze nie wypełnił tego formularza.",
+    "createdAt": "Przesłano {date}",
+    "unknownAuthor": "Nieznany autor",
+    "viewStatistics": "Statystyki formularza"
+  },
+  "submissionDetailsPage": {
+    "loading": "Ładowanie odpowiedzi...",
+    "submissionBy": "Odpowiedź użytkownika {authorName}",
+    "submissionByUnknown": "Odpowiedź nieznanego użytkownika",
+    "backToSubmissions": "Powrót do listy odpowiedzi",
+    "emptyOpenAnswer": "Nie udzielono odpowiedzi.",
+    "deleteSubmission": "Usuń odpowiedź",
+    "deleteSubmissionDescription": "Czy na pewno chcesz usunąć tę odpowiedź? Ta akcja jest nieodwracalna.",
+    "cancel": "Anuluj",
+    "deleteError": "Błąd podczas usuwania odpowiedzi. Spróbuj ponownie.",
+    "deleteSuccess": "Odpowiedź została pomyślnie usunięta."
   }
 }
