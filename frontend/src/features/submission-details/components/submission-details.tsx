@@ -54,7 +54,11 @@ export const SubmissionDetails = ({
   } = useFetchSubmissionDetails(formIdOrSlug, submissionId);
 
   if (formError) {
-    if (formError.status === HttpStatusCode.NotFound) return notFound();
+    if (
+      formError.status === HttpStatusCode.NotFound ||
+      formError.status === HttpStatusCode.Conflict
+    )
+      return notFound();
     else throw formError;
   } else if (submissionError) {
     if (submissionError.status === HttpStatusCode.NotFound) return notFound();

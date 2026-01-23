@@ -31,7 +31,11 @@ export const Submissions = ({ formIdOrSlug }: SubmissionsProps) => {
   const { data: formData } = useFetchFormDetails(formIdOrSlug);
 
   if (error) {
-    if (error.status === HttpStatusCode.NotFound) return notFound();
+    if (
+      error.status === HttpStatusCode.NotFound ||
+      error.status === HttpStatusCode.Conflict
+    )
+      return notFound();
     else throw error;
   }
 
