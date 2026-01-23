@@ -272,7 +272,7 @@ export const FormBaseForm = ({
                       aria-label="Status"
                       className="w-full sm:w-auto"
                     >
-                      <span className="flex-1 text-left">Status:</span>
+                      <span className="flex-1 text-left">{t("status")}:</span>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>

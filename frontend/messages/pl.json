@@ -59,6 +59,7 @@
     "name": "Nazwa",
     "namePlaceholder": "Mój wspaniały formularz",
     "description": "Opis",
+    "status": "Status",
     "formStatuses": {
       "DRAFT": "Szkic",
       "PUBLIC": "Publiczny",

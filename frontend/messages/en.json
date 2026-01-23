@@ -59,6 +59,7 @@
     "name": "Name",
     "namePlaceholder": "My Awesome Form",
     "description": "Description",
+    "status": "Status",
     "formStatuses": {
       "DRAFT": "Draft",
       "PUBLIC": "Public",
