@@ -60,15 +60,6 @@ export const Banner = ({ form }: BannerProps) => {
           {t("fillOutForm")}
         </Button>
 
-        {form.allowsGuestSubmissions && (
-          <Button
-            onClick={() => router.push(`/forms/${form.slug}/submissions/new`)}
-          >
-            <ICONS.anonymous />
-            {t("fillAnonymously")}
-          </Button>
-        )}
-
         {/* more options */}
         <FormOptions slug={form.slug} authorName={form.authorName} />
       </div>

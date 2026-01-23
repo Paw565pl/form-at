@@ -65,8 +65,9 @@ export const Details = ({ form }: DetailsProps) => {
           </h2>
         </div>
         <p className="ml-auto">
-          {t("createdAt", {
+          {t("createdInfo", {
             date: format.dateTime(new Date(form.updatedAt), "long"),
+            name: form.authorName || t("deletedUser"),
           })}
         </p>
       </div>

@@ -186,7 +186,8 @@
       "submissionsCount": "{count, plural, one {# odpowiedź} other {# odpowiedzi}}",
       "estimatedTime": "Szacowany czas ukończenia: {time}",
       "privateForm": "Formularz zabezpieczony kodem",
-      "createdAt": "Utworzono {date}"
+      "createdInfo": "Utworzono {date} przez {name}",
+      "deletedUser": "Usuniętego użytkownika"
     },
     "rating": {
       "ratingError": "Błąd podczas przesyłania oceny. Spróbuj ponownie.",

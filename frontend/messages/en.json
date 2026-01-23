@@ -186,7 +186,8 @@
       "submissionsCount": "{count, plural, one {# submission} other {# submissions}}",
       "estimatedTime": "{time} to complete",
       "privateForm": "Form Requires Code",
-      "createdAt": "Created {date}"
+      "createdInfo": "Created {date} by {name}",
+      "deletedUser": "Deleted User"
     },
     "rating": {
       "ratingError": "Error submitting rating. Please try again.",
