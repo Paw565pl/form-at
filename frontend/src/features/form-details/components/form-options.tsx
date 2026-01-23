@@ -9,13 +9,10 @@ import {
 } from "@/core/components/ui/dropdown-menu";
 import { ICONS } from "@/core/config/icons";
 import { Role } from "@/features/auth/types/role";
-import { DeleteFormAlertDialog } from "@/features/form-details/components/delete-form-alert-dialog";
-import { useDeleteForm } from "@/features/form-edit/hooks/use-delete-form";
+import { DeleteForm } from "@/features/form-details/components/delete-form";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { toast } from "sonner";
 
 interface FormOptionsProps {
   readonly slug: string;
@@ -27,26 +24,11 @@ export const FormOptions = ({ slug, authorName }: FormOptionsProps) => {
   const session = useSession();
   const router = useRouter();
 
-  const { mutate: deleteForm, isPending } = useDeleteForm(slug);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-
   const user = session.data?.user;
   const isUserAuthor = !!authorName && user?.name === authorName;
   const isUserAdmin = user?.roles.includes(Role.ADMIN);
 
   if (!isUserAuthor && !isUserAdmin) return null;
-
-  const handleDelete = () =>
-    deleteForm(undefined, {
-      onSuccess: () => {
-        toast.success(t("deleteSuccess"));
-        setIsDeleteDialogOpen(false);
-        router.replace("/forms");
-      },
-      onError: () => {
-        toast.error(t("deleteError"));
-      },
-    });
 
   return (
     <section>
@@ -67,23 +49,9 @@ export const FormOptions = ({ slug, authorName }: FormOptionsProps) => {
             </DropdownMenuItem>
           )}
 
-          <DropdownMenuItem
-            onClick={() => setIsDeleteDialogOpen(true)}
-            disabled={isPending}
-            variant="destructive"
-          >
-            <ICONS.delete />
-            {t("delete")}
-          </DropdownMenuItem>
+          <DeleteForm slug={slug} />
         </DropdownMenuContent>
       </DropdownMenu>
-
-      <DeleteFormAlertDialog
-        isOpen={isDeleteDialogOpen}
-        isPending={isPending}
-        onClose={() => setIsDeleteDialogOpen(false)}
-        onConfirm={handleDelete}
-      />
     </section>
   );
 };

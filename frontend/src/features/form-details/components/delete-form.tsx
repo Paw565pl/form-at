@@ -1,0 +1,72 @@
+"use client";
+
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/core/components/ui/alert-dialog";
+import { DropdownMenuItem } from "@/core/components/ui/dropdown-menu";
+import { ICONS } from "@/core/config/icons";
+import { useDeleteForm } from "@/features/form-edit/hooks/use-delete-form";
+import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+
+interface DeleteFormAlertDialogProps {
+  readonly slug: string;
+}
+
+export const DeleteForm = ({ slug }: DeleteFormAlertDialogProps) => {
+  const router = useRouter();
+  const t = useTranslations("formDetailsPage.banner");
+
+  const { mutate: deleteForm, isPending } = useDeleteForm(slug);
+
+  const handleDelete = () =>
+    deleteForm(undefined, {
+      onSuccess: () => {
+        toast.success(t("deleteSuccess"));
+        router.replace("/forms");
+      },
+      onError: () => {
+        toast.error(t("deleteError"));
+      },
+    });
+
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <DropdownMenuItem
+          disabled={isPending}
+          variant="destructive"
+          onSelect={(e) => {
+            e.preventDefault();
+          }}
+        >
+          <ICONS.delete />
+          {t("delete")}
+        </DropdownMenuItem>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>{t("deleteDialogTitle")}</AlertDialogTitle>
+          <AlertDialogDescription>
+            {t("deleteDialogDescription")}
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
+          <AlertDialogAction onClick={handleDelete} disabled={isPending}>
+            {t("delete")}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+};
