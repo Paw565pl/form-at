@@ -156,8 +156,8 @@
     "submitting": "Submitting",
     "cancel": "Cancel",
     "continue": "Update",
-    "updateDialogTitle": "Are you sure?",
-    "updateDialogDescription": "Are you sure you want to update this form? All prior submissions will be deleted. This action cannot be undone."
+    "updateDialogTitle": "Are you sure you want to update this form?",
+    "updateDialogDescription": "All prior submissions will be deleted. This action cannot be undone."
   },
   "formDetailsPage": {
     "loading": "Loading...",
@@ -203,8 +203,8 @@
       "save": "Save Changes",
       "cancel": "Cancel",
       "delete": "Delete",
-      "deleteDialogTitle": "Are you sure?",
-      "deleteDialogDescription": "Are you sure you want to delete this comment? This action cannot be undone.",
+      "deleteDialogTitle": "Are you sure you want to delete this comment?",
+      "deleteDialogDescription": "This action cannot be undone and the comment will be deleted pernamently.",
       "deleteError": "Error deleting comment. Please try again.",
       "deleteSuccess": "Comment deleted successfully.",
       "addButton": "Add a Comment",

@@ -156,8 +156,8 @@
     "submitting": "Zapisywanie",
     "cancel": "Anuluj",
     "continue": "Zapisz",
-    "updateDialogTitle": "Czy jesteś pewny?",
-    "updateDialogDescription": "Czy na pewno chcesz zaktualizować ten formularz? Wszystkie poprzednie odpowiedzi zostaną usunięte. Ta akcja jest nieodwracalna."
+    "updateDialogTitle": "Czy na pewno chcesz zaktualizować ten formularz?",
+    "updateDialogDescription": "Wszystkie poprzednie odpowiedzi zostaną usunięte. Ta akcja jest nieodwracalna."
   },
   "formDetailsPage": {
     "loading": "Ładowanie...",
@@ -205,8 +205,8 @@
       "delete": "Usuń",
       "deleteError": "Błąd podczas usuwania komentarza. Spróbuj ponownie.",
       "deleteSuccess": "Komentarz został pomyślnie usunięty.",
-      "deleteDialogTitle": "Czy jesteś pewny?",
-      "deleteDialogDescription": "Czy na pewno chcesz usunąć ten komentarz? Ta akcja jest nieodwracalna.",
+      "deleteDialogTitle": "Czy na pewno chcesz usunąć ten komentarz?",
+      "deleteDialogDescription": "Tej operacji nie można cofnąć, a komentarz zostanie trwale usunięty.",
       "addButton": "Dodaj komentarz",
       "loginToComment": "Zaloguj się, aby dodać komentarz",
       "ratingError": "Błąd podczas przesyłania oceny. Spróbuj ponownie.",
