@@ -1,0 +1,20 @@
+meta {
+  name: Find Statistics
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/v1/forms/:formIdOrSlug/submissions/statistics
+  body: none
+  auth: inherit
+}
+
+params:path {
+  formIdOrSlug: 696f669a9f2c2f68cac2ed0f
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
