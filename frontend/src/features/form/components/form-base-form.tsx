@@ -36,15 +36,24 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import { ReactElement, useEffect, useState } from "react";
+import { ComponentType, useEffect, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import z from "zod";
 
 type FormData = z.infer<ReturnType<typeof getFormSchema>>;
 
-interface FormBaseFormProps {
+export interface FormBaseFormSubmitComponentProps {
+  readonly isPending: boolean;
+  readonly uploadProgressPercent: number | null;
+  readonly onDialogOpen: (onFormValid: () => void) => void;
+}
+
+interface FormBaseFormProps extends Omit<
+  FormBaseFormSubmitComponentProps,
+  "onDialogOpen"
+> {
   readonly pageTitle: string;
-  readonly submitButton: ReactElement;
+  readonly SubmitComponent: ComponentType<FormBaseFormSubmitComponentProps>;
   readonly onSubmit: (request: FormRequest) => void;
   readonly defaultValues?: FormDetailResponseDto;
 }
@@ -56,7 +65,9 @@ const languageOptions: { label: string; value: Language }[] = [
 
 export const FormBaseForm = ({
   pageTitle,
-  submitButton,
+  isPending,
+  uploadProgressPercent,
+  SubmitComponent,
   onSubmit,
   defaultValues,
 }: FormBaseFormProps) => {
@@ -968,7 +979,11 @@ export const FormBaseForm = ({
             />
           )}
 
-        {submitButton}
+        <SubmitComponent
+          isPending={isPending}
+          uploadProgressPercent={uploadProgressPercent}
+          onDialogOpen={(onFormValid) => form.handleSubmit(onFormValid)()}
+        />
       </form>
     </section>
   );

@@ -38,12 +38,9 @@ export const FormCreateForm = () => {
   return (
     <FormBaseForm
       pageTitle={t("pageTitle")}
-      submitButton={
-        <FormCreateFormSubmitButton
-          isFormPending={isPending}
-          uploadProgressPercent={uploadProgressPercent}
-        />
-      }
+      isPending={isPending}
+      uploadProgressPercent={uploadProgressPercent}
+      SubmitComponent={FormCreateFormSubmitButton}
       onSubmit={onSubmit}
     />
   );

@@ -55,12 +55,9 @@ export const FormEditForm = ({ slug }: FormEditFormProps) => {
   return (
     <FormBaseForm
       pageTitle={t("pageTitle")}
-      submitButton={
-        <FormEditFormSubmitAlertDialog
-          isFormPending={isPending}
-          uploadProgressPercent={uploadProgressPercent}
-        />
-      }
+      isPending={isPending}
+      uploadProgressPercent={uploadProgressPercent}
+      SubmitComponent={FormEditFormSubmitAlertDialog}
       onSubmit={onSubmit}
       defaultValues={formDetails}
     />

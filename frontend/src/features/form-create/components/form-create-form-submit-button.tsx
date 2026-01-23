@@ -3,23 +3,19 @@
 import { Button } from "@/core/components/ui/button";
 import { Spinner } from "@/core/components/ui/spinner";
 import { ICONS } from "@/core/config/icons";
+import { FormBaseFormSubmitComponentProps } from "@/features/form/components/form-base-form";
 import { useTranslations } from "next-intl";
 
-interface FormCreateFormSubmitButtonProps {
-  readonly isFormPending: boolean;
-  readonly uploadProgressPercent: number | null;
-}
-
 export const FormCreateFormSubmitButton = ({
-  isFormPending,
+  isPending,
   uploadProgressPercent,
-}: FormCreateFormSubmitButtonProps) => {
+}: FormBaseFormSubmitComponentProps) => {
   const t = useTranslations("formCreatePage");
 
   return (
-    <Button type="submit" className="ml-auto min-w-40" disabled={isFormPending}>
-      {isFormPending ? <Spinner /> : <ICONS.save />}
-      {isFormPending ? t("submitting") : t("submit")}
+    <Button type="submit" className="ml-auto min-w-40" disabled={isPending}>
+      {isPending ? <Spinner /> : <ICONS.save />}
+      {isPending ? t("submitting") : t("submit")}
       {uploadProgressPercent ? ` (${uploadProgressPercent}%)` : ""}
     </Button>
   );
