@@ -12,7 +12,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/core/components/ui/select";
-import { Spinner } from "@/core/components/ui/spinner";
 import { Textarea } from "@/core/components/ui/textarea";
 import {
   Tooltip,
@@ -37,7 +36,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import z from "zod";
 
@@ -45,8 +44,7 @@ type FormData = z.infer<ReturnType<typeof getFormSchema>>;
 
 interface FormBaseFormProps {
   readonly pageTitle: string;
-  readonly isPending: boolean;
-  readonly uploadProgressPercent: number | null;
+  readonly submitButton: ReactElement;
   readonly onSubmit: (request: FormRequest) => void;
   readonly defaultValues?: FormDetailResponseDto;
 }
@@ -58,8 +56,7 @@ const languageOptions: { label: string; value: Language }[] = [
 
 export const FormBaseForm = ({
   pageTitle,
-  isPending,
-  uploadProgressPercent,
+  submitButton,
   onSubmit,
   defaultValues,
 }: FormBaseFormProps) => {
@@ -177,6 +174,7 @@ export const FormBaseForm = ({
       <form
         onSubmit={form.handleSubmit(internalOnSubmit)}
         className="flex flex-col gap-4"
+        id="form-base-form"
       >
         <div className="flex flex-col gap-4 md:grid md:grid-cols-3">
           <Card className="col-span-2 gap-4 p-4">
@@ -970,11 +968,7 @@ export const FormBaseForm = ({
             />
           )}
 
-        <Button type="submit" className="ml-auto min-w-40" disabled={isPending}>
-          {isPending ? <Spinner /> : <ICONS.save />}
-          {isPending ? t("submitting") : t("submit")}
-          {uploadProgressPercent ? ` (${uploadProgressPercent}%)` : ""}
-        </Button>
+        {submitButton}
       </form>
     </section>
   );

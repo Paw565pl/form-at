@@ -115,8 +115,6 @@
     "content": "Treść",
     "correct": "Poprawna",
     "deleteAnswer": "Usuń odpowiedź",
-    "submit": "Zapisz",
-    "submitting": "Zapisywanie",
     "errors": {
       "formNameMin": "Nazwa formularza musi mieć co najmniej {count} znaki.",
       "formNameMax": "Nazwa formularza może mieć maksymalnie {count} znaków.",
@@ -144,13 +142,21 @@
   "formCreatePage": {
     "pageTitle": "Utwórz nowy formularz",
     "successMessage": "Pomyślnie utworzono formularz!",
-    "errorMessage": "Wystąpił nieoczekiwany błąd."
+    "errorMessage": "Wystąpił nieoczekiwany błąd.",
+    "submit": "Zapisz",
+    "submitting": "Zapisywanie"
   },
   "formEditPage": {
     "pageTitle": "Edytuj formularz",
     "loading": "Ładowanie...",
     "successMessage": "Pomyślnie zapisano formularz!",
-    "errorMessage": "Wystąpił nieoczekiwany błąd."
+    "errorMessage": "Wystąpił nieoczekiwany błąd.",
+    "submit": "Zapisz",
+    "submitting": "Zapisywanie",
+    "cancel": "Anuluj",
+    "continue": "Zapisz",
+    "updateDialogTitle": "Czy jesteś pewny?",
+    "updateDialogDescription": "Czy na pewno chcesz zaktualizować ten formularz? Wszystkie poprzednie odpowiedzi zostaną usunięte. Ta akcja jest nieodwracalna."
   },
   "formDetailsPage": {
     "loading": "Ładowanie...",
@@ -195,10 +201,10 @@
       "editError": "Błąd podczas edytowania komentarza. Spróbuj ponownie.",
       "save": "Zapisz zmiany",
       "cancel": "Anuluj",
-      "delete": "Usuń komentarz",
+      "delete": "Usuń",
       "deleteError": "Błąd podczas usuwania komentarza. Spróbuj ponownie.",
       "deleteSuccess": "Komentarz został pomyślnie usunięty.",
-      "deleteDialogTitle": "Usuń komentarz",
+      "deleteDialogTitle": "Czy jesteś pewny?",
       "deleteDialogDescription": "Czy na pewno chcesz usunąć ten komentarz? Ta akcja jest nieodwracalna.",
       "addButton": "Dodaj komentarz",
       "loginToComment": "Zaloguj się, aby dodać komentarz",
