@@ -34,7 +34,7 @@ export const FormOptions = ({ slug, authorName }: FormOptionsProps) => {
     <section>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button aria-label={t("moreOptions")}>
+          <Button aria-label={t("moreOptions")} size={"icon-sm"}>
             <ICONS.more />
           </Button>
         </DropdownMenuTrigger>

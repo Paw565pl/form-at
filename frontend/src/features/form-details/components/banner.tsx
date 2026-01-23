@@ -52,7 +52,7 @@ export const Banner = ({ form }: BannerProps) => {
 
       <UserSubmissionDateBadge formIdOrSlug={form.id} />
 
-      <div className="absolute right-2 bottom-2 flex flex-col items-end gap-2 md:right-4 md:bottom-4 md:flex-row">
+      <div className="absolute right-2 bottom-2 flex flex-col items-center gap-2 md:right-4 md:bottom-4 md:flex-row">
         <Button
           onClick={() => router.push(`/forms/${form.slug}/submissions/new`)}
         >
