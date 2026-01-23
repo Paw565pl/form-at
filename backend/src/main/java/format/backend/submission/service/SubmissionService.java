@@ -215,7 +215,6 @@ public class SubmissionService {
             formService.incrementSubmissionsCountById(form.getId());
 
             val authorName = user != null ? user.getUsername() : null;
-
             return submissionMapper.toResponseDto(savedSubmissionEntity, authorName);
         } catch (DataIntegrityViolationException e) {
             throw new SubmissionAlreadyCreatedForUserException(formIdOrSlug);
