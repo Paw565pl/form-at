@@ -1,31 +1,32 @@
 import {
   AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/core/components/ui/alert-dialog";
-import { Button } from "@/core/components/ui/button";
 import { useTranslations } from "next-intl";
 
 interface DeleteFormAlertDialogProps {
   readonly isOpen: boolean;
   readonly isPending: boolean;
-  readonly onClose: () => void;
   readonly onConfirm: () => void;
+  readonly onClose: () => void;
 }
 
 export const DeleteFormAlertDialog = ({
   isOpen,
   isPending,
-  onClose,
   onConfirm,
+  onClose,
 }: DeleteFormAlertDialogProps) => {
   const t = useTranslations("formDetailsPage.banner");
 
   return (
-    <AlertDialog open={isOpen} onOpenChange={onClose}>
+    <AlertDialog open={isOpen}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{t("deleteDialogTitle")}</AlertDialogTitle>
@@ -34,16 +35,10 @@ export const DeleteFormAlertDialog = ({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <Button variant="outline" onClick={onClose}>
-            {t("cancel")}
-          </Button>
-          <Button
-            variant="destructive"
-            onClick={onConfirm}
-            disabled={isPending}
-          >
+          <AlertDialogCancel onClick={onClose}>{t("cancel")}</AlertDialogCancel>
+          <AlertDialogAction onClick={onConfirm} disabled={isPending}>
             {t("delete")}
-          </Button>
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

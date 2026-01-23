@@ -1,12 +1,13 @@
 import {
   AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/core/components/ui/alert-dialog";
-import { Button } from "@/core/components/ui/button";
 import { useTranslations } from "next-intl";
 
 interface DeleteCommentAlertDialogProps {
@@ -34,16 +35,10 @@ export const DeleteCommentAlertDialog = ({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <Button variant="outline" onClick={onClose}>
-            {t("cancel")}
-          </Button>
-          <Button
-            variant="destructive"
-            onClick={onConfirm}
-            disabled={isPending}
-          >
+          <AlertDialogCancel onClick={onClose}>{t("cancel")}</AlertDialogCancel>
+          <AlertDialogAction disabled={isPending} onClick={onConfirm}>
             {t("delete")}
-          </Button>
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
