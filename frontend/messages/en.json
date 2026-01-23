@@ -157,7 +157,7 @@
     "cancel": "Cancel",
     "continue": "Save",
     "updateDialogTitle": "Are you sure you want to update this form?",
-    "updateDialogDescription": "All prior submissions will be deleted. This action cannot be undone."
+    "updateDialogDescription": "All prior submissions for this form will be deleted. This action cannot be undone."
   },
   "formDetailsPage": {
     "loading": "Loading...",

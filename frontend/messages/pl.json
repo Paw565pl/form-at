@@ -157,7 +157,7 @@
     "cancel": "Anuluj",
     "continue": "Zapisz",
     "updateDialogTitle": "Czy na pewno chcesz zaktualizować ten formularz?",
-    "updateDialogDescription": "Wszystkie poprzednie odpowiedzi zostaną usunięte. Ta akcja jest nieodwracalna."
+    "updateDialogDescription": "Wszystkie poprzednie odpowiedzi dla tego formularza zostaną usunięte. Ta akcja jest nieodwracalna."
   },
   "formDetailsPage": {
     "loading": "Ładowanie...",
