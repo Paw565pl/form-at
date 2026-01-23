@@ -37,7 +37,7 @@ export const PrivateForm = ({ formIdOrSlug }: PrivateFormProps) => {
   const form = useForm<PrivateFormData>({
     resolver: zodResolver(privateFormSchema),
     defaultValues: {
-      code: "",
+      password: "",
     },
   });
 
@@ -47,19 +47,19 @@ export const PrivateForm = ({ formIdOrSlug }: PrivateFormProps) => {
   }, [form, t]);
 
   // eslint-disable-next-line react-hooks/incompatible-library
-  const code = form.watch("code");
+  const password = form.watch("password");
 
   const {
     data: privateForm,
     refetch,
     isFetching,
-  } = useFetchPrivateFormDetails(formIdOrSlug, code, {
+  } = useFetchPrivateFormDetails(formIdOrSlug, password, {
     enabled: false,
     retry: false,
   });
 
   const onSubmit = async () => {
-    form.clearErrors("code");
+    form.clearErrors("password");
 
     const result = await refetch();
 
@@ -67,10 +67,10 @@ export const PrivateForm = ({ formIdOrSlug }: PrivateFormProps) => {
       const message =
         result.error.response?.data?.message ?? result.error.message;
       if (result.error.response?.status === HttpStatusCode.Forbidden) {
-        form.setError("code", { message: t("errors.invalidCode") });
+        form.setError("password", { message: t("errors.invalidCode") });
         return;
       } else {
-        form.setError("code", { message });
+        form.setError("password", { message });
       }
       return;
     }
@@ -99,7 +99,7 @@ export const PrivateForm = ({ formIdOrSlug }: PrivateFormProps) => {
             </DialogHeader>
 
             <Controller
-              name="code"
+              name="password"
               control={form.control}
               rules={{
                 required: t("enterTheCode"),
@@ -116,7 +116,8 @@ export const PrivateForm = ({ formIdOrSlug }: PrivateFormProps) => {
                     disabled={isFetching}
                     onChange={(e) => {
                       field.onChange(e);
-                      if (form.formState.errors.code) form.clearErrors("code");
+                      if (form.formState.errors.password)
+                        form.clearErrors("password");
                     }}
                   />
                   {fieldState.invalid && (

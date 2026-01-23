@@ -7,7 +7,7 @@ type TranslateError = ReturnType<
 
 export const getPrivateFormSchema = (t: TranslateError) =>
   z.object({
-    code: z
+    password: z
       .string()
       .trim()
       .min(8, t("errors.contentMin", { count: "8" }))
