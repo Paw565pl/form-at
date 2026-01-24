@@ -36,14 +36,14 @@ export const Banner = ({ form }: BannerProps) => {
         className="rounded-t-md object-cover"
       />
 
-      {/* go back button */}
+      {/* go to forms list button */}
       <span className="absolute top-4 left-4">
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
               aria-label={t("back")}
               size="icon-sm"
-              onClick={() => router.back()}
+              onClick={() => router.push("/forms")}
             >
               <ICONS.back />
             </Button>
