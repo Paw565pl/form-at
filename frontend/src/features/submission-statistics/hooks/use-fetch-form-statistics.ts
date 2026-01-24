@@ -1,6 +1,6 @@
 import { apiService } from "@/core/services/api-service";
 import { ErrorResponseDto } from "@/core/types/error-response-dto";
-import { SubmissionStatisticsResponseDto } from "@/core/types/submission";
+import { SubmissionStatisticsResponseDto } from "@/core/types/submission-statistics";
 import {
   QueryClient,
   queryOptions,
@@ -10,7 +10,7 @@ import {
 import { AxiosError } from "axios";
 
 export const getFetchFormStatisticsQueryOptions = (
-  idOrSlug: string,
+  formIdOrSlug: string,
   options?: Omit<
     UseQueryOptions<
       SubmissionStatisticsResponseDto[],
@@ -21,11 +21,11 @@ export const getFetchFormStatisticsQueryOptions = (
 ) =>
   queryOptions<SubmissionStatisticsResponseDto[], AxiosError<ErrorResponseDto>>(
     {
-      queryKey: ["forms", idOrSlug, "submissions", "statistics"] as const,
+      queryKey: ["forms", formIdOrSlug, "submissions", "statistics"] as const,
       queryFn: async () => {
         const { data } = await apiService.get<
           SubmissionStatisticsResponseDto[]
-        >(`/api/v1/forms/${idOrSlug}/submissions/statistics`);
+        >(`/api/v1/forms/${formIdOrSlug}/submissions/statistics`);
         return data;
       },
       staleTime: 1000 * 60 * 10, // 10 minutes
@@ -34,7 +34,7 @@ export const getFetchFormStatisticsQueryOptions = (
   );
 
 export const useFetchFormStatistics = (
-  idOrSlug: string,
+  formIdOrSlug: string,
   options?: Omit<
     UseQueryOptions<
       SubmissionStatisticsResponseDto[],
@@ -42,9 +42,10 @@ export const useFetchFormStatistics = (
     >,
     "queryKey"
   >,
-) => useQuery(getFetchFormStatisticsQueryOptions(idOrSlug, options));
+) => useQuery(getFetchFormStatisticsQueryOptions(formIdOrSlug, options));
 
 export const prefetchFormStatistics = (
   queryClient: QueryClient,
-  idOrSlug: string,
-) => queryClient.prefetchQuery(getFetchFormStatisticsQueryOptions(idOrSlug));
+  formIdOrSlug: string,
+) =>
+  queryClient.prefetchQuery(getFetchFormStatisticsQueryOptions(formIdOrSlug));

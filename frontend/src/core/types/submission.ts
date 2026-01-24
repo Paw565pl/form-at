@@ -20,13 +20,3 @@ export interface SubmissionAnswerResponseDto {
   readonly chosenAnswerIds: string[];
   readonly openAnswer: string | null;
 }
-
-export interface SubmissionStatisticsResponseDto {
-  readonly questionId: string;
-  readonly submissionStatistics: SubmissionAnswersStatisticsResponseDto[];
-}
-
-export interface SubmissionAnswersStatisticsResponseDto {
-  readonly answerId: string;
-  readonly totalCount: number;
-}
