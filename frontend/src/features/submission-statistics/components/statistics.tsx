@@ -10,7 +10,7 @@ import { HttpStatusCode } from "axios";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { useFetchFormStatistics } from "../hooks/use-fetch-form-statistics";
+import { useFetchFormStatistics } from "@/features/submission-statistics/hooks/use-fetch-form-statistics";
 
 interface StatisticsProps {
   readonly formIdOrSlug: string;
