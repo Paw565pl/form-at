@@ -6,7 +6,7 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 
 export const FormStatisticsPage = async ({
   params,
-}: PageProps<"/forms/[slug]/statistics">) => {
+}: PageProps<"/forms/[slug]/submissions/statistics">) => {
   const { slug } = await params;
 
   const queryClient = getQueryClient();
