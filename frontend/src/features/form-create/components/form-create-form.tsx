@@ -1,6 +1,7 @@
 "use client";
 
 import { FormRequest } from "@/core/types/form";
+import { FormCreateFormSubmitButton } from "@/features/form-create/components/form-create-form-submit-button";
 import { useCreateForm } from "@/features/form-create/hooks/use-create-form";
 import { FormBaseForm } from "@/features/form/components/form-base-form";
 import { AxiosError } from "axios";
@@ -39,6 +40,7 @@ export const FormCreateForm = () => {
       pageTitle={t("pageTitle")}
       isPending={isPending}
       uploadProgressPercent={uploadProgressPercent}
+      SubmitComponent={FormCreateFormSubmitButton}
       onSubmit={onSubmit}
     />
   );

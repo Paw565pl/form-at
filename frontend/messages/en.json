@@ -59,6 +59,7 @@
     "name": "Name",
     "namePlaceholder": "My Awesome Form",
     "description": "Description",
+    "status": "Status",
     "formStatuses": {
       "DRAFT": "Draft",
       "PUBLIC": "Public",
@@ -115,8 +116,6 @@
     "content": "Content",
     "correct": "Correct",
     "deleteAnswer": "Delete Answer",
-    "submit": "Submit",
-    "submitting": "Submitting",
     "errors": {
       "formNameMin": "Form name must be at least {count} characters.",
       "formNameMax": "Form name must be at most {count} characters.",
@@ -144,13 +143,21 @@
   "formCreatePage": {
     "pageTitle": "Create New Form",
     "successMessage": "Form created successfully!",
-    "errorMessage": "An unexpected error occurred."
+    "errorMessage": "An unexpected error occurred.",
+    "submit": "Submit",
+    "submitting": "Submitting"
   },
   "formEditPage": {
     "pageTitle": "Edit Form",
     "loading": "Loading...",
     "successMessage": "Form updated successfully!",
-    "errorMessage": "An unexpected error occurred."
+    "errorMessage": "An unexpected error occurred.",
+    "submit": "Submit",
+    "submitting": "Submitting",
+    "cancel": "Cancel",
+    "continue": "Save",
+    "updateDialogTitle": "Are you sure you want to update this form?",
+    "updateDialogDescription": "All prior submissions for this form will be deleted. This action cannot be undone."
   },
   "formDetailsPage": {
     "loading": "Loading...",
@@ -195,9 +202,9 @@
       "editError": "Error editing comment. Please try again.",
       "save": "Save Changes",
       "cancel": "Cancel",
-      "delete": "Delete Comment",
-      "deleteDialogTitle": "Delete Comment",
-      "deleteDialogDescription": "Are you sure you want to delete this comment? This action cannot be undone.",
+      "delete": "Delete",
+      "deleteDialogTitle": "Are you sure you want to delete this comment?",
+      "deleteDialogDescription": "This action cannot be undone and the comment will be deleted pernamently.",
       "deleteError": "Error deleting comment. Please try again.",
       "deleteSuccess": "Comment deleted successfully.",
       "addButton": "Add a Comment",

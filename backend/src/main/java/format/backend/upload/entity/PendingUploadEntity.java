@@ -18,7 +18,7 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 @Setter
 @RequiredArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Document(collection = "pendingUploads")
+@Document(collection = "pending_uploads")
 public class PendingUploadEntity {
 
     @MongoId

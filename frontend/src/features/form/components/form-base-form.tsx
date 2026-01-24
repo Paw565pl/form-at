@@ -12,7 +12,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/core/components/ui/select";
-import { Spinner } from "@/core/components/ui/spinner";
 import { Textarea } from "@/core/components/ui/textarea";
 import {
   Tooltip,
@@ -37,16 +36,24 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { ComponentType, useEffect, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import z from "zod";
 
 type FormData = z.infer<ReturnType<typeof getFormSchema>>;
 
-interface FormBaseFormProps {
-  readonly pageTitle: string;
+export interface FormBaseFormSubmitComponentProps {
   readonly isPending: boolean;
   readonly uploadProgressPercent: number | null;
+  readonly onDialogOpen: (onFormValid: () => void) => void;
+}
+
+interface FormBaseFormProps extends Omit<
+  FormBaseFormSubmitComponentProps,
+  "onDialogOpen"
+> {
+  readonly pageTitle: string;
+  readonly SubmitComponent: ComponentType<FormBaseFormSubmitComponentProps>;
   readonly onSubmit: (request: FormRequest) => void;
   readonly defaultValues?: FormDetailResponseDto;
 }
@@ -60,6 +67,7 @@ export const FormBaseForm = ({
   pageTitle,
   isPending,
   uploadProgressPercent,
+  SubmitComponent,
   onSubmit,
   defaultValues,
 }: FormBaseFormProps) => {
@@ -177,6 +185,7 @@ export const FormBaseForm = ({
       <form
         onSubmit={form.handleSubmit(internalOnSubmit)}
         className="flex flex-col gap-4"
+        id="form-base-form"
       >
         <div className="flex flex-col gap-4 md:grid md:grid-cols-3">
           <Card className="col-span-2 gap-4 p-4">
@@ -263,7 +272,7 @@ export const FormBaseForm = ({
                       aria-label="Status"
                       className="w-full sm:w-auto"
                     >
-                      <span className="flex-1 text-left">Status:</span>
+                      <span className="flex-1 text-left">{t("status")}:</span>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -970,11 +979,11 @@ export const FormBaseForm = ({
             />
           )}
 
-        <Button type="submit" className="ml-auto min-w-40" disabled={isPending}>
-          {isPending ? <Spinner /> : <ICONS.save />}
-          {isPending ? t("submitting") : t("submit")}
-          {uploadProgressPercent ? ` (${uploadProgressPercent}%)` : ""}
-        </Button>
+        <SubmitComponent
+          isPending={isPending}
+          uploadProgressPercent={uploadProgressPercent}
+          onDialogOpen={(onFormValid) => form.handleSubmit(onFormValid)()}
+        />
       </form>
     </section>
   );
