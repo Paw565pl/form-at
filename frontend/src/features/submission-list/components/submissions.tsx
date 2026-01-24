@@ -59,7 +59,7 @@ export const Submissions = ({ formIdOrSlug }: SubmissionsProps) => {
           {t("title", { count: totalElements, formName: formData.name })}
         </h1>
 
-        <Button size="sm" asChild>
+        <Button size="sm" asChild className="ml-3">
           <Link href={`/forms/${formIdOrSlug}/submissions/statistics`}>
             <ICONS.statistics />
             {t("viewStatistics")}
@@ -82,7 +82,7 @@ export const Submissions = ({ formIdOrSlug }: SubmissionsProps) => {
             >
               <Card
                 key={submission.id}
-                className="hover:border-primary flex-row justify-between p-4 transition-all"
+                className="hover:border-primary flex-col-reverse justify-between p-4 transition-all sm:flex-row"
               >
                 <p className="font-semibold">
                   {submission.authorName || t("unknownAuthor")}

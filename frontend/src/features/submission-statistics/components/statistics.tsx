@@ -65,7 +65,7 @@ export const Statistics = ({ formIdOrSlug }: StatisticsProps) => {
           </span>
         </h1>
 
-        <Button size="sm" asChild>
+        <Button size="sm" asChild className="ml-3">
           <Link href={`/forms/${formIdOrSlug}/submissions`}>
             <ICONS.fillForm />
             {t("viewSubmissions")}
