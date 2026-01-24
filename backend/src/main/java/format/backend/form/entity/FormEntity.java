@@ -89,7 +89,6 @@ public class FormEntity {
     private @NonNull Integer questionsCount;
 
     @Field(name = "submissionsCount")
-    @Setter(AccessLevel.NONE)
     private @NonNull Long submissionsCount = 0L;
 
     @Field(name = "questions")
