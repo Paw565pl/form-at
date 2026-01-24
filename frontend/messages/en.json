@@ -277,6 +277,7 @@
   },
   "statisticsPage": {
     "loading": "Loading statistics...",
+    "noSubmissions": "Nobody has completed this form yet.",
     "title": "Submission Statistics for {formName}",
     "viewSubmissions": "Form Submissions",
     "noOpenQuestions": "Open answer questions are not displayed."

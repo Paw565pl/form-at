@@ -277,6 +277,7 @@
   },
   "statisticsPage": {
     "loading": "Ładowanie statystyk...",
+    "noSubmissions": "Nikt jeszcze nie wypełnił tego formularza.",
     "title": "Statystyki odpowiedzi dla {formName}",
     "viewSubmissions": "Odpowiedzi formularza",
     "noOpenQuestions": "Pytania otwarte nie są wyświetlane."

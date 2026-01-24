@@ -73,61 +73,67 @@ export const Statistics = ({ formIdOrSlug }: StatisticsProps) => {
         </Button>
       </header>
 
-      <div className="flex flex-col gap-4">
-        {formData.questions
-          .filter((question) => question.type !== "OPEN")
-          .map((question, index) => {
-            const questionStatistics = formStatistics.find(
-              (qs) => qs.questionId === question.id,
-            );
-            return (
-              <Card key={question.id} className="gap-2 p-4">
-                <header className="flex flex-col gap-4">
-                  <div className="flex flex-col flex-wrap gap-1 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="flex gap-1">
-                      <span className="text-muted-foreground">
-                        {index + 1}.
+      {formData.submissionsCount === 0 && (
+        <p className="text-center">{t("noSubmissions")}</p>
+      )}
+
+      {formData.submissionsCount > 0 && (
+        <div className="flex flex-col gap-4">
+          {formData.questions
+            .filter((question) => question.type !== "OPEN")
+            .map((question, index) => {
+              const questionStatistics = formStatistics.find(
+                (qs) => qs.questionId === question.id,
+              );
+              return (
+                <Card key={question.id} className="gap-2 p-4">
+                  <header className="flex flex-col gap-4">
+                    <div className="flex flex-col flex-wrap gap-1 sm:flex-row sm:items-center sm:justify-between">
+                      <div className="flex gap-1">
+                        <span className="text-muted-foreground">
+                          {index + 1}.
+                        </span>
+                        <h2 className="font-medium">
+                          {question.content}{" "}
+                          {question.isRequired && (
+                            <span className="text-muted-foreground">*</span>
+                          )}
+                        </h2>
+                      </div>
+                      <span className="text-muted-foreground ml-3 text-sm">
+                        {gt(`questionTypes.${question.type}`)}
                       </span>
-                      <h2 className="font-medium">
-                        {question.content}{" "}
-                        {question.isRequired && (
-                          <span className="text-muted-foreground">*</span>
-                        )}
-                      </h2>
                     </div>
-                    <span className="text-muted-foreground ml-3 text-sm">
-                      {gt(`questionTypes.${question.type}`)}
-                    </span>
+                  </header>
+                  <div className="flex flex-col gap-2">
+                    {question.answers.map((answer) => {
+                      const answerCount =
+                        questionStatistics?.submissionStatistics.find(
+                          (as) => as.answerId === answer.id,
+                        )?.totalCount || 0;
+                      const percentage = Math.round(
+                        (answerCount / formData.submissionsCount) * 100,
+                      );
+                      return (
+                        <Field className="w-full max-w-sm" key={answer.id}>
+                          <FieldLabel htmlFor={`${answer.id}-percentage`}>
+                            <span>{answer.content}</span>
+                            <span className="ml-auto">{percentage}%</span>
+                          </FieldLabel>
+                          <Progress
+                            value={percentage}
+                            id={`${answer.id}-percentage`}
+                            aria-label={`${answer.content} - ${percentage}%`}
+                          />
+                        </Field>
+                      );
+                    })}
                   </div>
-                </header>
-                <div className="flex flex-col gap-2">
-                  {question.answers.map((answer) => {
-                    const answerCount =
-                      questionStatistics?.submissionStatistics.find(
-                        (as) => as.answerId === answer.id,
-                      )?.totalCount || 0;
-                    const percentage = Math.round(
-                      (answerCount / formData.submissionsCount) * 100,
-                    );
-                    return (
-                      <Field className="w-full max-w-sm" key={answer.id}>
-                        <FieldLabel htmlFor={`${answer.id}-percentage`}>
-                          <span>{answer.content}</span>
-                          <span className="ml-auto">{percentage}%</span>
-                        </FieldLabel>
-                        <Progress
-                          value={percentage}
-                          id={`${answer.id}-percentage`}
-                          aria-label={`${answer.content} - ${percentage}%`}
-                        />
-                      </Field>
-                    );
-                  })}
-                </div>
-              </Card>
-            );
-          })}
-      </div>
+                </Card>
+              );
+            })}
+        </div>
+      )}
     </section>
   );
 };
