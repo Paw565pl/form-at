@@ -5,10 +5,7 @@ import { Banner } from "@/features/form-details/components/banner";
 import { Details } from "@/features/form-details/components/details";
 import { QuestionList } from "@/features/form-details/components/question-list/question-list";
 import { useFetchFormDetails } from "@/features/form-details/hooks/use-fetch-form-details";
-import { PrivateForm } from "@/features/form-details/private-form/private-form";
-import { HttpStatusCode } from "axios";
 import { useTranslations } from "next-intl";
-import { notFound } from "next/navigation";
 
 interface FormProps {
   readonly formIdOrSlug: string;
@@ -16,17 +13,7 @@ interface FormProps {
 
 export const Form = ({ formIdOrSlug }: FormProps) => {
   const t = useTranslations("formDetailsPage");
-  const { data: form, isLoading, error } = useFetchFormDetails(formIdOrSlug);
-
-  if (error) {
-    if (error.status === HttpStatusCode.NotFound) return notFound();
-    if (
-      error.status === HttpStatusCode.Forbidden ||
-      error.status === HttpStatusCode.Unauthorized
-    )
-      return <PrivateForm formIdOrSlug={formIdOrSlug} />;
-    else throw error;
-  }
+  const { data: form, isLoading } = useFetchFormDetails(formIdOrSlug);
 
   if (!form || isLoading) return <p>{t("loading")}</p>;
 
