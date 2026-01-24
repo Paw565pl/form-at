@@ -28,7 +28,6 @@ export const Banner = ({ form }: BannerProps) => {
 
   return (
     <section className="relative flex h-48 w-full items-end">
-      {/* background image */}
       <FormImageWithFallback
         src={form.thumbnail}
         alt={form.name}
@@ -36,7 +35,6 @@ export const Banner = ({ form }: BannerProps) => {
         className="rounded-t-md object-cover"
       />
 
-      {/* go to forms list button */}
       <span className="absolute top-4 left-4">
         <Tooltip>
           <TooltipTrigger asChild>
@@ -75,7 +73,6 @@ export const Banner = ({ form }: BannerProps) => {
           </Button>
         )}
 
-        {/* more options */}
         <FormOptions slug={form.slug} authorName={form.authorName} />
       </div>
     </section>

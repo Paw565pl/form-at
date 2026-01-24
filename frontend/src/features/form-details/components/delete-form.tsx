@@ -18,11 +18,11 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-interface DeleteFormAlertDialogProps {
+interface DeleteFormProps {
   readonly slug: string;
 }
 
-export const DeleteForm = ({ slug }: DeleteFormAlertDialogProps) => {
+export const DeleteForm = ({ slug }: DeleteFormProps) => {
   const router = useRouter();
   const t = useTranslations("formDetailsPage.banner");
 
