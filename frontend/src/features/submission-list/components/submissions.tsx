@@ -51,7 +51,7 @@ export const Submissions = ({ formIdOrSlug }: SubmissionsProps) => {
 
   return (
     <section
-      id="forms-list"
+      id="submissions-list"
       className="flex w-full flex-col gap-2 px-5 py-10 lg:px-30"
     >
       <header className="mb-2 flex flex-wrap items-center justify-between gap-4">
@@ -60,7 +60,7 @@ export const Submissions = ({ formIdOrSlug }: SubmissionsProps) => {
         </h1>
 
         <Button size="sm" asChild>
-          <Link href={`/forms/${formIdOrSlug}/statistics`}>
+          <Link href={`/forms/${formIdOrSlug}/submissions/statistics`}>
             <ICONS.statistics />
             {t("viewStatistics")}
           </Link>
@@ -87,7 +87,7 @@ export const Submissions = ({ formIdOrSlug }: SubmissionsProps) => {
                 <p className="font-semibold">
                   {submission.authorName || t("unknownAuthor")}
                 </p>
-                <span className="text-muted-foreground">
+                <span className="text-muted-foreground text-sm">
                   {t("createdAt", {
                     date: format.dateTime(
                       new Date(submission.createdAt),

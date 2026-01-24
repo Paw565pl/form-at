@@ -261,7 +261,7 @@
     "empty": "Nikt jeszcze nie wypełnił tego formularza.",
     "createdAt": "Przesłano {date}",
     "unknownAuthor": "Nieznany autor",
-    "viewStatistics": "Statystyki formularza"
+    "viewStatistics": "Statystyki odpowiedzi"
   },
   "submissionDetailsPage": {
     "loading": "Ładowanie odpowiedzi...",
@@ -274,5 +274,11 @@
     "cancel": "Anuluj",
     "deleteError": "Błąd podczas usuwania odpowiedzi. Spróbuj ponownie.",
     "deleteSuccess": "Odpowiedź została pomyślnie usunięta."
+  },
+  "statisticsPage": {
+    "loading": "Ładowanie statystyk...",
+    "title": "Statystyki odpowiedzi dla {formName}",
+    "viewSubmissions": "Odpowiedzi formularza",
+    "noOpenQuestions": "Pytania otwarte nie są wyświetlane."
   }
 }

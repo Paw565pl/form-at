@@ -6,6 +6,8 @@ import {
   FormRequest,
   FormRequestDto,
 } from "@/core/types/form";
+import { getFetchFormDetailsQueryOptions } from "@/features/form-details/hooks/use-fetch-form-details";
+import { getFetchFormStatisticsQueryOptions } from "@/features/submission-statistics/hooks/use-fetch-form-statistics";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useState } from "react";
@@ -68,6 +70,12 @@ export const useUpdateForm = (idOrSlug: string) => {
     onSettled: (_, __, ___, _____, { client }) => {
       setUploadProgressPercent(null);
       client.invalidateQueries({ queryKey: ["forms"] });
+      client.invalidateQueries({
+        queryKey: getFetchFormDetailsQueryOptions(idOrSlug).queryKey,
+      });
+      client.invalidateQueries({
+        queryKey: getFetchFormStatisticsQueryOptions(idOrSlug).queryKey,
+      });
     },
   });
 
