@@ -6,11 +6,11 @@ import { Field, FieldLabel } from "@/core/components/ui/field";
 import { Progress } from "@/core/components/ui/progress";
 import { ICONS } from "@/core/config/icons";
 import { useFetchFormDetails } from "@/features/form-details/hooks/use-fetch-form-details";
+import { useFetchFormStatistics } from "@/features/submission-statistics/hooks/use-fetch-form-statistics";
 import { HttpStatusCode } from "axios";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { useFetchFormStatistics } from "@/features/submission-statistics/hooks/use-fetch-form-statistics";
 
 interface StatisticsProps {
   readonly formIdOrSlug: string;
