@@ -2,6 +2,7 @@
 
 import { FormRequest } from "@/core/types/form";
 import { useFetchFormDetails } from "@/features/form-details/hooks/use-fetch-form-details";
+import { FormEditFormSubmitAlertDialog } from "@/features/form-edit/components/form-edit-form-submit-alert-dialog";
 import { useUpdateForm } from "@/features/form-edit/hooks/use-update-form";
 import { FormBaseForm } from "@/features/form/components/form-base-form";
 import { AxiosError, HttpStatusCode } from "axios";
@@ -56,6 +57,7 @@ export const FormEditForm = ({ slug }: FormEditFormProps) => {
       pageTitle={t("pageTitle")}
       isPending={isPending}
       uploadProgressPercent={uploadProgressPercent}
+      SubmitComponent={FormEditFormSubmitAlertDialog}
       onSubmit={onSubmit}
       defaultValues={formDetails}
     />

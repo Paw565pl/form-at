@@ -316,6 +316,8 @@ public class FormService {
 
         try {
             val savedFormEntity = formRepository.save(updatedFormEntity);
+            submissionRepository.deleteAllByFormId(savedFormEntity.getId());
+
             val userRating = findUserRating(keycloakJwtClaims.sub(), updatedFormEntity.getId());
 
             val response = mapToDetailResponseDto(savedFormEntity, userRating);

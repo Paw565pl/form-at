@@ -1,6 +1,7 @@
 import {
   AlertTriangle,
   BadgeQuestionMark,
+  ChartColumn,
   Check,
   ChevronDown,
   ChevronUp,
@@ -72,4 +73,5 @@ export const ICONS = {
   notFound: FileQuestion,
   rate: Star,
   reset: RotateCcw,
+  statistics: ChartColumn,
 } as const;

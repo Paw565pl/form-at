@@ -15,6 +15,7 @@ import format.backend.submission.entity.SubmissionEntity;
 import format.backend.submission.exception.SubmissionAlreadyCreatedForUserException;
 import format.backend.submission.exception.SubmissionNotFoundException;
 import format.backend.submission.exception.SubmissionNotFoundForUserException;
+import format.backend.submission.exception.SubmissionOperationNotSupported;
 import format.backend.submission.mapper.SubmissionMapper;
 import format.backend.submission.repository.SubmissionRepository;
 import format.backend.submission.validator.SubmissionValidator;
@@ -71,8 +72,8 @@ public class SubmissionService {
     public Page<@NonNull SubmissionResponseDto> findAllByFormIdOrSlug(
             KeycloakJwtClaims keycloakJwtClaims, String formIdOrSlug, Pageable pageable) {
         val form = formService.findOrThrow(formIdOrSlug);
-        if (!form.getSaveSubmissions()) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         isOwnerOrAdminCheck(Optional.ofNullable(form.getAuthor()), keycloakJwtClaims);
+        if (!form.getSaveSubmissions()) throw new SubmissionOperationNotSupported(formIdOrSlug);
 
         val countOperations = List.of(
                 Aggregation.match(Criteria.where(FORM_ID_FIELD).is(form.getId())),
@@ -107,8 +108,8 @@ public class SubmissionService {
     public SubmissionResponseDto findByFormIdOrSlugAndSubmissionId(
             KeycloakJwtClaims keycloakJwtClaims, String formIdOrSlug, String submissionId) {
         val form = formService.findOrThrow(formIdOrSlug);
-        if (!form.getSaveSubmissions()) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         isOwnerOrAdminCheck(Optional.ofNullable(form.getAuthor()), keycloakJwtClaims);
+        if (!form.getSaveSubmissions()) throw new SubmissionOperationNotSupported(formIdOrSlug);
 
         val submission = submissionRepository
                 .findByIdAndFormId(submissionId, form.getId())
@@ -123,8 +124,8 @@ public class SubmissionService {
     public List<SubmissionStatisticsResponseDto> findSubmissionsStatisticsByFormIdOrSlug(
             KeycloakJwtClaims keycloakJwtClaims, String formIdOrSlug) {
         val form = formService.findOrThrow(formIdOrSlug);
-        if (!form.getSaveSubmissions()) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         isOwnerOrAdminCheck(Optional.ofNullable(form.getAuthor()), keycloakJwtClaims);
+        if (!form.getSaveSubmissions()) throw new SubmissionOperationNotSupported(formIdOrSlug);
 
         val operations = new ArrayList<AggregationOperation>();
 
@@ -158,7 +159,7 @@ public class SubmissionService {
     public SubmissionResponseDto findByFormIdOrSlugAndAuthorId(
             KeycloakJwtClaims keycloakJwtClaims, String formIdOrSlug) {
         val form = formService.findOrThrow(formIdOrSlug);
-        if (!form.getSaveSubmissions()) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        if (!form.getSaveSubmissions()) throw new SubmissionOperationNotSupported(formIdOrSlug);
 
         val submission = submissionRepository
                 .findByFormIdAndAuthorId(form.getId(), keycloakJwtClaims.sub())
@@ -177,7 +178,7 @@ public class SubmissionService {
 
         if (!form.getAllowsGuestSubmissions() && keycloakJwtClaims == null)
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
-        if (!form.getSaveSubmissions()) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        if (!form.getSaveSubmissions()) throw new SubmissionOperationNotSupported(formIdOrSlug);
 
         val errors = submissionValidator.validate(form, requestDto);
         if (!errors.isEmpty()) throw new ValidationException(errors);
@@ -214,7 +215,6 @@ public class SubmissionService {
             formService.incrementSubmissionsCountById(form.getId());
 
             val authorName = user != null ? user.getUsername() : null;
-
             return submissionMapper.toResponseDto(savedSubmissionEntity, authorName);
         } catch (DataIntegrityViolationException e) {
             throw new SubmissionAlreadyCreatedForUserException(formIdOrSlug);
@@ -224,8 +224,8 @@ public class SubmissionService {
     @Transactional
     public void delete(KeycloakJwtClaims keycloakJwtClaims, String formIdOrSlug, String submissionId) {
         val form = formService.findOrThrow(formIdOrSlug);
-        if (!form.getSaveSubmissions()) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         isOwnerOrAdminCheck(Optional.ofNullable(form.getAuthor()), keycloakJwtClaims);
+        if (!form.getSaveSubmissions()) throw new SubmissionOperationNotSupported(formIdOrSlug);
 
         val submission = submissionRepository
                 .findById(submissionId)
