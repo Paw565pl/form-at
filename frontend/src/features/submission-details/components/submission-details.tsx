@@ -37,11 +37,8 @@ export const SubmissionDetails = ({
     isLoading: isFormLoading,
     error: formError,
   } = useFetchFormDetails(formIdOrSlug);
-  const {
-    data: submissionData,
-    isLoading: isSubmissionLoading,
-    error: submissionError,
-  } = useFetchSubmissionDetails(formIdOrSlug, submissionId);
+  const { data: submissionData, isLoading: isSubmissionLoading } =
+    useFetchSubmissionDetails(formIdOrSlug, submissionId);
 
   if (formError) {
     if (
@@ -50,9 +47,6 @@ export const SubmissionDetails = ({
     )
       return notFound();
     else throw formError;
-  } else if (submissionError) {
-    if (submissionError.status === HttpStatusCode.NotFound) return notFound();
-    else throw submissionError;
   }
 
   if (!formData || !submissionData || isFormLoading || isSubmissionLoading)

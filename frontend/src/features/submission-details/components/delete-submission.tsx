@@ -37,7 +37,7 @@ export const DeleteSubmission = ({
     deleteSubmission(undefined, {
       onSuccess: () => {
         toast.success(t("deleteSuccess"));
-        router.push(`/forms/${formIdOrSlug}/submissions`);
+        router.replace(`/forms/${formIdOrSlug}/submissions`);
       },
       onError: () => {
         toast.error(t("deleteError"));
