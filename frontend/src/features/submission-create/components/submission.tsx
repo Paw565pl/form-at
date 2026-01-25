@@ -21,7 +21,7 @@ import { getSubmissionSchema } from "@/features/submission-create/schemas/submis
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HttpStatusCode } from "axios";
 import { useTranslations } from "next-intl";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -36,6 +36,8 @@ interface SubmissionProps {
 export const Submission = ({ formData }: SubmissionProps) => {
   const t = useTranslations("submissionCreatePage");
   const gt = useTranslations("global");
+  const router = useRouter();
+
   const createSubmission = useCreateSubmission(formData.id);
   const [isSubmissionComplete, setIsSubmissionComplete] = useState(false);
 
@@ -299,8 +301,12 @@ export const Submission = ({ formData }: SubmissionProps) => {
             </h2>
             <p>{formData.thanksMessage || t("defaultThanksMessage")}</p>
           </div>
-          <Button size="sm" asChild variant="default">
-            <Link href={`/forms/${formData.slug}`}>{t("backToDetails")}</Link>
+          <Button
+            size="sm"
+            variant="default"
+            onClick={() => router.replace(`/forms/${formData.slug}`)}
+          >
+            {t("backToDetails")}
           </Button>
         </Card>
       )}
