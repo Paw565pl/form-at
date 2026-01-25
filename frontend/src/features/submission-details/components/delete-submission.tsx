@@ -32,6 +32,7 @@ export const DeleteSubmission = ({
     formIdOrSlug,
     submissionId,
   );
+
   const handleDelete = () =>
     deleteSubmission(undefined, {
       onSuccess: () => {
