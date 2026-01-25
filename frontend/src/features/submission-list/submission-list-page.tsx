@@ -29,7 +29,7 @@ export const SubmissionListPage = async ({
   const isFormAuthor = session?.user.name === formDetails?.authorName;
   const isAdmin = session?.user.roles.includes(Role.ADMIN);
 
-  if (!(isFormAuthor || isAdmin || formDetails?.saveSubmissions))
+  if ((!isFormAuthor && !isAdmin) || !formDetails?.saveSubmissions)
     return notFound();
 
   return (
