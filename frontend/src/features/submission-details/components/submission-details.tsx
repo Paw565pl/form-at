@@ -13,15 +13,12 @@ import {
 import { ICONS } from "@/core/config/icons";
 import { cn } from "@/core/lib/cn";
 import { useFetchFormDetails } from "@/features/form-details/hooks/use-fetch-form-details";
-import { DeleteSubmissionAlertDialog } from "@/features/submission-details/components/delete-submission-alert-dialog";
-import { useDeleteSubmission } from "@/features/submission-details/hooks/use-delete-submission";
+import { DeleteSubmission } from "@/features/submission-details/components/delete-submission";
 import { useFetchSubmissionDetails } from "@/features/submission-details/hooks/use-fetch-submission-details";
 import { HttpStatusCode } from "axios";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
-import { notFound, useRouter } from "next/navigation";
-import { useState } from "react";
-import { toast } from "sonner";
+import { notFound } from "next/navigation";
 
 interface SubmissionDetailsProps {
   readonly formIdOrSlug: string;
@@ -34,13 +31,6 @@ export const SubmissionDetails = ({
 }: SubmissionDetailsProps) => {
   const t = useTranslations("submissionDetailsPage");
   const gt = useTranslations("global");
-  const router = useRouter();
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-
-  const { mutate: deleteSubmission, isPending } = useDeleteSubmission(
-    formIdOrSlug,
-    submissionId,
-  );
 
   const {
     data: formData,
@@ -68,18 +58,6 @@ export const SubmissionDetails = ({
   if (!formData || !submissionData || isFormLoading || isSubmissionLoading)
     return <p>{t("loading")}</p>;
 
-  const handleDelete = () =>
-    deleteSubmission(undefined, {
-      onSuccess: () => {
-        toast.success(t("deleteSuccess"));
-        setIsDeleteDialogOpen(false);
-        router.push(`/forms/${formIdOrSlug}/submissions`);
-      },
-      onError: () => {
-        toast.error(t("deleteError"));
-      },
-    });
-
   return (
     <section
       id="form-create"
@@ -105,16 +83,10 @@ export const SubmissionDetails = ({
             : t("submissionByUnknown")}
         </h2>
 
-        <Button
-          size="sm"
-          variant="destructive"
-          className="ml-auto"
-          onClick={() => setIsDeleteDialogOpen(true)}
-          disabled={isPending}
-        >
-          <ICONS.delete />
-          {t("deleteSubmission")}
-        </Button>
+        <DeleteSubmission
+          formIdOrSlug={formIdOrSlug}
+          submissionId={submissionId}
+        />
       </header>
 
       <div className="flex flex-col gap-4">
@@ -227,13 +199,6 @@ export const SubmissionDetails = ({
           );
         })}
       </div>
-
-      <DeleteSubmissionAlertDialog
-        isOpen={isDeleteDialogOpen}
-        isPending={isPending}
-        onClose={() => setIsDeleteDialogOpen(false)}
-        onConfirm={handleDelete}
-      />
     </section>
   );
 };

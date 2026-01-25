@@ -6,7 +6,7 @@ import { shuffleFormData } from "@/core/utils/shuffle-form-data";
 import { getFetchFormDetailsQueryOptions } from "@/features/form-details/hooks/use-fetch-form-details";
 import { getFetchPrivateFormDetailsQueryOptions } from "@/features/form-details/private-form/hooks/use-fetch-private-form-details";
 import { Submission } from "@/features/submission-create/components/submission";
-import { notFound, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo } from "react";
 
 interface SubmissionCreateGateProps {
@@ -36,7 +36,7 @@ export const SubmissionCreateGate = ({ slug }: SubmissionCreateGateProps) => {
     [formData],
   );
 
-  if (!prepared) return notFound();
+  if (!prepared) return null;
 
   return <Submission formData={prepared} />;
 };
