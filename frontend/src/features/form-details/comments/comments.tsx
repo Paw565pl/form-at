@@ -21,6 +21,7 @@ export const Comments = ({ formIdOrSlug }: CommentsProps) => {
   const {
     data: formCommentsPages,
     isLoading,
+    error,
     isFetchingNextPage,
     fetchNextPage,
     hasNextPage,
@@ -32,7 +33,7 @@ export const Comments = ({ formIdOrSlug }: CommentsProps) => {
       0,
     ) || 0;
 
-  if (isLoading) {
+  if (isLoading || error) {
     return (
       <div className="flex flex-col gap-2 pt-4">
         <CreateCommentForm formIdOrSlug={formIdOrSlug} />
