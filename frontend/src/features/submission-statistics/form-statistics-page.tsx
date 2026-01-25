@@ -1,4 +1,6 @@
 import { getQueryClient } from "@/core/lib/tanstack-query";
+import { auth } from "@/features/auth/config/auth-config";
+import { Role } from "@/features/auth/types/role";
 import {
   getFetchFormDetailsQueryOptions,
   prefetchFormDetails,
@@ -7,8 +9,6 @@ import { Statistics } from "@/features/submission-statistics/components/statisti
 import { prefetchFormStatistics } from "@/features/submission-statistics/hooks/use-fetch-form-statistics";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { notFound } from "next/navigation";
-import { auth } from "@/features/auth/config/auth-config";
-import { Role } from "@/features/auth/types/role";
 
 export const FormStatisticsPage = async ({
   params,
