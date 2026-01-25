@@ -313,6 +313,7 @@ public class FormService {
                 .orElse(null);
 
         val updatedFormEntity = formMapper.updateEntityFromDto(requestDto, oldFormEntity, slug, passwordHash);
+        updatedFormEntity.setSubmissionsCount(0L);
 
         try {
             val savedFormEntity = formRepository.save(updatedFormEntity);

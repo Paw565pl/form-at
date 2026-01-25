@@ -261,7 +261,7 @@
     "empty": "Nobody has completed this form yet.",
     "createdAt": "Submitted at {date}",
     "unknownAuthor": "Unknown Author",
-    "viewStatistics": "Form Statistics"
+    "viewStatistics": "Submission Statistics"
   },
   "submissionDetailsPage": {
     "loading": "Loading submission details...",
@@ -274,5 +274,13 @@
     "cancel": "Cancel",
     "deleteError": "Error deleting submission. Please try again.",
     "deleteSuccess": "Submission deleted successfully."
+  },
+  "statisticsPage": {
+    "loading": "Loading statistics...",
+    "noSubmissions": "Nobody has completed this form yet.",
+    "title": "Submission Statistics for {formName}",
+    "viewSubmissions": "Form Submissions",
+    "noOpenQuestions": "Open answer questions are not displayed.",
+    "answerCount": "{count, plural, one {# answer} other {# answers}}"
   }
 }

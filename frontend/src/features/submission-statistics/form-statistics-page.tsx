@@ -5,21 +5,21 @@ import {
   getFetchFormDetailsQueryOptions,
   prefetchFormDetails,
 } from "@/features/form-details/hooks/use-fetch-form-details";
-import { Submissions } from "@/features/submission-list/components/submissions";
-import { prefetchSubmissionPages } from "@/features/submission-list/hooks/use-fetch-submission-pages";
+import { Statistics } from "@/features/submission-statistics/components/statistics";
+import { prefetchFormStatistics } from "@/features/submission-statistics/hooks/use-fetch-form-statistics";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { notFound } from "next/navigation";
 
-export const SubmissionListPage = async ({
+export const FormStatisticsPage = async ({
   params,
-}: PageProps<"/forms/[slug]/submissions">) => {
+}: PageProps<"/forms/[slug]/submissions/statistics">) => {
   const session = await auth();
   const { slug } = await params;
 
   const queryClient = getQueryClient();
   await Promise.all([
-    prefetchSubmissionPages(queryClient, slug),
     prefetchFormDetails(queryClient, slug),
+    prefetchFormStatistics(queryClient, slug),
   ]);
 
   const formDetails = queryClient.getQueryData(
@@ -34,7 +34,7 @@ export const SubmissionListPage = async ({
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <Submissions formIdOrSlug={slug} />
+      <Statistics formIdOrSlug={slug} />
     </HydrationBoundary>
   );
 };
