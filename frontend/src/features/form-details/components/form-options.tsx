@@ -41,12 +41,20 @@ export const FormOptions = ({ slug, authorName }: FormOptionsProps) => {
 
         <DropdownMenuContent align="end">
           {isUserAuthor && (
-            <DropdownMenuItem
-              onClick={() => router.push(`/forms/${slug}/edit`)}
-            >
-              <ICONS.edit />
-              {t("edit")}
-            </DropdownMenuItem>
+            <>
+              <DropdownMenuItem
+                onClick={() => router.push(`/forms/${slug}/submissions`)}
+              >
+                <ICONS.viewSubmissions />
+                {t("viewSubmissions")}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => router.push(`/forms/${slug}/edit`)}
+              >
+                <ICONS.edit />
+                {t("edit")}
+              </DropdownMenuItem>
+            </>
           )}
 
           <DeleteForm slug={slug} />

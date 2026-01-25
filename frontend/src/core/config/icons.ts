@@ -1,6 +1,7 @@
 import {
   AlertTriangle,
   BadgeQuestionMark,
+  BookOpen,
   ChartColumn,
   Check,
   ChevronDown,
@@ -65,6 +66,7 @@ export const ICONS = {
   send: SendHorizonal,
   like: ThumbsUp,
   dislike: ThumbsDown,
+  viewSubmissions: BookOpen,
   edit: Pen,
   save: Save,
   add: Plus,
