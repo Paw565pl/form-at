@@ -28,7 +28,7 @@ const resolveFileKey = (
   }
 };
 
-export const useUpdateForm = (idOrSlug: string) => {
+export const useUpdateForm = (formIdOrSlug: string) => {
   const [uploadProgressPercent, setUploadProgressPercent] = useState<
     number | null
   >(null);
@@ -38,7 +38,7 @@ export const useUpdateForm = (idOrSlug: string) => {
     AxiosError<ErrorResponseDto> | Error,
     FormRequest
   >({
-    mutationKey: ["forms", idOrSlug, "update"] as const,
+    mutationKey: ["forms", formIdOrSlug, "update"] as const,
     mutationFn: async (request) => {
       const files: File[] = [
         request.thumbnail,
@@ -59,7 +59,7 @@ export const useUpdateForm = (idOrSlug: string) => {
         })),
       };
       const { data } = await apiService.put(
-        `/api/v1/forms/${idOrSlug}`,
+        `/api/v1/forms/${formIdOrSlug}`,
         requestDto,
       );
 
