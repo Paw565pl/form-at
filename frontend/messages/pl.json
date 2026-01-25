@@ -280,6 +280,7 @@
     "noSubmissions": "Nikt jeszcze nie wypełnił tego formularza.",
     "title": "Statystyki odpowiedzi dla {formName}",
     "viewSubmissions": "Odpowiedzi formularza",
-    "noOpenQuestions": "Pytania otwarte nie są wyświetlane."
+    "noOpenQuestions": "Pytania otwarte nie są wyświetlane.",
+    "answerCount": "{count, plural, one {# odpowiedź} other {# odpowiedzi}}"
   }
 }

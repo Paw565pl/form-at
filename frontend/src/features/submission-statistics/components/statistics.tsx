@@ -32,14 +32,13 @@ export const Statistics = ({ formIdOrSlug }: StatisticsProps) => {
   } = useFetchFormStatistics(formIdOrSlug);
 
   if (formError) {
-    if (
-      formError.status === HttpStatusCode.NotFound ||
-      formError.status === HttpStatusCode.Conflict
-    )
-      return notFound();
+    if (formError.status === HttpStatusCode.NotFound) return notFound();
     else throw formError;
   } else if (formStatisticsError) {
-    if (formStatisticsError.status === HttpStatusCode.NotFound)
+    if (
+      formStatisticsError.status === HttpStatusCode.NotFound ||
+      formStatisticsError.status === HttpStatusCode.Conflict
+    )
       return notFound();
     else throw formStatisticsError;
   }
@@ -118,7 +117,10 @@ export const Statistics = ({ formIdOrSlug }: StatisticsProps) => {
                         <Field className="w-full max-w-sm" key={answer.id}>
                           <FieldLabel htmlFor={`${answer.id}-percentage`}>
                             <span>{answer.content}</span>
-                            <span className="ml-auto">{percentage}%</span>
+                            <span className="ml-auto">
+                              {percentage}% (
+                              {t("answerCount", { count: answerCount })})
+                            </span>
                           </FieldLabel>
                           <Progress
                             value={percentage}
