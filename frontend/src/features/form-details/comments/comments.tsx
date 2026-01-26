@@ -33,7 +33,16 @@ export const Comments = ({ formIdOrSlug }: CommentsProps) => {
       0,
     ) || 0;
 
-  if (isLoading || error) {
+  if (error) {
+    return (
+      <div className="flex flex-col gap-2 pt-4">
+        <CreateCommentForm formIdOrSlug={formIdOrSlug} />
+        <p className="text-error text-center">{t("loadingError")}</p>
+      </div>
+    );
+  }
+
+  if (isLoading) {
     return (
       <div className="flex flex-col gap-2 pt-4">
         <CreateCommentForm formIdOrSlug={formIdOrSlug} />

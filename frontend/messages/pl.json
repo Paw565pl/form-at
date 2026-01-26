@@ -211,6 +211,7 @@
       "noQuestions": "Brak pytań do wyświetlenia."
     },
     "comments": {
+      "loadingError": "Błąd podczas ładowania komentarzy. Spróbuj ponownie.",
       "add": "Dodaj komentarz",
       "addSuccess": "Komentarz został pomyślnie dodany.",
       "addError": "Błąd podczas dodawania komentarza. Spróbuj ponownie.",

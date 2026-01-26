@@ -211,6 +211,7 @@
       "noQuestions": "No questions to display."
     },
     "comments": {
+      "loadingError": "Error loading comments. Please try again.",
       "add": "Add a Comment",
       "addSuccess": "Comment added successfully.",
       "addError": "Error adding comment. Please try again.",
