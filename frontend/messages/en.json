@@ -161,15 +161,15 @@
   },
   "formDetailsPage": {
     "privateForm": {
-      "enterTheCode": "Enter the Form Code",
-      "codeDescription": "This form is private, ask the form author for the access code.",
-      "code": "Code",
+      "enterThePassword": "Enter the Form Password",
+      "passwordDescription": "This form is private, ask the form author for the access password.",
+      "password": "Password",
       "cancel": "Cancel",
       "confirm": "Confirm",
       "errors": {
-        "contentMin": "Code must be at least {count} characters.",
-        "contentMax": "Code must be at most {count} characters.",
-        "invalidCode": "Invalid code. Please try again."
+        "contentMin": "Password must be at least {count} characters.",
+        "contentMax": "Password must be at most {count} characters.",
+        "invalidPassword": "Invalid password. Please try again."
       }
     },
     "loading": "Loading...",
@@ -193,7 +193,7 @@
       "questionsCount": "{count, plural, one {# question} other {# questions}}",
       "submissionsCount": "{count, plural, one {# submission} other {# submissions}}",
       "estimatedTime": "{time} to complete",
-      "privateForm": "Form Requires Code",
+      "privateForm": "Form Requires Password",
       "createdInfo": "Created {date} by {name}",
       "deletedUser": "Deleted User"
     },

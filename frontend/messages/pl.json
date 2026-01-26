@@ -162,15 +162,15 @@
   "formDetailsPage": {
     "loading": "Ładowanie...",
     "privateForm": {
-      "enterTheCode": "Wprowadź kod do formularza",
-      "codeDescription": "Ten formularz jest prywatny, poproś autora formularza o kod dostępu.",
-      "code": "Kod",
+      "enterThePassword": "Wprowadź hasło do formularza",
+      "passwordDescription": "Ten formularz jest prywatny, poproś autora formularza o hasło dostępu.",
+      "password": "Hasło",
       "cancel": "Anuluj",
       "confirm": "Potwierdź",
       "errors": {
-        "contentMin": "Kod musi mieć co najmniej {count} znaków.",
-        "contentMax": "Kod może mieć maksymalnie {count} znaków.",
-        "invalidCode": "Nieprawidłowy kod. Spróbuj ponownie."
+        "contentMin": "Hasło musi mieć co najmniej {count} znaków.",
+        "contentMax": "Hasło może mieć maksymalnie {count} znaków.",
+        "invalidPassword": "Nieprawidłowe hasło. Spróbuj ponownie."
       }
     },
     "banner": {
@@ -193,7 +193,7 @@
       "questionsCount": "{count, plural, one {# pytanie} few {# pytania} many {# pytań} other {# pytań}}",
       "submissionsCount": "{count, plural, one {# odpowiedź} other {# odpowiedzi}}",
       "estimatedTime": "Szacowany czas ukończenia: {time}",
-      "privateForm": "Formularz zabezpieczony kodem",
+      "privateForm": "Formularz zabezpieczony hasłem",
       "createdInfo": "Utworzono {date} przez {name}",
       "deletedUser": "Usuniętego użytkownika"
     },

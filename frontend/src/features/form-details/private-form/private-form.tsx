@@ -64,7 +64,7 @@ export const PrivateForm = ({ formIdOrSlug }: PrivateFormProps) => {
       const message =
         result.error.response?.data?.message ?? result.error.message;
       if (result.error.response?.status === HttpStatusCode.Forbidden) {
-        form.setError("password", { message: t("errors.invalidCode") });
+        form.setError("password", { message: t("errors.invalidPassword") });
       } else {
         form.setError("password", { message });
       }
@@ -89,24 +89,24 @@ export const PrivateForm = ({ formIdOrSlug }: PrivateFormProps) => {
             onSubmit={form.handleSubmit(onSubmit)}
           >
             <DialogHeader>
-              <DialogTitle>{t("enterTheCode")}</DialogTitle>
-              <DialogDescription>{t("codeDescription")}</DialogDescription>
+              <DialogTitle>{t("enterThePassword")}</DialogTitle>
+              <DialogDescription>{t("passwordDescription")}</DialogDescription>
             </DialogHeader>
 
             <Controller
               name="password"
               control={form.control}
               rules={{
-                required: t("enterTheCode"),
+                required: t("enterThePassword"),
               }}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>{t("code")}</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>{t("password")}</FieldLabel>
                   <Input
                     {...field}
                     id={field.name}
                     type="password"
-                    placeholder={t("code")}
+                    placeholder={t("password")}
                     aria-invalid={fieldState.invalid}
                     disabled={isFetching}
                     onChange={(e) => {
