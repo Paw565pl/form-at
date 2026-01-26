@@ -1,9 +1,6 @@
-"use client";
-
 import {
   AlertDialog,
   AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
@@ -11,28 +8,36 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/core/components/ui/alert-dialog";
-import { DropdownMenuItem } from "@/core/components/ui/dropdown-menu";
+import { Button } from "@/core/components/ui/button";
 import { ICONS } from "@/core/config/icons";
-import { useDeleteForm } from "@/features/form-edit/hooks/use-delete-form";
+import { useDeleteSubmission } from "@/features/submission-details/hooks/use-delete-submission";
+import { AlertDialogCancel } from "@radix-ui/react-alert-dialog";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-interface DeleteFormProps {
-  readonly slug: string;
+interface DeleteSubmissionAlertDialogProps {
+  readonly formIdOrSlug: string;
+  readonly submissionId: string;
 }
 
-export const DeleteForm = ({ slug }: DeleteFormProps) => {
+export const DeleteSubmissionAlertDialog = ({
+  formIdOrSlug,
+  submissionId,
+}: DeleteSubmissionAlertDialogProps) => {
+  const t = useTranslations("submissionDetailsPage");
   const router = useRouter();
-  const t = useTranslations("formDetailsPage.banner");
 
-  const { mutate: deleteForm, isPending } = useDeleteForm(slug);
+  const { mutate: deleteSubmission, isPending } = useDeleteSubmission(
+    formIdOrSlug,
+    submissionId,
+  );
 
   const handleDelete = () =>
-    deleteForm(undefined, {
+    deleteSubmission(undefined, {
       onSuccess: () => {
         toast.success(t("deleteSuccess"));
-        router.replace("/forms");
+        router.replace(`/forms/${formIdOrSlug}/submissions`);
       },
       onError: () => {
         toast.error(t("deleteError"));
@@ -42,28 +47,27 @@ export const DeleteForm = ({ slug }: DeleteFormProps) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <DropdownMenuItem
-          disabled={isPending}
+        <Button
+          size="sm"
           variant="destructive"
-          onSelect={(e) => {
-            e.preventDefault();
-          }}
+          disabled={isPending}
+          className="ml-auto"
         >
           <ICONS.delete />
-          {t("delete")}
-        </DropdownMenuItem>
+          {t("deleteSubmission")}
+        </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{t("deleteDialogTitle")}</AlertDialogTitle>
+          <AlertDialogTitle>{t("deleteSubmission")}</AlertDialogTitle>
           <AlertDialogDescription>
-            {t("deleteDialogDescription")}
+            {t("deleteSubmissionDescription")}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDelete} disabled={isPending}>
-            {t("delete")}
+          <AlertDialogAction onClick={handleDelete}>
+            {t("deleteSubmission")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

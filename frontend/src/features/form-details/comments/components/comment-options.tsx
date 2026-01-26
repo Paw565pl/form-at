@@ -7,7 +7,7 @@ import {
 } from "@/core/components/ui/dropdown-menu";
 import { ICONS } from "@/core/config/icons";
 import { Role } from "@/features/auth/types/role";
-import { DeleteComment } from "@/features/form-details/comments/components/delete-comment";
+import { DeleteCommentAlertDialog } from "@/features/form-details/comments/components/delete-comment-alert-dialog";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 
@@ -48,7 +48,10 @@ export const CommentOptions = ({
               {t("edit")}
             </DropdownMenuItem>
           )}
-          <DeleteComment formIdOrSlug={formIdOrSlug} commentId={commentId} />
+          <DeleteCommentAlertDialog
+            formIdOrSlug={formIdOrSlug}
+            commentId={commentId}
+          />
         </DropdownMenuContent>
       </DropdownMenu>
     </span>

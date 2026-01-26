@@ -13,7 +13,7 @@ import {
 import { ICONS } from "@/core/config/icons";
 import { cn } from "@/core/lib/cn";
 import { useFetchFormDetails } from "@/features/form-details/hooks/use-fetch-form-details";
-import { DeleteSubmission } from "@/features/submission-details/components/delete-submission";
+import { DeleteSubmissionAlertDialog } from "@/features/submission-details/components/delete-submission-alert-dialog";
 import { useFetchSubmissionDetails } from "@/features/submission-details/hooks/use-fetch-submission-details";
 import { HttpStatusCode } from "axios";
 import { useTranslations } from "next-intl";
@@ -77,7 +77,7 @@ export const SubmissionDetails = ({
             : t("submissionByUnknown")}
         </h2>
 
-        <DeleteSubmission
+        <DeleteSubmissionAlertDialog
           formIdOrSlug={formIdOrSlug}
           submissionId={submissionId}
         />

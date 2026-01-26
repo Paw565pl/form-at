@@ -9,7 +9,7 @@ import {
 } from "@/core/components/ui/dropdown-menu";
 import { ICONS } from "@/core/config/icons";
 import { Role } from "@/features/auth/types/role";
-import { DeleteForm } from "@/features/form-details/components/delete-form";
+import { DeleteFormAlertDialog } from "@/features/form-details/components/delete-form-alert-dialog";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
@@ -57,7 +57,7 @@ export const FormOptions = ({ slug, authorName }: FormOptionsProps) => {
             </>
           )}
 
-          <DeleteForm slug={slug} />
+          <DeleteFormAlertDialog slug={slug} />
         </DropdownMenuContent>
       </DropdownMenu>
     </section>

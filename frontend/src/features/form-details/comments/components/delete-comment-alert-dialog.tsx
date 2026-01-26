@@ -15,15 +15,15 @@ import { useDeleteComment } from "@/features/form-details/comments/hooks/use-del
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
-interface DeleteCommentProps {
+interface DeleteCommentAlertDialogProps {
   readonly formIdOrSlug: string;
   readonly commentId: string;
 }
 
-export const DeleteComment = ({
+export const DeleteCommentAlertDialog = ({
   formIdOrSlug,
   commentId,
-}: DeleteCommentProps) => {
+}: DeleteCommentAlertDialogProps) => {
   const t = useTranslations("formDetailsPage.comments");
 
   const { mutate: deleteComment, isPending } = useDeleteComment(
