@@ -68,7 +68,7 @@ export const Banner = ({ form }: BannerProps) => {
           <Button
             onClick={() => router.push(`/forms/${form.slug}/submissions/new`)}
           >
-            <ICONS.fillForm />
+            <ICONS.fillSubmission />
             {t("fillOutForm")}
           </Button>
         )}

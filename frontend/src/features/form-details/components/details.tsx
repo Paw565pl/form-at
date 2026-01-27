@@ -53,7 +53,7 @@ export const Details = ({ form }: DetailsProps) => {
           <h2>{t("questionsCount", { count: form.questions.length })}</h2>
         </div>
         <div className="flex items-center gap-1">
-          <ICONS.submissionsCount />
+          <ICONS.submissions />
           <h2>{t("submissionsCount", { count: form.submissionsCount })}</h2>
         </div>
         <div className="flex items-center gap-1">

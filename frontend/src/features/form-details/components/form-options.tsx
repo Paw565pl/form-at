@@ -34,7 +34,7 @@ export const FormOptions = ({ slug, authorName }: FormOptionsProps) => {
     <section>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button aria-label={t("moreOptions")} size={"icon-sm"}>
+          <Button aria-label={t("moreOptions")} size="icon">
             <ICONS.more />
           </Button>
         </DropdownMenuTrigger>
@@ -45,7 +45,7 @@ export const FormOptions = ({ slug, authorName }: FormOptionsProps) => {
               <DropdownMenuItem
                 onClick={() => router.push(`/forms/${slug}/submissions`)}
               >
-                <ICONS.viewSubmissions />
+                <ICONS.submissions />
                 {t("viewSubmissions")}
               </DropdownMenuItem>
               <DropdownMenuItem
