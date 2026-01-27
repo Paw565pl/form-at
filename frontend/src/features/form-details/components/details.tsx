@@ -47,7 +47,7 @@ export const Details = ({ form }: DetailsProps) => {
       {form.description && <p>{form.description}</p>}
 
       {/* form tags */}
-      <div className="text-muted-foreground flex flex-wrap items-center gap-2 text-sm md:gap-6">
+      <div className="text-muted-foreground flex flex-wrap items-center gap-2 text-sm md:gap-4">
         <div className="flex items-center gap-1">
           <ICONS.questionsCount />
           <h2>{t("questionsCount", { count: form.questions.length })}</h2>
