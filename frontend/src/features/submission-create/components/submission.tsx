@@ -102,7 +102,7 @@ export const Submission = ({ formData }: SubmissionProps) => {
       className="flex w-full flex-col gap-4 px-5 py-10 lg:px-30"
     >
       <header className="flex flex-col">
-        <div className="relative h-48">
+        <div className="relative h-64 md:h-110">
           <FormImageWithFallback
             src={formData.thumbnail}
             alt={formData.name}

@@ -27,7 +27,7 @@ export const Banner = ({ form }: BannerProps) => {
   const { data: mySubmission } = useFetchMySubmission(form.slug);
 
   return (
-    <section className="relative flex h-48 w-full items-end">
+    <section className="relative flex h-64 w-full items-end md:h-110">
       <FormImageWithFallback
         src={form.thumbnail}
         alt={form.name}
