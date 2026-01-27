@@ -108,7 +108,6 @@ export const PrivateForm = ({ formIdOrSlug }: PrivateFormProps) => {
                     type="password"
                     placeholder={t("password")}
                     aria-invalid={fieldState.invalid}
-                    disabled={isFetching}
                     onChange={(e) => {
                       field.onChange(e);
                       if (form.formState.errors.password)
