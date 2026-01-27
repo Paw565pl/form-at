@@ -177,7 +177,7 @@
       "cancel": "Cancel",
       "confirm": "Confirm",
       "fillOutForm": "Fill Out the Form",
-      "back": "Go Back to Previous Page",
+      "back": "Go Back to Forms List",
       "formFinished": "Completed on {finishedAt}",
       "moreOptions": "More Options",
       "fillAnonymously": "Fill Anonymously",
@@ -273,6 +273,7 @@
     }
   },
   "submissionListPage": {
+    "back": "Go Back to Form Details",
     "title": "Showing {count, plural, one {# submission} other {# submissions}} for {formName}",
     "end": "You have reached the end of the list.",
     "loading": "Loading submissions...",
@@ -294,6 +295,7 @@
     "deleteSuccess": "Submission deleted successfully."
   },
   "statisticsPage": {
+    "back": "Go Back to Form Details",
     "loading": "Loading statistics...",
     "noSubmissions": "Nobody has completed this form yet.",
     "title": "Submission Statistics for {formName}",

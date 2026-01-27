@@ -3,13 +3,18 @@
 import { ScrollToTopButton } from "@/core/components/scroll-to-top-button/scroll-to-top-button";
 import { Button } from "@/core/components/ui/button";
 import { Card } from "@/core/components/ui/card";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/core/components/ui/tooltip";
 import { ICONS } from "@/core/config/icons";
 import { useFetchFormDetails } from "@/features/form-details/hooks/use-fetch-form-details";
 import { useFetchSubmissionPages } from "@/features/submission-list/hooks/use-fetch-submission-pages";
 import { HttpStatusCode } from "axios";
 import { useFormatter, useTranslations } from "next-intl";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 interface SubmissionsProps {
@@ -19,6 +24,7 @@ interface SubmissionsProps {
 export const Submissions = ({ formIdOrSlug }: SubmissionsProps) => {
   const t = useTranslations("submissionListPage");
   const format = useFormatter();
+  const router = useRouter();
 
   const {
     data: submissionPages,
@@ -55,9 +61,25 @@ export const Submissions = ({ formIdOrSlug }: SubmissionsProps) => {
       className="flex w-full flex-col gap-2 px-5 py-10 lg:px-30"
     >
       <header className="mb-2 flex flex-wrap items-center justify-between gap-4">
-        <h1 className="ml-4 text-xl font-bold">
-          {t("title", { count: totalElements, formName: formData.name })}
-        </h1>
+        <div className="flex items-center">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                aria-label={t("back")}
+                size="icon-sm"
+                onClick={() => router.push(`/forms/${formIdOrSlug}`)}
+              >
+                <ICONS.back />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">
+              <span>{t("back")}</span>
+            </TooltipContent>
+          </Tooltip>
+          <h1 className="ml-4 text-xl font-bold">
+            {t("title", { count: totalElements, formName: formData.name })}
+          </h1>
+        </div>
 
         <Button size="sm" asChild className="ml-3">
           <Link href={`/forms/${formIdOrSlug}/submissions/statistics`}>

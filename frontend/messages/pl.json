@@ -177,7 +177,7 @@
       "cancel": "Anuluj",
       "confirm": "Potwierdź",
       "fillOutForm": "Wypełnij formularz",
-      "back": "Wróć do poprzedniej strony",
+      "back": "Wróć do Listy formularzy",
       "formFinished": "Wypełniono {finishedAt}",
       "moreOptions": "Więcej opcji",
       "fillAnonymously": "Wypełnij anonimowo",
@@ -273,6 +273,7 @@
     }
   },
   "submissionListPage": {
+    "back": "Wróć do szczegółów formularza",
     "title": "Wyświetlanie {count, plural, one {# odpowiedzi} other {# odpowiedzi}} dla {formName}",
     "end": "Dotarłeś do końca listy.",
     "loading": "Ładowanie odpowiedzi...",
@@ -294,6 +295,7 @@
     "deleteSuccess": "Odpowiedź została pomyślnie usunięta."
   },
   "statisticsPage": {
+    "back": "Wróć do szczegółów formularza",
     "loading": "Ładowanie statystyk...",
     "noSubmissions": "Nikt jeszcze nie wypełnił tego formularza.",
     "title": "Statystyki odpowiedzi dla {formName}",
