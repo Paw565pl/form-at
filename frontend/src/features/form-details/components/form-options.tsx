@@ -7,6 +7,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/core/components/ui/dropdown-menu";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/core/components/ui/tooltip";
 import { ICONS } from "@/core/config/icons";
 import { Role } from "@/features/auth/types/role";
 import { DeleteFormAlertDialog } from "@/features/form-details/components/delete-form-alert-dialog";
@@ -33,11 +38,18 @@ export const FormOptions = ({ slug, authorName }: FormOptionsProps) => {
   return (
     <section>
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button aria-label={t("moreOptions")} size="icon">
-            <ICONS.more />
-          </Button>
-        </DropdownMenuTrigger>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <DropdownMenuTrigger asChild>
+              <Button aria-label={t("moreOptions")} size="icon">
+                <ICONS.more />
+              </Button>
+            </DropdownMenuTrigger>
+          </TooltipTrigger>
+          <TooltipContent>
+            <span>{t("moreOptions")}</span>
+          </TooltipContent>
+        </Tooltip>
 
         <DropdownMenuContent align="end">
           {isUserAuthor && (
