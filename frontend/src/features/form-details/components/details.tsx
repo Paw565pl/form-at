@@ -33,7 +33,7 @@ export const Details = ({ form }: DetailsProps) => {
             </Tooltip>
           )}
 
-          <h1 className="line-clamp-2 max-w-2xl text-3xl">{form.name}</h1>
+          <h1 className="line-clamp-2 max-w-2xl pb-1 text-3xl">{form.name}</h1>
         </div>
 
         <FormRating
