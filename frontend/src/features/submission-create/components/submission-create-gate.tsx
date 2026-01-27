@@ -7,7 +7,7 @@ import { getFetchFormDetailsQueryOptions } from "@/features/form-details/hooks/u
 import { getFetchPrivateFormDetailsQueryOptions } from "@/features/form-details/private-form/hooks/use-fetch-private-form-details";
 import { Submission } from "@/features/submission-create/components/submission";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 
 interface SubmissionCreateGateProps {
   readonly slug: string;
@@ -27,9 +27,7 @@ export const SubmissionCreateGate = ({ slug }: SubmissionCreateGateProps) => {
 
   const formData = privateForm ?? publicForm;
 
-  useEffect(() => {
-    if (!formData) router.replace(`/forms/${slug}`);
-  }, [formData, router, slug]);
+  if (!formData) router.replace(`/forms/${slug}`);
 
   const prepared = useMemo(
     () => (formData ? shuffleFormData(formData) : null),
