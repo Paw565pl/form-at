@@ -1,32 +1,25 @@
 import { getQueryClient } from "@/core/lib/tanstack-query";
-import { FormDetailResponseDto } from "@/core/types/form";
-import { shuffleFormData } from "@/core/utils/shuffle-form-data";
-import {
-  getFetchFormDetailsQueryOptions,
-  prefetchFormDetails,
-} from "@/features/form-details/hooks/use-fetch-form-details";
-import { Submission } from "@/features/submission-create/components/submission";
+import { auth } from "@/features/auth/config/auth-config";
+import { prefetchFormDetails } from "@/features/form-details/hooks/use-fetch-form-details";
+import { prefetchMySubmission } from "@/features/form-details/my-submission/hooks/use-fetch-my-submission";
+import { SubmissionCreateGate } from "@/features/submission-create/components/submission-create-gate";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import { notFound } from "next/navigation";
 
 export const SubmissionCreatePage = async ({
   params,
 }: PageProps<"/forms/[slug]/submissions/new">) => {
   const { slug } = await params;
+  const session = await auth();
 
   const queryClient = getQueryClient();
-  await prefetchFormDetails(queryClient, slug);
-  const formData = queryClient.getQueryData<FormDetailResponseDto>(
-    getFetchFormDetailsQueryOptions(slug).queryKey,
-  );
-
-  if (!formData) return notFound();
-
-  const preparedFormData = shuffleFormData(formData);
+  await Promise.all([
+    prefetchFormDetails(queryClient, slug),
+    prefetchMySubmission(queryClient, slug, { enabled: !!session }),
+  ]);
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <Submission formData={preparedFormData} />
+      <SubmissionCreateGate slug={slug} />
     </HydrationBoundary>
   );
 };

@@ -8,16 +8,13 @@ import {
 import { ICONS } from "@/core/config/icons";
 import { Role } from "@/features/auth/types/role";
 import { DeleteCommentAlertDialog } from "@/features/form-details/comments/components/delete-comment-alert-dialog";
-import { useDeleteComment } from "@/features/form-details/comments/hooks/use-delete-comment";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
-import { toast } from "sonner";
 
 interface CommentOptionsProps {
   readonly formIdOrSlug: string;
   readonly commentId: string;
-  readonly authorName: string;
+  readonly authorName: string | null;
   readonly onEdit?: () => void;
 }
 
@@ -29,28 +26,12 @@ export const CommentOptions = ({
 }: CommentOptionsProps) => {
   const t = useTranslations("formDetailsPage.comments");
   const session = useSession();
-  const { mutate: deleteComment, isPending } = useDeleteComment(
-    formIdOrSlug,
-    commentId,
-  );
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const user = session.data?.user;
-  const isUserAuthor = user?.name === authorName;
+  const isUserAuthor = user && user.name === authorName;
   const isUserAdmin = user?.roles.includes(Role.ADMIN);
 
   if (!isUserAuthor && !isUserAdmin) return null;
-
-  const handleDelete = () =>
-    deleteComment(undefined, {
-      onSuccess: () => {
-        toast.success(t("deleteSuccess"));
-        setIsDeleteDialogOpen(false);
-      },
-      onError: () => {
-        toast.error(t("deleteError"));
-      },
-    });
 
   return (
     <span className="absolute top-4 right-4">
@@ -67,23 +48,12 @@ export const CommentOptions = ({
               {t("edit")}
             </DropdownMenuItem>
           )}
-          <DropdownMenuItem
-            onClick={() => setIsDeleteDialogOpen(true)}
-            disabled={isPending}
-            variant="destructive"
-          >
-            <ICONS.delete />
-            {t("delete")}
-          </DropdownMenuItem>
+          <DeleteCommentAlertDialog
+            formIdOrSlug={formIdOrSlug}
+            commentId={commentId}
+          />
         </DropdownMenuContent>
       </DropdownMenu>
-
-      <DeleteCommentAlertDialog
-        isOpen={isDeleteDialogOpen}
-        isPending={isPending}
-        onClose={() => setIsDeleteDialogOpen(false)}
-        onConfirm={handleDelete}
-      />
     </span>
   );
 };

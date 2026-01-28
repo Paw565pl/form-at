@@ -161,24 +161,41 @@
   },
   "formDetailsPage": {
     "loading": "Ładowanie...",
-    "banner": {
-      "back": "Wróć do poprzedniej strony",
-      "formFinished": "Wypełniono {finishedAt}",
-      "fillOutForm": "Wypełnij formularz",
-      "enterTheCode": "Wprowadź kod do formularza",
-      "moreOptions": "Więcej opcji",
-      "codeDescription": "Ten formularz jest prywatny, poproś autora formularza o kod dostępu.",
-      "code": "Kod",
+    "privateForm": {
+      "enterThePassword": "Wprowadź hasło do formularza",
+      "passwordDescription": "Ten formularz jest prywatny, poproś autora formularza o hasło dostępu.",
+      "password": "Hasło",
       "cancel": "Anuluj",
       "confirm": "Potwierdź",
-      "fillAnonymously": "Wypełnij anonimowo"
+      "errors": {
+        "contentMin": "Hasło musi mieć co najmniej {count} znaków.",
+        "contentMax": "Hasło może mieć maksymalnie {count} znaków.",
+        "invalidPassword": "Nieprawidłowe hasło. Spróbuj ponownie."
+      }
+    },
+    "banner": {
+      "cancel": "Anuluj",
+      "confirm": "Potwierdź",
+      "fillOutForm": "Wypełnij formularz",
+      "back": "Wróć do listy formularzy",
+      "formFinished": "Wypełniono {finishedAt}",
+      "moreOptions": "Więcej opcji",
+      "fillAnonymously": "Wypełnij anonimowo",
+      "viewSubmissions": "Zobacz odpowiedzi",
+      "edit": "Edytuj formularz",
+      "delete": "Usuń formularz",
+      "deleteDialogTitle": "Czy na pewno chcesz usunąć ten formularz?",
+      "deleteDialogDescription": "Ta akcja jest nieodwracalna i wszystkie dane formularza zostaną utracone.",
+      "deleteError": "Błąd podczas usuwania formularza. Spróbuj ponownie.",
+      "deleteSuccess": "Formularz został pomyślnie usunięty."
     },
     "details": {
       "questionsCount": "{count, plural, one {# pytanie} few {# pytania} many {# pytań} other {# pytań}}",
       "submissionsCount": "{count, plural, one {# odpowiedź} other {# odpowiedzi}}",
       "estimatedTime": "Szacowany czas ukończenia: {time}",
-      "privateForm": "Formularz zabezpieczony kodem",
-      "createdAt": "Utworzono {date}"
+      "privateForm": "Formularz zabezpieczony hasłem",
+      "createdInfo": "Utworzono {date} przez",
+      "deletedUser": "Usuniętego użytkownika"
     },
     "rating": {
       "ratingError": "Błąd podczas przesyłania oceny. Spróbuj ponownie.",
@@ -194,6 +211,7 @@
       "noQuestions": "Brak pytań do wyświetlenia."
     },
     "comments": {
+      "loadingError": "Błąd podczas ładowania komentarzy. Spróbuj ponownie.",
       "add": "Dodaj komentarz",
       "addSuccess": "Komentarz został pomyślnie dodany.",
       "addError": "Błąd podczas dodawania komentarza. Spróbuj ponownie.",
@@ -214,6 +232,7 @@
       "ratingDislike": "Nie lubię tego",
       "loading": "Ładowanie komentarzy...",
       "moreOptions": "Więcej opcji",
+      "deletedUser": "Usunięty użytkownik",
       "errors": {
         "contentMin": "Komentarz musi mieć co najmniej {count} znaki.",
         "contentMax": "Komentarz może mieć maksymalnie {count} znaków."
@@ -255,6 +274,7 @@
     }
   },
   "submissionListPage": {
+    "back": "Wróć do szczegółów formularza",
     "title": "Wyświetlanie {count, plural, one {# odpowiedzi} other {# odpowiedzi}} dla {formName}",
     "end": "Dotarłeś do końca listy.",
     "loading": "Ładowanie odpowiedzi...",
@@ -276,6 +296,7 @@
     "deleteSuccess": "Odpowiedź została pomyślnie usunięta."
   },
   "statisticsPage": {
+    "back": "Wróć do szczegółów formularza",
     "loading": "Ładowanie statystyk...",
     "noSubmissions": "Nikt jeszcze nie wypełnił tego formularza.",
     "title": "Statystyki odpowiedzi dla {formName}",

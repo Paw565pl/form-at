@@ -9,6 +9,7 @@ import { FormDetailResponseDto, FormStatus } from "@/core/types/form";
 import { formatDuration } from "@/core/utils/format-duration";
 import { FormRating } from "@/features/form-details/rating/form-rating";
 import { useFormatter, useTranslations } from "next-intl";
+import Link from "next/link";
 
 interface DetailsProps {
   readonly form: FormDetailResponseDto;
@@ -19,7 +20,7 @@ export const Details = ({ form }: DetailsProps) => {
   const t = useTranslations("formDetailsPage.details");
 
   return (
-    <Card className="flex w-full flex-col gap-4 rounded-t-none p-4">
+    <Card className="flex h-full min-h-50 w-full flex-col justify-between gap-4 rounded-t-none p-4">
       <header className="flex flex-wrap items-center gap-2 md:flex-row">
         <div className="flex items-center gap-2">
           {form.status === FormStatus.Private && (
@@ -33,7 +34,7 @@ export const Details = ({ form }: DetailsProps) => {
             </Tooltip>
           )}
 
-          <h1 className="line-clamp-2 max-w-2xl text-3xl">{form.name}</h1>
+          <h1 className="line-clamp-2 max-w-2xl pb-1 text-3xl">{form.name}</h1>
         </div>
 
         <FormRating
@@ -47,13 +48,13 @@ export const Details = ({ form }: DetailsProps) => {
       {form.description && <p>{form.description}</p>}
 
       {/* form tags */}
-      <div className="text-muted-foreground flex flex-wrap items-center gap-2 text-sm md:gap-6">
+      <div className="text-muted-foreground flex flex-wrap items-center gap-2 text-sm md:gap-4">
         <div className="flex items-center gap-1">
           <ICONS.questionsCount />
           <h2>{t("questionsCount", { count: form.questions.length })}</h2>
         </div>
         <div className="flex items-center gap-1">
-          <ICONS.submissionsCount />
+          <ICONS.submissions />
           <h2>{t("submissionsCount", { count: form.submissionsCount })}</h2>
         </div>
         <div className="flex items-center gap-1">
@@ -65,9 +66,19 @@ export const Details = ({ form }: DetailsProps) => {
           </h2>
         </div>
         <p className="ml-auto">
-          {t("createdAt", {
+          {t("createdInfo", {
             date: format.dateTime(new Date(form.updatedAt), "long"),
-          })}
+          })}{" "}
+          {form.authorName ? (
+            <Link
+              href={`/users/${form.authorName}`}
+              className="hover:underline"
+            >
+              {form.authorName}
+            </Link>
+          ) : (
+            t("deletedUser")
+          )}
         </p>
       </div>
     </Card>

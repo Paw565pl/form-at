@@ -4,13 +4,18 @@ import { Button } from "@/core/components/ui/button";
 import { Card } from "@/core/components/ui/card";
 import { Field, FieldLabel } from "@/core/components/ui/field";
 import { Progress } from "@/core/components/ui/progress";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/core/components/ui/tooltip";
 import { ICONS } from "@/core/config/icons";
 import { useFetchFormDetails } from "@/features/form-details/hooks/use-fetch-form-details";
 import { useFetchFormStatistics } from "@/features/submission-statistics/hooks/use-fetch-form-statistics";
 import { HttpStatusCode } from "axios";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 
 interface StatisticsProps {
   readonly formIdOrSlug: string;
@@ -19,6 +24,7 @@ interface StatisticsProps {
 export const Statistics = ({ formIdOrSlug }: StatisticsProps) => {
   const t = useTranslations("statisticsPage");
   const gt = useTranslations("global");
+  const router = useRouter();
 
   const {
     data: formData,
@@ -57,16 +63,32 @@ export const Statistics = ({ formIdOrSlug }: StatisticsProps) => {
       className="flex w-full flex-col gap-2 px-5 py-10 lg:px-30"
     >
       <header className="mb-2 flex flex-wrap items-center justify-between gap-4">
-        <h1 className="ml-4 text-xl font-bold">
-          {t("title", { formName: formData.name })}
-          <span className="text-muted-foreground block text-sm font-normal">
-            {t("noOpenQuestions")}
-          </span>
-        </h1>
+        <div className="flex items-center">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                aria-label={t("back")}
+                size="icon-sm"
+                onClick={() => router.push(`/forms/${formIdOrSlug}`)}
+              >
+                <ICONS.back />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">
+              <span>{t("back")}</span>
+            </TooltipContent>
+          </Tooltip>
+          <h1 className="ml-4 text-xl font-bold">
+            {t("title", { formName: formData.name })}
+            <span className="text-muted-foreground block text-sm font-normal">
+              {t("noOpenQuestions")}
+            </span>
+          </h1>
+        </div>
 
         <Button size="sm" asChild className="ml-3">
           <Link href={`/forms/${formIdOrSlug}/submissions`}>
-            <ICONS.fillForm />
+            <ICONS.submissions />
             {t("viewSubmissions")}
           </Link>
         </Button>

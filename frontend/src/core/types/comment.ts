@@ -5,7 +5,7 @@ export enum CommentRatingType {
 
 export interface CommentResponseDto {
   readonly id: string;
-  readonly authorName: string;
+  readonly authorName: string | null;
   readonly content: string;
   readonly ratingScore: number;
   readonly userRating: CommentRatingType | null;

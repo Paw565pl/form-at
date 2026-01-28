@@ -3,17 +3,6 @@
 import { Badge } from "@/core/components/ui/badge";
 import { Button } from "@/core/components/ui/button";
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/core/components/ui/dialog";
-import { Input } from "@/core/components/ui/input";
-import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
@@ -21,6 +10,8 @@ import {
 import { ICONS } from "@/core/config/icons";
 import { FormImageWithFallback } from "@/core/form-image/form-image-with-fallback";
 import { FormDetailResponseDto } from "@/core/types/form";
+import { FormOptions } from "@/features/form-details/components/form-options";
+import { useFetchMySubmission } from "@/features/form-details/my-submission/hooks/use-fetch-my-submission";
 import { useFormatter, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 
@@ -29,13 +20,14 @@ interface BannerProps {
 }
 
 export const Banner = ({ form }: BannerProps) => {
-  const format = useFormatter();
   const t = useTranslations("formDetailsPage.banner");
+  const format = useFormatter();
   const router = useRouter();
 
+  const { data: mySubmission } = useFetchMySubmission(form.slug);
+
   return (
-    <section className="relative flex h-48 w-full items-end">
-      {/* background image */}
+    <section className="relative flex h-64 w-full items-end md:h-110">
       <FormImageWithFallback
         src={form.thumbnail}
         alt={form.name}
@@ -43,14 +35,13 @@ export const Banner = ({ form }: BannerProps) => {
         className="rounded-t-md object-cover"
       />
 
-      {/* go back button */}
       <span className="absolute top-4 left-4">
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
               aria-label={t("back")}
               size="icon-sm"
-              onClick={() => router.back()}
+              onClick={() => router.push("/forms")}
             >
               <ICONS.back />
             </Button>
@@ -61,61 +52,32 @@ export const Banner = ({ form }: BannerProps) => {
         </Tooltip>
       </span>
 
-      {/* User's submission date */}
-      {/* TODO take submission date from user's submission data */}
-      <Badge className="absolute top-4 right-4">
-        {t("formFinished", {
-          finishedAt: format.dateTime(new Date(), "long"),
-        })}
-      </Badge>
+      {mySubmission && (
+        <Badge className="absolute top-4 right-4">
+          {t("formFinished", {
+            finishedAt: format.dateTime(
+              new Date(mySubmission.createdAt),
+              "long",
+            ),
+          })}
+        </Badge>
+      )}
 
-      <div className="absolute right-2 bottom-2 flex flex-col items-end gap-2 md:right-4 md:bottom-4 md:flex-row">
-        <Dialog>
-          <form>
-            <DialogTrigger asChild>
-              <Button>
-                <ICONS.fillForm />
-                {t("fillOutForm")}
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>{t("enterTheCode")}</DialogTitle>
-                <DialogDescription>{t("codeDescription")}</DialogDescription>
-              </DialogHeader>
-              <div className="grid gap-3">
-                <Input id="code" name="code" placeholder={t("code")} />
-              </div>
-              <DialogFooter>
-                <DialogClose asChild>
-                  <Button variant="outline">{t("cancel")}</Button>
-                </DialogClose>
-                <Button type="submit">{t("confirm")}</Button>
-              </DialogFooter>
-            </DialogContent>
-          </form>
-        </Dialog>
-
-        {form.allowsGuestSubmissions && (
-          <Button>
-            <ICONS.anonymous />
-            {t("fillAnonymously")}
+      <div className="absolute right-2 bottom-2 flex items-center gap-2 md:right-4 md:bottom-4">
+        {!mySubmission && (
+          <Button
+            onClick={() => router.push(`/forms/${form.slug}/submissions/new`)}
+          >
+            <ICONS.fillSubmission />
+            {t("fillOutForm")}
           </Button>
         )}
 
-        {/* more options */}
-        <span>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button aria-label={t("moreOptions")}>
-                <ICONS.more />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="bottom">
-              <span>{t("moreOptions")}</span>
-            </TooltipContent>
-          </Tooltip>
-        </span>
+        <FormOptions
+          slug={form.slug}
+          authorName={form.authorName}
+          saveSubmissions={form.saveSubmissions}
+        />
       </div>
     </section>
   );

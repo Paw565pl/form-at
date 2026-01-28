@@ -160,25 +160,42 @@
     "updateDialogDescription": "All prior submissions for this form will be deleted. This action cannot be undone."
   },
   "formDetailsPage": {
-    "loading": "Loading...",
-    "banner": {
-      "back": "Go Back to Previous Page",
-      "formFinished": "Completed on {finishedAt}",
-      "fillOutForm": "Fill Out the Form",
-      "enterTheCode": "Enter the Form Code",
-      "moreOptions": "More Options",
-      "codeDescription": "This form is private, ask the form author for the access code.",
-      "code": "Code",
+    "privateForm": {
+      "enterThePassword": "Enter the Form Password",
+      "passwordDescription": "This form is private, ask the form author for the access password.",
+      "password": "Password",
       "cancel": "Cancel",
       "confirm": "Confirm",
-      "fillAnonymously": "Fill Anonymously"
+      "errors": {
+        "contentMin": "Password must be at least {count} characters.",
+        "contentMax": "Password must be at most {count} characters.",
+        "invalidPassword": "Invalid password. Please try again."
+      }
+    },
+    "loading": "Loading...",
+    "banner": {
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "fillOutForm": "Fill Out the Form",
+      "back": "Go Back to Forms List",
+      "formFinished": "Completed on {finishedAt}",
+      "moreOptions": "More Options",
+      "fillAnonymously": "Fill Anonymously",
+      "viewSubmissions": "View Submissions",
+      "edit": "Edit Form",
+      "delete": "Delete Form",
+      "deleteDialogTitle": "Are you sure you want to delete this form?",
+      "deleteDialogDescription": "This action cannot be undone and all form data will be permanently lost.",
+      "deleteError": "Error deleting form. Please try again.",
+      "deleteSuccess": "Form deleted successfully."
     },
     "details": {
       "questionsCount": "{count, plural, one {# question} other {# questions}}",
       "submissionsCount": "{count, plural, one {# submission} other {# submissions}}",
       "estimatedTime": "{time} to complete",
-      "privateForm": "Form Requires Code",
-      "createdAt": "Created {date}"
+      "privateForm": "Form Requires Password",
+      "createdInfo": "Created {date} by",
+      "deletedUser": "Deleted User"
     },
     "rating": {
       "ratingError": "Error submitting rating. Please try again.",
@@ -194,6 +211,7 @@
       "noQuestions": "No questions to display."
     },
     "comments": {
+      "loadingError": "Error loading comments. Please try again.",
       "add": "Add a Comment",
       "addSuccess": "Comment added successfully.",
       "addError": "Error adding comment. Please try again.",
@@ -214,6 +232,7 @@
       "ratingDislike": "Dislike",
       "loading": "Loading comments...",
       "moreOptions": "More Options",
+      "deletedUser": "Deleted User",
       "errors": {
         "contentMin": "Comment must be at least {count} characters.",
         "contentMax": "Comment must be {count} characters or less."
@@ -255,6 +274,7 @@
     }
   },
   "submissionListPage": {
+    "back": "Go Back to Form Details",
     "title": "Showing {count, plural, one {# submission} other {# submissions}} for {formName}",
     "end": "You have reached the end of the list.",
     "loading": "Loading submissions...",
@@ -276,6 +296,7 @@
     "deleteSuccess": "Submission deleted successfully."
   },
   "statisticsPage": {
+    "back": "Go Back to Form Details",
     "loading": "Loading statistics...",
     "noSubmissions": "Nobody has completed this form yet.",
     "title": "Submission Statistics for {formName}",

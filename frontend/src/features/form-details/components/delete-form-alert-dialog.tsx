@@ -1,3 +1,5 @@
+"use client";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,30 +13,29 @@ import {
 } from "@/core/components/ui/alert-dialog";
 import { DropdownMenuItem } from "@/core/components/ui/dropdown-menu";
 import { ICONS } from "@/core/config/icons";
-import { useDeleteComment } from "@/features/form-details/comments/hooks/use-delete-comment";
+import { useDeleteForm } from "@/features/form-edit/hooks/use-delete-form";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { toast } from "sonner";
 
-interface DeleteCommentAlertDialogProps {
-  readonly formIdOrSlug: string;
-  readonly commentId: string;
+interface DeleteFormAlertDialogProps {
+  readonly slug: string;
 }
 
-export const DeleteCommentAlertDialog = ({
-  formIdOrSlug,
-  commentId,
-}: DeleteCommentAlertDialogProps) => {
-  const t = useTranslations("formDetailsPage.comments");
+export const DeleteFormAlertDialog = ({ slug }: DeleteFormAlertDialogProps) => {
+  const router = useRouter();
+  const t = useTranslations("formDetailsPage.banner");
 
-  const { mutate: deleteComment, isPending } = useDeleteComment(
-    formIdOrSlug,
-    commentId,
-  );
+  const [isOpen, setIsOpen] = useState(false);
+  const { mutate: deleteForm, isPending } = useDeleteForm(slug);
 
   const handleDelete = () =>
-    deleteComment(undefined, {
+    deleteForm(undefined, {
       onSuccess: () => {
+        setIsOpen(false);
         toast.success(t("deleteSuccess"));
+        router.replace("/forms");
       },
       onError: () => {
         toast.error(t("deleteError"));
@@ -42,7 +43,7 @@ export const DeleteCommentAlertDialog = ({
     });
 
   return (
-    <AlertDialog>
+    <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
       <AlertDialogTrigger asChild>
         <DropdownMenuItem
           disabled={isPending}
@@ -64,7 +65,7 @@ export const DeleteCommentAlertDialog = ({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDelete}>
+          <AlertDialogAction onClick={handleDelete} disabled={isPending}>
             {t("delete")}
           </AlertDialogAction>
         </AlertDialogFooter>
