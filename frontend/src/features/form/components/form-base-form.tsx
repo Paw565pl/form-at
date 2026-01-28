@@ -691,10 +691,10 @@ export const FormBaseForm = ({
                   )}
                 />
 
-                {typeof question.image === "string" && (
+                {typeof watchedQuestions[qIdx].image === "string" && (
                   <div className="relative h-48">
                     <Image
-                      src={question.image}
+                      src={watchedQuestions[qIdx].image}
                       alt={t("existingQuestionImageAlt", {
                         number: (qIdx + 1).toString(),
                       })}

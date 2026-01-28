@@ -12,6 +12,7 @@ import { FormImageWithFallback } from "@/core/form-image/form-image-with-fallbac
 import { FormDetailResponseDto } from "@/core/types/form";
 import { FormOptions } from "@/features/form-details/components/form-options";
 import { useFetchMySubmission } from "@/features/form-details/my-submission/hooks/use-fetch-my-submission";
+import { useSession } from "next-auth/react";
 import { useFormatter, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 
@@ -23,8 +24,11 @@ export const Banner = ({ form }: BannerProps) => {
   const t = useTranslations("formDetailsPage.banner");
   const format = useFormatter();
   const router = useRouter();
+  const { data: session } = useSession();
 
-  const { data: mySubmission } = useFetchMySubmission(form.slug);
+  const { data: mySubmission } = useFetchMySubmission(form.slug, {
+    enabled: !!session,
+  });
 
   return (
     <section className="relative flex h-64 w-full items-end md:h-110">

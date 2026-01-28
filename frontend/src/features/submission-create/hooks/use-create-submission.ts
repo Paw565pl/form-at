@@ -7,8 +7,8 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
-export const useCreateSubmission = (formIdOrSlug: string) => {
-  const mutation = useMutation<
+export const useCreateSubmission = (formIdOrSlug: string) =>
+  useMutation<
     SubmissionResponseDto,
     AxiosError<ErrorResponseDto>,
     SubmissionRequestDto
@@ -19,10 +19,11 @@ export const useCreateSubmission = (formIdOrSlug: string) => {
         `/api/v1/forms/${formIdOrSlug}/submissions`,
         request,
       );
-
       return data;
     },
+    onSettled: (_, __, ___, _____, { client }) => {
+      client.invalidateQueries({
+        queryKey: ["forms", formIdOrSlug, "submissions"],
+      });
+    },
   });
-
-  return mutation;
-};

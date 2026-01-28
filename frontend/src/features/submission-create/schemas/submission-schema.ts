@@ -46,7 +46,7 @@ export const getSubmissionSchema = (t: TranslateError) =>
               ctx.addIssue({
                 path: ["chosenAnswerIds"],
                 code: "custom",
-                message: "oneAnswerRequired",
+                message: t("errors.oneAnswerRequired"),
               });
             }
           }
