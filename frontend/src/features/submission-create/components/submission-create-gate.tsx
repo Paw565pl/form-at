@@ -5,23 +5,16 @@ import { FormDetailResponseDto } from "@/core/types/form";
 import { shuffleFormData } from "@/core/utils/shuffle-form-data";
 import { getFetchFormDetailsQueryOptions } from "@/features/form-details/hooks/use-fetch-form-details";
 import { getFetchPrivateFormDetailsQueryOptions } from "@/features/form-details/private-form/hooks/use-fetch-private-form-details";
+import { Submission } from "@/features/submission-create/components/submission";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
-import { useMemo } from "react";
+import { useEffect } from "react";
 
 interface SubmissionCreateGateProps {
   readonly slug: string;
 }
 
-const Submission = dynamic(
-  () =>
-    import("@/features/submission-create/components/submission").then(
-      (m) => m.Submission,
-    ),
-  { ssr: false },
-);
-
-export const SubmissionCreateGate = ({ slug }: SubmissionCreateGateProps) => {
+const SubmissionCreateGateInternal = ({ slug }: SubmissionCreateGateProps) => {
   const queryClient = getQueryClient();
   const router = useRouter();
 
@@ -33,14 +26,20 @@ export const SubmissionCreateGate = ({ slug }: SubmissionCreateGateProps) => {
   );
 
   const formData = privateForm ?? publicForm;
-  if (!formData) router.replace(`/forms/${slug}`);
 
-  const preparedFormData = useMemo(
-    () => (formData ? shuffleFormData(formData) : null),
-    [formData],
-  );
+  useEffect(() => {
+    if (!formData) router.replace(`/forms/${slug}`);
+  }, [slug, router, formData]);
 
-  if (!preparedFormData) return null;
+  if (!formData) return null;
+  const shuffledFormData = shuffleFormData(formData);
 
-  return <Submission formData={preparedFormData} />;
+  return <Submission formData={shuffledFormData} />;
 };
+
+export const SubmissionCreateGate = dynamic(
+  () => Promise.resolve(SubmissionCreateGateInternal),
+  {
+    ssr: false,
+  },
+);
