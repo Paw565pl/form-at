@@ -52,22 +52,16 @@ export const FormOptions = ({ slug, authorName }: FormOptionsProps) => {
         </Tooltip>
 
         <DropdownMenuContent align="end">
-          {isUserAuthor && (
-            <>
-              <DropdownMenuItem
-                onClick={() => router.push(`/forms/${slug}/submissions`)}
-              >
-                <ICONS.submissions />
-                {t("viewSubmissions")}
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => router.push(`/forms/${slug}/edit`)}
-              >
-                <ICONS.edit />
-                {t("edit")}
-              </DropdownMenuItem>
-            </>
-          )}
+          <DropdownMenuItem
+            onClick={() => router.push(`/forms/${slug}/submissions`)}
+          >
+            <ICONS.submissions />
+            {t("viewSubmissions")}
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => router.push(`/forms/${slug}/edit`)}>
+            <ICONS.edit />
+            {t("edit")}
+          </DropdownMenuItem>
 
           <DeleteFormAlertDialog slug={slug} />
         </DropdownMenuContent>
