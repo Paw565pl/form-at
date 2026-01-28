@@ -63,7 +63,7 @@ export const Banner = ({ form }: BannerProps) => {
         </Badge>
       )}
 
-      <div className="absolute right-2 bottom-2 flex flex-col items-center gap-2 md:right-4 md:bottom-4 md:flex-row">
+      <div className="absolute right-2 bottom-2 flex items-center gap-2 md:right-4 md:bottom-4">
         {!mySubmission && (
           <Button
             onClick={() => router.push(`/forms/${form.slug}/submissions/new`)}
