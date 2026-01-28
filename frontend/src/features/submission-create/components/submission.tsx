@@ -16,10 +16,12 @@ import {
   SubmissionAnswerRequestDto,
   SubmissionRequestDto,
 } from "@/core/types/submission";
+import { useFetchMySubmission } from "@/features/form-details/my-submission/hooks/use-fetch-my-submission";
 import { useCreateSubmission } from "@/features/submission-create/hooks/use-create-submission";
 import { getSubmissionSchema } from "@/features/submission-create/schemas/submission-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HttpStatusCode } from "axios";
+import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -37,9 +39,15 @@ export const Submission = ({ formData }: SubmissionProps) => {
   const t = useTranslations("submissionCreatePage");
   const gt = useTranslations("global");
   const router = useRouter();
+  const { data: session } = useSession();
 
   const createSubmission = useCreateSubmission(formData.id);
+  const { data: mySubmission, isLoading } = useFetchMySubmission(formData.id, {
+    enabled: !!session,
+  });
+
   const [isSubmissionComplete, setIsSubmissionComplete] = useState(false);
+  const hasSubmission = !!mySubmission || isSubmissionComplete;
 
   const formSchema = getSubmissionSchema(t);
   const form = useForm<FormData>({
@@ -59,6 +67,8 @@ export const Submission = ({ formData }: SubmissionProps) => {
   useEffect(() => {
     if (Object.keys(form.formState.errors).length > 0) form.trigger();
   }, [form, t]);
+
+  if (isLoading) return <p>{t("loading")}</p>;
 
   const onSubmit = (data: FormData) => {
     const request: SubmissionRequestDto = {
@@ -120,7 +130,7 @@ export const Submission = ({ formData }: SubmissionProps) => {
         </Card>
       </header>
 
-      {!isSubmissionComplete && (
+      {!hasSubmission && (
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-col gap-4"
@@ -290,7 +300,7 @@ export const Submission = ({ formData }: SubmissionProps) => {
         </form>
       )}
 
-      {isSubmissionComplete && (
+      {hasSubmission && (
         <Card className="flex flex-col items-center justify-center gap-5 p-6">
           <div className="bg-primary/10 flex h-16 w-16 items-center justify-center rounded-full">
             <ICONS.check className="text-primary h-10 w-10" />
