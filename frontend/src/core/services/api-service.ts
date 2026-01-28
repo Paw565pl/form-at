@@ -10,7 +10,6 @@ export const apiService = axios.create({
       ? serverEnv.API_BASE_URL
       : getClientEnv("NEXT_PUBLIC_API_BASE_URL"),
   timeout: 10_000,
-  adapter: "fetch",
 });
 
 apiService.interceptors.request.use(async (config) => {
