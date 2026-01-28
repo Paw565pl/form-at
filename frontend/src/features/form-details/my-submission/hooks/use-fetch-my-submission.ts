@@ -25,6 +25,7 @@ export const getFetchMySubmissionOptions = (
       return data;
     },
     staleTime: 1000 * 60 * 10, // 10 minutes
+    refetchOnWindowFocus: false,
     ...options,
   });
 
