@@ -1,4 +1,3 @@
-import { getQueryClient } from "@/core/lib/tanstack-query";
 import { apiService } from "@/core/services/api-service";
 import { ErrorResponseDto } from "@/core/types/error-response-dto";
 import {
@@ -7,14 +6,11 @@ import {
 } from "@/core/types/rating";
 
 import { getFetchFormDetailsQueryOptions } from "@/features/form-details/hooks/use-fetch-form-details";
-import { getFetchPrivateFormDetailsQueryOptions } from "@/features/form-details/private-form/hooks/use-fetch-private-form-details";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
-export const useCreateFormRating = (formIdOrSlug: string) => {
-  const queryClient = getQueryClient();
-
-  const mutation = useMutation<
+export const useCreateFormRating = (formIdOrSlug: string) =>
+  useMutation<
     FormRatingResponseDto,
     AxiosError<ErrorResponseDto>,
     FormRatingRequestDto
@@ -25,19 +21,11 @@ export const useCreateFormRating = (formIdOrSlug: string) => {
         `/api/v1/forms/${formIdOrSlug}/rating`,
         request,
       );
-
       return data;
     },
-    onSettled: () => {
-      queryClient.invalidateQueries({
+    onSettled: (_, __, ___, ____, { client }) => {
+      client.invalidateQueries({
         queryKey: getFetchFormDetailsQueryOptions(formIdOrSlug).queryKey,
-      });
-      queryClient.invalidateQueries({
-        queryKey: getFetchPrivateFormDetailsQueryOptions(formIdOrSlug, "")
-          .queryKey,
       });
     },
   });
-
-  return mutation;
-};

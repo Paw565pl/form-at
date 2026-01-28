@@ -20,7 +20,7 @@ import { getPrivateFormSchema } from "@/features/form-details/private-form/schem
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HttpStatusCode } from "axios";
 import { useTranslations } from "next-intl";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod";
 
@@ -32,6 +32,7 @@ interface PrivateFormProps {
 
 export const PrivateForm = ({ formIdOrSlug }: PrivateFormProps) => {
   const t = useTranslations("formDetailsPage.privateForm");
+  const [isAuthorized, setIsAuthorized] = useState(false);
 
   const privateFormSchema = getPrivateFormSchema(t);
   const form = useForm<PrivateFormData>({
@@ -53,21 +54,23 @@ export const PrivateForm = ({ formIdOrSlug }: PrivateFormProps) => {
     data: privateForm,
     refetch,
     isFetching,
-  } = useFetchPrivateFormDetails(formIdOrSlug, password, { enabled: false });
+  } = useFetchPrivateFormDetails(formIdOrSlug, password, {
+    enabled: isAuthorized,
+  });
 
   const onSubmit = async () => {
     form.clearErrors("password");
+    const { error } = await refetch();
 
-    const result = await refetch();
-
-    if (result.error) {
-      const message =
-        result.error.response?.data?.message ?? result.error.message;
-      if (result.error.response?.status === HttpStatusCode.Forbidden) {
+    if (error) {
+      if (error.response?.status === HttpStatusCode.Forbidden) {
         form.setError("password", { message: t("errors.invalidPassword") });
       } else {
+        const message = error.response?.data?.message ?? error.message;
         form.setError("password", { message });
       }
+    } else {
+      setIsAuthorized(true);
     }
   };
 
