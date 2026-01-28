@@ -35,12 +35,12 @@ export const SubmissionCreateGate = ({ slug }: SubmissionCreateGateProps) => {
   const formData = privateForm ?? publicForm;
   if (!formData) router.replace(`/forms/${slug}`);
 
-  const prepared = useMemo(
+  const preparedFormData = useMemo(
     () => (formData ? shuffleFormData(formData) : null),
     [formData],
   );
 
-  if (!prepared) return null;
+  if (!preparedFormData) return null;
 
-  return <Submission formData={prepared} />;
+  return <Submission formData={preparedFormData} />;
 };
