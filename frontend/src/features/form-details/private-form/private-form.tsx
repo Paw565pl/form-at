@@ -53,7 +53,7 @@ export const PrivateForm = ({ formIdOrSlug }: PrivateFormProps) => {
     data: privateForm,
     refetch,
     isFetching,
-  } = useFetchPrivateFormDetails(formIdOrSlug, password);
+  } = useFetchPrivateFormDetails(formIdOrSlug, password, { enabled: false });
 
   const onSubmit = async () => {
     form.clearErrors("password");
