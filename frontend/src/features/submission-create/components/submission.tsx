@@ -41,10 +41,13 @@ export const Submission = ({ formData }: SubmissionProps) => {
   const router = useRouter();
   const { data: session } = useSession();
 
-  const createSubmission = useCreateSubmission(formData.id);
-  const { data: mySubmission, isLoading } = useFetchMySubmission(formData.id, {
-    enabled: !!session,
-  });
+  const createSubmission = useCreateSubmission(formData.slug);
+  const { data: mySubmission, isLoading } = useFetchMySubmission(
+    formData.slug,
+    {
+      enabled: !!session,
+    },
+  );
 
   const [isSubmissionComplete, setIsSubmissionComplete] = useState(false);
   const hasSubmission = !!mySubmission || isSubmissionComplete;
