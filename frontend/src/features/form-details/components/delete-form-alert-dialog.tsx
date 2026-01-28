@@ -16,6 +16,7 @@ import { ICONS } from "@/core/config/icons";
 import { useDeleteForm } from "@/features/form-edit/hooks/use-delete-form";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { toast } from "sonner";
 
 interface DeleteFormAlertDialogProps {
@@ -26,11 +27,13 @@ export const DeleteFormAlertDialog = ({ slug }: DeleteFormAlertDialogProps) => {
   const router = useRouter();
   const t = useTranslations("formDetailsPage.banner");
 
+  const [isOpen, setIsOpen] = useState(false);
   const { mutate: deleteForm, isPending } = useDeleteForm(slug);
 
   const handleDelete = () =>
     deleteForm(undefined, {
       onSuccess: () => {
+        setIsOpen(false);
         toast.success(t("deleteSuccess"));
         router.replace("/forms");
       },
@@ -40,7 +43,7 @@ export const DeleteFormAlertDialog = ({ slug }: DeleteFormAlertDialogProps) => {
     });
 
   return (
-    <AlertDialog>
+    <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
       <AlertDialogTrigger asChild>
         <DropdownMenuItem
           disabled={isPending}

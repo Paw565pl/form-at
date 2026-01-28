@@ -12,6 +12,6 @@ export const useDeleteForm = (idOrSlug: string) =>
       return data;
     },
     onSettled: (_, __, ___, _____, { client }) => {
-      client.invalidateQueries({ queryKey: ["forms"] });
+      setTimeout(() => client.invalidateQueries({ queryKey: ["forms"] }), 100);
     },
   });
