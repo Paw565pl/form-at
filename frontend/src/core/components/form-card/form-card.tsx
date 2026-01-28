@@ -14,7 +14,7 @@ export const FormListItem = ({ form, showAuthor = false }: FormCardProps) => {
   const format = useFormatter();
 
   return (
-    <Link href={`/forms/${form.id}`} key={form.id}>
+    <Link href={`/forms/${form.slug}`} key={form.id}>
       <Card
         key={form.id}
         className="hover:border-primary gap-1 p-3 transition-all"
