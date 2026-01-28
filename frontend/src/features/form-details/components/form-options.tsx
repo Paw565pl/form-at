@@ -22,9 +22,14 @@ import { useRouter } from "next/navigation";
 interface FormOptionsProps {
   readonly slug: string;
   readonly authorName: string | null;
+  readonly saveSubmissions: boolean;
 }
 
-export const FormOptions = ({ slug, authorName }: FormOptionsProps) => {
+export const FormOptions = ({
+  slug,
+  authorName,
+  saveSubmissions,
+}: FormOptionsProps) => {
   const t = useTranslations("formDetailsPage.banner");
   const session = useSession();
   const router = useRouter();
@@ -52,12 +57,14 @@ export const FormOptions = ({ slug, authorName }: FormOptionsProps) => {
         </Tooltip>
 
         <DropdownMenuContent align="end">
-          <DropdownMenuItem
-            onClick={() => router.push(`/forms/${slug}/submissions`)}
-          >
-            <ICONS.submissions />
-            {t("viewSubmissions")}
-          </DropdownMenuItem>
+          {saveSubmissions && (
+            <DropdownMenuItem
+              onClick={() => router.push(`/forms/${slug}/submissions`)}
+            >
+              <ICONS.submissions />
+              {t("viewSubmissions")}
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem onClick={() => router.push(`/forms/${slug}/edit`)}>
             <ICONS.edit />
             {t("edit")}

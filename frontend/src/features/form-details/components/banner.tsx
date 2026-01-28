@@ -73,7 +73,11 @@ export const Banner = ({ form }: BannerProps) => {
           </Button>
         )}
 
-        <FormOptions slug={form.slug} authorName={form.authorName} />
+        <FormOptions
+          slug={form.slug}
+          authorName={form.authorName}
+          saveSubmissions={form.saveSubmissions}
+        />
       </div>
     </section>
   );
