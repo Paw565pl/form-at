@@ -1,5 +1,4 @@
 import { getQueryClient } from "@/core/lib/tanstack-query";
-import { FormDetailResponseDto } from "@/core/types/form";
 import { prefetchFormCommentsPages } from "@/features/form-details/comments/hooks/use-fetch-form-comments-pages";
 import { Form } from "@/features/form-details/components/form";
 import {
@@ -9,6 +8,7 @@ import {
 import { prefetchMySubmission } from "@/features/form-details/my-submission/hooks/use-fetch-my-submission";
 import { PrivateForm } from "@/features/form-details/private-form/private-form";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { HttpStatusCode } from "axios";
 
 export const FormDetailsPage = async ({
   params,
@@ -22,16 +22,18 @@ export const FormDetailsPage = async ({
     prefetchMySubmission(queryClient, slug),
   ]);
 
-  const publicForm = queryClient.getQueryData<FormDetailResponseDto>(
+  const publicFormQueryState = queryClient.getQueryState(
     getFetchFormDetailsQueryOptions(slug).queryKey,
   );
+  const isPrivateForm =
+    publicFormQueryState?.error?.status === HttpStatusCode.Forbidden;
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      {publicForm ? (
-        <Form formIdOrSlug={slug} />
-      ) : (
+      {isPrivateForm ? (
         <PrivateForm formIdOrSlug={slug} />
+      ) : (
+        <Form formIdOrSlug={slug} />
       )}
     </HydrationBoundary>
   );
