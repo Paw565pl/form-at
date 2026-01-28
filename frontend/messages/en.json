@@ -232,6 +232,7 @@
       "ratingDislike": "Dislike",
       "loading": "Loading comments...",
       "moreOptions": "More Options",
+      "deletedUser": "Deleted User",
       "errors": {
         "contentMin": "Comment must be at least {count} characters.",
         "contentMax": "Comment must be {count} characters or less."

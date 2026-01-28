@@ -66,12 +66,19 @@ export const Comments = ({ formIdOrSlug }: CommentsProps) => {
         {formCommentsPages?.pages.map((page) =>
           page.content.map((comment) => (
             <Card key={comment.id} className="relative flex flex-col p-4">
-              <Link href={`/users/${comment.authorName}`} className="w-fit">
+              {comment.authorName ? (
+                <Link href={`/users/${comment.authorName}`} className="w-fit">
+                  <header className="flex items-center gap-2">
+                    <UserImage className="h-10 w-10" />
+                    <h1 className="text-xl font-bold">{comment.authorName}</h1>
+                  </header>
+                </Link>
+              ) : (
                 <header className="flex items-center gap-2">
                   <UserImage className="h-10 w-10" />
-                  <h1 className="text-xl font-bold">{comment.authorName}</h1>
+                  <h1 className="text-xl font-bold">{t("deletedUser")}</h1>
                 </header>
-              </Link>
+              )}
 
               {editedCommentId === comment.id ? (
                 <EditCommentForm
