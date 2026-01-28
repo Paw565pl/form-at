@@ -70,7 +70,9 @@ export const Comments = ({ formIdOrSlug }: CommentsProps) => {
                 <Link href={`/users/${comment.authorName}`} className="w-fit">
                   <header className="flex items-center gap-2">
                     <UserImage className="h-10 w-10" />
-                    <h1 className="text-xl font-bold">{comment.authorName}</h1>
+                    <h1 className="text-xl font-bold hover:underline">
+                      {comment.authorName}
+                    </h1>
                   </header>
                 </Link>
               ) : (

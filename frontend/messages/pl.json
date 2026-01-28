@@ -194,7 +194,7 @@
       "submissionsCount": "{count, plural, one {# odpowiedź} other {# odpowiedzi}}",
       "estimatedTime": "Szacowany czas ukończenia: {time}",
       "privateForm": "Formularz zabezpieczony hasłem",
-      "createdInfo": "Utworzono {date} przez {name}",
+      "createdInfo": "Utworzono {date} przez",
       "deletedUser": "Usuniętego użytkownika"
     },
     "rating": {

@@ -9,6 +9,7 @@ import { FormDetailResponseDto, FormStatus } from "@/core/types/form";
 import { formatDuration } from "@/core/utils/format-duration";
 import { FormRating } from "@/features/form-details/rating/form-rating";
 import { useFormatter, useTranslations } from "next-intl";
+import Link from "next/link";
 
 interface DetailsProps {
   readonly form: FormDetailResponseDto;
@@ -67,8 +68,17 @@ export const Details = ({ form }: DetailsProps) => {
         <p className="ml-auto">
           {t("createdInfo", {
             date: format.dateTime(new Date(form.updatedAt), "long"),
-            name: form.authorName || t("deletedUser"),
-          })}
+          })}{" "}
+          {form.authorName ? (
+            <Link
+              href={`/users/${form.authorName}`}
+              className="hover:underline"
+            >
+              {form.authorName}
+            </Link>
+          ) : (
+            t("deletedUser")
+          )}
         </p>
       </div>
     </Card>

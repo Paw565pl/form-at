@@ -194,7 +194,7 @@
       "submissionsCount": "{count, plural, one {# submission} other {# submissions}}",
       "estimatedTime": "{time} to complete",
       "privateForm": "Form Requires Password",
-      "createdInfo": "Created {date} by {name}",
+      "createdInfo": "Created {date} by",
       "deletedUser": "Deleted User"
     },
     "rating": {
