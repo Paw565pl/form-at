@@ -14,7 +14,7 @@ import { useTranslations } from "next-intl";
 interface CommentOptionsProps {
   readonly formIdOrSlug: string;
   readonly commentId: string;
-  readonly authorName: string;
+  readonly authorName: string | null;
   readonly onEdit?: () => void;
 }
 
@@ -28,7 +28,7 @@ export const CommentOptions = ({
   const session = useSession();
 
   const user = session.data?.user;
-  const isUserAuthor = user?.name === authorName;
+  const isUserAuthor = user && user.name === authorName;
   const isUserAdmin = user?.roles.includes(Role.ADMIN);
 
   if (!isUserAuthor && !isUserAdmin) return null;

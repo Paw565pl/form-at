@@ -6,6 +6,7 @@ import { EditCommentForm } from "@/features/form-details/comments/components/edi
 import { useFetchFormCommentsPages } from "@/features/form-details/comments/hooks/use-fetch-form-comments-pages";
 import { RatingButtons } from "@/features/form-details/comments/rating/components/rating-buttons";
 import { useFormatter, useTranslations } from "next-intl";
+import Link from "next/link";
 import { useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 
@@ -65,10 +66,12 @@ export const Comments = ({ formIdOrSlug }: CommentsProps) => {
         {formCommentsPages?.pages.map((page) =>
           page.content.map((comment) => (
             <Card key={comment.id} className="relative flex flex-col p-4">
-              <header className="flex items-center gap-3">
-                <UserImage className="h-10 w-10" />
-                <h1 className="text-xl font-bold">{comment.authorName}</h1>
-              </header>
+              <Link href={`/users/${comment.authorName}`} className="w-fit">
+                <header className="flex items-center gap-2">
+                  <UserImage className="h-10 w-10" />
+                  <h1 className="text-xl font-bold">{comment.authorName}</h1>
+                </header>
+              </Link>
 
               {editedCommentId === comment.id ? (
                 <EditCommentForm
