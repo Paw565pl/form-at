@@ -21,7 +21,7 @@ export const MobileMenu = () => {
   const [open, setOpen] = useState(false);
 
   return (
-    <nav className="md:hidden">
+    <nav className="lg:hidden">
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
