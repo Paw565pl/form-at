@@ -40,7 +40,7 @@ export const FormListLoading = () => {
         {/* Title */}
         <Skeleton className="h-8 w-40" />
 
-        <div className="flex flex-col justify-between gap-2 sm:flex-wrap md:flex-row">
+        <div className="flex flex-col justify-between gap-2 md:flex-row">
           {/* Filters */}
           <div className="flex w-full flex-col gap-2 md:flex-row">
             {/* Search input */}
