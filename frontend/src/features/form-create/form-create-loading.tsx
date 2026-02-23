@@ -6,24 +6,24 @@ const QuestionCardSkeleton = () => (
     {/* Question header */}
     <div className="flex items-center justify-between gap-8">
       <Skeleton className="ml-3 h-5 w-28" />
-      <Skeleton className="h-8 w-8 rounded-md" />
+      <Skeleton className="h-8 w-8" />
     </div>
 
     {/* Question content input */}
     <div className="flex flex-col gap-2">
       <Skeleton className="mx-3 h-4 w-28" />
-      <Skeleton className="h-9 w-full rounded-md" />
+      <Skeleton className="h-9 w-full" />
     </div>
 
     {/* Image upload */}
     <div className="flex flex-col gap-2">
       <Skeleton className="mx-3 h-4 w-24" />
-      <Skeleton className="h-9 w-full rounded-md" />
+      <Skeleton className="h-9 w-full" />
     </div>
 
     {/* Type selector + required checkbox */}
     <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
-      <Skeleton className="h-9 w-full rounded-md sm:w-40" />
+      <Skeleton className="h-9 w-full sm:w-40" />
       <Skeleton className="h-5 w-24" />
     </div>
   </Card>
@@ -46,7 +46,7 @@ export const FormCreateLoading = () => {
               <Skeleton className="h-4 w-16" />
               <Skeleton className="h-3 w-12" />
             </div>
-            <Skeleton className="h-9 w-full rounded-md" />
+            <Skeleton className="h-9 w-full" />
           </div>
 
           {/* Description field */}
@@ -55,12 +55,12 @@ export const FormCreateLoading = () => {
               <Skeleton className="h-4 w-24" />
               <Skeleton className="h-3 w-12" />
             </div>
-            <Skeleton className="h-24 w-full rounded-md" />
+            <Skeleton className="h-24 w-full" />
           </div>
 
           {/* Status selector */}
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-            <Skeleton className="h-9 w-full rounded-md sm:w-48" />
+            <Skeleton className="h-9 w-full sm:w-48" />
             <Skeleton className="ml-3 h-4 w-40 sm:ml-0" />
           </div>
 
@@ -70,7 +70,7 @@ export const FormCreateLoading = () => {
               <Skeleton className="h-4 w-28" />
               <Skeleton className="h-3 w-12" />
             </div>
-            <Skeleton className="h-24 w-full rounded-md" />
+            <Skeleton className="h-24 w-full" />
           </div>
         </Card>
 
@@ -82,17 +82,17 @@ export const FormCreateLoading = () => {
               <Skeleton className="h-4 w-28" />
               <Skeleton className="h-3 w-16" />
             </div>
-            <Skeleton className="h-9 w-full rounded-md" />
+            <Skeleton className="h-9 w-full" />
           </div>
 
           {/* Language select */}
-          <Skeleton className="h-9 w-full rounded-md" />
+          <Skeleton className="h-9 w-full" />
 
           {/* Shuffle select */}
-          <Skeleton className="h-9 w-full rounded-md" />
+          <Skeleton className="h-9 w-full" />
 
           {/* Duration select */}
-          <Skeleton className="h-9 w-full rounded-md" />
+          <Skeleton className="h-9 w-full" />
 
           {/* Checkbox options */}
           <div className="flex items-center justify-between px-3">
@@ -114,8 +114,8 @@ export const FormCreateLoading = () => {
       <div className="flex items-center justify-between">
         <Skeleton className="ml-4 h-6 w-32" />
         <div className="flex gap-2">
-          <Skeleton className="h-8 w-28 rounded-md" />
-          <Skeleton className="h-8 w-8 rounded-md" />
+          <Skeleton className="h-8 w-28" />
+          <Skeleton className="h-8 w-8" />
         </div>
       </div>
 
@@ -126,7 +126,7 @@ export const FormCreateLoading = () => {
 
       {/* Submit button */}
       <div className="flex justify-end">
-        <Skeleton className="h-10 w-40 rounded-md" />
+        <Skeleton className="h-10 w-40" />
       </div>
     </section>
   );

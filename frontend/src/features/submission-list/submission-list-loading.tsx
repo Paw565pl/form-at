@@ -16,10 +16,10 @@ export const SubmissionListLoading = () => {
       {/* Header */}
       <header className="mb-2 flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center">
-          <Skeleton className="h-8 w-8 rounded-md" />
+          <Skeleton className="h-8 w-8" />
           <Skeleton className="ml-4 h-6 w-60" />
         </div>
-        <Skeleton className="ml-3 h-8 w-36 rounded-md" />
+        <Skeleton className="ml-3 h-8 w-36" />
       </header>
 
       {/* Submission cards */}

@@ -27,9 +27,9 @@ export const FormDetailsLoading = () => {
   return (
     <section className="px-5 py-10 lg:px-30">
       {/* Banner - mobile */}
-      <Skeleton className="h-64 w-full rounded-none md:hidden" />
+      <Skeleton className="h-64 w-full rounded-b-none md:hidden" />
       {/* Banner - desktop */}
-      <Skeleton className="hidden h-110 w-full rounded-none md:block" />
+      <Skeleton className="hidden h-110 w-full rounded-b-none md:block" />
 
       {/* Details card */}
       <Card className="flex min-h-50 w-full flex-col justify-between gap-4 rounded-t-none p-4">
@@ -63,7 +63,7 @@ export const FormDetailsLoading = () => {
       {/* Comments section */}
       <div className="flex flex-col gap-2 pt-4">
         {/* Create comment input */}
-        <Skeleton className="h-10 w-full rounded-md" />
+        <Skeleton className="h-10 w-full" />
 
         {Array.from({ length: COMMENT_SKELETON_COUNT }).map((_, i) => (
           <CommentSkeleton key={`comment-skeleton-${i}`} />

@@ -38,13 +38,13 @@ export const FormStatisticsLoading = () => {
       {/* Header */}
       <header className="mb-2 flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center">
-          <Skeleton className="h-8 w-8 rounded-md" />
+          <Skeleton className="h-8 w-8" />
           <div className="ml-4 flex flex-col gap-1">
             <Skeleton className="h-6 w-56" />
             <Skeleton className="h-4 w-40" />
           </div>
         </div>
-        <Skeleton className="ml-3 h-8 w-40 rounded-md" />
+        <Skeleton className="ml-3 h-8 w-40" />
       </header>
 
       {/* Question statistics cards */}

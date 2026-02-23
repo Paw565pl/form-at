@@ -15,7 +15,7 @@ const QuestionCardSkeleton = () => (
     </div>
 
     {/* Answer area */}
-    <Skeleton className="h-24 w-full rounded-md" />
+    <Skeleton className="h-24 w-full" />
   </Card>
 );
 
@@ -45,7 +45,7 @@ export const SubmissionCreateLoading = () => {
 
       {/* Submit button */}
       <footer className="flex justify-end gap-4">
-        <Skeleton className="h-10 w-40 rounded-md" />
+        <Skeleton className="h-10 w-40" />
       </footer>
     </section>
   );

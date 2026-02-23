@@ -27,9 +27,9 @@ export const SubmissionDetailsLoading = () => {
     <section className="flex w-full flex-col gap-4 px-5 py-10 lg:px-30">
       {/* Header: back button + author name + delete button */}
       <header className="flex gap-2">
-        <Skeleton className="h-8 w-8 rounded-md" />
+        <Skeleton className="h-8 w-8" />
         <Skeleton className="h-7 w-52" />
-        <Skeleton className="ml-auto h-8 w-8 rounded-md" />
+        <Skeleton className="ml-auto h-8 w-8" />
       </header>
 
       {/* Question cards */}

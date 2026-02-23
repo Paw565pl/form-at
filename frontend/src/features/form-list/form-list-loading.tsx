@@ -51,8 +51,8 @@ export const FormListLoading = () => {
 
           {/* View toggle buttons */}
           <div className="flex gap-2">
-            <Skeleton className="h-9 w-9 rounded-md" />
-            <Skeleton className="h-9 w-9 rounded-md" />
+            <Skeleton className="h-9 w-9" />
+            <Skeleton className="h-9 w-9" />
           </div>
         </div>
       </header>
