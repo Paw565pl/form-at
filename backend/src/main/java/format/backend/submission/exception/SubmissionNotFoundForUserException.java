@@ -9,6 +9,6 @@ public final class SubmissionNotFoundForUserException extends ApplicationExcepti
     public SubmissionNotFoundForUserException(@NonNull String formIdOrSlug) {
         super(
                 HttpStatus.NOT_FOUND,
-                String.format("You have not submitted your answers for form with id or slug '%s'", formIdOrSlug));
+                String.format("Form with id or slug '%s' has not been submitted by the user", formIdOrSlug));
     }
 }
