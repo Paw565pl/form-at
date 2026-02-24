@@ -229,7 +229,6 @@
       "ratingError": "Error submitting rating. Please try again.",
       "ratingLike": "Like",
       "ratingDislike": "Dislike",
-      "loading": "Loading comments...",
       "moreOptions": "More Options",
       "deletedUser": "Deleted User",
       "errors": {

@@ -229,7 +229,6 @@
       "ratingError": "Błąd podczas przesyłania oceny. Spróbuj ponownie.",
       "ratingLike": "Lubię to",
       "ratingDislike": "Nie lubię tego",
-      "loading": "Ładowanie komentarzy...",
       "moreOptions": "Więcej opcji",
       "deletedUser": "Usunięty użytkownik",
       "errors": {

@@ -122,9 +122,10 @@ export const Comments = ({ formIdOrSlug }: CommentsProps) => {
         )}
       </InfiniteScroll>
 
-      {isFetchingNextPage && (
-        <p className="text-muted-foreground text-center">{t("loading")}</p>
-      )}
+      {isFetchingNextPage &&
+        Array.from({ length: 3 }).map((_, i) => (
+          <CommentSkeleton key={`comment-skeleton-${i}`} />
+        ))}
     </div>
   );
 };
