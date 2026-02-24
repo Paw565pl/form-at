@@ -16,6 +16,7 @@ export interface FormListResponseDto {
   readonly allowsQuestionsPreview: boolean;
   readonly allowsGuestSubmissions: boolean;
   readonly saveSubmissions: boolean;
+  readonly showAnswersFeedback: boolean;
   readonly authorName: string | null;
   readonly submissionsCount: number;
   readonly questionsCount: number;
@@ -67,6 +68,7 @@ export interface FormDetailResponseDto {
   readonly allowsQuestionsPreview: boolean;
   readonly allowsGuestSubmissions: boolean;
   readonly saveSubmissions: boolean;
+  readonly showAnswersFeedback: boolean;
   readonly authorName: string | null;
   readonly submissionsCount: number;
   readonly questions: QuestionResponseDto[];
@@ -118,6 +120,7 @@ export interface FormRequestDto {
   allowsQuestionsPreview: boolean;
   allowsGuestSubmissions: boolean;
   saveSubmissions: boolean;
+  // showAnswersFeedback: boolean; TODO: uncomment when added to form and schema
   questions: QuestionRequestDto[];
 }
 

@@ -40,4 +40,6 @@ public record FormRequestDto(
 
         @NotNull(message = "SaveSubmissions cannot be null") @NonNull Boolean saveSubmissions,
 
+        @NotNull(message = "ShowAnswersFeedback cannot be null") @NonNull Boolean showAnswersFeedback,
+
         @Size(min = 3, max = 100, message = "Questions must contain between 3 and 100 items") @NotEmpty(message = "Questions cannot be empty") @Valid @NonNull List<@NonNull QuestionRequestDto> questions) {}

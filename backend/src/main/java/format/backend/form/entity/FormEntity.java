@@ -85,6 +85,9 @@ public class FormEntity {
     @Field(name = "saveSubmissions")
     private @NonNull Boolean saveSubmissions;
 
+    @Field(name = "showAnswersFeedback")
+    private @NonNull Boolean showAnswersFeedback;
+
     @Field(name = "questionsCount")
     private @NonNull Integer questionsCount;
 

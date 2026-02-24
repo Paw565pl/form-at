@@ -28,6 +28,8 @@ public record FormListAggregationResult(
 
         @NonNull Boolean saveSubmissions,
 
+        @NonNull Boolean showAnswersFeedback,
+
         @Nullable String authorName,
 
         @NonNull Long submissionsCount,

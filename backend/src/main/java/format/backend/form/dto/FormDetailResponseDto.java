@@ -36,6 +36,8 @@ public record FormDetailResponseDto(
 
         @NonNull Boolean saveSubmissions,
 
+        @NonNull Boolean showAnswersFeedback,
+
         @Nullable String authorName,
 
         @NonNull Long submissionsCount,
