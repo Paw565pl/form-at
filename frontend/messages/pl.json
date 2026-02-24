@@ -149,7 +149,6 @@
   },
   "formEditPage": {
     "pageTitle": "Edytuj formularz",
-    "loading": "Ładowanie...",
     "successMessage": "Pomyślnie zapisano formularz!",
     "errorMessage": "Wystąpił nieoczekiwany błąd.",
     "submit": "Zapisz",

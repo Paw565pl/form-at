@@ -149,7 +149,6 @@
   },
   "formEditPage": {
     "pageTitle": "Edit Form",
-    "loading": "Loading...",
     "successMessage": "Form updated successfully!",
     "errorMessage": "An unexpected error occurred.",
     "submit": "Submit",
