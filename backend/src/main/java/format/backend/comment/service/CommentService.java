@@ -125,11 +125,8 @@ public class CommentService {
 
         if (!Objects.equals(comment.getFormId(), formId)) throw new ResponseStatusException(NOT_FOUND);
 
-        val isCommentOwner = Optional.ofNullable(comment.getAuthorId())
-                .map(authorId -> Objects.equals(authorId, keycloakJwtClaims.sub()))
-                .orElse(false);
-        val isAdmin = keycloakJwtClaims.roles().contains(Role.ADMIN);
-        if (!(isCommentOwner || isAdmin)) throw new ResponseStatusException(FORBIDDEN);
+        val isCommentOwner = Objects.equals(comment.getAuthorId(), keycloakJwtClaims.sub());
+        if (!isCommentOwner) throw new ResponseStatusException(FORBIDDEN);
 
         comment.setContent(commentRequestDto.content());
 
@@ -153,11 +150,9 @@ public class CommentService {
 
         if (!Objects.equals(comment.getFormId(), formId)) throw new ResponseStatusException(NOT_FOUND);
 
-        val isCommentOwner = Optional.ofNullable(comment.getAuthorId())
-                .map(authorId -> Objects.equals(authorId, keycloakJwtClaims.sub()))
-                .orElse(false);
+        val isCommentOwner = Objects.equals(comment.getAuthorId(), keycloakJwtClaims.sub());
         val isAdmin = keycloakJwtClaims.roles().contains(Role.ADMIN);
-        if (!(isCommentOwner || isAdmin)) throw new ResponseStatusException(FORBIDDEN);
+        if (!isCommentOwner && !isAdmin) throw new ResponseStatusException(FORBIDDEN);
 
         commentRepository.delete(comment);
         commentRatingRepository.deleteAllByCommentId(comment.getId());
