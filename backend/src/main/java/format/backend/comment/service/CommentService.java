@@ -59,7 +59,7 @@ public class CommentService {
         val formId = ObjectId.isValid(formIdOrSlug)
                 ? formIdOrSlug
                 : formService.findOrThrow(formIdOrSlug).getId();
-        val criteria = Criteria.where("formId").is(new ObjectId(formId));
+        val criteria = Criteria.where("formId").is(formId);
 
         val total = mongoTemplate.count(Query.query(criteria), CommentEntity.class);
         if (total == 0) return Page.empty(pageable);
