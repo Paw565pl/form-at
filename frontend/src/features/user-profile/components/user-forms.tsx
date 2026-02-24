@@ -2,6 +2,7 @@ import { FormListItem } from "@/core/components/form-card/form-card";
 import { Button } from "@/core/components/ui/button";
 import { Empty, EmptyContent, EmptyHeader } from "@/core/components/ui/empty";
 import { ICONS } from "@/core/config/icons";
+import { FormListItemSkeleton } from "@/features/form-list/form-list-loading";
 import { useFetchFormPages } from "@/features/form-list/hooks/use-fetch-form-pages";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
@@ -21,7 +22,14 @@ export const UserForms = ({ authorId }: UserFormsProps) => {
   );
 
   if (isLoading)
-    return <p className="text-lg font-bold">{t("loadingForms")}</p>;
+    return (
+      <div className="flex flex-2 flex-col gap-2">
+        <h2 className="text-lg font-bold md:text-xl">{t("forms")}</h2>
+        {Array.from({ length: 3 }).map((_, i) => (
+          <FormListItemSkeleton key={`form-item-skeleton-${i}`} />
+        ))}
+      </div>
+    );
 
   const forms = formPages?.pages.at(0)?.content;
 

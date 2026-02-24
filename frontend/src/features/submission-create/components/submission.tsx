@@ -19,6 +19,7 @@ import {
 import { useFetchMySubmission } from "@/features/form-details/my-submission/hooks/use-fetch-my-submission";
 import { useCreateSubmission } from "@/features/submission-create/hooks/use-create-submission";
 import { getSubmissionSchema } from "@/features/submission-create/schemas/submission-schema";
+import { SubmissionCreateLoading } from "@/features/submission-create/submission-create-loading";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HttpStatusCode } from "axios";
 import { useSession } from "next-auth/react";
@@ -71,7 +72,7 @@ export const Submission = ({ formData }: SubmissionProps) => {
     if (Object.keys(form.formState.errors).length > 0) form.trigger();
   }, [form, t]);
 
-  if (isLoading) return <p>{t("loading")}</p>;
+  if (isLoading) return <SubmissionCreateLoading />;
 
   const onSubmit = (data: FormData) => {
     const request: SubmissionRequestDto = {

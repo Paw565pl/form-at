@@ -3,7 +3,7 @@ import { Skeleton } from "@/core/components/ui/skeleton";
 
 const SUBMISSION_CARD_SKELETON_COUNT = 8;
 
-const SubmissionCardSkeleton = () => (
+export const SubmissionCardSkeleton = () => (
   <Card className="flex-col-reverse justify-between gap-2 p-4 sm:flex-row">
     <Skeleton className="h-5 w-40" />
     <Skeleton className="h-4 w-48" />

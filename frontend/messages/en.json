@@ -170,7 +170,6 @@
         "invalidPassword": "Invalid password. Please try again."
       }
     },
-    "loading": "Loading...",
     "banner": {
       "cancel": "Cancel",
       "confirm": "Confirm",
@@ -242,10 +241,8 @@
     }
   },
   "userProfilePage": {
-    "loadingProfile": "Loading Profile...",
     "usersForms": {
       "forms": "Recently Created User's Forms",
-      "loadingForms": "Loading Recently Created User's Forms...",
       "noForms": "No forms found. Create your first form!",
       "createForm": "Create New Form"
     },
@@ -255,7 +252,6 @@
     "commentsCount": "Comments"
   },
   "submissionCreatePage": {
-    "loading": "Loading form...",
     "yourAnswer": "Enter your answer below",
     "submit": "Send",
     "submissionCreated": "Submission sent successfully!",
@@ -274,14 +270,12 @@
     "back": "Go Back to Form Details",
     "title": "Showing {count, plural, one {# submission} other {# submissions}} for {formName}",
     "end": "You have reached the end of the list.",
-    "loading": "Loading submissions...",
     "empty": "Nobody has completed this form yet.",
     "createdAt": "Submitted at {date}",
     "unknownAuthor": "Unknown Author",
     "viewStatistics": "Submission Statistics"
   },
   "submissionDetailsPage": {
-    "loading": "Loading submission details...",
     "submissionBy": "Submission by {authorName}",
     "submissionByUnknown": "Submission by Unknown User",
     "backToSubmissions": "Back to Submissions List",
@@ -294,7 +288,6 @@
   },
   "statisticsPage": {
     "back": "Go Back to Form Details",
-    "loading": "Loading statistics...",
     "noSubmissions": "Nobody has completed this form yet.",
     "title": "Submission Statistics for {formName}",
     "viewSubmissions": "Form Submissions",

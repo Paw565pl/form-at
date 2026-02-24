@@ -158,7 +158,6 @@
     "updateDialogDescription": "Wszystkie poprzednie odpowiedzi dla tego formularza zostaną usunięte. Ta akcja jest nieodwracalna."
   },
   "formDetailsPage": {
-    "loading": "Ładowanie...",
     "privateForm": {
       "enterThePassword": "Wprowadź hasło do formularza",
       "passwordDescription": "Ten formularz jest prywatny, poproś autora formularza o hasło dostępu.",
@@ -242,10 +241,8 @@
     }
   },
   "userProfilePage": {
-    "loadingProfile": "Ładowanie profilu użytkownika...",
     "usersForms": {
       "forms": "Ostatnio utworzone formularze użytkownika",
-      "loadingForms": "Ładowanie ostatnio utworzonych formularzy użytkownika...",
       "noForms": "Nie znaleziono formularzy. Utwórz swój pierwszy formularz!",
       "createForm": "Utwórz nowy formularz"
     },
@@ -255,7 +252,6 @@
     "commentsCount": "Komentarze"
   },
   "submissionCreatePage": {
-    "loading": "Ładowanie formularza...",
     "yourAnswer": "Wpisz swoją odpowiedź poniżej",
     "submit": "Wyślij",
     "submissionCreated": "Pomyślnie przesłano odpowiedź!",
@@ -274,14 +270,12 @@
     "back": "Wróć do szczegółów formularza",
     "title": "Wyświetlanie {count, plural, one {# odpowiedzi} other {# odpowiedzi}} dla {formName}",
     "end": "Dotarłeś do końca listy.",
-    "loading": "Ładowanie odpowiedzi...",
     "empty": "Nikt jeszcze nie wypełnił tego formularza.",
     "createdAt": "Przesłano {date}",
     "unknownAuthor": "Nieznany autor",
     "viewStatistics": "Statystyki odpowiedzi"
   },
   "submissionDetailsPage": {
-    "loading": "Ładowanie odpowiedzi...",
     "submissionBy": "Odpowiedź użytkownika {authorName}",
     "submissionByUnknown": "Odpowiedź nieznanego użytkownika",
     "backToSubmissions": "Powrót do listy odpowiedzi",
@@ -294,7 +288,6 @@
   },
   "statisticsPage": {
     "back": "Wróć do szczegółów formularza",
-    "loading": "Ładowanie statystyk...",
     "noSubmissions": "Nikt jeszcze nie wypełnił tego formularza.",
     "title": "Statystyki odpowiedzi dla {formName}",
     "viewSubmissions": "Odpowiedzi formularza",
