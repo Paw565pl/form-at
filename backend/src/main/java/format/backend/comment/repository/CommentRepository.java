@@ -10,9 +10,7 @@ import org.springframework.data.mongodb.repository.Update;
 public interface CommentRepository extends MongoRepository<@NonNull CommentEntity, @NonNull String> {
     int countAllByAuthorId(String authorId);
 
-    void deleteAllByFormId(String formId);
-
-    List<CommentEntity> findAllByFormId(String formId);
+    List<CommentEntity> deleteAllByFormId(String formId);
 
     @Query("{ '_id': ?0 }")
     @Update("{ '$inc': { 'ratingScore': ?1 } }")

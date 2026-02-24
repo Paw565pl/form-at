@@ -1,7 +1,5 @@
 package format.backend.form.entity;
 
-import format.backend.auth.entity.UserEntity;
-import format.backend.submission.entity.SubmissionEntity;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -15,13 +13,11 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.annotation.ReadOnlyProperty;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
@@ -30,11 +26,13 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 @Setter
 @RequiredArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@CompoundIndex(def = "{'status': 1, 'updatedAt': -1, '_id': 1}")
 @CompoundIndex(def = "{'status': 1, 'createdAt': -1, '_id': 1}")
+@CompoundIndex(def = "{'status': 1, 'updatedAt': -1, '_id': 1}")
 @CompoundIndex(def = "{'status': 1, 'questionsCount': -1, '_id': 1}")
 @CompoundIndex(def = "{'status': 1, 'submissionsCount': -1, '_id': 1}")
-@CompoundIndex(def = "{'authorId': 1, 'updatedAt': -1, '_id': 1}")
+@CompoundIndex(
+        def = "{'authorId': 1, 'updatedAt': -1, '_id': 1}",
+        partialFilter = "{'authorId': { '$type': 'string' }}")
 @Document(collection = "forms")
 public class FormEntity {
 
@@ -91,17 +89,12 @@ public class FormEntity {
     @Field(name = "questionsCount")
     private @NonNull Integer questionsCount;
 
-    @Field(name = "submissionsCount")
-    private @NonNull Long submissionsCount = 0L;
-
     @Field(name = "questions")
     @Setter(AccessLevel.NONE)
     private @NonNull List<@NonNull QuestionEntity> questions = new ArrayList<>();
 
-    @ReadOnlyProperty
-    @DocumentReference(lazy = true, lookup = "{'formId':?#{#self._id} }")
-    @Setter(AccessLevel.NONE)
-    private @NonNull List<@NonNull SubmissionEntity> submissions = new ArrayList<>();
+    @Field(name = "submissionsCount")
+    private @NonNull Long submissionsCount = 0L;
 
     @Field("ratingsCount")
     private @NonNull Long ratingsCount = 0L;
@@ -109,10 +102,9 @@ public class FormEntity {
     @Field("ratingsSum")
     private @NonNull Long ratingsSum = 0L;
 
-    @Indexed
-    @DocumentReference(lazy = true)
+    @Indexed(partialFilter = "{'authorId': { '$type': 'string' }}")
     @Field(name = "authorId")
-    private @Nullable UserEntity author;
+    private @Nullable String authorId;
 
     @CreatedDate
     @Field(name = "createdAt")
@@ -128,12 +120,12 @@ public class FormEntity {
 
     @Transient
     public @NonNull Language getLanguage() {
-        return Language.fromMongoValue(language)
+        return Language.fromValue(language)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid language mongo value: " + language));
     }
 
     public void setLanguage(@NonNull Language language) {
-        this.language = language.getMongoValue();
+        this.language = language.getValue();
     }
 
     @Transient
@@ -141,12 +133,12 @@ public class FormEntity {
         return Duration.ofSeconds(estimatedDurationSeconds);
     }
 
+    public void setEstimatedDuration(@NonNull Duration estimatedDuration) {
+        this.estimatedDurationSeconds = (int) estimatedDuration.toSeconds();
+    }
+
     @Transient
     public @Nullable Double getRatingAvg() {
         return ratingsCount == 0 ? null : (double) ratingsSum / ratingsCount;
-    }
-
-    public void setEstimatedDuration(@NonNull Duration estimatedDuration) {
-        this.estimatedDurationSeconds = (int) estimatedDuration.toSeconds();
     }
 }

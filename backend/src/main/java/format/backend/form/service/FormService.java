@@ -3,9 +3,9 @@ package format.backend.form.service;
 import com.github.pemistahl.lingua.api.LanguageDetector;
 import com.github.slugify.Slugify;
 import format.backend.auth.entity.Role;
-import format.backend.auth.entity.UserEntity;
 import format.backend.auth.jwt.KeycloakJwtClaims;
 import format.backend.auth.service.UserService;
+import format.backend.comment.entity.CommentEntity;
 import format.backend.comment.repository.CommentRepository;
 import format.backend.comment_rating.repository.CommentRatingRepository;
 import format.backend.core.exception.ValidationException;
@@ -26,14 +26,18 @@ import format.backend.form.mapper.FormMapper;
 import format.backend.form.mapper.QuestionMapper;
 import format.backend.form.repository.FormRepository;
 import format.backend.form.validator.FormValidator;
+import format.backend.form_rating.entity.FormRatingEntity;
 import format.backend.form_rating.repository.FormRatingRepository;
 import format.backend.submission.repository.SubmissionRepository;
 import format.backend.upload.service.UploadService;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.TreeMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -84,9 +88,14 @@ public class FormService {
     private final UserService userService;
     private final UploadService uploadService;
 
-    private static final Map<String, String> sortFields = Stream.of(
-                    "estimatedDuration", "questionsCount", "submissionsCount", "createdAt", "updatedAt")
-            .collect(Collectors.toUnmodifiableMap(String::toLowerCase, Function.identity()));
+    private static final Map<String, String> SORT_FIELDS;
+
+    static {
+        val treeMap = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
+        List.of("estimatedDuration", "questionsCount", "submissionsCount", "createdAt", "updatedAt")
+                .forEach(v -> treeMap.put(v, v));
+        SORT_FIELDS = Collections.unmodifiableMap(treeMap);
+    }
 
     public Page<@NonNull FormListResponseDto> findAllPublic(FormFilterDto filterDto, Pageable pageable) {
         val operations = new ArrayList<AggregationOperation>();
@@ -98,8 +107,8 @@ public class FormService {
             val searchQueryLanguage = languageDetector.detectLanguageOf(trimmedSearchQuery);
             val mongoSearchLanguage =
                     switch (searchQueryLanguage) {
-                        case ENGLISH -> Language.EN.getMongoValue();
-                        default -> Language.PL.getMongoValue();
+                        case ENGLISH -> Language.EN.getValue();
+                        default -> Language.PL.getValue();
                     };
 
             val textMatch = Aggregation.match(TextCriteria.forLanguage(mongoSearchLanguage)
@@ -112,7 +121,7 @@ public class FormService {
 
         if (filterDto.language() != null) {
             val languageMatch = Aggregation.match(
-                    Criteria.where("language").is(filterDto.language().getMongoValue()));
+                    Criteria.where("language").is(filterDto.language().getValue()));
             operations.add(languageMatch);
         }
 
@@ -195,9 +204,8 @@ public class FormService {
     private List<Sort.Order> getSortOrders(Pageable pageable, boolean isTextQuery) {
         val textScoreSortOrder = isTextQuery ? Stream.of(Sort.Order.desc("score")) : Stream.<Sort.Order>empty();
         val pageableSortOrders = pageable.getSort().stream()
-                .filter(o -> sortFields.containsKey(o.getProperty().toLowerCase()))
-                .map(o -> new Sort.Order(
-                        o.getDirection(), sortFields.get(o.getProperty().toLowerCase())));
+                .filter(o -> SORT_FIELDS.containsKey(o.getProperty()))
+                .map(o -> new Sort.Order(o.getDirection(), SORT_FIELDS.get(o.getProperty())));
         val tieBreaker = Stream.of(Sort.Order.asc("_id"));
 
         return Stream.of(textScoreSortOrder, pageableSortOrders, tieBreaker)
@@ -210,11 +218,11 @@ public class FormService {
         return form.orElseThrow(() -> new FormNotFoundException(idOrSlug));
     }
 
-    private @Nullable Double findUserRating(@Nullable String userId, String formId) {
+    private @Nullable Integer findUserRating(@Nullable String userId, String formId) {
         if (userId == null) return null;
         return formRatingRepository
                 .findByFormIdAndAuthorId(formId, userId)
-                .map(r -> (double) r.getValue())
+                .map(FormRatingEntity::getValue)
                 .orElse(null);
     }
 
@@ -230,14 +238,11 @@ public class FormService {
         if (!permitsAnonymousAccess) {
             if (userId == null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 
-            val isAuthor = Optional.ofNullable(form.getAuthor())
-                    .map(a -> Objects.equals(a.getId(), userId))
-                    .orElse(false);
+            val isAuthor = Objects.equals(form.getAuthorId(), userId);
             if (!isAuthor) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
         val userRating = findUserRating(userId, form.getId());
-
         return mapToDetailResponseDto(form, userRating);
     }
 
@@ -257,16 +262,16 @@ public class FormService {
         return mapToDetailResponseDto(formEntity, userRating);
     }
 
-    private FormDetailResponseDto mapToDetailResponseDto(FormEntity formEntity, @Nullable Double userRating) {
+    private FormDetailResponseDto mapToDetailResponseDto(FormEntity formEntity, @Nullable Integer userRating) {
         val questions = formEntity.getQuestions().stream()
                 .map(q -> questionMapper.toResponseDto(q, uploadService.getFileUrl(q.getImageKey())))
                 .toList();
-        val authorName = Optional.ofNullable(formEntity.getAuthor())
-                .map(UserEntity::getUsername)
+        val authorName = Optional.ofNullable(formEntity.getAuthorId())
+                .map(authorId -> userService.findOrThrow(authorId).getUsername())
                 .orElse(null);
 
         return formMapper.toDetailResponseDto(
-                formEntity, uploadService.getFileUrl(formEntity.getThumbnailKey()), authorName, questions, userRating);
+                formEntity, uploadService.getFileUrl(formEntity.getThumbnailKey()), questions, authorName, userRating);
     }
 
     @Transactional
@@ -278,12 +283,10 @@ public class FormService {
         val passwordHash = Optional.ofNullable(requestDto.password())
                 .map(passwordEncoder::encode)
                 .orElse(null);
-
-        val author = userService.findOrThrow(keycloakJwtClaims.sub());
-        val formEntity = formMapper.toEntity(requestDto, slug, passwordHash, author);
+        val formEntity = formMapper.toEntity(requestDto, slug, passwordHash, keycloakJwtClaims.sub());
 
         try {
-            val response = mapToDetailResponseDto(formRepository.save(formEntity), null);
+            val savedFormEntity = formRepository.save(formEntity);
 
             val imageKeys = Stream.concat(
                             Stream.ofNullable(requestDto.thumbnailKey()),
@@ -292,7 +295,7 @@ public class FormService {
                     .collect(Collectors.toUnmodifiableSet());
             uploadService.commitUploads(imageKeys);
 
-            return response;
+            return mapToDetailResponseDto(savedFormEntity, null);
         } catch (DataIntegrityViolationException e) {
             throw new FormAlreadyExistsException(requestDto.name());
         }
@@ -301,20 +304,17 @@ public class FormService {
     @Transactional
     public FormDetailResponseDto update(
             String idOrSlug, KeycloakJwtClaims keycloakJwtClaims, FormRequestDto requestDto) {
-        val oldFormEntity = findOrThrow(idOrSlug);
+        val formEntity = findOrThrow(idOrSlug);
 
-        val isFormOwner = Optional.ofNullable(oldFormEntity.getAuthor())
-                .map(a -> Objects.equals(a.getId(), keycloakJwtClaims.sub()))
-                .orElse(false);
-        val isAdmin = keycloakJwtClaims.roles().contains(Role.ADMIN);
-        if (!(isFormOwner || isAdmin)) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        val isFormOwner = Objects.equals(formEntity.getAuthorId(), keycloakJwtClaims.sub());
+        if (!isFormOwner) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 
         val errors = formValidator.validate(requestDto);
         if (!errors.isEmpty()) throw new ValidationException(errors);
 
         val oldImageKeys = Stream.concat(
-                        Stream.ofNullable(oldFormEntity.getThumbnailKey()),
-                        oldFormEntity.getQuestions().stream().map(QuestionEntity::getImageKey))
+                        Stream.ofNullable(formEntity.getThumbnailKey()),
+                        formEntity.getQuestions().stream().map(QuestionEntity::getImageKey))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toUnmodifiableSet());
 
@@ -323,16 +323,13 @@ public class FormService {
                 .map(passwordEncoder::encode)
                 .orElse(null);
 
-        val updatedFormEntity = formMapper.updateEntityFromDto(requestDto, oldFormEntity, slug, passwordHash);
+        val updatedFormEntity = formMapper.updateEntityFromDto(requestDto, formEntity, slug, passwordHash);
         updatedFormEntity.setSubmissionsCount(0L);
 
         try {
             val savedFormEntity = formRepository.save(updatedFormEntity);
             submissionRepository.deleteAllByFormId(savedFormEntity.getId());
 
-            val userRating = findUserRating(keycloakJwtClaims.sub(), updatedFormEntity.getId());
-
-            val response = mapToDetailResponseDto(savedFormEntity, userRating);
             val requestImageKeys = Stream.concat(
                             Stream.ofNullable(requestDto.thumbnailKey()),
                             requestDto.questions().stream().map(QuestionRequestDto::imageKey))
@@ -349,7 +346,8 @@ public class FormService {
                     .collect(Collectors.toUnmodifiableSet());
             uploadService.deleteAllByKeys(outdatedImageKeys);
 
-            return response;
+            val userRating = findUserRating(keycloakJwtClaims.sub(), updatedFormEntity.getId());
+            return mapToDetailResponseDto(savedFormEntity, userRating);
         } catch (DataIntegrityViolationException e) {
             throw new FormAlreadyExistsException(requestDto.name());
         }
@@ -359,11 +357,9 @@ public class FormService {
     public void delete(String idOrSlug, KeycloakJwtClaims keycloakJwtClaims) {
         val formEntity = findOrThrow(idOrSlug);
 
-        val isFormOwner = Optional.ofNullable(formEntity.getAuthor())
-                .map(a -> Objects.equals(a.getId(), keycloakJwtClaims.sub()))
-                .orElse(false);
+        val isFormOwner = Objects.equals(formEntity.getAuthorId(), keycloakJwtClaims.sub());
         val isAdmin = keycloakJwtClaims.roles().contains(Role.ADMIN);
-        if (!(isFormOwner || isAdmin)) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        if (!isFormOwner && !isAdmin) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 
         val imageKeys = Stream.concat(
                         Stream.ofNullable(formEntity.getThumbnailKey()),
@@ -371,13 +367,13 @@ public class FormService {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toUnmodifiableSet());
 
-        val comments = commentRepository.findAllByFormId(formEntity.getId());
-
         formRepository.delete(formEntity);
         uploadService.deleteAllByKeys(imageKeys);
 
-        commentRepository.deleteAllByFormId(formEntity.getId());
-        commentRatingRepository.deleteAllByCommentIn(comments);
+        val comments = commentRepository.deleteAllByFormId(formEntity.getId());
+        val commentIds = comments.stream().map(CommentEntity::getId).toList();
+        commentRatingRepository.deleteAllByCommentIdIn(commentIds);
+
         submissionRepository.deleteAllByFormId(formEntity.getId());
         formRatingRepository.deleteAllByFormId(formEntity.getId());
     }

@@ -46,7 +46,7 @@ public record FormDetailResponseDto(
 
         @Nullable Double ratingAvg,
 
-        @Nullable Double userRating,
+        @Nullable Integer userRating,
 
         @Nullable String authorName,
 
