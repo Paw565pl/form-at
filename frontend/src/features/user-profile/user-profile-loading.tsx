@@ -1,21 +1,8 @@
 import { Card } from "@/core/components/ui/card";
 import { Skeleton } from "@/core/components/ui/skeleton";
+import { FormListItemSkeleton } from "@/features/form-list/form-list-loading";
 
 const FORM_LIST_ITEM_COUNT = 3;
-
-const FormListItemSkeleton = () => (
-  <Card className="flex flex-row gap-3 p-3">
-    <div className="flex flex-1 flex-col gap-1.5">
-      <Skeleton className="h-4 w-3/5" />
-      <Skeleton className="h-3.5 w-full" />
-
-      <div className="flex justify-between">
-        <Skeleton className="h-3 w-2/5" />
-        <Skeleton className="h-3 w-1/5" />
-      </div>
-    </div>
-  </Card>
-);
 
 export const UserProfileLoading = () => {
   return (

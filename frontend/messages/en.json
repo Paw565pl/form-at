@@ -52,7 +52,6 @@
     "questions": "{count, plural, one {# question} other {# questions}}",
     "submissions": "{count, plural, one {# submission} other {# submissions}}",
     "end": "You have reached the end of the list.",
-    "loading": "Loading forms...",
     "empty": "No forms found for given criteria."
   },
   "formBaseForm": {
