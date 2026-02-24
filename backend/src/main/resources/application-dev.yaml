@@ -28,13 +28,6 @@ logging:
           protocol:
             command: debug
 
-springdoc:
-  api-docs:
-    path: /api/docs
-
-  swagger-ui:
-    path: /swagger-ui.html
-
 cors:
   allowed-origins: "*"
 
