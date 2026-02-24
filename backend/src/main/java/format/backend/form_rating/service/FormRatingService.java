@@ -11,7 +11,6 @@ import format.backend.form_rating.repository.FormRatingRepository;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,9 +27,7 @@ public class FormRatingService {
     @Transactional
     public FormRatingResponseDto add(
             String formIdOrSlug, KeycloakJwtClaims keycloakJwtClaims, FormRatingRequestDto formRatingRequestDto) {
-        val formId = ObjectId.isValid(formIdOrSlug)
-                ? formIdOrSlug
-                : formService.findOrThrow(formIdOrSlug).getId();
+        val formId = formService.findOrThrow(formIdOrSlug).getId();
 
         val newRatingValue = formRatingRequestDto.ratingValue();
         val existingRatingOpt = formRatingRepository.findByFormIdAndAuthorId(formId, keycloakJwtClaims.sub());
@@ -63,9 +60,7 @@ public class FormRatingService {
 
     @Transactional
     public void delete(String formIdOrSlug, KeycloakJwtClaims keycloakJwtClaims) {
-        val formId = ObjectId.isValid(formIdOrSlug)
-                ? formIdOrSlug
-                : formService.findOrThrow(formIdOrSlug).getId();
+        val formId = formService.findOrThrow(formIdOrSlug).getId();
         val existingRating = formRatingRepository
                 .findByFormIdAndAuthorId(formId, keycloakJwtClaims.sub())
                 .orElseThrow(() -> new FormNotRatedByUserException(formIdOrSlug));
