@@ -30,9 +30,7 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 @CompoundIndex(def = "{'status': 1, 'updatedAt': -1, '_id': 1}")
 @CompoundIndex(def = "{'status': 1, 'questionsCount': -1, '_id': 1}")
 @CompoundIndex(def = "{'status': 1, 'submissionsCount': -1, '_id': 1}")
-@CompoundIndex(
-        def = "{'authorId': 1, 'updatedAt': -1, '_id': 1}",
-        partialFilter = "{'authorId': { '$type': 'string' }}")
+@CompoundIndex(def = "{'authorId': 1, 'createdAt': -1, '_id': 1}", partialFilter = "{'authorId': {'$type': 'string'}}")
 @Document(collection = "forms")
 public class FormEntity {
 
@@ -102,7 +100,7 @@ public class FormEntity {
     @Field("ratingsSum")
     private @NonNull Long ratingsSum = 0L;
 
-    @Indexed(partialFilter = "{'authorId': { '$type': 'string' }}")
+    @Indexed(partialFilter = "{'authorId': {'$type': 'string'}}")
     @Field(name = "authorId")
     private @Nullable String authorId;
 

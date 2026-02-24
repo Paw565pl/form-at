@@ -30,7 +30,6 @@ import format.backend.form_rating.entity.FormRatingEntity;
 import format.backend.form_rating.repository.FormRatingRepository;
 import format.backend.submission.repository.SubmissionRepository;
 import format.backend.upload.service.UploadService;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
