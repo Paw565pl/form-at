@@ -13,10 +13,12 @@ public enum RatingType {
     private final int value;
 
     public static Optional<RatingType> fromValue(int value) {
-        return switch (value) {
-            case 1 -> Optional.of(UPVOTE);
-            case -1 -> Optional.of(DOWNVOTE);
-            default -> Optional.empty();
-        };
+        for (var ratingType : values()) {
+            if (ratingType.getValue() == value) {
+                return Optional.of(ratingType);
+            }
+        }
+
+        return Optional.empty();
     }
 }

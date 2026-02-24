@@ -1,9 +1,6 @@
 package format.backend.auth.entity;
 
-import java.util.Arrays;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -15,9 +12,6 @@ public enum Role {
 
     private final String value;
 
-    private static final Map<String, Role> valueToRoleMap =
-            Arrays.stream(values()).collect(Collectors.toMap(r -> r.value.toLowerCase(), r -> r));
-
     /**
      * Returns the role with prefix "ROLE_".
      */
@@ -26,6 +20,14 @@ public enum Role {
     }
 
     public static Optional<Role> fromValue(String value) {
-        return Optional.ofNullable(valueToRoleMap.get(value.toLowerCase()));
+        if (value == null) return Optional.empty();
+
+        for (var role : values()) {
+            if (role.getValue().equalsIgnoreCase(value)) {
+                return Optional.of(role);
+            }
+        }
+
+        return Optional.empty();
     }
 }
