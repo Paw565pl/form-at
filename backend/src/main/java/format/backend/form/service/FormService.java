@@ -1,5 +1,6 @@
 package format.backend.form.service;
 
+import com.github.pemistahl.lingua.api.LanguageDetector;
 import com.github.slugify.Slugify;
 import format.backend.auth.entity.Role;
 import format.backend.auth.entity.UserEntity;
@@ -17,6 +18,7 @@ import format.backend.form.dto.QuestionRequestDto;
 import format.backend.form.entity.FormEntity;
 import format.backend.form.entity.FormListAggregationResult;
 import format.backend.form.entity.FormStatus;
+import format.backend.form.entity.Language;
 import format.backend.form.entity.QuestionEntity;
 import format.backend.form.exception.FormAlreadyExistsException;
 import format.backend.form.exception.FormNotFoundException;
@@ -68,6 +70,7 @@ public class FormService {
     private final MongoTemplate mongoTemplate;
     private final PasswordEncoder passwordEncoder;
     private final Slugify slugify;
+    private final LanguageDetector languageDetector;
 
     private final FormRepository formRepository;
     private final FormMapper formMapper;
@@ -91,8 +94,16 @@ public class FormService {
         val isTextQuery =
                 filterDto.searchQuery() != null && !filterDto.searchQuery().isBlank();
         if (isTextQuery) {
-            val textMatch = Aggregation.match(TextCriteria.forDefaultLanguage()
-                    .matchingPhrase(filterDto.searchQuery())
+            val trimmedSearchQuery = filterDto.searchQuery().trim();
+            val searchQueryLanguage = languageDetector.detectLanguageOf(trimmedSearchQuery);
+            val mongoSearchLanguage =
+                    switch (searchQueryLanguage) {
+                        case ENGLISH -> Language.EN.getMongoValue();
+                        default -> Language.PL.getMongoValue();
+                    };
+
+            val textMatch = Aggregation.match(TextCriteria.forLanguage(mongoSearchLanguage)
+                    .matchingPhrase(trimmedSearchQuery)
                     .caseSensitive(false));
             operations.add(textMatch);
         }

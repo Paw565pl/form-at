@@ -72,6 +72,7 @@ repositories {
 val mapstructVersion = "1.6.3"
 val slugifyVersion = "3.0.7"
 val minioVersion = "8.6.0"
+val linguaVersion = "1.2.2"
 val restAssuredVersion = "6.0.0"
 val dataFakerVersion = "2.5.4"
 val sonarJavaVersion = "8.9.4.40912"
@@ -86,6 +87,7 @@ dependencies {
     implementation("org.mapstruct:mapstruct:$mapstructVersion")
     implementation("com.github.slugify:slugify:$slugifyVersion")
     implementation("io.minio:minio:$minioVersion")
+    implementation("com.github.pemistahl:lingua:$linguaVersion")
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
