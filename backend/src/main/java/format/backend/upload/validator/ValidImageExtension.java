@@ -43,7 +43,7 @@ class ImageExtensionValidator implements ConstraintValidator<ValidImageExtension
         val trimmedValue = value.trim();
         val lastDotIndex = trimmedValue.lastIndexOf('.');
         val fileExtension = lastDotIndex == -1 ? trimmedValue : trimmedValue.substring(lastDotIndex + 1);
-        val isValid = ImageExtension.fromStringValue(fileExtension).isPresent();
+        val isValid = ImageExtension.fromExtensionValue(fileExtension).isPresent();
 
         if (!isValid) {
             val errorMessage = String.format(
