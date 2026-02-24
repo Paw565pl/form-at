@@ -32,15 +32,15 @@ public record FormListResponseDto(
 
         @NonNull Boolean showAnswersFeedback,
 
-        @Nullable String authorName,
+        @NonNull Integer questionsCount,
 
         @NonNull Long submissionsCount,
-
-        @NonNull Integer questionsCount,
 
         @NonNull Long ratingsCount,
 
         @Nullable Double ratingAvg,
+
+        @Nullable String authorName,
 
         @NonNull Instant createdAt,
 

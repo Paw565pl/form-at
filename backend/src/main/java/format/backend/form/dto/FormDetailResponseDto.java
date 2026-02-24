@@ -38,17 +38,17 @@ public record FormDetailResponseDto(
 
         @NonNull Boolean showAnswersFeedback,
 
-        @Nullable String authorName,
+        @NonNull List<@NonNull QuestionResponseDto> questions,
 
         @NonNull Long submissionsCount,
-
-        @NonNull List<@NonNull QuestionResponseDto> questions,
 
         @NonNull Long ratingsCount,
 
         @Nullable Double ratingAvg,
 
         @Nullable Double userRating,
+
+        @Nullable String authorName,
 
         @NonNull Instant createdAt,
 
