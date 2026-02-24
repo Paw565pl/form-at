@@ -10,8 +10,8 @@ export interface FormListResponseDto {
   readonly slug: string;
   readonly description: string | null;
   readonly language: string;
-  readonly status: string;
-  readonly estimatedDuration: string;
+  readonly status: FormStatus;
+  readonly estimatedDuration: FormEstimatedDuration;
   readonly thumbnail: string | null;
   readonly allowsQuestionsPreview: boolean;
   readonly allowsGuestSubmissions: boolean;
@@ -21,7 +21,7 @@ export interface FormListResponseDto {
   readonly submissionsCount: number;
   readonly questionsCount: number;
   readonly ratingsCount: number;
-  readonly averageRating: number | null;
+  readonly ratingAvg: number | null;
   readonly createdAt: string;
   readonly updatedAt: string;
 }
