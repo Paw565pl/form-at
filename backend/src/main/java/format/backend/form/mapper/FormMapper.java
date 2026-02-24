@@ -35,6 +35,7 @@ public interface FormMapper {
             target = "ratingAvg",
             expression =
                     "java(formEntity.getRatingAvg() == null ? null : Math.round(formEntity.getRatingAvg() * 10) / 10.0)")
+    @Mapping(target = "questions", source = "questions")
     FormDetailResponseDto toDetailResponseDto(
             FormEntity formEntity,
             String thumbnail,
