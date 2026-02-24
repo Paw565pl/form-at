@@ -5,11 +5,11 @@ import { CreateCommentForm } from "@/features/form-details/comments/components/c
 import { EditCommentForm } from "@/features/form-details/comments/components/edit-comment-form";
 import { useFetchFormCommentsPages } from "@/features/form-details/comments/hooks/use-fetch-form-comments-pages";
 import { RatingButtons } from "@/features/form-details/comments/rating/components/rating-buttons";
+import { CommentSkeleton } from "@/features/form-details/form-details-loading";
 import { useFormatter, useTranslations } from "next-intl";
 import Link from "next/link";
 import { useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { CommentSkeleton } from "../form-details-loading";
 
 interface CommentsProps {
   readonly formIdOrSlug: string;
