@@ -41,7 +41,7 @@ public class CommentRatingEntity {
     @Nullable private String authorId;
 
     @Field(name = "type", targetType = FieldType.INT32)
-    private int type;
+    private Integer type;
 
     @CreatedDate
     @Field("createdAt")
