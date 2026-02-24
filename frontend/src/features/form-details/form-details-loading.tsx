@@ -3,7 +3,7 @@ import { Skeleton } from "@/core/components/ui/skeleton";
 
 const COMMENT_SKELETON_COUNT = 3;
 
-const CommentSkeleton = () => (
+export const CommentSkeleton = () => (
   <Card className="flex flex-col gap-3 p-4">
     {/* Author */}
     <div className="flex items-center gap-2">

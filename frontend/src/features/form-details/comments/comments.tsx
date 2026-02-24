@@ -9,6 +9,7 @@ import { useFormatter, useTranslations } from "next-intl";
 import Link from "next/link";
 import { useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { CommentSkeleton } from "../form-details-loading";
 
 interface CommentsProps {
   readonly formIdOrSlug: string;
@@ -47,7 +48,10 @@ export const Comments = ({ formIdOrSlug }: CommentsProps) => {
     return (
       <div className="flex flex-col gap-2 pt-4">
         <CreateCommentForm formIdOrSlug={formIdOrSlug} />
-        <p className="text-muted-foreground text-center">{t("loading")}</p>
+
+        {Array.from({ length: 4 }).map((_, i) => (
+          <CommentSkeleton key={`comment-skeleton-${i}`} />
+        ))}
       </div>
     );
   }
