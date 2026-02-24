@@ -1,7 +1,5 @@
 package format.backend.comment.entity;
 
-import format.backend.auth.entity.UserEntity;
-import format.backend.form.entity.FormEntity;
 import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -16,7 +14,6 @@ import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
@@ -25,7 +22,7 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 @Setter
 @RequiredArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@CompoundIndex(def = "{'formId': 1, 'updatedAt': -1, '_id': 1}")
+@CompoundIndex(def = "{'formId': 1, 'createdAt': -1, '_id': 1}")
 @Document(collection = "comments")
 public class CommentEntity {
 
@@ -33,14 +30,12 @@ public class CommentEntity {
     @Field(name = "_id", targetType = FieldType.OBJECT_ID)
     private String id;
 
-    @Indexed
-    @DocumentReference(lazy = true)
-    @Field(name = "authorId")
-    private @Nullable UserEntity author;
-
-    @DocumentReference(lazy = true)
     @Field(name = "formId")
-    private @NonNull FormEntity form;
+    private @NonNull String formId;
+
+    @Indexed(partialFilter = "{ 'authorId': { '$type': 'string' }}")
+    @Field(name = "authorId")
+    private @Nullable String authorId;
 
     @Field(name = "content")
     private @NonNull String content;

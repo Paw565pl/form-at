@@ -4,9 +4,7 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 import format.backend.auth.entity.Role;
-import format.backend.auth.entity.UserEntity;
 import format.backend.auth.jwt.KeycloakJwtClaims;
-import format.backend.auth.service.UserService;
 import format.backend.comment.dto.CommentRequestDto;
 import format.backend.comment.dto.CommentResponseDto;
 import format.backend.comment.entity.CommentEntity;
@@ -50,7 +48,6 @@ public class CommentService {
     private final CommentRatingRepository commentRatingRepository;
     private final CommentMapper commentMapper;
 
-    private final UserService userService;
     private final FormService formService;
 
     public CommentEntity findOrThrow(String id) {
@@ -59,8 +56,10 @@ public class CommentService {
 
     public Page<@NonNull CommentResponseDto> findAll(
             String formIdOrSlug, @Nullable KeycloakJwtClaims keycloakJwtClaims, Pageable pageable) {
-        val form = formService.findOrThrow(formIdOrSlug);
-        val criteria = Criteria.where("formId").is(new ObjectId(form.getId()));
+        val formId = ObjectId.isValid(formIdOrSlug)
+                ? formIdOrSlug
+                : formService.findOrThrow(formIdOrSlug).getId();
+        val criteria = Criteria.where("formId").is(new ObjectId(formId));
 
         val total = mongoTemplate.count(Query.query(criteria), CommentEntity.class);
         if (total == 0) return Page.empty(pageable);
@@ -69,7 +68,7 @@ public class CommentService {
         val operations = new ArrayList<AggregationOperation>();
 
         operations.add(Aggregation.match(criteria));
-        operations.add(Aggregation.sort(Sort.by(Sort.Order.desc("updatedAt"), Sort.Order.asc("_id"))));
+        operations.add(Aggregation.sort(Sort.by(Sort.Order.desc("createdAt"), Sort.Order.asc("_id"))));
         operations.add(Aggregation.skip(pageable.getOffset()));
         operations.add(Aggregation.limit(pageable.getPageSize()));
 
@@ -106,12 +105,11 @@ public class CommentService {
     public CommentResponseDto create(
             String formIdOrSlug, KeycloakJwtClaims keycloakJwtClaims, CommentRequestDto commentRequestDto) {
         val form = formService.findOrThrow(formIdOrSlug);
-        val user = userService.findOrThrow(keycloakJwtClaims.sub());
 
-        val comment = commentMapper.toEntity(commentRequestDto, form, user);
+        val comment = commentMapper.toEntity(commentRequestDto, form.getId(), keycloakJwtClaims.sub());
+        val savedComment = commentRepository.save(comment);
 
-        val saved = commentRepository.save(comment);
-        return commentMapper.toResponseDto(saved, user.getUsername(), null);
+        return commentMapper.toResponseDto(savedComment, keycloakJwtClaims.username(), null);
     }
 
     @Transactional
@@ -120,48 +118,48 @@ public class CommentService {
             String commentId,
             KeycloakJwtClaims keycloakJwtClaims,
             CommentRequestDto commentRequestDto) {
-        val form = formService.findOrThrow(formIdOrSlug);
+        val formId = ObjectId.isValid(formIdOrSlug)
+                ? formIdOrSlug
+                : formService.findOrThrow(formIdOrSlug).getId();
         val comment = findOrThrow(commentId);
 
-        if (!comment.getForm().getId().equals(form.getId())) throw new ResponseStatusException(NOT_FOUND);
+        if (!Objects.equals(comment.getFormId(), formId)) throw new ResponseStatusException(NOT_FOUND);
 
-        val isCommentOwner = Optional.ofNullable(comment.getAuthor())
-                .map(a -> Objects.equals(a.getId(), keycloakJwtClaims.sub()))
+        val isCommentOwner = Optional.ofNullable(comment.getAuthorId())
+                .map(authorId -> Objects.equals(authorId, keycloakJwtClaims.sub()))
                 .orElse(false);
         val isAdmin = keycloakJwtClaims.roles().contains(Role.ADMIN);
         if (!(isCommentOwner || isAdmin)) throw new ResponseStatusException(FORBIDDEN);
 
         comment.setContent(commentRequestDto.content());
 
-        val updated = commentRepository.save(comment);
-        val authorName = Optional.ofNullable(updated.getAuthor())
-                .map(UserEntity::getUsername)
-                .orElse(null);
-
+        val updatedComment = commentRepository.save(comment);
+        val authorName = keycloakJwtClaims.username();
         val userRating = commentRatingRepository
-                .findByCommentIdAndAuthorId(updated.getId(), keycloakJwtClaims.sub())
+                .findByCommentIdAndAuthorId(updatedComment.getId(), keycloakJwtClaims.sub())
                 .map(CommentRatingEntity::getType)
                 .flatMap(RatingType::fromValue)
                 .orElse(null);
 
-        return commentMapper.toResponseDto(updated, authorName, userRating);
+        return commentMapper.toResponseDto(updatedComment, authorName, userRating);
     }
 
     @Transactional
     public void delete(String formIdOrSlug, String commentId, KeycloakJwtClaims keycloakJwtClaims) {
-        val form = formService.findOrThrow(formIdOrSlug);
+        val formId = ObjectId.isValid(formIdOrSlug)
+                ? formIdOrSlug
+                : formService.findOrThrow(formIdOrSlug).getId();
         val comment = findOrThrow(commentId);
 
-        if (!comment.getForm().getId().equals(form.getId())) throw new ResponseStatusException(NOT_FOUND);
+        if (!Objects.equals(comment.getFormId(), formId)) throw new ResponseStatusException(NOT_FOUND);
 
-        val isCommentOwner = Optional.ofNullable(comment.getAuthor())
-                .map(a -> Objects.equals(a.getId(), keycloakJwtClaims.sub()))
+        val isCommentOwner = Optional.ofNullable(comment.getAuthorId())
+                .map(authorId -> Objects.equals(authorId, keycloakJwtClaims.sub()))
                 .orElse(false);
         val isAdmin = keycloakJwtClaims.roles().contains(Role.ADMIN);
         if (!(isCommentOwner || isAdmin)) throw new ResponseStatusException(FORBIDDEN);
 
         commentRepository.delete(comment);
-
         commentRatingRepository.deleteAllByCommentId(comment.getId());
     }
 }

@@ -7,7 +7,9 @@ import format.backend.comment.dto.CommentResponseDto;
 import format.backend.comment.service.CommentService;
 import format.backend.comment.validator.ValidCommentId;
 import jakarta.validation.Valid;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,8 +39,10 @@ public class CommentController {
     @GetMapping
     public Page<@NonNull CommentResponseDto> findAll(
             @AuthenticationPrincipal Jwt jwt, @PathVariable String formIdOrSlug, Pageable pageable) {
-        return commentService.findAll(
-                formIdOrSlug, jwt != null ? keycloakJwtClaimsExtractor.getClaims(jwt) : null, pageable);
+        val keycloakJwtClaims = Optional.ofNullable(jwt)
+                .map(keycloakJwtClaimsExtractor::getClaims)
+                .orElse(null);
+        return commentService.findAll(formIdOrSlug, keycloakJwtClaims, pageable);
     }
 
     @IsAuthenticated
