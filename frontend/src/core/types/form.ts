@@ -83,7 +83,6 @@ export enum Language {
 }
 
 export enum FormStatus {
-  Draft = "DRAFT",
   Public = "PUBLIC",
   Unpublic = "UNPUBLIC",
   Private = "PRIVATE",
