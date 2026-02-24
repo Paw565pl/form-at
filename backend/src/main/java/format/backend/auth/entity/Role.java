@@ -3,6 +3,7 @@ package format.backend.auth.entity;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.val;
 
 @Getter
 @AllArgsConstructor
@@ -22,7 +23,7 @@ public enum Role {
     public static Optional<Role> fromValue(String value) {
         if (value == null) return Optional.empty();
 
-        for (var role : values()) {
+        for (val role : values()) {
             if (role.getValue().equalsIgnoreCase(value)) {
                 return Optional.of(role);
             }
