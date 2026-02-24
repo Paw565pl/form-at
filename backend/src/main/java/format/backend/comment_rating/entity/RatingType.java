@@ -4,8 +4,8 @@ import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@AllArgsConstructor
 @Getter
+@AllArgsConstructor
 public enum RatingType {
     UPVOTE(1),
     DOWNVOTE(-1);

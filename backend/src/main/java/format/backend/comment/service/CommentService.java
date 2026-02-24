@@ -80,7 +80,7 @@ public class CommentService {
 
         if (userId.isPresent()) {
             val commentRatingsLookup = LookupOperation.newLookup()
-                    .from("comment_ratings")
+                    .from("commentRatings")
                     .localField("_id")
                     .foreignField("commentId")
                     .pipeline(Aggregation.match(Criteria.where("authorId").is(userId.get())))
