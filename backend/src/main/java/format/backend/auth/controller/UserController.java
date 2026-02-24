@@ -1,6 +1,6 @@
 package format.backend.auth.controller;
 
-import format.backend.auth.dto.UserProfile;
+import format.backend.auth.dto.UserProfileResponseDto;
 import format.backend.auth.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +16,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/{username}")
-    public UserProfile findProfileByUsername(@PathVariable String username) {
+    public UserProfileResponseDto findProfileByUsername(@PathVariable String username) {
         return userService.findProfileByUsername(username);
     }
 }

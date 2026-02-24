@@ -1,7 +1,7 @@
 package format.backend.auth.service;
 
-import format.backend.auth.dto.UserProfile;
-import format.backend.auth.dto.UserStatistics;
+import format.backend.auth.dto.UserProfileResponseDto;
+import format.backend.auth.dto.UserStatisticsDto;
 import format.backend.auth.entity.UserEntity;
 import format.backend.auth.jwt.KeycloakJwtClaims;
 import format.backend.auth.repository.UserRepository;
@@ -33,7 +33,7 @@ public class UserService {
         return userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
     }
 
-    public UserProfile findProfileByUsername(String username) {
+    public UserProfileResponseDto findProfileByUsername(String username) {
         val user = userRepository
                 .findByUsername(username)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -45,10 +45,10 @@ public class UserService {
         val commentsCountFuture = CompletableFuture.supplyAsync(
                 () -> commentRepository.countAllByAuthorId(user.getId()), applicationTaskExecutor);
 
-        val statistics =
-                new UserStatistics(formsCountFuture.join(), submissionsCountFuture.join(), commentsCountFuture.join());
+        val statistics = new UserStatisticsDto(
+                formsCountFuture.join(), submissionsCountFuture.join(), commentsCountFuture.join());
 
-        return new UserProfile(user.getId(), user.getUsername(), statistics);
+        return new UserProfileResponseDto(user.getId(), user.getUsername(), statistics);
     }
 
     @Transactional
