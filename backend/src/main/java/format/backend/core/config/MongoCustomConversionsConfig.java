@@ -1,6 +1,6 @@
 package format.backend.core.config;
 
-import format.backend.comment_rating.converter.RatingTypeConverter;
+import format.backend.comment_rating.converter.RatingTypeReadConverter;
 import format.backend.form.converter.LanguageReadConverter;
 import java.util.List;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +12,6 @@ class MongoCustomConversionsConfig {
 
     @Bean
     MongoCustomConversions mongoCustomConversions() {
-        return new MongoCustomConversions(List.of(new LanguageReadConverter(), new RatingTypeConverter()));
+        return new MongoCustomConversions(List.of(new LanguageReadConverter(), new RatingTypeReadConverter()));
     }
 }
