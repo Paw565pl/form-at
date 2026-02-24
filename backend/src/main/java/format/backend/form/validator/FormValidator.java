@@ -88,7 +88,7 @@ public class FormValidator {
 
             if (question.type().equals(QuestionType.OPEN)) continue;
 
-            val totalAnswersCount = question.answers().size();
+            final int totalAnswersCount = question.answers().size();
             val correctAnswersCount = question.answers().stream()
                     .filter(AnswerRequestDto::isCorrect)
                     .count();
