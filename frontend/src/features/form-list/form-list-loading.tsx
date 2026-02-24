@@ -1,7 +1,7 @@
 import { Card } from "@/core/components/ui/card";
 import { Skeleton } from "@/core/components/ui/skeleton";
 
-const GridCardSkeleton = () => (
+export const GridCardSkeleton = () => (
   <Card className="h-full overflow-hidden">
     {/* Image area */}
     <Skeleton className="min-h-40 rounded-none" />
