@@ -8,11 +8,17 @@ import format.backend.auth.repository.UserRepository;
 import format.backend.comment.repository.CommentRepository;
 import format.backend.form.repository.FormRepository;
 import format.backend.submission.repository.SubmissionRepository;
+import java.time.Instant;
 import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.task.AsyncTaskExecutor;
+import org.springframework.data.mongodb.core.FindAndModifyOptions;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +29,8 @@ import org.springframework.web.server.ResponseStatusException;
 public class UserService {
 
     @Qualifier("applicationTaskExecutor") private final AsyncTaskExecutor applicationTaskExecutor;
+
+    private final MongoTemplate mongoTemplate;
 
     private final UserRepository userRepository;
     private final FormRepository formRepository;
@@ -53,6 +61,14 @@ public class UserService {
 
     @Transactional
     public UserEntity createOrUpdate(KeycloakJwtClaims jwtClaims) {
-        return userRepository.save(new UserEntity(jwtClaims.sub(), jwtClaims.username(), jwtClaims.email()));
+        val query = new Query(Criteria.where("_id").is(jwtClaims.sub()));
+        val update = new Update()
+                .set("username", jwtClaims.username())
+                .set("email", jwtClaims.email())
+                .setOnInsert("createdAt", Instant.now())
+                .set("updatedAt", Instant.now());
+
+        return mongoTemplate.findAndModify(
+                query, update, FindAndModifyOptions.options().upsert(true).returnNew(true), UserEntity.class);
     }
 }
