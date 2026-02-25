@@ -9,6 +9,7 @@ public final class SubmissionAlreadyCreatedForUserException extends ApplicationE
     public SubmissionAlreadyCreatedForUserException(@NonNull String formIdOrSlug) {
         super(
                 HttpStatus.CONFLICT,
+                "SUBMISSION_ALREADY_CREATED_FOR_USER",
                 String.format("Form with id or slug '%s' has been already submitted by the user", formIdOrSlug));
     }
 }

@@ -11,21 +11,21 @@ import org.springframework.http.HttpStatus;
 public abstract class ApplicationException extends RuntimeException {
 
     private final @NonNull HttpStatus status;
-
+    private final @NonNull String code;
     private final @Nullable Map<@NonNull String, @NonNull List<@NonNull String>> errors;
 
-    protected ApplicationException(@NonNull HttpStatus status, @NonNull String message) {
-        super(message);
-        this.status = status;
-        this.errors = null;
+    protected ApplicationException(@NonNull HttpStatus status, @NonNull String code, @NonNull String message) {
+        this(status, code, message, null);
     }
 
     protected ApplicationException(
             @NonNull HttpStatus status,
+            @NonNull String code,
             @NonNull String message,
             @Nullable Map<@NonNull String, @NonNull List<@NonNull String>> errors) {
         super(message);
         this.status = status;
+        this.code = code;
         this.errors = errors;
     }
 }
