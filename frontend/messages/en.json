@@ -6,6 +6,10 @@
       "OPEN": "Open Ended"
     }
   },
+  "homePage": {
+    "appDescription": "Welcome to formAT, the ultimate form builder and survey tool! Whether you're gathering feedback, conducting research, or collecting data, formAT has you covered.",
+    "createNewForm": "Create New Form"
+  },
   "errorPage": {
     "header": "Whoops! Something went wrong.",
     "message": "We encountered an unexpected error. Please return to the homepage to continue browsing.",
