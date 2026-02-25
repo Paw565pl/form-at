@@ -1,5 +1,6 @@
 package format.backend.form.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import format.backend.form.entity.FormStatus;
 import format.backend.form.entity.Language;
 import java.time.Duration;
@@ -38,7 +39,7 @@ public record FormListResponseDto(
 
         @NonNull Long ratingsCount,
 
-        @Nullable Double ratingAvg,
+        @JsonFormat(shape = JsonFormat.Shape.NUMBER_FLOAT, pattern = "0.0") @Nullable Double ratingAvg,
 
         @Nullable String authorName,
 

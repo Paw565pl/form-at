@@ -16,25 +16,10 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = QuestionMapper.class)
 public interface FormMapper {
 
-    @Mapping(target = "ratingsCount", expression = "java(formEntity.getRatingsCount())")
-    @Mapping(
-            target = "ratingAvg",
-            expression =
-                    "java(formEntity.getRatingAvg() == null ? null : Math.round(formEntity.getRatingAvg() * 10) / 10.0)")
     FormListResponseDto toListResponseDto(FormEntity formEntity, String thumbnail, @Nullable String authorName);
 
-    @Mapping(target = "ratingsCount", expression = "java(formListAggregationResult.ratingsCount())")
-    @Mapping(
-            target = "ratingAvg",
-            expression =
-                    "java(formListAggregationResult.ratingsCount() == 0 ? null : Math.round(formListAggregationResult.ratingAvg() * 10) / 10.0)")
     FormListResponseDto toListResponseDto(FormListAggregationResult formListAggregationResult, String thumbnail);
 
-    @Mapping(target = "ratingsCount", expression = "java(formEntity.getRatingsCount())")
-    @Mapping(
-            target = "ratingAvg",
-            expression =
-                    "java(formEntity.getRatingAvg() == null ? null : Math.round(formEntity.getRatingAvg() * 10) / 10.0)")
     @Mapping(target = "questions", source = "questions")
     FormDetailResponseDto toDetailResponseDto(
             FormEntity formEntity,
