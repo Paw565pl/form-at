@@ -34,7 +34,7 @@ public class SubmissionEntity {
     @Field(name = "formId")
     private @NonNull String formId;
 
-    @Indexed
+    @Indexed(partialFilter = "{'authorId': {'$type': 'string'}}")
     @Field(name = "authorId")
     private @Nullable String authorId;
 
