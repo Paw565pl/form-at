@@ -1,3 +1,5 @@
+"use client";
+
 import { Logo } from "@/core/components/logo/logo";
 import { Button } from "@/core/components/ui/button";
 import { Card } from "@/core/components/ui/card";
@@ -6,114 +8,134 @@ import { cn } from "@/core/lib/cn";
 import { useTranslations } from "next-intl";
 import Link from "next/dist/client/link";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+
+const useCountUp = (target: number, duration = 1000) => {
+  const [value, setValue] = useState(0);
+  useEffect(() => {
+    let start = 0;
+    const increment = target / (duration / 16);
+    const interval = setInterval(() => {
+      start += increment;
+      if (start >= target) {
+        setValue(target);
+        clearInterval(interval);
+      } else {
+        setValue(Math.floor(start));
+      }
+    }, 16);
+    return () => clearInterval(interval);
+  }, [target, duration]);
+  return value;
+};
 
 const stats = [
+  // todo: fetch real stats from backend
   {
-    label: "Users",
-    description:
-      "Are you a form creator or a form filler? Join our community of users who are shaping the future of information gathering with formAT.",
+    label: "users",
     icon: ICONS.user,
-    value: "123",
+    value: 123,
   },
   {
-    label: "Forms",
-    description:
-      "What kind of bread are you? Which cat breed is the best? Explore the variety of forms created with formAT.",
+    label: "forms",
     icon: ICONS.form,
-    value: "123",
+    value: 123,
   },
   {
-    label: "Submissions",
-    description:
-      "How many times have people hit submit? Discover the engagement and impact of forms created with formAT.",
+    label: "submissions",
     icon: ICONS.submissions,
-    value: "456",
+    value: 123,
   },
-];
+] as const;
 
 const features = [
   {
-    title: "Advanced Poll Maker",
-    description:
-      "Create complex forms with various question types. Make it public or private. Customize with shuffle options and add images and banners.",
+    label: "advancedFormBuilder",
     icon: ICONS.form,
-    image: "/home1.png",
+    image: "/images/home1.png",
     reverse: false,
   },
   {
-    title: "Live Results",
-    description:
-      "Watch your form submissions in real time. See how people are responding to your questions and get instant feedback and statistics.",
+    label: "liveResults",
     icon: ICONS.submissions,
-    image: "/home1.png",
+    image: "/images/home2.png",
     reverse: true,
   },
   {
-    title: "Rate and Review",
-    description:
-      "Share your thoughts and opinions on forms created by others. Rate and review forms to help creators improve and to guide other users in finding the best forms for their needs.",
+    label: "rateAndReview",
     icon: ICONS.rate,
-    image: "/home1.png",
+    image: "/images/home3.png",
     reverse: false,
   },
-];
+] as const;
 
 export const Home = () => {
   const t = useTranslations("homePage");
 
   return (
     <section id="home" className="flex flex-col gap-16 p-10">
-      <header className="flex flex-col items-center p-10">
-        <div className="text-primary flex items-center text-6xl font-semibold">
-          <Logo className="h-36 w-36" />
+      <header className="flex flex-col items-center lg:p-12">
+        <div className="text-primary flex items-center text-4xl font-semibold lg:text-6xl">
+          <Logo className="size-20 lg:size-36" />
           <h1>formAT</h1>
         </div>
-        <p className="text-muted-foreground mx-20 text-center text-lg">
+        <p className="text-muted-foreground text-center text-lg lg:mx-20">
           {t("appDescription")}
         </p>
       </header>
 
-      <div className="flex justify-center gap-4">
-        {stats.map((stat) => (
-          <Card key={stat.label} className="flex-1 gap-2 p-6">
-            <div className="flex items-center gap-2">
-              <stat.icon className="text-primary h-6 w-6" />
-              <h3 className="text-lg font-semibold">
-                {stat.value} {stat.label}
-              </h3>
-            </div>
-            <p className="text-muted-foreground text-sm">{stat.description}</p>
-          </Card>
-        ))}
+      <div className="flex flex-col justify-center gap-6 lg:mb-12 lg:flex-row">
+        {stats.map((stat) => {
+          const animatedValue = useCountUp(stat.value);
+          return (
+            <Card key={stat.label} className="flex-1 gap-2 p-6">
+              <div className="flex items-center gap-2">
+                <stat.icon className="text-primary h-6 w-6" />
+                <h3 className="text-lg font-semibold">
+                  {t(`stats.${stat.label}`)}:{" "}
+                  <span className="text-primary">{animatedValue}</span>
+                </h3>
+              </div>
+              <p className="text-muted-foreground text-sm">
+                {t(`stats.${stat.label}Desc`)}
+              </p>
+            </Card>
+          );
+        })}
       </div>
 
       {features.map((feature) => (
         <div
-          key={feature.title}
+          key={feature.label}
           className={cn(
-            "flex flex-col items-center justify-around gap-10 lg:flex-row",
+            "flex flex-col items-center justify-around gap-6 lg:flex-row lg:gap-10",
             feature.reverse && "lg:flex-row-reverse",
           )}
         >
           <Card className="flex flex-col gap-4 p-6">
             <div className="flex items-center gap-2">
               <feature.icon className="text-primary h-6 w-6" />
-              <h1 className="text-xl font-semibold">{feature.title}</h1>
+              <h1 className="text-xl font-semibold">
+                {t(`features.${feature.label}`)}
+              </h1>
             </div>
-            <p className="text-muted-foreground">{feature.description}</p>
+            <p className="text-muted-foreground">
+              {t(`features.${feature.label}Desc`)}
+            </p>
           </Card>
           <Image
             src={feature.image}
-            alt={feature.title}
-            width={600}
-            height={300}
+            alt={t(`features.${feature.label}`)}
+            width={700}
+            height={400}
             className="rounded-md border shadow-sm"
+            priority
           ></Image>
         </div>
       ))}
 
-      <footer className="flex items-center gap-6 self-center">
-        <h1 className="text-lg">Ready to get started?</h1>
+      <footer className="flex flex-col items-center gap-4 self-center md:flex-row">
+        <h1 className="text-muted-foreground text-lg">{t("getStarted")}</h1>
         <Button asChild size="lg">
           <Link href="/forms/new">
             <ICONS.formNew />
