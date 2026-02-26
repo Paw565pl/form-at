@@ -143,21 +143,27 @@
   "formCreatePage": {
     "pageTitle": "Utwórz nowy formularz",
     "successMessage": "Pomyślnie utworzono formularz!",
-    "errorMessage": "Wystąpił nieoczekiwany błąd.",
     "submit": "Zapisz",
-    "submitting": "Zapisywanie"
+    "submitting": "Zapisywanie",
+    "errors": {
+      "unexpected": "Wystąpił nieoczekiwany błąd.",
+      "formAlreadyExists": "Formularz o tej nazwie już istnieje."
+    }
   },
   "formEditPage": {
     "pageTitle": "Edytuj formularz",
     "loading": "Ładowanie...",
     "successMessage": "Pomyślnie zapisano formularz!",
-    "errorMessage": "Wystąpił nieoczekiwany błąd.",
     "submit": "Zapisz",
     "submitting": "Zapisywanie",
     "cancel": "Anuluj",
     "continue": "Zapisz",
     "updateDialogTitle": "Czy na pewno chcesz zaktualizować ten formularz?",
-    "updateDialogDescription": "Wszystkie poprzednie odpowiedzi dla tego formularza zostaną usunięte. Ta akcja jest nieodwracalna."
+    "updateDialogDescription": "Wszystkie poprzednie odpowiedzi dla tego formularza zostaną usunięte. Ta akcja jest nieodwracalna.",
+    "errors": {
+      "unexpected": "Wystąpił nieoczekiwany błąd.",
+      "formAlreadyExists": "Formularz o tej nazwie już istnieje."
+    }
   },
   "formDetailsPage": {
     "loading": "Ładowanie...",
@@ -170,7 +176,8 @@
       "errors": {
         "contentMin": "Hasło musi mieć co najmniej {count} znaków.",
         "contentMax": "Hasło może mieć maksymalnie {count} znaków.",
-        "invalidPassword": "Nieprawidłowe hasło. Spróbuj ponownie."
+        "invalidPassword": "Nieprawidłowe hasło. Spróbuj ponownie.",
+        "unexpected": "Wystąpił nieoczekiwany błąd."
       }
     },
     "banner": {

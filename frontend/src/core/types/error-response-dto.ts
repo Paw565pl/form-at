@@ -1,7 +1,8 @@
 export interface ErrorResponseDto {
-  readonly timestamp: string;
+  readonly detail: string;
+  readonly instance: string;
   readonly status: number;
-  readonly error: string;
-  readonly message: string;
+  readonly title: string;
+  readonly code: string;
   readonly errors?: Readonly<Record<string, string[]>>;
 }

@@ -18,7 +18,12 @@ export const Form = ({ formIdOrSlug }: FormProps) => {
   const { data: form, isLoading, error } = useFetchFormDetails(formIdOrSlug);
 
   if (error) {
-    if (error.status === HttpStatusCode.NotFound) return notFound();
+    if (
+      error.status === HttpStatusCode.NotFound ||
+      error.status === HttpStatusCode.Unauthorized ||
+      error.status === HttpStatusCode.Forbidden
+    )
+      return notFound();
     else throw error;
   }
 

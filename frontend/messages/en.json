@@ -143,21 +143,27 @@
   "formCreatePage": {
     "pageTitle": "Create New Form",
     "successMessage": "Form created successfully!",
-    "errorMessage": "An unexpected error occurred.",
     "submit": "Submit",
-    "submitting": "Submitting"
+    "submitting": "Submitting",
+    "errors": {
+      "unexpected": "An unexpected error occurred.",
+      "formAlreadyExists": "Form with this name already exists."
+    }
   },
   "formEditPage": {
     "pageTitle": "Edit Form",
     "loading": "Loading...",
     "successMessage": "Form updated successfully!",
-    "errorMessage": "An unexpected error occurred.",
     "submit": "Submit",
     "submitting": "Submitting",
     "cancel": "Cancel",
     "continue": "Save",
     "updateDialogTitle": "Are you sure you want to update this form?",
-    "updateDialogDescription": "All prior submissions for this form will be deleted. This action cannot be undone."
+    "updateDialogDescription": "All prior submissions for this form will be deleted. This action cannot be undone.",
+    "errors": {
+      "unexpected": "An unexpected error occurred.",
+      "formAlreadyExists": "Form with this name already exists."
+    }
   },
   "formDetailsPage": {
     "privateForm": {
@@ -169,7 +175,8 @@
       "errors": {
         "contentMin": "Password must be at least {count} characters.",
         "contentMax": "Password must be at most {count} characters.",
-        "invalidPassword": "Invalid password. Please try again."
+        "invalidPassword": "Invalid password. Please try again.",
+        "unexpected": "An unexpected error occurred."
       }
     },
     "loading": "Loading...",

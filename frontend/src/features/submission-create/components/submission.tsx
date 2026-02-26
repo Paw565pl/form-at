@@ -95,9 +95,7 @@ export const Submission = ({ formData }: SubmissionProps) => {
           if (error.status === HttpStatusCode.Conflict) {
             toast.error(t("errors.submissionExists"));
           } else {
-            toast.error(
-              error.response?.data?.message || t("errors.unexpected"),
-            );
+            toast.error(t("errors.unexpected"));
           }
         },
         onSuccess: () => {
