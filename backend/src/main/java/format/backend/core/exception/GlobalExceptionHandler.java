@@ -1,6 +1,7 @@
 package format.backend.core.exception;
 
 import jakarta.validation.ConstraintViolationException;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +32,7 @@ public class GlobalExceptionHandler {
             @NonNull HttpStatusCode status,
             @NonNull String detail,
             @NonNull String code,
-            @Nullable Map<@NonNull String, ?> errors) {
+            @Nullable Map<@NonNull String, @NonNull List<@NonNull String>> errors) {
         val problemDetail = ProblemDetail.forStatusAndDetail(status, detail);
 
         problemDetail.setProperty("code", code);
