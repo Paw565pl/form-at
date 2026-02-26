@@ -2,10 +2,9 @@ spring:
   application:
     name: backend
 
-  web:
-    error:
-      include-message: always
-      include-path: never
+  mvc:
+    problemdetails:
+      enabled: true
 
   data:
     web:

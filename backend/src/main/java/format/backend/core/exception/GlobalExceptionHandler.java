@@ -2,14 +2,17 @@ package format.backend.core.exception;
 
 import jakarta.validation.ConstraintViolationException;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.core.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
@@ -17,28 +20,42 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static ProblemDetail createProblemDetail(
+            @NonNull HttpStatusCode status,
+            @NonNull String detail,
+            @NonNull String code,
+            @Nullable Map<@NonNull String, ?> errors) {
+        val problemDetail = ProblemDetail.forStatusAndDetail(status, detail);
+
+        problemDetail.setProperty("code", code);
+        if (errors != null && !errors.isEmpty()) {
+            problemDetail.setProperty("errors", errors);
+        }
+
+        return problemDetail;
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<@NonNull ErrorResponseDto> handleMethodArgumentNotValidException(
-            MethodArgumentNotValidException e) {
+    public ResponseEntity<ProblemDetail> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        val status = HttpStatus.BAD_REQUEST;
         val errors = e.getFieldErrors().stream()
                 .filter(fieldError -> fieldError.getDefaultMessage() != null
                         && !fieldError.getDefaultMessage().isBlank())
                 .collect(Collectors.groupingBy(
                         FieldError::getField,
                         Collectors.mapping(DefaultMessageSourceResolvable::getDefaultMessage, Collectors.toList())));
+        val problemDetail = createProblemDetail(status, "Validation failed", "VALIDATION_FAILED", errors);
 
-        val status = HttpStatus.BAD_REQUEST;
-        val response = new ErrorResponseDto(status, "Validation failed", errors);
-
-        return ResponseEntity.status(status).body(response);
+        return ResponseEntity.status(status).body(problemDetail);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<@NonNull ErrorResponseDto> handleConstraintViolationException(
-            ConstraintViolationException e) {
+    public ResponseEntity<ProblemDetail> handleConstraintViolationException(ConstraintViolationException e) {
+        val status = HttpStatus.BAD_REQUEST;
         val errors = e.getConstraintViolations().stream()
                 .map(error -> {
                     val propertyPathIterator = error.getPropertyPath().iterator();
@@ -55,45 +72,52 @@ public class GlobalExceptionHandler {
                         && !entry.getValue().isBlank())
                 .collect(Collectors.groupingBy(
                         Map.Entry::getKey, Collectors.mapping(Map.Entry::getValue, Collectors.toList())));
+        val problemDetail = createProblemDetail(status, "Validation failed", "VALIDATION_FAILED", errors);
 
-        val status = HttpStatus.BAD_REQUEST;
-        val response = new ErrorResponseDto(status, "Validation failed", errors);
-
-        return ResponseEntity.status(status).body(response);
+        return ResponseEntity.status(status).body(problemDetail);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<@NonNull ErrorResponseDto> handleHttpMessageNotReadableException(
+    public ResponseEntity<ProblemDetail> handleHttpMessageNotReadableException(
             HttpMessageNotReadableException ignored) {
-        val status = HttpStatus.BAD_REQUEST;
-        val response = new ErrorResponseDto(status, "Required request body is missing");
+        val status = HttpStatus.UNPROCESSABLE_CONTENT;
+        val problemDetail =
+                createProblemDetail(status, "Malformed or missing JSON request body", "MALFORMED_JSON_BODY", null);
 
-        return ResponseEntity.status(status).body(response);
+        return ResponseEntity.status(status).body(problemDetail);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<@NonNull ErrorResponseDto> handleIllegalArgumentException(DataIntegrityViolationException e) {
+    public ResponseEntity<ProblemDetail> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
         val status = HttpStatus.CONFLICT;
-        val response = new ErrorResponseDto(status, e.getMessage());
+        val problemDetail = createProblemDetail(status, "A database conflict occurred", "INTEGRITY_VIOLATION", null);
 
-        return ResponseEntity.status(status).body(response);
+        return ResponseEntity.status(status).body(problemDetail);
     }
 
     @ExceptionHandler(PropertyReferenceException.class)
-    public ResponseEntity<@NonNull ErrorResponseDto> handlePropertyReferenceException(PropertyReferenceException e) {
+    public ResponseEntity<ProblemDetail> handlePropertyReferenceException(PropertyReferenceException e) {
         val status = HttpStatus.BAD_REQUEST;
-        val response = new ErrorResponseDto(status, e.getMessage());
+        val problemDetail = createProblemDetail(status, e.getMessage(), "INVALID_REFERENCE", null);
 
-        return ResponseEntity.status(status).body(response);
+        return ResponseEntity.status(status).body(problemDetail);
     }
 
     @ExceptionHandler(ApplicationException.class)
-    public ResponseEntity<@NonNull ErrorResponseDto> handleApplicationException(ApplicationException e) {
+    public ResponseEntity<ProblemDetail> handleApplicationException(ApplicationException e) {
         val status = e.getStatus();
-        val response = Optional.ofNullable(e.getErrors())
-                .map(errors -> new ErrorResponseDto(status, e.getMessage(), errors))
-                .orElse(new ErrorResponseDto(status, e.getMessage()));
+        val problemDetail = createProblemDetail(status, e.getMessage(), e.getCode(), e.getErrors());
 
-        return ResponseEntity.status(status).body(response);
+        return ResponseEntity.status(status).body(problemDetail);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ProblemDetail> handleUnexpectedException(Exception e) {
+        log.error("An unexpected error occurred", e);
+
+        val status = HttpStatus.INTERNAL_SERVER_ERROR;
+        val problemDetail = createProblemDetail(status, "An unexpected error occurred", "INTERNAL_SERVER_ERROR", null);
+
+        return ResponseEntity.status(status).body(problemDetail);
     }
 }
