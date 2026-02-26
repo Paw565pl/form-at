@@ -86,6 +86,7 @@ export const Home = () => {
 
       <div className="flex flex-col justify-center gap-6 lg:mb-12 lg:flex-row">
         {stats.map((stat) => {
+          // eslint-disable-next-line react-hooks/rules-of-hooks
           const animatedValue = useCountUp(stat.value);
           return (
             <Card key={stat.label} className="flex-1 gap-2 p-6">

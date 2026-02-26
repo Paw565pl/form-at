@@ -1,6 +1,6 @@
-type LogoProps = {
+interface LogoProps {
   className?: string;
-};
+}
 
 export const Logo = ({ className }: LogoProps) => (
   <svg

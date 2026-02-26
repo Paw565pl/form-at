@@ -1,4 +1,4 @@
-import { Home } from "./components/home";
+import { Home } from "@/features/home/components/home";
 
 export const HomePage = async () => {
   // todo: load stats
