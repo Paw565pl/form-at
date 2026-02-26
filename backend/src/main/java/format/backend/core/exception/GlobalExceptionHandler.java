@@ -114,14 +114,4 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(status).body(problemDetail);
     }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ProblemDetail> handleUnexpectedException(Exception e) {
-        log.error("An unexpected error occurred", e);
-
-        val status = HttpStatus.INTERNAL_SERVER_ERROR;
-        val problemDetail = createProblemDetail(status, "An unexpected error occurred", "INTERNAL_SERVER_ERROR", null);
-
-        return ResponseEntity.status(status).body(problemDetail);
-    }
 }
