@@ -34,7 +34,7 @@ const SubmissionCreateGateInternal = ({ slug }: SubmissionCreateGateProps) => {
   if (!formData) return null;
   const shuffledFormData = shuffleFormData(formData);
 
-  return <Submission formData={shuffledFormData} />;
+  return <Submission formDetails={shuffledFormData} />;
 };
 
 export const SubmissionCreateGate = dynamic(
