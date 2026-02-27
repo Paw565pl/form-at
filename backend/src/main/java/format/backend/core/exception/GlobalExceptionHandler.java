@@ -1,6 +1,7 @@
 package format.backend.core.exception;
 
 import jakarta.validation.ConstraintViolationException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -22,6 +23,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import tools.jackson.databind.exc.InvalidFormatException;
 
 @Slf4j
 @RestControllerAdvice
@@ -82,11 +84,30 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ProblemDetail> handleHttpMessageNotReadableException(
-            HttpMessageNotReadableException ignored) {
+    public ResponseEntity<ProblemDetail> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
         val status = HttpStatus.UNPROCESSABLE_CONTENT;
+        val errors =
+                switch (e.getCause()) {
+                    case InvalidFormatException invalidFormatException
+                    when invalidFormatException.getTargetType().isEnum()
+                            && !invalidFormatException.getPath().isEmpty() -> {
+                        val fieldName =
+                                invalidFormatException.getPath().getLast().getPropertyName();
+                        val givenInput = invalidFormatException.getValue();
+                        val validValues = Arrays.stream(
+                                        invalidFormatException.getTargetType().getEnumConstants())
+                                .map(Object::toString)
+                                .toList();
+
+                        val message = String.format(
+                                "Invalid value '%s'. Accepted values are: %s",
+                                givenInput, String.join(", ", validValues));
+                        yield Map.of(fieldName, List.of(message));
+                    }
+                    default -> null;
+                };
         val problemDetail =
-                createProblemDetail(status, "Malformed or missing JSON request body", "MALFORMED_JSON_BODY", null);
+                createProblemDetail(status, "Malformed or missing JSON request body", "MALFORMED_JSON_BODY", errors);
 
         return ResponseEntity.status(status).body(problemDetail);
     }
