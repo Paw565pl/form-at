@@ -120,7 +120,7 @@ export interface FormRequestDto {
   allowsQuestionsPreview: boolean;
   allowsGuestSubmissions: boolean;
   saveSubmissions: boolean;
-  // showAnswersFeedback: boolean; TODO: uncomment when added to form and schema
+  showAnswersFeedback: boolean;
   questions: QuestionRequestDto[];
 }
 
