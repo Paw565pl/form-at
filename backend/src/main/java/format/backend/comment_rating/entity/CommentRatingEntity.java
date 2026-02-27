@@ -32,7 +32,7 @@ public class CommentRatingEntity {
     @Field(name = "_id", targetType = FieldType.OBJECT_ID)
     private String id;
 
-    @Field(name = "commentId")
+    @Field(name = "commentId", targetType = FieldType.OBJECT_ID)
     @NonNull private String commentId;
 
     @Field(name = "authorId")

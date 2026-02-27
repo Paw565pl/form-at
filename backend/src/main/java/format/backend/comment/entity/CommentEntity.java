@@ -30,7 +30,7 @@ public class CommentEntity {
     @Field(name = "_id", targetType = FieldType.OBJECT_ID)
     private String id;
 
-    @Field(name = "formId")
+    @Field(name = "formId", targetType = FieldType.OBJECT_ID)
     private @NonNull String formId;
 
     @Indexed(partialFilter = "{'authorId': {'$type': 'string'}}")

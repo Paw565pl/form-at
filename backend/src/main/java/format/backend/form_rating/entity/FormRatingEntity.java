@@ -29,7 +29,7 @@ public class FormRatingEntity {
     @Field(name = "_id", targetType = FieldType.OBJECT_ID)
     private String id;
 
-    @Field(name = "formId")
+    @Field(name = "formId", targetType = FieldType.OBJECT_ID)
     @NonNull private String formId;
 
     @Field(name = "authorId")
