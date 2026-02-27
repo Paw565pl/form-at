@@ -238,9 +238,12 @@ public class FormService {
 
         val userRating = findUserRating(userId, formEntity.getId());
 
-        if (!formEntity.getStatus().equals(FormStatus.PRIVATE)) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        if (!passwordEncoder.matches(accessRequestDto.password(), formEntity.getPasswordHash()))
+        if (!formEntity.getStatus().equals(FormStatus.PRIVATE)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+        if (!passwordEncoder.matches(accessRequestDto.password(), formEntity.getPasswordHash())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
 
         return mapToDetailResponseDto(formEntity, userRating);
     }
