@@ -1,8 +1,7 @@
 package format.backend.comment_rating.service;
 
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-
 import format.backend.auth.jwt.KeycloakJwtClaims;
+import format.backend.comment.exception.CommentNotFoundException;
 import format.backend.comment.repository.CommentRepository;
 import format.backend.comment.service.CommentService;
 import format.backend.comment_rating.dto.CommentRatingRequestDto;
@@ -18,7 +17,6 @@ import lombok.val;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +40,7 @@ public class CommentRatingService {
                 : formService.findOrThrow(formIdOrSlug).getId();
         val comment = commentService.findOrThrow(commentId);
 
-        if (!Objects.equals(comment.getFormId(), formId)) throw new ResponseStatusException(NOT_FOUND);
+        if (!Objects.equals(comment.getFormId(), formId)) throw new CommentNotFoundException(commentId);
 
         val newType = commentRatingRequestDto.type();
         val existingRatingOpt =
@@ -86,7 +84,7 @@ public class CommentRatingService {
                 : formService.findOrThrow(formIdOrSlug).getId();
         val comment = commentService.findOrThrow(commentId);
 
-        if (!Objects.equals(comment.getFormId(), formId)) throw new ResponseStatusException(NOT_FOUND);
+        if (!Objects.equals(comment.getFormId(), formId)) throw new CommentNotFoundException(commentId);
 
         val existingRating = commentRatingRepository
                 .findByCommentIdAndAuthorId(comment.getId(), keycloakJwtClaims.sub())

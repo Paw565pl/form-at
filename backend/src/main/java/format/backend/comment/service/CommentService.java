@@ -1,7 +1,6 @@
 package format.backend.comment.service;
 
 import static org.springframework.http.HttpStatus.FORBIDDEN;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 import format.backend.auth.entity.Role;
 import format.backend.auth.jwt.KeycloakJwtClaims;
@@ -123,7 +122,7 @@ public class CommentService {
                 : formService.findOrThrow(formIdOrSlug).getId();
         val comment = findOrThrow(commentId);
 
-        if (!Objects.equals(comment.getFormId(), formId)) throw new ResponseStatusException(NOT_FOUND);
+        if (!Objects.equals(comment.getFormId(), formId)) throw new CommentNotFoundException(commentId);
 
         val isCommentOwner = Objects.equals(comment.getAuthorId(), keycloakJwtClaims.sub());
         if (!isCommentOwner) throw new ResponseStatusException(FORBIDDEN);
@@ -148,7 +147,7 @@ public class CommentService {
                 : formService.findOrThrow(formIdOrSlug).getId();
         val comment = findOrThrow(commentId);
 
-        if (!Objects.equals(comment.getFormId(), formId)) throw new ResponseStatusException(NOT_FOUND);
+        if (!Objects.equals(comment.getFormId(), formId)) throw new CommentNotFoundException(commentId);
 
         val isCommentOwner = Objects.equals(comment.getAuthorId(), keycloakJwtClaims.sub());
         val isAdmin = keycloakJwtClaims.roles().contains(Role.ADMIN);
