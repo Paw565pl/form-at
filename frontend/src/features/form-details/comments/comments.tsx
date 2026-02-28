@@ -50,7 +50,7 @@ export const Comments = ({ formIdOrSlug }: CommentsProps) => {
         <CreateCommentForm formIdOrSlug={formIdOrSlug} />
 
         {Array.from({ length: 4 }).map((_, i) => (
-          <CommentSkeleton key={`comment-skeleton-${i}`} />
+          <CommentSkeleton key={i} />
         ))}
       </div>
     );
@@ -123,9 +123,7 @@ export const Comments = ({ formIdOrSlug }: CommentsProps) => {
       </InfiniteScroll>
 
       {isFetchingNextPage &&
-        Array.from({ length: 3 }).map((_, i) => (
-          <CommentSkeleton key={`comment-skeleton-${i}`} />
-        ))}
+        Array.from({ length: 3 }).map((_, i) => <CommentSkeleton key={i} />)}
     </div>
   );
 };

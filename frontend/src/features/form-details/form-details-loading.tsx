@@ -66,7 +66,7 @@ export const FormDetailsLoading = () => {
         <Skeleton className="h-10 w-full" />
 
         {Array.from({ length: COMMENT_SKELETON_COUNT }).map((_, i) => (
-          <CommentSkeleton key={`comment-skeleton-${i}`} />
+          <CommentSkeleton key={i} />
         ))}
       </div>
     </section>

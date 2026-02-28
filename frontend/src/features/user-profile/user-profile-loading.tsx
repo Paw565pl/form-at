@@ -18,7 +18,7 @@ export const UserProfileLoading = () => {
         <div className="flex flex-2 flex-col gap-2">
           <Skeleton className="h-6 w-32" />
           {Array.from({ length: FORM_LIST_ITEM_COUNT }).map((_, i) => (
-            <FormListItemSkeleton key={`form-item-skeleton-${i}`} />
+            <FormListItemSkeleton key={i} />
           ))}
         </div>
       </div>

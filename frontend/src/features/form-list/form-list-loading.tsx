@@ -74,7 +74,7 @@ export const FormListLoading = () => {
       {/* Grid view skeleton */}
       <div className="grid grid-cols-1 gap-4 pt-2 sm:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: GRID_SKELETON_COUNT }).map((_, i) => (
-          <GridCardSkeleton key={`grid-skeleton-${i}`} />
+          <GridCardSkeleton key={i} />
         ))}
       </div>
     </section>

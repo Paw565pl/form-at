@@ -17,10 +17,7 @@ const StatisticsQuestionSkeleton = () => (
     {/* Answer progress bars */}
     <div className="flex flex-col gap-2">
       {Array.from({ length: 3 }).map((_, i) => (
-        <div
-          className="flex w-full max-w-sm flex-col gap-1.5"
-          key={`progress-${i}`}
-        >
+        <div className="flex w-full max-w-sm flex-col gap-1.5" key={i}>
           <div className="flex items-end justify-between">
             <Skeleton className="h-3 w-24" />
             <Skeleton className="h-3 w-16" />
@@ -50,7 +47,7 @@ export const FormStatisticsLoading = () => {
       {/* Question statistics cards */}
       <div className="flex flex-col gap-4">
         {Array.from({ length: QUESTION_SKELETON_COUNT }).map((_, i) => (
-          <StatisticsQuestionSkeleton key={`stats-skeleton-${i}`} />
+          <StatisticsQuestionSkeleton key={i} />
         ))}
       </div>
     </section>

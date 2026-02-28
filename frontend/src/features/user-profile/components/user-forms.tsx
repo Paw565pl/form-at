@@ -26,7 +26,7 @@ export const UserForms = ({ authorId }: UserFormsProps) => {
       <div className="flex flex-2 flex-col gap-2">
         <h2 className="text-lg font-bold md:text-xl">{t("forms")}</h2>
         {Array.from({ length: 3 }).map((_, i) => (
-          <FormListItemSkeleton key={`form-item-skeleton-${i}`} />
+          <FormListItemSkeleton key={i} />
         ))}
       </div>
     );

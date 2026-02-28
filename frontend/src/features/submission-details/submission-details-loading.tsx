@@ -35,7 +35,7 @@ export const SubmissionDetailsLoading = () => {
       {/* Question cards */}
       <div className="flex flex-col gap-4">
         {Array.from({ length: QUESTION_SKELETON_COUNT }).map((_, i) => (
-          <QuestionCardSkeleton key={`question-skeleton-${i}`} />
+          <QuestionCardSkeleton key={i} />
         ))}
       </div>
     </section>

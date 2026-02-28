@@ -86,7 +86,7 @@ export const GridView = () => {
       {(isLoading || isFetchingNextPage) && (
         <div className="grid grid-cols-1 gap-4 pt-2 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => (
-            <GridCardSkeleton key={`grid-skeleton-${i}`} />
+            <GridCardSkeleton key={i} />
           ))}
         </div>
       )}

@@ -46,7 +46,7 @@ export const ListView = () => {
       {(isLoading || isFetchingNextPage) && (
         <div className="grid grid-cols-1 gap-4 pt-2 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => (
-            <FormListItemSkeleton key={`grid-skeleton-${i}`} />
+            <FormListItemSkeleton key={i} />
           ))}
         </div>
       )}

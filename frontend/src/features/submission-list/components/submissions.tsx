@@ -134,7 +134,7 @@ export const Submissions = ({ formIdOrSlug }: SubmissionsProps) => {
       {(isLoading || isFetchingNextPage) && (
         <div className="flex flex-col gap-2">
           {Array.from({ length: 4 }).map((_, i) => (
-            <SubmissionCardSkeleton key={`submission-skeleton-${i}`} />
+            <SubmissionCardSkeleton key={i} />
           ))}
         </div>
       )}

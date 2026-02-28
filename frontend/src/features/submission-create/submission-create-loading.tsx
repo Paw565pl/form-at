@@ -40,7 +40,7 @@ export const SubmissionCreateLoading = () => {
 
       {/* Question cards */}
       {Array.from({ length: QUESTION_SKELETON_COUNT }).map((_, i) => (
-        <QuestionCardSkeleton key={`question-skeleton-${i}`} />
+        <QuestionCardSkeleton key={i} />
       ))}
 
       {/* Submit button */}
