@@ -79,12 +79,6 @@ public class CommentService {
                 .build());
 
         if (userId.isPresent()) {
-            //            operations.add(
-            //                    Aggregation.addFields()
-            //                            .addField("idString")
-            //                            .withValue(ConvertOperators.valueOf("_id").convertToString())
-            //                            .build()
-            //            );
             val commentRatingsLookup = LookupOperation.newLookup()
                     .from("commentRatings")
                     .localField("_id")
