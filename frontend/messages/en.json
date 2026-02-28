@@ -290,7 +290,9 @@
     "backToSubmissions": "Back to Submissions List",
     "emptyOpenAnswer": "No answer provided.",
     "deleteSubmission": "Delete Submission",
-    "deleteSubmissionDescription": "Are you sure you want to delete this submission? This action cannot be undone.",
+    "deleteDialogTitle": "Are you sure you want to delete this submission?",
+    "deleteDialogDescription": "This action cannot be undone and the submission will be deleted permanently.",
+    "delete": "Delete",
     "cancel": "Cancel",
     "deleteError": "Error deleting submission. Please try again.",
     "deleteSuccess": "Submission deleted successfully."

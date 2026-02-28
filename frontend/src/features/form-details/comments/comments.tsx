@@ -92,7 +92,9 @@ export const Comments = ({ formIdOrSlug }: CommentsProps) => {
                 />
               ) : (
                 <>
-                  <p className="py-2 text-sm">{comment.content}</p>
+                  <p className="py-2 text-sm text-pretty wrap-break-word">
+                    {comment.content}
+                  </p>
 
                   <RatingButtons
                     ratingScore={comment.ratingScore}
