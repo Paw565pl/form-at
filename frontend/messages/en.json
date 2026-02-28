@@ -147,7 +147,7 @@
     "submit": "Submit",
     "submitting": "Submitting",
     "errors": {
-      "unexpected": "An unexpected error occurred.",
+      "unexpected": "An unexpected error occurred while trying to create the form.",
       "formAlreadyExists": "Form with this name already exists."
     }
   },
@@ -162,7 +162,7 @@
     "updateDialogTitle": "Are you sure you want to update this form?",
     "updateDialogDescription": "All prior submissions for this form will be deleted. This action cannot be undone.",
     "errors": {
-      "unexpected": "An unexpected error occurred.",
+      "unexpected": "An unexpected error occurred while trying to edit the form.",
       "formAlreadyExists": "Form with this name already exists."
     }
   },

@@ -31,6 +31,8 @@ export const FormCreateForm = () => {
           const errorResponse = error.response?.data as ErrorResponseDto;
           if (errorResponse.code === "FORM_ALREADY_EXISTS") {
             toast.error(t("errors.formAlreadyExists"));
+          } else {
+            toast.error(t("errors.unexpected"));
           }
         } else {
           toast.error(t("errors.unexpected"));
