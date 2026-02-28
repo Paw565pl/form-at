@@ -55,11 +55,6 @@ export const FormDetailsLoading = () => {
         </div>
       </Card>
 
-      {/* Question list toggle button */}
-      <div className="mt-2">
-        <Skeleton className="h-8 w-36" />
-      </div>
-
       {/* Comments section */}
       <div className="flex flex-col gap-2 pt-4">
         {/* Create comment input */}
