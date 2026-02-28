@@ -46,7 +46,7 @@ export const Details = ({ form }: DetailsProps) => {
       </header>
 
       {form.description && (
-        <p className="text-pretty wrap-break-word">{form.description}</p>
+        <p className="wrap-break-word">{form.description}</p>
       )}
 
       {/* form tags */}

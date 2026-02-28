@@ -92,7 +92,7 @@ export const Comments = ({ formIdOrSlug }: CommentsProps) => {
                 />
               ) : (
                 <>
-                  <p className="py-2 text-sm text-pretty wrap-break-word">
+                  <p className="py-2 text-sm wrap-break-word">
                     {comment.content}
                   </p>
 
