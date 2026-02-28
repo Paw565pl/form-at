@@ -1,5 +1,5 @@
 import { apiService } from "@/core/services/api-service";
-import { minioService } from "@/core/services/minio-service";
+import { uploadService } from "@/core/services/upload-service";
 import { ErrorResponseDto } from "@/core/types/error-response-dto";
 import {
   FormDetailResponseDto,
@@ -45,7 +45,7 @@ export const useUpdateForm = (formIdOrSlug: string) => {
         ...request.questions.map((q) => q.image),
       ].filter((f) => f instanceof File);
 
-      const result = await minioService.upload(files, (percent) =>
+      const result = await uploadService.upload(files, (percent) =>
         setUploadProgressPercent(percent),
       );
       if (!result.isSuccess) throw result.error;

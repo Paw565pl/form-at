@@ -6,6 +6,9 @@ import org.springframework.http.HttpStatus;
 
 public final class CommentNotRatedByUserException extends ApplicationException {
     public CommentNotRatedByUserException(@NonNull String commentId) {
-        super(HttpStatus.NOT_FOUND, String.format("Comment wih id '%s' has not been rated by the user", commentId));
+        super(
+                HttpStatus.NOT_FOUND,
+                "COMMENT_NOT_RATED_BY_USER",
+                String.format("Comment wih id '%s' has not been rated by the user", commentId));
     }
 }

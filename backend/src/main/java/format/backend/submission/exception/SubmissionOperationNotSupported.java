@@ -7,6 +7,9 @@ import org.springframework.http.HttpStatus;
 public final class SubmissionOperationNotSupported extends ApplicationException {
 
     public SubmissionOperationNotSupported(@NonNull String formIdOrSlug) {
-        super(HttpStatus.CONFLICT, String.format("Form with id or slug '%s' does not save submissions", formIdOrSlug));
+        super(
+                HttpStatus.CONFLICT,
+                "SUBMISSION_OPERATION_NOT_SUPPORTED",
+                String.format("Form with id or slug '%s' does not save submissions", formIdOrSlug));
     }
 }

@@ -1,7 +1,5 @@
 package format.backend.submission.entity;
 
-import format.backend.auth.entity.UserEntity;
-import format.backend.form.entity.FormEntity;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +14,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
@@ -25,7 +22,7 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 @Setter
 @RequiredArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@CompoundIndex(def = "{'formId': 1, 'authorId': 1}", unique = true, partialFilter = "{'authorId': {'$exists': true}}")
+@CompoundIndex(def = "{'formId': 1, 'authorId': 1}", unique = true, partialFilter = "{'authorId': {'$type': 'string'}}")
 @Document(collection = "submissions")
 public class SubmissionEntity {
 
@@ -34,14 +31,12 @@ public class SubmissionEntity {
     private String id;
 
     @Indexed
-    @DocumentReference(lazy = true)
-    @Field(name = "formId")
-    private @NonNull FormEntity form;
+    @Field(name = "formId", targetType = FieldType.OBJECT_ID)
+    private @NonNull String formId;
 
-    @Indexed
-    @DocumentReference(lazy = true)
+    @Indexed(partialFilter = "{'authorId': {'$type': 'string'}}")
     @Field(name = "authorId")
-    private @Nullable UserEntity author;
+    private @Nullable String authorId;
 
     @Field(name = "answers")
     @Setter(AccessLevel.NONE)

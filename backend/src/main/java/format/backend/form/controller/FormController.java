@@ -43,7 +43,7 @@ public class FormController {
     @GetMapping
     public Page<@NonNull FormListResponseDto> findAllPublic(
             FormFilterDto filterDto,
-            @PageableDefault(size = 20, sort = "updatedAt", direction = DESC) Pageable pageable) {
+            @PageableDefault(size = 20, sort = "createdAt", direction = DESC) Pageable pageable) {
         return formService.findAllPublic(filterDto, pageable);
     }
 
@@ -64,7 +64,6 @@ public class FormController {
         val keycloakJwtClaims = Optional.ofNullable(jwt)
                 .map(keycloakJwtClaimsExtractor::getClaims)
                 .orElse(null);
-
         return formService.findPrivateByIdOrSlug(keycloakJwtClaims, idOrSlug, accessRequestDto);
     }
 

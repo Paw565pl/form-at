@@ -2,7 +2,7 @@ package format.backend.auth.dto;
 
 import org.jspecify.annotations.NonNull;
 
-public record UserProfile(
+public record UserProfileResponseDto(
         @NonNull String id,
         @NonNull String username,
-        @NonNull UserStatistics statistics) {}
+        @NonNull UserStatisticsDto statistics) {}

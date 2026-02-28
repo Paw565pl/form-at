@@ -1,6 +1,5 @@
 import { getQueryClient } from "@/core/lib/tanstack-query";
 import { auth } from "@/features/auth/config/auth-config";
-import { Role } from "@/features/auth/types/role";
 import {
   getFetchFormDetailsQueryOptions,
   prefetchFormDetails,
@@ -22,9 +21,7 @@ export const FormEditPage = async ({
     getFetchFormDetailsQueryOptions(slug).queryKey,
   );
   const isFormAuthor = session?.user.name === formDetails?.authorName;
-  const isAdmin = session?.user.roles.includes(Role.ADMIN);
-
-  if (!(isFormAuthor || isAdmin)) return notFound();
+  if (!isFormAuthor) return notFound();
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
