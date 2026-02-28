@@ -1,11 +1,9 @@
 package format.backend.comment.mapper;
 
-import format.backend.auth.entity.UserEntity;
 import format.backend.comment.dto.CommentRequestDto;
 import format.backend.comment.dto.CommentResponseDto;
 import format.backend.comment.entity.CommentEntity;
 import format.backend.comment_rating.entity.RatingType;
-import format.backend.form.entity.FormEntity;
 import org.jspecify.annotations.Nullable;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -19,11 +17,9 @@ public interface CommentMapper {
     CommentResponseDto toResponseDto(CommentEntity comment, String authorName, @Nullable RatingType userRating);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "form", source = "form")
-    @Mapping(target = "author", source = "author")
     @Mapping(target = "ratingScore", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "version", ignore = true)
-    CommentEntity toEntity(CommentRequestDto commentRequestDto, FormEntity form, @Nullable UserEntity author);
+    CommentEntity toEntity(CommentRequestDto commentRequestDto, String formId, String authorId);
 }

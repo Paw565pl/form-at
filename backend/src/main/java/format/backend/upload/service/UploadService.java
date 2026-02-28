@@ -72,7 +72,7 @@ public class UploadService {
                     val fileExtension = lastDotIndex == -1 ? fileName : fileName.substring(lastDotIndex + 1);
 
                     val key = String.format("%s/%s", UUID.randomUUID(), fileName);
-                    val contentType = ImageExtension.fromStringValue(fileExtension)
+                    val contentType = ImageExtension.fromExtensionValue(fileExtension)
                             .map(ImageExtension::getContentType)
                             .orElse("*/*");
                     val expiresAt = Instant.now().plus(expiryDuration);

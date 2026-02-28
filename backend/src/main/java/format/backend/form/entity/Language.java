@@ -1,11 +1,9 @@
 package format.backend.form.entity;
 
-import java.util.Arrays;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.val;
 
 @Getter
 @AllArgsConstructor
@@ -13,12 +11,17 @@ public enum Language {
     EN("english"),
     PL("none");
 
-    private final String mongoValue;
+    private final String value;
 
-    private static final Map<String, Language> mongoValueToLanguageMap =
-            Arrays.stream(values()).collect(Collectors.toMap(l -> l.mongoValue.toLowerCase(), l -> l));
+    public static Optional<Language> fromValue(String value) {
+        if (value == null) return Optional.empty();
 
-    public static Optional<Language> fromMongoValue(String mongoValue) {
-        return Optional.ofNullable(mongoValueToLanguageMap.get(mongoValue.toLowerCase()));
+        for (val language : values()) {
+            if (language.getValue().equalsIgnoreCase(value)) {
+                return Optional.of(language);
+            }
+        }
+
+        return Optional.empty();
     }
 }

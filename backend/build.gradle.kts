@@ -3,11 +3,11 @@ import com.diffplug.spotless.LineEnding
 plugins {
     java
     idea
-    id("org.springframework.boot") version "4.0.2"
-    id("org.springframework.boot.aot") version "4.0.2" apply false
+    id("org.springframework.boot") version "4.0.3"
+    id("org.springframework.boot.aot") version "4.0.3" apply false
     id("io.spring.dependency-management") version "1.1.7"
     id("se.solrike.sonarlint") version "2.2.0"
-    id("com.diffplug.spotless") version "8.2.0"
+    id("com.diffplug.spotless") version "8.2.1"
 }
 
 if (project.hasProperty("aot")) {
@@ -15,7 +15,7 @@ if (project.hasProperty("aot")) {
 }
 
 group = "format"
-version = "0.0.1-SNAPSHOT"
+version = "0.0.1"
 description = "backend"
 
 java {
@@ -39,14 +39,14 @@ spotless {
         removeUnusedImports()
         importOrder()
         cleanthat()
-        palantirJavaFormat("2.85.0")
+        palantirJavaFormat("2.89.0")
         trimTrailingWhitespace()
         leadingTabsToSpaces()
         endWithNewline()
         formatAnnotations()
     }
 
-    val prettierVersion = "3.7.4"
+    val prettierVersion = "3.8.1"
 
     yaml {
         target("src/**/*.yaml")
@@ -70,12 +70,12 @@ repositories {
 }
 
 val mapstructVersion = "1.6.3"
-val springdocVersion = "3.0.1"
 val slugifyVersion = "3.0.7"
 val minioVersion = "8.6.0"
+val linguaVersion = "1.2.2"
 val restAssuredVersion = "6.0.0"
-val dataFakerVersion = "2.5.3"
-val sonarlintVersion = "8.9.4.40912"
+val dataFakerVersion = "2.5.4"
+val sonarJavaVersion = "8.9.4.40912"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
@@ -85,9 +85,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
     implementation("org.mapstruct:mapstruct:$mapstructVersion")
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdocVersion")
     implementation("com.github.slugify:slugify:$slugifyVersion")
     implementation("io.minio:minio:$minioVersion")
+    implementation("com.github.pemistahl:lingua:$linguaVersion")
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
@@ -105,7 +105,7 @@ dependencies {
     testImplementation("io.rest-assured:rest-assured:$restAssuredVersion")
     testImplementation("net.datafaker:datafaker:$dataFakerVersion")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    sonarlintPlugins("org.sonarsource.java:sonar-java-plugin:$sonarlintVersion")
+    sonarlintPlugins("org.sonarsource.java:sonar-java-plugin:$sonarJavaVersion")
 }
 
 tasks.withType<JavaCompile> {

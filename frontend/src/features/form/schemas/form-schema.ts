@@ -117,6 +117,7 @@ export const getFormSchema = (t: TranslateError) =>
       allowsQuestionsPreview: z.boolean(),
       allowsGuestSubmissions: z.boolean(),
       saveSubmissions: z.boolean(),
+      showAnswersFeedback: z.boolean(),
       // file is new file selected by user
       // string is existing url
       thumbnail: z.file().or(z.string()).optional(),

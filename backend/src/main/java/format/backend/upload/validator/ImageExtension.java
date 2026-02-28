@@ -1,11 +1,9 @@
 package format.backend.upload.validator;
 
-import java.util.Arrays;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.val;
 
 @Getter
 @AllArgsConstructor
@@ -19,10 +17,15 @@ public enum ImageExtension {
     private final String extensionValue;
     private final String contentType;
 
-    private static final Map<String, ImageExtension> extensionValueToImageExtensionMap = Arrays.stream(values())
-            .collect(Collectors.toMap(l -> l.getExtensionValue().toLowerCase(), l -> l));
+    public static Optional<ImageExtension> fromExtensionValue(String extensionValue) {
+        if (extensionValue == null) return Optional.empty();
 
-    public static Optional<ImageExtension> fromStringValue(String value) {
-        return Optional.ofNullable(extensionValueToImageExtensionMap.get(value.toLowerCase()));
+        for (val imageExtension : values()) {
+            if (imageExtension.getExtensionValue().equalsIgnoreCase(extensionValue)) {
+                return Optional.of(imageExtension);
+            }
+        }
+
+        return Optional.empty();
     }
 }

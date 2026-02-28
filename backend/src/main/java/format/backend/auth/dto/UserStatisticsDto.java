@@ -2,7 +2,7 @@ package format.backend.auth.dto;
 
 import org.jspecify.annotations.NonNull;
 
-public record UserStatistics(
+public record UserStatisticsDto(
         @NonNull Integer formsCount,
         @NonNull Integer submissionsCount,
         @NonNull Integer commentsCount) {}

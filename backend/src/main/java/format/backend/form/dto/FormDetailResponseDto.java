@@ -1,5 +1,6 @@
 package format.backend.form.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import format.backend.form.entity.FormShuffleVariant;
 import format.backend.form.entity.FormStatus;
 import format.backend.form.entity.Language;
@@ -36,17 +37,19 @@ public record FormDetailResponseDto(
 
         @NonNull Boolean saveSubmissions,
 
-        @Nullable String authorName,
-
-        @NonNull Long submissionsCount,
+        @NonNull Boolean showAnswersFeedback,
 
         @NonNull List<@NonNull QuestionResponseDto> questions,
 
+        @NonNull Long submissionsCount,
+
         @NonNull Long ratingsCount,
 
-        @Nullable Double ratingAvg,
+        @JsonFormat(shape = JsonFormat.Shape.NUMBER_FLOAT, pattern = "0.0") @Nullable Double ratingAvg,
 
-        @Nullable Double userRating,
+        @Nullable Integer userRating,
+
+        @Nullable String authorName,
 
         @NonNull Instant createdAt,
 
