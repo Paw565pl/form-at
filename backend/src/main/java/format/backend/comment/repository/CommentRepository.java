@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.mongodb.repository.Update;
 
 public interface CommentRepository extends MongoRepository<@NonNull CommentEntity, @NonNull String> {
-    int countAllByAuthorId(String authorId);
+    long countAllByAuthorId(String authorId);
 
     List<CommentEntity> deleteAllByFormId(String formId);
 
