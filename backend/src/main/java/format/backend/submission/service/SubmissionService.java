@@ -72,7 +72,9 @@ public class SubmissionService {
             KeycloakJwtClaims keycloakJwtClaims, String formIdOrSlug, Pageable pageable) {
         val form = formService.findOrThrow(formIdOrSlug);
         isOwnerOrAdminCheck(Optional.ofNullable(form.getAuthorId()), keycloakJwtClaims);
-        if (!form.getSaveSubmissions()) throw new SubmissionOperationNotSupported(formIdOrSlug);
+        if (!form.getSaveSubmissions() || form.getAuthorId() == null) {
+            throw new SubmissionOperationNotSupported(formIdOrSlug);
+        }
 
         val countOperations = List.of(
                 Aggregation.match(Criteria.where(FORM_ID_FIELD).is(form.getId())),
@@ -108,7 +110,9 @@ public class SubmissionService {
             KeycloakJwtClaims keycloakJwtClaims, String formIdOrSlug, String submissionId) {
         val form = formService.findOrThrow(formIdOrSlug);
         isOwnerOrAdminCheck(Optional.ofNullable(form.getAuthorId()), keycloakJwtClaims);
-        if (!form.getSaveSubmissions()) throw new SubmissionOperationNotSupported(formIdOrSlug);
+        if (!form.getSaveSubmissions() || form.getAuthorId() == null) {
+            throw new SubmissionOperationNotSupported(formIdOrSlug);
+        }
 
         val submission = submissionRepository
                 .findByIdAndFormId(submissionId, form.getId())
@@ -124,7 +128,9 @@ public class SubmissionService {
             KeycloakJwtClaims keycloakJwtClaims, String formIdOrSlug) {
         val form = formService.findOrThrow(formIdOrSlug);
         isOwnerOrAdminCheck(Optional.ofNullable(form.getAuthorId()), keycloakJwtClaims);
-        if (!form.getSaveSubmissions()) throw new SubmissionOperationNotSupported(formIdOrSlug);
+        if (!form.getSaveSubmissions() || form.getAuthorId() == null) {
+            throw new SubmissionOperationNotSupported(formIdOrSlug);
+        }
 
         val operations = new ArrayList<AggregationOperation>();
 
@@ -158,7 +164,9 @@ public class SubmissionService {
     public SubmissionResponseDto findByFormIdOrSlugAndAuthorId(
             KeycloakJwtClaims keycloakJwtClaims, String formIdOrSlug) {
         val form = formService.findOrThrow(formIdOrSlug);
-        if (!form.getSaveSubmissions()) throw new SubmissionOperationNotSupported(formIdOrSlug);
+        if (!form.getSaveSubmissions() || form.getAuthorId() == null) {
+            throw new SubmissionOperationNotSupported(formIdOrSlug);
+        }
 
         val submission = submissionRepository
                 .findByFormIdAndAuthorId(form.getId(), keycloakJwtClaims.sub())
@@ -174,7 +182,9 @@ public class SubmissionService {
         if (!form.getAllowsGuestSubmissions() && keycloakJwtClaims == null) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
-        if (!form.getSaveSubmissions()) throw new SubmissionOperationNotSupported(formIdOrSlug);
+        if (!form.getSaveSubmissions() || form.getAuthorId() == null) {
+            throw new SubmissionOperationNotSupported(formIdOrSlug);
+        }
 
         val errors = submissionValidator.validate(form, requestDto);
         if (!errors.isEmpty()) throw new ValidationException(errors);
@@ -223,7 +233,9 @@ public class SubmissionService {
     public void delete(KeycloakJwtClaims keycloakJwtClaims, String formIdOrSlug, String submissionId) {
         val form = formService.findOrThrow(formIdOrSlug);
         isOwnerOrAdminCheck(Optional.ofNullable(form.getAuthorId()), keycloakJwtClaims);
-        if (!form.getSaveSubmissions()) throw new SubmissionOperationNotSupported(formIdOrSlug);
+        if (!form.getSaveSubmissions() || form.getAuthorId() == null) {
+            throw new SubmissionOperationNotSupported(formIdOrSlug);
+        }
 
         val submission = submissionRepository
                 .findByIdAndFormId(submissionId, form.getId())

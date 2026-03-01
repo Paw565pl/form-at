@@ -15,5 +15,5 @@ public interface SubmissionMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
-    SubmissionEntity toEntity(SubmissionRequestDto submissionRequestDto, String formId, String authorId);
+    SubmissionEntity toEntity(SubmissionRequestDto submissionRequestDto, String formId, @Nullable String authorId);
 }
