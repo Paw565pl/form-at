@@ -52,7 +52,6 @@
     "questions": "{count, plural, one {# pytanie} few {# pytania} many {# pytań} other {# pytań}}",
     "submissions": "{count, plural, one {# odpowiedź} other {# odpowiedzi}}",
     "end": "Dotarłeś do końca listy.",
-    "loading": "Ładowanie formularzy...",
     "empty": "Brak formularzy dla wybranych kryteriów wyszukiwania."
   },
   "formBaseForm": {
@@ -153,7 +152,6 @@
   },
   "formEditPage": {
     "pageTitle": "Edytuj formularz",
-    "loading": "Ładowanie...",
     "successMessage": "Pomyślnie zapisano formularz!",
     "submit": "Zapisz",
     "submitting": "Zapisywanie",
@@ -167,7 +165,6 @@
     }
   },
   "formDetailsPage": {
-    "loading": "Ładowanie...",
     "privateForm": {
       "enterThePassword": "Wprowadź hasło do formularza",
       "passwordDescription": "Ten formularz jest prywatny, poproś autora formularza o hasło dostępu.",
@@ -238,7 +235,6 @@
       "ratingError": "Błąd podczas przesyłania oceny. Spróbuj ponownie.",
       "ratingLike": "Lubię to",
       "ratingDislike": "Nie lubię tego",
-      "loading": "Ładowanie komentarzy...",
       "moreOptions": "Więcej opcji",
       "deletedUser": "Usunięty użytkownik",
       "errors": {
@@ -253,10 +249,8 @@
     }
   },
   "userProfilePage": {
-    "loadingProfile": "Ładowanie profilu użytkownika...",
     "usersForms": {
       "forms": "Ostatnio utworzone formularze użytkownika",
-      "loadingForms": "Ładowanie ostatnio utworzonych formularzy użytkownika...",
       "noForms": "Nie znaleziono formularzy. Utwórz swój pierwszy formularz!",
       "createForm": "Utwórz nowy formularz"
     },
@@ -266,7 +260,6 @@
     "commentsCount": "Komentarze"
   },
   "submissionCreatePage": {
-    "loading": "Ładowanie formularza...",
     "yourAnswer": "Wpisz swoją odpowiedź poniżej",
     "submit": "Wyślij",
     "submissionCreated": "Pomyślnie przesłano odpowiedź!",
@@ -285,27 +278,26 @@
     "back": "Wróć do szczegółów formularza",
     "title": "Wyświetlanie {count, plural, one {# odpowiedzi} other {# odpowiedzi}} dla {formName}",
     "end": "Dotarłeś do końca listy.",
-    "loading": "Ładowanie odpowiedzi...",
     "empty": "Nikt jeszcze nie wypełnił tego formularza.",
     "createdAt": "Przesłano {date}",
     "unknownAuthor": "Nieznany autor",
     "viewStatistics": "Statystyki odpowiedzi"
   },
   "submissionDetailsPage": {
-    "loading": "Ładowanie odpowiedzi...",
     "submissionBy": "Odpowiedź użytkownika {authorName}",
     "submissionByUnknown": "Odpowiedź nieznanego użytkownika",
     "backToSubmissions": "Powrót do listy odpowiedzi",
     "emptyOpenAnswer": "Nie udzielono odpowiedzi.",
     "deleteSubmission": "Usuń odpowiedź",
-    "deleteSubmissionDescription": "Czy na pewno chcesz usunąć tę odpowiedź? Ta akcja jest nieodwracalna.",
+    "deleteDialogTitle": "Czy na pewno chcesz usunąć tę odpowiedź?",
+    "deleteDialogDescription": "Tej operacji nie można cofnąć, a odpowiedź zostanie trwale usunięta.",
+    "delete": "Usuń",
     "cancel": "Anuluj",
     "deleteError": "Błąd podczas usuwania odpowiedzi. Spróbuj ponownie.",
     "deleteSuccess": "Odpowiedź została pomyślnie usunięta."
   },
   "statisticsPage": {
     "back": "Wróć do szczegółów formularza",
-    "loading": "Ładowanie statystyk...",
     "noSubmissions": "Nikt jeszcze nie wypełnił tego formularza.",
     "title": "Statystyki odpowiedzi dla {formName}",
     "viewSubmissions": "Odpowiedzi formularza",

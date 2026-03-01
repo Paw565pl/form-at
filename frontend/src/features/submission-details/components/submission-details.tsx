@@ -15,6 +15,7 @@ import { cn } from "@/core/lib/cn";
 import { useFetchFormDetails } from "@/features/form-details/hooks/use-fetch-form-details";
 import { DeleteSubmissionAlertDialog } from "@/features/submission-details/components/delete-submission-alert-dialog";
 import { useFetchSubmissionDetails } from "@/features/submission-details/hooks/use-fetch-submission-details";
+import { SubmissionDetailsLoading } from "@/features/submission-details/submission-details-loading";
 import { HttpStatusCode } from "axios";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
@@ -50,7 +51,7 @@ export const SubmissionDetails = ({
   }
 
   if (!formData || !submissionData || isFormLoading || isSubmissionLoading)
-    return <p>{t("loading")}</p>;
+    return <SubmissionDetailsLoading />;
 
   return (
     <section

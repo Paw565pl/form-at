@@ -52,7 +52,6 @@
     "questions": "{count, plural, one {# question} other {# questions}}",
     "submissions": "{count, plural, one {# submission} other {# submissions}}",
     "end": "You have reached the end of the list.",
-    "loading": "Loading forms...",
     "empty": "No forms found for given criteria."
   },
   "formBaseForm": {
@@ -153,7 +152,6 @@
   },
   "formEditPage": {
     "pageTitle": "Edit Form",
-    "loading": "Loading...",
     "successMessage": "Form updated successfully!",
     "submit": "Submit",
     "submitting": "Submitting",
@@ -180,7 +178,6 @@
         "unexpected": "An unexpected error occurred."
       }
     },
-    "loading": "Loading...",
     "banner": {
       "cancel": "Cancel",
       "confirm": "Confirm",
@@ -238,7 +235,6 @@
       "ratingError": "Error submitting rating. Please try again.",
       "ratingLike": "Like",
       "ratingDislike": "Dislike",
-      "loading": "Loading comments...",
       "moreOptions": "More Options",
       "deletedUser": "Deleted User",
       "errors": {
@@ -253,10 +249,8 @@
     }
   },
   "userProfilePage": {
-    "loadingProfile": "Loading Profile...",
     "usersForms": {
       "forms": "Recently Created User's Forms",
-      "loadingForms": "Loading Recently Created User's Forms...",
       "noForms": "No forms found. Create your first form!",
       "createForm": "Create New Form"
     },
@@ -266,7 +260,6 @@
     "commentsCount": "Comments"
   },
   "submissionCreatePage": {
-    "loading": "Loading form...",
     "yourAnswer": "Enter your answer below",
     "submit": "Send",
     "submissionCreated": "Submission sent successfully!",
@@ -285,27 +278,26 @@
     "back": "Go Back to Form Details",
     "title": "Showing {count, plural, one {# submission} other {# submissions}} for {formName}",
     "end": "You have reached the end of the list.",
-    "loading": "Loading submissions...",
     "empty": "Nobody has completed this form yet.",
     "createdAt": "Submitted at {date}",
     "unknownAuthor": "Unknown Author",
     "viewStatistics": "Submission Statistics"
   },
   "submissionDetailsPage": {
-    "loading": "Loading submission details...",
     "submissionBy": "Submission by {authorName}",
     "submissionByUnknown": "Submission by Unknown User",
     "backToSubmissions": "Back to Submissions List",
     "emptyOpenAnswer": "No answer provided.",
     "deleteSubmission": "Delete Submission",
-    "deleteSubmissionDescription": "Are you sure you want to delete this submission? This action cannot be undone.",
+    "deleteDialogTitle": "Are you sure you want to delete this submission?",
+    "deleteDialogDescription": "This action cannot be undone and the submission will be deleted permanently.",
+    "delete": "Delete",
     "cancel": "Cancel",
     "deleteError": "Error deleting submission. Please try again.",
     "deleteSuccess": "Submission deleted successfully."
   },
   "statisticsPage": {
     "back": "Go Back to Form Details",
-    "loading": "Loading statistics...",
     "noSubmissions": "Nobody has completed this form yet.",
     "title": "Submission Statistics for {formName}",
     "viewSubmissions": "Form Submissions",

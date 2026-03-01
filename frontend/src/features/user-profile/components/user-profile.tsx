@@ -4,6 +4,7 @@ import { Card, CardDescription, CardTitle } from "@/core/components/ui/card";
 import { UserImage } from "@/core/components/user-image/user-image";
 import { UserForms } from "@/features/user-profile/components/user-forms";
 import { useFetchUserProfile } from "@/features/user-profile/hooks/use-fetch-user-profile";
+import { UserProfileLoading } from "@/features/user-profile/user-profile-loading";
 import { HttpStatusCode } from "axios";
 import { useTranslations } from "next-intl";
 import { notFound } from "next/navigation";
@@ -25,7 +26,7 @@ export const UserProfile = ({ username }: UserProfileProps) => {
     else throw error;
   }
 
-  if (!userProfile || isProfileLoading) return <p>{t("loadingProfile")}</p>;
+  if (!userProfile || isProfileLoading) return <UserProfileLoading />;
 
   return (
     <section
