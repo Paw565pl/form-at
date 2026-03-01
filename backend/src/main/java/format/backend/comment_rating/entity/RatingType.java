@@ -13,8 +13,10 @@ public enum RatingType {
 
     private final int value;
 
+    private static final RatingType[] VALUES = values();
+
     public static Optional<RatingType> fromValue(int value) {
-        for (val ratingType : values()) {
+        for (val ratingType : VALUES) {
             if (ratingType.getValue() == value) {
                 return Optional.of(ratingType);
             }

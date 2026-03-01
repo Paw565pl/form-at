@@ -13,10 +13,12 @@ public enum Language {
 
     private final String value;
 
+    private static final Language[] VALUES = values();
+
     public static Optional<Language> fromValue(String value) {
         if (value == null) return Optional.empty();
 
-        for (val language : values()) {
+        for (val language : VALUES) {
             if (language.getValue().equalsIgnoreCase(value)) {
                 return Optional.of(language);
             }

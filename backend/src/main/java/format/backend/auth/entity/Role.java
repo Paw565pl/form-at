@@ -20,10 +20,12 @@ public enum Role {
         return "ROLE_" + value;
     }
 
+    private static final Role[] VALUES = values();
+
     public static Optional<Role> fromValue(String value) {
         if (value == null) return Optional.empty();
 
-        for (val role : values()) {
+        for (val role : VALUES) {
             if (role.getValue().equalsIgnoreCase(value)) {
                 return Optional.of(role);
             }
