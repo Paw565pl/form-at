@@ -4,6 +4,7 @@ import { ErrorResponseDto } from "@/core/types/error-response-dto";
 import { FormRequest } from "@/core/types/form";
 import { useFetchFormDetails } from "@/features/form-details/hooks/use-fetch-form-details";
 import { FormEditFormSubmitAlertDialog } from "@/features/form-edit/components/form-edit-form-submit-alert-dialog";
+import { FormEditLoading } from "@/features/form-edit/form-edit-loading";
 import { useUpdateForm } from "@/features/form-edit/hooks/use-update-form";
 import { FormBaseForm } from "@/features/form/components/form-base-form";
 import { AxiosError, HttpStatusCode } from "axios";
@@ -35,7 +36,7 @@ export const FormEditForm = ({ slug }: FormEditFormProps) => {
     else throw error;
   }
 
-  if (isLoading || !formDetails) return <p>{t("loading")}</p>;
+  if (isLoading || !formDetails) return <FormEditLoading />;
 
   const onSubmit = (request: FormRequest) => {
     updateForm(request, {

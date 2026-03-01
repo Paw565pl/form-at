@@ -11,6 +11,10 @@ import {
 import { ICONS } from "@/core/config/icons";
 import { useFetchFormDetails } from "@/features/form-details/hooks/use-fetch-form-details";
 import { useFetchSubmissionPages } from "@/features/submission-list/hooks/use-fetch-submission-pages";
+import {
+  SubmissionCardSkeleton,
+  SubmissionListLoading,
+} from "@/features/submission-list/submission-list-loading";
 import { HttpStatusCode } from "axios";
 import { useFormatter, useTranslations } from "next-intl";
 import Link from "next/link";
@@ -45,7 +49,7 @@ export const Submissions = ({ formIdOrSlug }: SubmissionsProps) => {
     else throw error;
   }
 
-  if (!formData) return <p>{t("loading")}</p>;
+  if (!formData) return <SubmissionListLoading />;
 
   const totalElements = submissionPages?.pages.at(0)?.page.totalElements || 0;
 
@@ -127,7 +131,13 @@ export const Submissions = ({ formIdOrSlug }: SubmissionsProps) => {
         <p className="p-4 text-center">{t("empty")}</p>
       )}
 
-      {(isLoading || isFetchingNextPage) && <p>{t("loading")}</p>}
+      {(isLoading || isFetchingNextPage) && (
+        <div className="flex flex-col gap-2">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <SubmissionCardSkeleton key={i} />
+          ))}
+        </div>
+      )}
 
       {!isLoading && !hasNextPage && (
         <p className="text-muted-foreground p-4 text-center text-sm">

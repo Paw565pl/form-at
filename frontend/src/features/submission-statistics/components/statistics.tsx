@@ -11,6 +11,7 @@ import {
 } from "@/core/components/ui/tooltip";
 import { ICONS } from "@/core/config/icons";
 import { useFetchFormDetails } from "@/features/form-details/hooks/use-fetch-form-details";
+import { FormStatisticsLoading } from "@/features/submission-statistics/form-statistics-loading";
 import { useFetchFormStatistics } from "@/features/submission-statistics/hooks/use-fetch-form-statistics";
 import { HttpStatusCode } from "axios";
 import { useTranslations } from "next-intl";
@@ -55,7 +56,7 @@ export const Statistics = ({ formIdOrSlug }: StatisticsProps) => {
     isLoadingFormDetails ||
     isLoadingFormStatistics
   )
-    return <p>{t("loading")}</p>;
+    return <FormStatisticsLoading />;
 
   return (
     <section

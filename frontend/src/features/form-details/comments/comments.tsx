@@ -5,6 +5,7 @@ import { CreateCommentForm } from "@/features/form-details/comments/components/c
 import { EditCommentForm } from "@/features/form-details/comments/components/edit-comment-form";
 import { useFetchFormCommentsPages } from "@/features/form-details/comments/hooks/use-fetch-form-comments-pages";
 import { RatingButtons } from "@/features/form-details/comments/rating/components/rating-buttons";
+import { CommentSkeleton } from "@/features/form-details/form-details-loading";
 import { useFormatter, useTranslations } from "next-intl";
 import Link from "next/link";
 import { useState } from "react";
@@ -47,7 +48,10 @@ export const Comments = ({ formIdOrSlug }: CommentsProps) => {
     return (
       <div className="flex flex-col gap-2 pt-4">
         <CreateCommentForm formIdOrSlug={formIdOrSlug} />
-        <p className="text-muted-foreground text-center">{t("loading")}</p>
+
+        {Array.from({ length: 4 }).map((_, i) => (
+          <CommentSkeleton key={i} />
+        ))}
       </div>
     );
   }
@@ -118,9 +122,8 @@ export const Comments = ({ formIdOrSlug }: CommentsProps) => {
         )}
       </InfiniteScroll>
 
-      {isFetchingNextPage && (
-        <p className="text-muted-foreground text-center">{t("loading")}</p>
-      )}
+      {isFetchingNextPage &&
+        Array.from({ length: 3 }).map((_, i) => <CommentSkeleton key={i} />)}
     </div>
   );
 };
