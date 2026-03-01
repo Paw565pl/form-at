@@ -289,7 +289,9 @@
     "backToSubmissions": "Powrót do listy odpowiedzi",
     "emptyOpenAnswer": "Nie udzielono odpowiedzi.",
     "deleteSubmission": "Usuń odpowiedź",
-    "deleteSubmissionDescription": "Czy na pewno chcesz usunąć tę odpowiedź? Ta akcja jest nieodwracalna.",
+    "deleteDialogTitle": "Czy na pewno chcesz usunąć tę odpowiedź?",
+    "deleteDialogDescription": "Tej operacji nie można cofnąć, a odpowiedź zostanie trwale usunięta.",
+    "delete": "Usuń",
     "cancel": "Anuluj",
     "deleteError": "Błąd podczas usuwania odpowiedzi. Spróbuj ponownie.",
     "deleteSuccess": "Odpowiedź została pomyślnie usunięta."

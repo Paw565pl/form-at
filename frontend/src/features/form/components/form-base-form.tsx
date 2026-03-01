@@ -137,7 +137,6 @@ export const FormBaseForm = ({
       isRequired: true,
       answers: [],
     });
-    form.trigger("questions");
   };
 
   const appendAnswer = (questionIdx: number) => {

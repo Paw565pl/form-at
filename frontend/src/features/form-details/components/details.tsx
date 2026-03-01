@@ -45,7 +45,9 @@ export const Details = ({ form }: DetailsProps) => {
         />
       </header>
 
-      {form.description && <p>{form.description}</p>}
+      {form.description && (
+        <p className="wrap-break-word">{form.description}</p>
+      )}
 
       {/* form tags */}
       <div className="text-muted-foreground flex flex-wrap items-center gap-2 text-sm md:gap-4">

@@ -1,6 +1,7 @@
 import {
   AlertDialog,
   AlertDialogAction,
+  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
@@ -8,10 +9,9 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/core/components/ui/alert-dialog";
-import { Button } from "@/core/components/ui/button";
+import { Button, buttonVariants } from "@/core/components/ui/button";
 import { ICONS } from "@/core/config/icons";
 import { useDeleteSubmission } from "@/features/submission-details/hooks/use-delete-submission";
-import { AlertDialogCancel } from "@radix-ui/react-alert-dialog";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -59,15 +59,18 @@ export const DeleteSubmissionAlertDialog = ({
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{t("deleteSubmission")}</AlertDialogTitle>
+          <AlertDialogTitle>{t("deleteDialogTitle")}</AlertDialogTitle>
           <AlertDialogDescription>
-            {t("deleteSubmissionDescription")}
+            {t("deleteDialogDescription")}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDelete}>
-            {t("deleteSubmission")}
+          <AlertDialogAction
+            onClick={handleDelete}
+            className={buttonVariants({ variant: "destructive" })}
+          >
+            {t("delete")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
