@@ -1,6 +1,5 @@
 package format.backend.form.mapper;
 
-import format.backend.auth.entity.UserEntity;
 import format.backend.form.dto.FormDetailResponseDto;
 import format.backend.form.dto.FormListResponseDto;
 import format.backend.form.dto.FormRequestDto;
@@ -17,56 +16,38 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = QuestionMapper.class)
 public interface FormMapper {
 
-    @Mapping(target = "ratingsCount", expression = "java(formEntity.getRatingsCount())")
-    @Mapping(
-            target = "ratingAvg",
-            expression =
-                    "java(formEntity.getRatingAvg() == null ? null : Math.round(formEntity.getRatingAvg() * 10) / 10.0)")
     FormListResponseDto toListResponseDto(FormEntity formEntity, String thumbnail, @Nullable String authorName);
 
-    @Mapping(target = "ratingsCount", expression = "java(formListAggregationResult.ratingsCount())")
-    @Mapping(
-            target = "ratingAvg",
-            expression =
-                    "java(formListAggregationResult.ratingsCount() == 0 ? null : formListAggregationResult.ratingAvg())")
     FormListResponseDto toListResponseDto(FormListAggregationResult formListAggregationResult, String thumbnail);
 
     @Mapping(target = "questions", source = "questions")
-    @Mapping(target = "ratingsCount", expression = "java(formEntity.getRatingsCount())")
-    @Mapping(
-            target = "ratingAvg",
-            expression =
-                    "java(formEntity.getRatingAvg() == null ? null : Math.round(formEntity.getRatingAvg() * 10) / 10.0)")
-    @Mapping(target = "userRating", source = "userRating")
     FormDetailResponseDto toDetailResponseDto(
             FormEntity formEntity,
             String thumbnail,
-            @Nullable String authorName,
             List<QuestionResponseDto> questions,
-            @Nullable Double userRating);
+            @Nullable String authorName,
+            @Nullable Integer userRating);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "language", expression = "java(formRequestDto.language().getMongoValue())")
+    @Mapping(target = "language", expression = "java(formRequestDto.language().getValue())")
     @Mapping(
             target = "estimatedDurationSeconds",
             expression = "java((int) formRequestDto.estimatedDuration().toSeconds())")
     @Mapping(target = "questionsCount", expression = "java(formRequestDto.questions().size())")
     @Mapping(target = "submissionsCount", ignore = true)
-    @Mapping(target = "submissions", ignore = true)
     @Mapping(target = "ratingsCount", ignore = true)
     @Mapping(target = "ratingsSum", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "version", ignore = true)
-    FormEntity toEntity(FormRequestDto formRequestDto, String slug, String passwordHash, @Nullable UserEntity author);
+    FormEntity toEntity(FormRequestDto formRequestDto, String slug, String passwordHash, String authorId);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "questionsCount", expression = "java(formRequestDto.questions().size())")
     @Mapping(target = "submissionsCount", ignore = true)
     @Mapping(target = "ratingsCount", ignore = true)
     @Mapping(target = "ratingsSum", ignore = true)
-    @Mapping(target = "author", ignore = true)
-    @Mapping(target = "submissions", ignore = true)
+    @Mapping(target = "authorId", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "version", ignore = true)

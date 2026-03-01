@@ -71,25 +71,29 @@ public class SubmissionValidator {
                 val message = String.format(
                         "Form with id '%s' does not have question with id '%s'",
                         form.getId(), submissionAnswer.questionId());
-                errors.add(Map.entry(String.format("answers[%s].questionId", i), List.of(message)));
+                errors.add(Map.entry(String.format("answers[%d].questionId", i), List.of(message)));
+
                 continue;
             }
 
             switch (question.getType()) {
                 case SINGLE_CHOICE -> {
                     val errorMessages = validateSingleChoiceQuestionAnswer(submissionAnswer, answersIds);
-                    if (!errorMessages.isEmpty())
-                        errors.add(Map.entry(String.format("answers[%s].chosenAnswerIds", i), errorMessages));
+                    if (!errorMessages.isEmpty()) {
+                        errors.add(Map.entry(String.format("answers[%d].chosenAnswerIds", i), errorMessages));
+                    }
                 }
                 case MULTIPLE_CHOICE -> {
                     val errorMessages = validateMultipleChoiceQuestionAnswer(submissionAnswer, answersIds);
-                    if (!errorMessages.isEmpty())
-                        errors.add(Map.entry(String.format("answers[%s].chosenAnswerIds", i), errorMessages));
+                    if (!errorMessages.isEmpty()) {
+                        errors.add(Map.entry(String.format("answers[%d].chosenAnswerIds", i), errorMessages));
+                    }
                 }
                 case OPEN -> {
                     val errorMessages = validateOpenQuestionAnswer(submissionAnswer);
-                    if (!errorMessages.isEmpty())
-                        errors.add(Map.entry(String.format("answers[%s].openAnswer", i), errorMessages));
+                    if (!errorMessages.isEmpty()) {
+                        errors.add(Map.entry(String.format("answers[%d].openAnswer", i), errorMessages));
+                    }
                 }
             }
         }
@@ -126,9 +130,7 @@ public class SubmissionValidator {
         val hasInvalidAnswersCount = submissionAnswer.chosenAnswerIds().isEmpty()
                 || submissionAnswer.chosenAnswerIds().size() > answersIds.size();
         if (hasInvalidAnswersCount) {
-            val message =
-                    String.format("Multiple choice question must have between 1 and %s answers", answersIds.size());
-            errorMessages.add(message);
+            errorMessages.add(String.format("Question must have between 1 and %d answers", answersIds.size()));
         }
 
         if (!answersIds.containsAll(submissionAnswer.chosenAnswerIds())) {
@@ -149,8 +151,9 @@ public class SubmissionValidator {
         val errorMessages = new ArrayList<String>();
 
         if (submissionAnswer.openAnswer() == null
-                || submissionAnswer.openAnswer().isBlank())
+                || submissionAnswer.openAnswer().isBlank()) {
             errorMessages.add("Open answer question must have non-blank open answer");
+        }
 
         return Collections.unmodifiableList(errorMessages);
     }

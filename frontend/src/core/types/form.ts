@@ -10,17 +10,18 @@ export interface FormListResponseDto {
   readonly slug: string;
   readonly description: string | null;
   readonly language: string;
-  readonly status: string;
-  readonly estimatedDuration: string;
+  readonly status: FormStatus;
+  readonly estimatedDuration: FormEstimatedDuration;
   readonly thumbnail: string | null;
   readonly allowsQuestionsPreview: boolean;
   readonly allowsGuestSubmissions: boolean;
   readonly saveSubmissions: boolean;
+  readonly showAnswersFeedback: boolean;
   readonly authorName: string | null;
   readonly submissionsCount: number;
   readonly questionsCount: number;
   readonly ratingsCount: number;
-  readonly averageRating: number | null;
+  readonly ratingAvg: number | null;
   readonly createdAt: string;
   readonly updatedAt: string;
 }
@@ -67,6 +68,7 @@ export interface FormDetailResponseDto {
   readonly allowsQuestionsPreview: boolean;
   readonly allowsGuestSubmissions: boolean;
   readonly saveSubmissions: boolean;
+  readonly showAnswersFeedback: boolean;
   readonly authorName: string | null;
   readonly submissionsCount: number;
   readonly questions: QuestionResponseDto[];
@@ -83,7 +85,6 @@ export enum Language {
 }
 
 export enum FormStatus {
-  Draft = "DRAFT",
   Public = "PUBLIC",
   Unpublic = "UNPUBLIC",
   Private = "PRIVATE",
@@ -119,6 +120,7 @@ export interface FormRequestDto {
   allowsQuestionsPreview: boolean;
   allowsGuestSubmissions: boolean;
   saveSubmissions: boolean;
+  showAnswersFeedback: boolean;
   questions: QuestionRequestDto[];
 }
 

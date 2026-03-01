@@ -2,16 +2,16 @@ spring:
   application:
     name: backend
 
-  web:
-    error:
-      include-message: always
-      include-path: never
+  mvc:
+    problemdetails:
+      enabled: true
 
   data:
     web:
       pageable:
         default-page-size: 20
         max-page-size: 50
+        serialization-mode: via_dto
 
     mongodb:
       auto-index-creation: true

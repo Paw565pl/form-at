@@ -65,10 +65,14 @@ export const FormOptions = ({
               {t("viewSubmissions")}
             </DropdownMenuItem>
           )}
-          <DropdownMenuItem onClick={() => router.push(`/forms/${slug}/edit`)}>
-            <ICONS.edit />
-            {t("edit")}
-          </DropdownMenuItem>
+          {isUserAuthor && (
+            <DropdownMenuItem
+              onClick={() => router.push(`/forms/${slug}/edit`)}
+            >
+              <ICONS.edit />
+              {t("edit")}
+            </DropdownMenuItem>
+          )}
 
           <DeleteFormAlertDialog slug={slug} />
         </DropdownMenuContent>

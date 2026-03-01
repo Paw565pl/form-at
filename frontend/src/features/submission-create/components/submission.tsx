@@ -32,20 +32,20 @@ import z from "zod";
 type FormData = z.infer<ReturnType<typeof getSubmissionSchema>>;
 
 interface SubmissionProps {
-  readonly formData: FormDetailResponseDto;
+  readonly formDetails: FormDetailResponseDto;
 }
 
-export const Submission = ({ formData }: SubmissionProps) => {
+export const Submission = ({ formDetails }: SubmissionProps) => {
   const t = useTranslations("submissionCreatePage");
   const gt = useTranslations("global");
   const router = useRouter();
   const { data: session } = useSession();
 
-  const createSubmission = useCreateSubmission(formData.slug);
+  const createSubmission = useCreateSubmission(formDetails.slug);
   const { data: mySubmission, isLoading } = useFetchMySubmission(
-    formData.slug,
+    formDetails.slug,
     {
-      enabled: !!session,
+      enabled: !!session && formDetails.saveSubmissions,
     },
   );
 
@@ -56,7 +56,7 @@ export const Submission = ({ formData }: SubmissionProps) => {
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      answers: formData.questions.map((q) => ({
+      answers: formDetails.questions.map((q) => ({
         questionId: q.id,
         chosenAnswerIds: [],
         openAnswer: "",
@@ -89,15 +89,13 @@ export const Submission = ({ formData }: SubmissionProps) => {
         })),
     };
 
-    if (formData.saveSubmissions) {
+    if (formDetails.saveSubmissions) {
       createSubmission.mutate(request, {
         onError: (error) => {
           if (error.status === HttpStatusCode.Conflict) {
             toast.error(t("errors.submissionExists"));
           } else {
-            toast.error(
-              error.response?.data?.message || t("errors.unexpected"),
-            );
+            toast.error(t("errors.unexpected"));
           }
         },
         onSuccess: () => {
@@ -117,8 +115,8 @@ export const Submission = ({ formData }: SubmissionProps) => {
       <header className="flex flex-col">
         <div className="relative h-64 md:h-110">
           <FormImageWithFallback
-            src={formData.thumbnail}
-            alt={formData.name}
+            src={formDetails.thumbnail}
+            alt={formDetails.name}
             fill
             preload
             className="rounded-t-md object-cover"
@@ -127,9 +125,11 @@ export const Submission = ({ formData }: SubmissionProps) => {
 
         <Card className="flex flex-col gap-4 rounded-t-none p-4">
           <header className="flex flex-wrap items-center gap-2 md:flex-row">
-            <h1 className="line-clamp-2 max-w-2xl text-2xl">{formData.name}</h1>
+            <h1 className="line-clamp-2 max-w-2xl text-2xl">
+              {formDetails.name}
+            </h1>
           </header>
-          {formData.description && <p>{formData.description}</p>}
+          {formDetails.description && <p>{formDetails.description}</p>}
         </Card>
       </header>
 
@@ -138,7 +138,7 @@ export const Submission = ({ formData }: SubmissionProps) => {
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-col gap-4"
         >
-          {formData.questions.map((question, index) => (
+          {formDetails.questions.map((question, index) => (
             <Card key={question.id} className="gap-2 p-4">
               <header className="flex flex-col gap-4">
                 {question.image && (
@@ -312,12 +312,12 @@ export const Submission = ({ formData }: SubmissionProps) => {
             <h2 className="mb-2 text-xl font-medium">
               {t("submissionCreated")}
             </h2>
-            <p>{formData.thanksMessage || t("defaultThanksMessage")}</p>
+            <p>{formDetails.thanksMessage || t("defaultThanksMessage")}</p>
           </div>
           <Button
             size="sm"
             variant="default"
-            onClick={() => router.replace(`/forms/${formData.slug}`)}
+            onClick={() => router.replace(`/forms/${formDetails.slug}`)}
           >
             {t("backToDetails")}
           </Button>

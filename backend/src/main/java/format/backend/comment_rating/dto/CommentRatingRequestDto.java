@@ -5,4 +5,4 @@ import jakarta.validation.constraints.NotNull;
 import org.jspecify.annotations.NonNull;
 
 public record CommentRatingRequestDto(
-        @NotNull(message = "Comment RatingType must not be null") @NonNull RatingType type) {}
+        @NotNull(message = "Type cannot be null") @NonNull RatingType type) {}

@@ -1,11 +1,8 @@
 package format.backend.form_rating.mapper;
 
-import format.backend.auth.entity.UserEntity;
-import format.backend.form.entity.FormEntity;
 import format.backend.form_rating.dto.FormRatingRequestDto;
 import format.backend.form_rating.dto.FormRatingResponseDto;
 import format.backend.form_rating.entity.FormRatingEntity;
-import org.jspecify.annotations.Nullable;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
@@ -15,11 +12,9 @@ public interface FormRatingMapper {
     FormRatingResponseDto toResponseDto(FormRatingEntity formRating);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "form", source = "form")
-    @Mapping(target = "author", source = "author")
     @Mapping(target = "value", source = "formRatingRequestDto.ratingValue")
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "version", ignore = true)
-    FormRatingEntity toEntity(FormRatingRequestDto formRatingRequestDto, FormEntity form, @Nullable UserEntity author);
+    FormRatingEntity toEntity(FormRatingRequestDto formRatingRequestDto, String formId, String authorId);
 }
