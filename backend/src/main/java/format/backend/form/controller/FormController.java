@@ -42,9 +42,13 @@ public class FormController {
 
     @GetMapping
     public Page<@NonNull FormListResponseDto> findAllPublic(
+            @AuthenticationPrincipal @Nullable Jwt jwt,
             FormFilterDto filterDto,
             @PageableDefault(size = 20, sort = "createdAt", direction = DESC) Pageable pageable) {
-        return formService.findAllPublic(filterDto, pageable);
+        val keycloakJwtClaims = Optional.ofNullable(jwt)
+                .map(keycloakJwtClaimsExtractor::getClaims)
+                .orElse(null);
+        return formService.findAllPublic(keycloakJwtClaims, filterDto, pageable);
     }
 
     @GetMapping("/{idOrSlug}")
