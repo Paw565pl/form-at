@@ -1,27 +1,22 @@
 package format.backend.comment_rating.entity;
 
 import java.util.Optional;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.val;
+import lombok.RequiredArgsConstructor;
 
 @Getter
-@AllArgsConstructor
+@RequiredArgsConstructor
 public enum RatingType {
     UPVOTE(1),
     DOWNVOTE(-1);
 
     private final int value;
 
-    private static final RatingType[] VALUES = values();
-
     public static Optional<RatingType> fromValue(int value) {
-        for (val ratingType : VALUES) {
-            if (ratingType.getValue() == value) {
-                return Optional.of(ratingType);
-            }
-        }
-
-        return Optional.empty();
+        return switch (value) {
+            case 1 -> Optional.of(UPVOTE);
+            case -1 -> Optional.of(DOWNVOTE);
+            default -> Optional.empty();
+        };
     }
 }

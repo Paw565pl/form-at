@@ -31,12 +31,10 @@ import format.backend.form_rating.repository.FormRatingRepository;
 import format.backend.submission.repository.SubmissionRepository;
 import format.backend.upload.service.UploadService;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.TreeMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -85,14 +83,9 @@ public class FormService {
     private final UploadService uploadService;
 
     public static final String AUTHOR_ID_FIELD = "authorId";
-    private static final Map<String, String> SORT_FIELDS;
-
-    static {
-        val treeMap = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
-        List.of("estimatedDuration", "questionsCount", "submissionsCount", "createdAt", "updatedAt")
-                .forEach(v -> treeMap.put(v, v));
-        SORT_FIELDS = Collections.unmodifiableMap(treeMap);
-    }
+    private static final Map<String, String> SORT_FIELDS = Stream.of(
+                    "estimatedDuration", "questionsCount", "submissionsCount", "createdAt", "updatedAt")
+            .collect(Collectors.toUnmodifiableMap(String::toLowerCase, Function.identity()));
 
     public Page<@NonNull FormListResponseDto> findAllPublic(
             @Nullable KeycloakJwtClaims keycloakJwtClaims, FormFilterDto filterDto, Pageable pageable) {
@@ -200,8 +193,9 @@ public class FormService {
     private List<Sort.Order> getSortOrders(Pageable pageable, boolean isTextQuery) {
         val textScoreSortOrder = isTextQuery ? Stream.of(Sort.Order.desc("score")) : Stream.<Sort.Order>empty();
         val pageableSortOrders = pageable.getSort().stream()
-                .filter(o -> SORT_FIELDS.containsKey(o.getProperty()))
-                .map(o -> new Sort.Order(o.getDirection(), SORT_FIELDS.get(o.getProperty())));
+                .filter(o -> SORT_FIELDS.containsKey(o.getProperty().toLowerCase()))
+                .map(o -> new Sort.Order(
+                        o.getDirection(), SORT_FIELDS.get(o.getProperty().toLowerCase())));
         val tieBreaker = Stream.of(Sort.Order.asc("_id"));
 
         return Stream.of(textScoreSortOrder, pageableSortOrders, tieBreaker)
