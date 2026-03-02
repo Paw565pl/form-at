@@ -90,6 +90,7 @@ export const FormBaseForm = ({
     allowsQuestionsPreview: defaultValues?.allowsQuestionsPreview ?? false,
     allowsGuestSubmissions: defaultValues?.allowsGuestSubmissions ?? false,
     saveSubmissions: defaultValues?.saveSubmissions ?? true,
+    showAnswersFeedback: defaultValues?.showAnswersFeedback ?? false,
     thumbnail: defaultValues?.thumbnail ?? undefined,
     questions:
       defaultValues?.questions && defaultValues.questions.length !== 0
@@ -136,7 +137,6 @@ export const FormBaseForm = ({
       isRequired: true,
       answers: [],
     });
-    form.trigger("questions");
   };
 
   const appendAnswer = (questionIdx: number) => {
@@ -575,6 +575,24 @@ export const FormBaseForm = ({
                   </FieldLabel>
                   <Checkbox
                     id="saveSubmissions"
+                    className="max-w-5"
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </Field>
+              )}
+            />
+
+            <Controller
+              name="showAnswersFeedback"
+              control={form.control}
+              render={({ field }) => (
+                <Field className="flex-row items-center justify-between px-3">
+                  <FieldLabel htmlFor="showAnswersFeedback">
+                    {t("showAnswersFeedback")}
+                  </FieldLabel>
+                  <Checkbox
+                    id="showAnswersFeedback"
                     className="max-w-5"
                     checked={field.value}
                     onCheckedChange={field.onChange}

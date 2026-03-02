@@ -27,7 +27,7 @@ export const Banner = ({ form }: BannerProps) => {
   const { data: session } = useSession();
 
   const { data: mySubmission } = useFetchMySubmission(form.slug, {
-    enabled: !!session,
+    enabled: !!session && form.saveSubmissions,
   });
 
   return (

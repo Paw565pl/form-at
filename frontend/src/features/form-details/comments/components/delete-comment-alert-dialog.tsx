@@ -9,6 +9,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/core/components/ui/alert-dialog";
+import { buttonVariants } from "@/core/components/ui/button";
 import { DropdownMenuItem } from "@/core/components/ui/dropdown-menu";
 import { ICONS } from "@/core/config/icons";
 import { useDeleteComment } from "@/features/form-details/comments/hooks/use-delete-comment";
@@ -64,7 +65,10 @@ export const DeleteCommentAlertDialog = ({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDelete}>
+          <AlertDialogAction
+            onClick={handleDelete}
+            className={buttonVariants({ variant: "destructive" })}
+          >
             {t("delete")}
           </AlertDialogAction>
         </AlertDialogFooter>

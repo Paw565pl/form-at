@@ -28,16 +28,22 @@ public record FormListAggregationResult(
 
         @NonNull Boolean saveSubmissions,
 
-        @Nullable String authorName,
-
-        @NonNull Long submissionsCount,
+        @NonNull Boolean showAnswersFeedback,
 
         @NonNull Integer questionsCount,
 
+        @NonNull Long submissionsCount,
+
         @NonNull Long ratingsCount,
 
-        @Nullable Double ratingAvg,
+        @NonNull Long ratingsSum,
+
+        @Nullable String authorName,
 
         @NonNull Instant createdAt,
 
-        @NonNull Instant updatedAt) {}
+        @NonNull Instant updatedAt) {
+    public @Nullable Double getRatingAvg() {
+        return ratingsCount == 0 ? null : (double) ratingsSum / ratingsCount;
+    }
+}

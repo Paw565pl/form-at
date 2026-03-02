@@ -8,17 +8,11 @@ import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.mongodb.repository.Update;
 
 public interface CommentRepository extends MongoRepository<@NonNull CommentEntity, @NonNull String> {
-    Integer countAllByAuthorId(String authorId);
+    long countAllByAuthorId(String authorId);
 
-    void deleteAllByFormId(String formId);
-
-    List<CommentEntity> findAllByFormId(String formId);
+    List<CommentEntity> deleteAllByFormId(String formId);
 
     @Query("{ '_id': ?0 }")
-    @Update("{ '$inc': { 'ratingScore': 1 } }")
-    void incrementRatingScore(String commentId);
-
-    @Query("{ '_id': ?0 }")
-    @Update("{ '$inc': { 'ratingScore': -1 } }")
-    void decrementRatingScore(String commentId);
+    @Update("{ '$inc': { 'ratingScore': ?1 } }")
+    void updateRatingScore(String commentId, int delta);
 }

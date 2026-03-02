@@ -5,7 +5,6 @@ import {
   getFetchFormDetailsQueryOptions,
   prefetchFormDetails,
 } from "@/features/form-details/hooks/use-fetch-form-details";
-import { prefetchMySubmission } from "@/features/form-details/my-submission/hooks/use-fetch-my-submission";
 import { PrivateForm } from "@/features/form-details/private-form/private-form";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { HttpStatusCode } from "axios";
@@ -19,7 +18,6 @@ export const FormDetailsPage = async ({
   await Promise.all([
     prefetchFormDetails(queryClient, slug),
     prefetchFormCommentsPages(queryClient, slug),
-    prefetchMySubmission(queryClient, slug),
   ]);
 
   const publicFormQueryState = queryClient.getQueryState(

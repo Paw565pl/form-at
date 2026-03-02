@@ -30,7 +30,7 @@ type UploadResult =
       readonly error: Error;
     };
 
-class MinioService {
+class UploadService {
   private minioClient = axios.create({
     baseURL:
       typeof window === "undefined"
@@ -112,4 +112,4 @@ class MinioService {
   }
 }
 
-export const minioService = new MinioService();
+export const uploadService = new UploadService();

@@ -4,21 +4,21 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
-@AllArgsConstructor
+@RequiredArgsConstructor
 public enum Language {
     EN("english"),
     PL("none");
 
-    private final String mongoValue;
+    private final String value;
 
-    private static final Map<String, Language> mongoValueToLanguageMap =
-            Arrays.stream(values()).collect(Collectors.toMap(l -> l.mongoValue.toLowerCase(), l -> l));
+    private static final Map<String, Language> valueToLanguageMap =
+            Arrays.stream(values()).collect(Collectors.toUnmodifiableMap(l -> l.value.toLowerCase(), l -> l));
 
-    public static Optional<Language> fromMongoValue(String mongoValue) {
-        return Optional.ofNullable(mongoValueToLanguageMap.get(mongoValue.toLowerCase()));
+    public static Optional<Language> fromValue(String value) {
+        return Optional.ofNullable(valueToLanguageMap.get(value.toLowerCase()));
     }
 }

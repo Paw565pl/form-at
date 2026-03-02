@@ -83,22 +83,20 @@ public class FormValidator {
             if (!isQuestionImageUploaded) {
                 val message =
                         String.format("Question image with key '%s' was not found in storage", question.imageKey());
-                errors.add(Map.entry(String.format("questions[%s].imageKey", i), List.of(message)));
+                errors.add(Map.entry(String.format("questions[%d].imageKey", i), List.of(message)));
             }
 
             if (question.type().equals(QuestionType.OPEN)) continue;
+
+            final int totalAnswersCount = question.answers().size();
             val correctAnswersCount = question.answers().stream()
                     .filter(AnswerRequestDto::isCorrect)
                     .count();
 
-            if (question.type().equals(QuestionType.SINGLE_CHOICE) && correctAnswersCount != 1)
-                errors.add(Map.entry(
-                        String.format("questions[%s].answers", i),
-                        List.of("Single choice question must have exactly one valid answer")));
-            else if (question.type().equals(QuestionType.MULTIPLE_CHOICE) && correctAnswersCount < 1)
-                errors.add(Map.entry(
-                        String.format("questions[%s].answers", i),
-                        List.of("Multiple choice question must have at least one valid answer")));
+            if (correctAnswersCount < 1) {
+                val message = String.format("Question must have between 1 and %d correct answers", totalAnswersCount);
+                errors.add(Map.entry(String.format("questions[%d].answers", i), List.of(message)));
+            }
         }
 
         return Collections.unmodifiableList(errors);

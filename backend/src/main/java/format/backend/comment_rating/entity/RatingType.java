@@ -1,11 +1,11 @@
 package format.backend.comment_rating.entity;
 
 import java.util.Optional;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-@AllArgsConstructor
 @Getter
+@RequiredArgsConstructor
 public enum RatingType {
     UPVOTE(1),
     DOWNVOTE(-1);

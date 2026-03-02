@@ -1,7 +1,5 @@
 package format.backend.submission.mapper;
 
-import format.backend.auth.entity.UserEntity;
-import format.backend.form.entity.FormEntity;
 import format.backend.submission.dto.SubmissionRequestDto;
 import format.backend.submission.dto.SubmissionResponseDto;
 import format.backend.submission.entity.SubmissionEntity;
@@ -13,12 +11,9 @@ import org.mapstruct.MappingConstants;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface SubmissionMapper {
 
-    @Mapping(target = "authorName", source = "authorName")
     SubmissionResponseDto toResponseDto(SubmissionEntity submissionEntity, @Nullable String authorName);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "form", source = "form")
-    @Mapping(target = "author", source = "author")
     @Mapping(target = "createdAt", ignore = true)
-    SubmissionEntity toEntity(SubmissionRequestDto submissionRequestDto, FormEntity form, @Nullable UserEntity author);
+    SubmissionEntity toEntity(SubmissionRequestDto submissionRequestDto, String formId, @Nullable String authorId);
 }

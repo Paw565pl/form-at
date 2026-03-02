@@ -10,13 +10,6 @@ spring:
           jwk-set-uri: http://keycloak:7000/realms/form-at/protocol/openid-connect/certs
           audiences: ["spring-boot-backend"]
 
-springdoc:
-  api-docs:
-    enabled: false
-
-  swagger-ui:
-    enabled: false
-
 logging:
   level:
     root: error

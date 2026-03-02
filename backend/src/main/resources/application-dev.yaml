@@ -15,8 +15,6 @@ logging:
     data: debug
     org:
       springframework:
-        security:
-          oauth2: debug
         data:
           mongodb:
             core:
@@ -27,13 +25,6 @@ logging:
         driver:
           protocol:
             command: debug
-
-springdoc:
-  api-docs:
-    path: /api/docs
-
-  swagger-ui:
-    path: /swagger-ui.html
 
 cors:
   allowed-origins: "*"

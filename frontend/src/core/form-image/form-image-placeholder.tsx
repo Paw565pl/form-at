@@ -1,6 +1,6 @@
 export const FormImagePlaceholder = () => {
   return (
-    <div className="bg-muted flex h-full w-full items-center justify-center">
+    <div className="bg-muted flex h-full w-full items-center justify-center rounded-t-md">
       <svg
         width="100"
         height="100"

@@ -1,5 +1,6 @@
 "use client";
 
+import { ErrorResponseDto } from "@/core/types/error-response-dto";
 import { FormRequest } from "@/core/types/form";
 import { FormCreateFormSubmitButton } from "@/features/form-create/components/form-create-form-submit-button";
 import { useCreateForm } from "@/features/form-create/hooks/use-create-form";
@@ -27,9 +28,14 @@ export const FormCreateForm = () => {
       },
       onError: (error) => {
         if (error instanceof AxiosError) {
-          toast.error(error.response?.data.message);
+          const errorResponse = error.response?.data as ErrorResponseDto;
+          if (errorResponse.code === "FORM_ALREADY_EXISTS") {
+            toast.error(t("errors.formAlreadyExists"));
+          } else {
+            toast.error(t("errors.unexpected"));
+          }
         } else {
-          toast.error(t("errorMessage"));
+          toast.error(t("errors.unexpected"));
         }
       },
     });

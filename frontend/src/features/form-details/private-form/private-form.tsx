@@ -66,8 +66,7 @@ export const PrivateForm = ({ formIdOrSlug }: PrivateFormProps) => {
       if (error.response?.status === HttpStatusCode.Forbidden) {
         form.setError("password", { message: t("errors.invalidPassword") });
       } else {
-        const message = error.response?.data?.message ?? error.message;
-        form.setError("password", { message });
+        form.setError("password", { message: t("errors.unexpected") });
       }
     } else {
       setIsAuthorized(true);
