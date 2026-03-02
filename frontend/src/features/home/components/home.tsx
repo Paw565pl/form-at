@@ -5,6 +5,7 @@ import { Button } from "@/core/components/ui/button";
 import { Card } from "@/core/components/ui/card";
 import { ICONS } from "@/core/config/icons";
 import { cn } from "@/core/lib/cn";
+import { useFetchStatistics } from "@/features/home/hooks/use-fetch-statistics";
 import { useTranslations } from "next-intl";
 import Link from "next/dist/client/link";
 import Image from "next/image";
@@ -29,25 +30,6 @@ const useCountUp = (target: number, duration = 1000) => {
   return value;
 };
 
-const stats = [
-  // todo: fetch real stats from backend
-  {
-    label: "users",
-    icon: ICONS.user,
-    value: 123,
-  },
-  {
-    label: "forms",
-    icon: ICONS.form,
-    value: 123,
-  },
-  {
-    label: "submissions",
-    icon: ICONS.submissions,
-    value: 123,
-  },
-] as const;
-
 const features = [
   {
     label: "advancedFormBuilder",
@@ -71,6 +53,25 @@ const features = [
 
 export const Home = () => {
   const t = useTranslations("homePage");
+  const { data: statistics } = useFetchStatistics();
+
+  const stats = [
+    {
+      label: "users",
+      icon: ICONS.user,
+      value: statistics?.usersCount ?? 0,
+    },
+    {
+      label: "forms",
+      icon: ICONS.form,
+      value: statistics?.formsCount ?? 0,
+    },
+    {
+      label: "submissions",
+      icon: ICONS.submissions,
+      value: statistics?.submissionsCount ?? 0,
+    },
+  ] as const;
 
   return (
     <section id="home" className="flex flex-col gap-16 p-10">
