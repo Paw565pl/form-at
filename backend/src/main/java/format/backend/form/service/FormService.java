@@ -31,12 +31,10 @@ import format.backend.form_rating.repository.FormRatingRepository;
 import format.backend.submission.repository.SubmissionRepository;
 import format.backend.upload.service.UploadService;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.TreeMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -84,16 +82,13 @@ public class FormService {
     private final UserService userService;
     private final UploadService uploadService;
 
-    private static final Map<String, String> SORT_FIELDS;
+    public static final String AUTHOR_ID_FIELD = "authorId";
+    private static final Map<String, String> SORT_FIELDS = Stream.of(
+                    "estimatedDuration", "questionsCount", "submissionsCount", "createdAt", "updatedAt")
+            .collect(Collectors.toUnmodifiableMap(String::toLowerCase, Function.identity()));
 
-    static {
-        val treeMap = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
-        List.of("estimatedDuration", "questionsCount", "submissionsCount", "createdAt", "updatedAt")
-                .forEach(v -> treeMap.put(v, v));
-        SORT_FIELDS = Collections.unmodifiableMap(treeMap);
-    }
-
-    public Page<@NonNull FormListResponseDto> findAllPublic(FormFilterDto filterDto, Pageable pageable) {
+    public Page<@NonNull FormListResponseDto> findAllPublic(
+            @Nullable KeycloakJwtClaims keycloakJwtClaims, FormFilterDto filterDto, Pageable pageable) {
         val operations = new ArrayList<AggregationOperation>();
 
         val isTextQuery =
@@ -113,7 +108,17 @@ public class FormService {
             operations.add(textMatch);
         }
 
-        operations.add(Aggregation.match(Criteria.where("status").is(FormStatus.PUBLIC.name())));
+        val statusCriteria = Criteria.where("status").is(FormStatus.PUBLIC.name());
+        val criteria =
+                switch (keycloakJwtClaims) {
+                    case KeycloakJwtClaims c ->
+                        new Criteria()
+                                .orOperator(
+                                        statusCriteria,
+                                        Criteria.where(AUTHOR_ID_FIELD).is(c.sub()));
+                    case null -> statusCriteria;
+                };
+        operations.add(Aggregation.match(criteria));
 
         if (filterDto.language() != null) {
             val languageMatch = Aggregation.match(
@@ -143,7 +148,8 @@ public class FormService {
         }
 
         if (filterDto.authorId() != null && !filterDto.authorId().isBlank()) {
-            val authorIdMatch = Aggregation.match(Criteria.where("authorId").is(filterDto.authorId()));
+            val authorIdMatch =
+                    Aggregation.match(Criteria.where(AUTHOR_ID_FIELD).is(filterDto.authorId()));
             operations.add(authorIdMatch);
         }
 
@@ -168,7 +174,7 @@ public class FormService {
         operations.add(Aggregation.skip(pageable.getOffset()));
         operations.add(Aggregation.limit(pageable.getPageSize()));
 
-        operations.add(Aggregation.lookup("users", "authorId", "_id", "author"));
+        operations.add(Aggregation.lookup("users", AUTHOR_ID_FIELD, "_id", "author"));
         operations.add(Aggregation.addFields()
                 .addField("authorName")
                 .withValue(ArrayOperators.arrayOf("author.username").first())
@@ -187,8 +193,9 @@ public class FormService {
     private List<Sort.Order> getSortOrders(Pageable pageable, boolean isTextQuery) {
         val textScoreSortOrder = isTextQuery ? Stream.of(Sort.Order.desc("score")) : Stream.<Sort.Order>empty();
         val pageableSortOrders = pageable.getSort().stream()
-                .filter(o -> SORT_FIELDS.containsKey(o.getProperty()))
-                .map(o -> new Sort.Order(o.getDirection(), SORT_FIELDS.get(o.getProperty())));
+                .filter(o -> SORT_FIELDS.containsKey(o.getProperty().toLowerCase()))
+                .map(o -> new Sort.Order(
+                        o.getDirection(), SORT_FIELDS.get(o.getProperty().toLowerCase())));
         val tieBreaker = Stream.of(Sort.Order.asc("_id"));
 
         return Stream.of(textScoreSortOrder, pageableSortOrders, tieBreaker)

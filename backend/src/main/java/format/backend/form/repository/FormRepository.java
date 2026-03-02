@@ -30,5 +30,5 @@ public interface FormRepository extends MongoRepository<@NonNull FormEntity, @No
     @Update("{ '$inc': { 'ratingsSum': ?1 } }")
     void updateRatingsSum(String id, int delta);
 
-    int countAllByAuthorId(String authorId);
+    long countAllByAuthorId(String authorId);
 }

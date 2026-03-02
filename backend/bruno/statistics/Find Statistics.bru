@@ -1,0 +1,15 @@
+meta {
+  name: Find Statistics
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/v1/statistics
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}
