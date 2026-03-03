@@ -1,4 +1,3 @@
-import { getQueryClient } from "@/core/lib/tanstack-query";
 import { apiService } from "@/core/services/api-service";
 import { CommentRequestDto, CommentResponseDto } from "@/core/types/comment";
 import { ErrorResponseDto } from "@/core/types/error-response-dto";
@@ -6,29 +5,23 @@ import { getFetchFormCommentsPagesQueryOptions } from "@/features/form-details/c
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
-export const useCreateComment = (formIdOrSlug: string) => {
-  const queryClient = getQueryClient();
-
-  const mutation = useMutation<
+export const useCreateComment = (formIdOrSlug: string) =>
+  useMutation<
     CommentResponseDto,
     AxiosError<ErrorResponseDto>,
     CommentRequestDto
   >({
-    mutationKey: ["comments", formIdOrSlug, "create"] as const,
+    mutationKey: ["forms", formIdOrSlug, "comments", "create"],
     mutationFn: async (request) => {
-      const { data } = await apiService.post(
+      const { data } = await apiService.post<CommentResponseDto>(
         `/api/v1/forms/${formIdOrSlug}/comments`,
         request,
       );
-
       return data;
     },
-    onSettled: () => {
-      queryClient.invalidateQueries({
+    onSuccess: (_, __, ___, { client }) => {
+      client.invalidateQueries({
         queryKey: getFetchFormCommentsPagesQueryOptions(formIdOrSlug).queryKey,
       });
     },
   });
-
-  return mutation;
-};

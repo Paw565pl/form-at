@@ -14,7 +14,7 @@ export const getFetchFormCommentsPagesQueryOptions = (formIdOrSlug: string) =>
     PaginatedResponseDto<CommentResponseDto>,
     AxiosError<ErrorResponseDto>
   >({
-    queryKey: ["forms", formIdOrSlug, "comments"] as const,
+    queryKey: ["forms", formIdOrSlug, "comments"],
     queryFn: async ({ pageParam }) => {
       const { data } = await apiService.get<
         PaginatedResponseDto<CommentResponseDto>
@@ -28,7 +28,6 @@ export const getFetchFormCommentsPagesQueryOptions = (formIdOrSlug: string) =>
     initialPageParam: 0,
     getNextPageParam: ({ page }) =>
       page.number + 1 < page.totalPages ? page.number + 1 : undefined,
-    staleTime: 1000 * 60 * 10, // 10 minutes
   });
 
 export const useFetchFormCommentsPages = (formIdOrSlug: string) =>
