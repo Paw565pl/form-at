@@ -251,8 +251,8 @@
   "userProfilePage": {
     "usersForms": {
       "forms": "Ostatnio utworzone formularze użytkownika",
-      "noForms": "Nie znaleziono formularzy. Utwórz swój pierwszy formularz!",
-      "createForm": "Utwórz nowy formularz",
+      "noForms": "Nie znaleziono formularzy",
+      "createForm": "Utwórz pierwszy formularz",
       "showAll": "Pokaż wszystkie"
     },
     "userStatistics": "Statystyki użytkownika",
