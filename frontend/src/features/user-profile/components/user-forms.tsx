@@ -51,9 +51,17 @@ export const UserForms = ({ authorId }: UserFormsProps) => {
   return (
     <div className="flex flex-2 flex-col gap-2">
       <h2 className="text-lg font-bold md:text-xl">{t("forms")}</h2>
+
       {forms?.map((form) => (
         <FormListItem form={form} key={form.id} />
       ))}
+
+      <Link
+        href={`/forms?authorId=${authorId}`}
+        className="text-muted-foreground mt-auto text-right text-sm hover:underline"
+      >
+        {t("showAll")}
+      </Link>
     </div>
   );
 };

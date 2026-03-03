@@ -252,7 +252,8 @@
     "usersForms": {
       "forms": "Ostatnio utworzone formularze użytkownika",
       "noForms": "Nie znaleziono formularzy. Utwórz swój pierwszy formularz!",
-      "createForm": "Utwórz nowy formularz"
+      "createForm": "Utwórz nowy formularz",
+      "showAll": "Pokaż wszystkie"
     },
     "userStatistics": "Statystyki użytkownika",
     "formsCount": "Utworzone formularze",

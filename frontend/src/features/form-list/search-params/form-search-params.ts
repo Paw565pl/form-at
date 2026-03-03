@@ -14,6 +14,7 @@ export const formFilterSearchParams = {
   minEstimatedDuration: parseAsDuration,
   maxEstimatedDuration: parseAsDuration,
   allowsGuestSubmissions: parseAsBoolean,
+  authorId: parseAsString,
 } as const;
 
 export const loadFormFilterSearchParams = createLoader(formFilterSearchParams);

@@ -252,7 +252,8 @@
     "usersForms": {
       "forms": "Recently Created User's Forms",
       "noForms": "No forms found. Create your first form!",
-      "createForm": "Create New Form"
+      "createForm": "Create New Form",
+      "showAll": "Show all"
     },
     "userStatistics": "User's Statistics",
     "formsCount": "Forms Created",
