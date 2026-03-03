@@ -6,7 +6,7 @@ import {
 } from "@/core/types/form";
 import { QuestionType } from "@/core/types/question";
 import { useTranslations } from "next-intl";
-import z from "zod";
+import * as z from "zod";
 
 type TranslateError = ReturnType<typeof useTranslations<"formBaseForm">>;
 
@@ -45,7 +45,7 @@ const getQuestionSchema = (t: TranslateError) =>
         .max(6, t("errors.answersCountMax", { count: "6" })),
       // file is new file selected by user
       // string is existing url
-      image: z.file().or(z.string()).optional(),
+      image: z.file().or(z.string().trim()).optional(),
     })
     .superRefine((data, ctx) => {
       if (data.type !== QuestionType.Open && data.answers.length < 2) {
@@ -120,7 +120,7 @@ export const getFormSchema = (t: TranslateError) =>
       showAnswersFeedback: z.boolean(),
       // file is new file selected by user
       // string is existing url
-      thumbnail: z.file().or(z.string()).optional(),
+      thumbnail: z.file().or(z.string().trim()).optional(),
       questions: z
         .array(getQuestionSchema(t))
         .min(3, t("errors.questionsCountMin", { count: "3" }))

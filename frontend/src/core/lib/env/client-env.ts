@@ -1,6 +1,6 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import { env } from "next-runtime-env";
-import { z } from "zod";
+import * as z from "zod";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const clientEnv = createEnv({

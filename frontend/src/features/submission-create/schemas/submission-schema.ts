@@ -1,6 +1,6 @@
 import { QuestionType } from "@/core/types/question";
 import { useTranslations } from "next-intl";
-import z from "zod";
+import * as z from "zod";
 
 type TranslateError = ReturnType<
   typeof useTranslations<"submissionCreatePage">
@@ -11,8 +11,8 @@ export const getSubmissionSchema = (t: TranslateError) =>
     answers: z.array(
       z
         .object({
-          questionId: z.string(),
-          chosenAnswerIds: z.array(z.string()),
+          questionId: z.string().trim(),
+          chosenAnswerIds: z.array(z.string().trim()),
           openAnswer: z.string().trim(),
           type: z.enum(QuestionType), // for validation purposes
           required: z.boolean(),
