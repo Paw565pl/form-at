@@ -1,4 +1,3 @@
-import { getQueryClient } from "@/core/lib/tanstack-query";
 import { apiService } from "@/core/services/api-service";
 import {
   CommentRatingRequestDto,
@@ -9,43 +8,33 @@ import { getFetchFormCommentsPagesQueryOptions } from "@/features/form-details/c
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
-interface UseCreateCommentRatingParams {
-  formIdOrSlug: string;
-  commentId: string;
-}
-
-export const useCreateCommentRating = ({
-  formIdOrSlug,
-  commentId,
-}: UseCreateCommentRatingParams) => {
-  const queryClient = getQueryClient();
-
-  const mutation = useMutation<
+export const useCreateCommentRating = (
+  formIdOrSlug: string,
+  commentId: string,
+) =>
+  useMutation<
     CommentRatingResponseDto,
     AxiosError<ErrorResponseDto>,
     CommentRatingRequestDto
   >({
     mutationKey: [
-      "comments",
+      "forms",
       formIdOrSlug,
+      "comments",
       commentId,
       "rating",
       "create",
-    ] as const,
+    ],
     mutationFn: async (request) => {
-      const { data } = await apiService.post(
+      const { data } = await apiService.post<CommentRatingResponseDto>(
         `/api/v1/forms/${formIdOrSlug}/comments/${commentId}/rating`,
         request,
       );
-
       return data;
     },
-    onSettled: () => {
-      queryClient.invalidateQueries({
+    onSuccess: (_, __, ___, { client }) => {
+      client.invalidateQueries({
         queryKey: getFetchFormCommentsPagesQueryOptions(formIdOrSlug).queryKey,
       });
     },
   });
-
-  return mutation;
-};

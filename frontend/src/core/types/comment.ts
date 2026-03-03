@@ -1,6 +1,6 @@
 export enum CommentRatingType {
-  upvote = "UPVOTE",
-  downvote = "DOWNVOTE",
+  Upvote = "UPVOTE",
+  Downvote = "DOWNVOTE",
 }
 
 export interface CommentResponseDto {

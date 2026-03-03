@@ -23,23 +23,21 @@ export const RatingButtons = ({
 }: RatingButtonsProps) => {
   const t = useTranslations("formDetailsPage.comments");
   const { data: session } = useSession();
-  const { mutate: createRating, isPending } = useCreateCommentRating({
+  const { mutate: createRating, isPending } = useCreateCommentRating(
     formIdOrSlug,
     commentId,
-  });
+  );
   const { mutate: deleteRating, isPending: isDeleting } =
-    useDeleteCommentRating({
-      formIdOrSlug,
-      commentId,
-    });
+    useDeleteCommentRating(formIdOrSlug, commentId);
 
   const handleRating = (
     type: CommentRatingType,
     userRating: CommentRatingType | null,
   ) => {
     if (!session || isPending) return;
+
     if (userRating === type) {
-      deleteRating();
+      deleteRating(undefined);
     } else {
       createRating(
         { type },
@@ -58,12 +56,12 @@ export const RatingButtons = ({
         variant="ghost"
         size="icon-sm"
         aria-label={t("ratingLike")}
-        onClick={() => handleRating(CommentRatingType.upvote, userRating)}
+        onClick={() => handleRating(CommentRatingType.Upvote, userRating)}
         disabled={!session || isPending || isDeleting}
       >
         <ICONS.like
           className={cn({
-            "text-primary": userRating === CommentRatingType.upvote,
+            "text-primary": userRating === CommentRatingType.Upvote,
           })}
         />
       </Button>
@@ -74,12 +72,12 @@ export const RatingButtons = ({
         variant="ghost"
         size="icon-sm"
         aria-label={t("ratingDislike")}
-        onClick={() => handleRating(CommentRatingType.downvote, userRating)}
+        onClick={() => handleRating(CommentRatingType.Downvote, userRating)}
         disabled={!session || isPending || isDeleting}
       >
         <ICONS.dislike
           className={cn({
-            "text-primary": userRating === CommentRatingType.downvote,
+            "text-primary": userRating === CommentRatingType.Downvote,
           })}
         />
       </Button>
