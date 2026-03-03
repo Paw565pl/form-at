@@ -18,7 +18,7 @@ const getFetchSubmissionPagesQueryOptions = (
     PaginatedResponseDto<SubmissionResponseDto>,
     AxiosError<ErrorResponseDto>
   >({
-    queryKey: ["forms", formIdOrSlug, "submissions", pageOptionsDto] as const,
+    queryKey: ["forms", formIdOrSlug, "submissions", pageOptionsDto ?? null],
     queryFn: async ({ pageParam }) => {
       const { data } = await apiService.get<
         PaginatedResponseDto<SubmissionResponseDto>
@@ -33,7 +33,6 @@ const getFetchSubmissionPagesQueryOptions = (
     initialPageParam: 0,
     getNextPageParam: ({ page }) =>
       page.number + 1 < page.totalPages ? page.number + 1 : undefined,
-    staleTime: 1000 * 60 * 10, // 10 minutes
   });
 
 export const useFetchSubmissionPages = (

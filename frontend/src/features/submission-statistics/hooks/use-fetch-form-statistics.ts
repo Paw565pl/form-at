@@ -21,14 +21,14 @@ export const getFetchFormStatisticsQueryOptions = (
 ) =>
   queryOptions<SubmissionStatisticsResponseDto[], AxiosError<ErrorResponseDto>>(
     {
-      queryKey: ["forms", formIdOrSlug, "submissions", "statistics"] as const,
+      queryKey: ["forms", formIdOrSlug, "submissions", "statistics"],
       queryFn: async () => {
         const { data } = await apiService.get<
           SubmissionStatisticsResponseDto[]
         >(`/api/v1/forms/${formIdOrSlug}/submissions/statistics`);
         return data;
       },
-      staleTime: 1000 * 60 * 10, // 10 minutes
+      staleTime: 1000 * 60 * 60, // 60 minutes
       ...options,
     },
   );
