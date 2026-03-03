@@ -70,7 +70,7 @@ export const UserForms = ({ authorId }: UserFormsProps) => {
 
       <Link
         href={`/forms?authorId=${authorId}`}
-        className="text-muted-foreground mt-auto text-right text-sm hover:underline"
+        className="text-muted-foreground text-right text-sm hover:underline"
       >
         {t("showAll")}
       </Link>
