@@ -6,14 +6,13 @@ import { AxiosError } from "axios";
 
 export const getFetchUserProfileQueryOptions = (username: string) =>
   queryOptions<UserProfileResponseDto, AxiosError<ErrorResponseDto>>({
-    queryKey: ["users", username] as const,
+    queryKey: ["users", username],
     queryFn: async () => {
       const { data } = await apiService.get<UserProfileResponseDto>(
         `/api/v1/users/${username}`,
       );
       return data;
     },
-    staleTime: 1000 * 60 * 10, // 10 minutes
   });
 
 export const useFetchUserProfile = (username: string) =>
