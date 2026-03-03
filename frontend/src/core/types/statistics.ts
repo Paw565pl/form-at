@@ -1,5 +1,5 @@
 export interface StatisticsResponseDto {
-  usersCount: number;
-  formsCount: number;
-  submissionsCount: number;
+  readonly usersCount: number;
+  readonly formsCount: number;
+  readonly submissionsCount: number;
 }

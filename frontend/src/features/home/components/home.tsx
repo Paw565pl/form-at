@@ -9,26 +9,7 @@ import { useFetchStatistics } from "@/features/home/hooks/use-fetch-statistics";
 import { useTranslations } from "next-intl";
 import Link from "next/dist/client/link";
 import Image from "next/image";
-import { useEffect, useState } from "react";
-
-const useCountUp = (target: number, duration = 1000) => {
-  const [value, setValue] = useState(0);
-  useEffect(() => {
-    let start = 0;
-    const increment = target / (duration / 16);
-    const interval = setInterval(() => {
-      start += increment;
-      if (start >= target) {
-        setValue(target);
-        clearInterval(interval);
-      } else {
-        setValue(Math.floor(start));
-      }
-    }, 16);
-    return () => clearInterval(interval);
-  }, [target, duration]);
-  return value;
-};
+import { useCountUp } from "@/features/home/hooks/use-count-up";
 
 const features = [
   {
@@ -132,7 +113,7 @@ export const Home = () => {
             height={400}
             className="rounded-md border shadow-sm"
             priority
-          ></Image>
+          />
         </div>
       ))}
 
