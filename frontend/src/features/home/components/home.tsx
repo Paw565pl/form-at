@@ -8,8 +8,8 @@ import { cn } from "@/core/lib/cn";
 import { useCountUp } from "@/features/home/hooks/use-count-up";
 import { useFetchStatistics } from "@/features/home/hooks/use-fetch-statistics";
 import { useTranslations } from "next-intl";
-import Link from "next/dist/client/link";
 import Image from "next/image";
+import Link from "next/link";
 
 const features = [
   {

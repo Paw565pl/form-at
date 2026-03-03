@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getTranslations } from "next-intl/server";
 
-export default async function manifest(): Promise<MetadataRoute.Manifest> {
+const manifest = async (): Promise<MetadataRoute.Manifest> => {
   const t = await getTranslations("homePage");
   return {
     name: "formAT",
@@ -25,4 +25,6 @@ export default async function manifest(): Promise<MetadataRoute.Manifest> {
     background_color: "#121212",
     display: "standalone",
   };
-}
+};
+
+export default manifest;
