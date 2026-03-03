@@ -25,6 +25,7 @@ const getFetchMySubmissionOptions = (
       );
       return data;
     },
+    staleTime: 1000 * 60 * 60, // 60 minutes
     refetchOnWindowFocus: false,
     ...options,
   });
