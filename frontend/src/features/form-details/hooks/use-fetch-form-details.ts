@@ -17,14 +17,13 @@ export const getFetchFormDetailsQueryOptions = (
   >,
 ) =>
   queryOptions<FormDetailResponseDto, AxiosError<ErrorResponseDto>>({
-    queryKey: ["forms", idOrSlug] as const,
+    queryKey: ["forms", idOrSlug],
     queryFn: async () => {
       const { data } = await apiService.get<FormDetailResponseDto>(
         `/api/v1/forms/${idOrSlug}`,
       );
       return data;
     },
-    staleTime: 1000 * 60 * 10, // 10 minutes
     ...options,
   });
 

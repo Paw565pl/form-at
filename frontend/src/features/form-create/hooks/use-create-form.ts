@@ -21,7 +21,7 @@ export const useCreateForm = () => {
     AxiosError<ErrorResponseDto> | Error,
     FormRequest
   >({
-    mutationKey: ["forms", "create"] as const,
+    mutationKey: ["forms", "create"],
     mutationFn: async (request) => {
       const files: File[] = [
         request.thumbnail,
@@ -47,11 +47,14 @@ export const useCreateForm = () => {
               : null,
         })),
       };
-      const { data } = await apiService.post("/api/v1/forms", requestDto);
+      const { data } = await apiService.post<FormDetailResponseDto>(
+        "/api/v1/forms",
+        requestDto,
+      );
 
       return data;
     },
-    onSettled: (_, __, ___, _____, { client }) => {
+    onSuccess: (_, __, ___, { client }) => {
       setUploadProgressPercent(null);
       client.invalidateQueries({ queryKey: ["forms"] });
     },
