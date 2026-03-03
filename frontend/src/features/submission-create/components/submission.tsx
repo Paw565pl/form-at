@@ -45,6 +45,7 @@ export const Submission = ({ formDetails }: SubmissionProps) => {
   const createSubmission = useCreateSubmission(formDetails.slug);
   const { data: mySubmission, isLoading } = useFetchMySubmission(
     formDetails.slug,
+    session?.user.id ?? "",
     {
       enabled: !!session && formDetails.saveSubmissions,
     },
