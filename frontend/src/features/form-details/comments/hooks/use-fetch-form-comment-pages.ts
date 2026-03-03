@@ -9,7 +9,7 @@ import {
 } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
-export const getFetchFormCommentsPagesQueryOptions = (formIdOrSlug: string) =>
+export const getFetchFormCommentPagesQueryOptions = (formIdOrSlug: string) =>
   infiniteQueryOptions<
     PaginatedResponseDto<CommentResponseDto>,
     AxiosError<ErrorResponseDto>
@@ -30,13 +30,13 @@ export const getFetchFormCommentsPagesQueryOptions = (formIdOrSlug: string) =>
       page.number + 1 < page.totalPages ? page.number + 1 : undefined,
   });
 
-export const useFetchFormCommentsPages = (formIdOrSlug: string) =>
-  useInfiniteQuery(getFetchFormCommentsPagesQueryOptions(formIdOrSlug));
+export const useFetchFormCommentPages = (formIdOrSlug: string) =>
+  useInfiniteQuery(getFetchFormCommentPagesQueryOptions(formIdOrSlug));
 
-export const prefetchFormCommentsPages = (
+export const prefetchFormCommentPages = (
   queryClient: QueryClient,
   formIdOrSlug: string,
 ) =>
   queryClient.prefetchInfiniteQuery(
-    getFetchFormCommentsPagesQueryOptions(formIdOrSlug),
+    getFetchFormCommentPagesQueryOptions(formIdOrSlug),
   );

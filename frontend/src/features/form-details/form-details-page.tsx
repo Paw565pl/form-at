@@ -1,5 +1,5 @@
 import { getQueryClient } from "@/core/lib/tanstack-query";
-import { prefetchFormCommentsPages } from "@/features/form-details/comments/hooks/use-fetch-form-comments-pages";
+import { prefetchFormCommentPages } from "@/features/form-details/comments/hooks/use-fetch-form-comment-pages";
 import { Form } from "@/features/form-details/components/form";
 import {
   getFetchFormDetailsQueryOptions,
@@ -15,10 +15,8 @@ export const FormDetailsPage = async ({
   const { slug } = await params;
 
   const queryClient = getQueryClient();
-  await Promise.all([
-    prefetchFormDetails(queryClient, slug),
-    prefetchFormCommentsPages(queryClient, slug),
-  ]);
+  await prefetchFormDetails(queryClient, slug);
+  prefetchFormCommentPages(queryClient, slug);
 
   const publicFormQueryState = queryClient.getQueryState(
     getFetchFormDetailsQueryOptions(slug).queryKey,
@@ -27,13 +25,15 @@ export const FormDetailsPage = async ({
     publicFormQueryState?.error?.status === HttpStatusCode.Unauthorized ||
     publicFormQueryState?.error?.status === HttpStatusCode.Forbidden;
 
+  const component = isPrivateForm ? (
+    <PrivateForm formIdOrSlug={slug} />
+  ) : (
+    <Form formIdOrSlug={slug} />
+  );
+
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      {isPrivateForm ? (
-        <PrivateForm formIdOrSlug={slug} />
-      ) : (
-        <Form formIdOrSlug={slug} />
-      )}
+      {component}
     </HydrationBoundary>
   );
 };

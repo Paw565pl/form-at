@@ -3,7 +3,7 @@ import { UserImage } from "@/core/components/user-image/user-image";
 import { CommentOptions } from "@/features/form-details/comments/components/comment-options";
 import { CreateCommentForm } from "@/features/form-details/comments/components/create-comment-form";
 import { EditCommentForm } from "@/features/form-details/comments/components/edit-comment-form";
-import { useFetchFormCommentsPages } from "@/features/form-details/comments/hooks/use-fetch-form-comments-pages";
+import { useFetchFormCommentPages } from "@/features/form-details/comments/hooks/use-fetch-form-comment-pages";
 import { RatingButtons } from "@/features/form-details/comments/rating/components/rating-buttons";
 import { CommentSkeleton } from "@/features/form-details/form-details-loading";
 import { useFormatter, useTranslations } from "next-intl";
@@ -27,7 +27,7 @@ export const Comments = ({ formIdOrSlug }: CommentsProps) => {
     isFetchingNextPage,
     fetchNextPage,
     hasNextPage,
-  } = useFetchFormCommentsPages(formIdOrSlug);
+  } = useFetchFormCommentPages(formIdOrSlug);
 
   const dataLength =
     formCommentsPages?.pages.reduce(
