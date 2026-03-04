@@ -74,10 +74,10 @@ export const Home = () => {
             <Card key={stat.label} className="flex-1 gap-2 p-6">
               <div className="flex items-center gap-2">
                 <stat.icon className="text-primary h-6 w-6" />
-                <h3 className="text-lg font-semibold">
+                <h2 className="text-lg font-semibold">
                   {t(`stats.${stat.label}`)}:{" "}
                   <span className="text-primary">{animatedValue}</span>
-                </h3>
+                </h2>
               </div>
               <p className="text-muted-foreground text-sm">
                 {t(`stats.${stat.label}Desc`)}
