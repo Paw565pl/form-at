@@ -272,8 +272,9 @@
   "userProfilePage": {
     "usersForms": {
       "forms": "Recently Created User's Forms",
-      "noForms": "No forms found. Create your first form!",
-      "createForm": "Create New Form"
+      "noForms": "No forms found",
+      "createForm": "Create first form",
+      "showAll": "Show all"
     },
     "userStatistics": "User's Statistics",
     "formsCount": "Forms Created",
