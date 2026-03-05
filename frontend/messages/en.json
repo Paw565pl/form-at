@@ -6,6 +6,27 @@
       "OPEN": "Open Ended"
     }
   },
+  "homePage": {
+    "appDescription": "Welcome to formAT, the ultimate form builder and survey tool! Whether you're gathering feedback, conducting research, or collecting data, formAT has you covered.",
+    "getStarted": "Ready to get started?",
+    "createNewForm": "Create New Form",
+    "stats": {
+      "users": "Users",
+      "usersDesc": "Are you a form creator or a form filler? Join our community of users who are shaping the future of information gathering with formAT.",
+      "forms": "Forms",
+      "formsDesc": "What kind of bread are you? Which cat breed is the best? Explore the variety of forms created with formAT.",
+      "submissions": "Submissions",
+      "submissionsDesc": "How many times have people hit submit? Discover the engagement and impact of forms created with formAT."
+    },
+    "features": {
+      "advancedFormBuilder": "Advanced Form Builder",
+      "advancedFormBuilderDesc": "Create complex forms with various question types. Make them public or private. Customize with shuffle options and add images and banners.",
+      "liveResults": "Live Results",
+      "liveResultsDesc": "Browse your form submissions in real time. See how people are responding to your questions and get instant feedback and statistics.",
+      "rateAndReview": "Rate and Review",
+      "rateAndReviewDesc": "Share your thoughts and opinions on forms created by others. Rate and review forms to help creators improve and to guide other users in finding the best forms for their needs."
+    }
+  },
   "errorPage": {
     "header": "Whoops! Something went wrong.",
     "message": "We encountered an unexpected error. Please return to the homepage to continue browsing.",
@@ -251,8 +272,9 @@
   "userProfilePage": {
     "usersForms": {
       "forms": "Recently Created User's Forms",
-      "noForms": "No forms found. Create your first form!",
-      "createForm": "Create New Form"
+      "noForms": "No forms found",
+      "createForm": "Create first form",
+      "showAll": "Show all"
     },
     "userStatistics": "User's Statistics",
     "formsCount": "Forms Created",
