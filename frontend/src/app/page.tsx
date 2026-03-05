@@ -1,3 +1,3 @@
-import { RootPage } from "@/core/pages/root-page";
+import { HomePage } from "@/features/home/home-page";
 
-export default RootPage;
+export default HomePage;

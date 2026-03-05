@@ -6,6 +6,27 @@
       "OPEN": "Odpowiedź otwarta"
     }
   },
+  "homePage": {
+    "appDescription": "Witaj w formAT, najlepszym narzędziu do tworzenia formularzy i ankiet! Niezależnie od tego, czy zbierasz opinie, prowadzisz badania, czy gromadzisz dane, formAT to idealne rozwiązanie dla Ciebie.",
+    "getStarted": "Zaczynamy?",
+    "createNewForm": "Utwórz nowy formularz",
+    "stats": {
+      "users": "Użytkownicy",
+      "usersDesc": "Wolisz tworzyć formularze, a może je wypełniać? Dołącz do naszej rosnącej społeczności i odkryj, jak formAT ułatwia zbieranie danych.",
+      "forms": "Formularze",
+      "formsDesc": "Jakim rodzajem chleba jesteś? Która rasa kota jest najlepsza? Odkryj różnorodność formularzy tworzonych z wykorzystaniem formAT.",
+      "submissions": "Odpowiedzi",
+      "submissionsDesc": "Ile razy kliknięto przycisk \"Wyślij\"? Odkryj zaangażowanie i wpływ formularzy stworzonych z wykorzystaniem formAT."
+    },
+    "features": {
+      "advancedFormBuilder": "Zaawansowany kreator",
+      "advancedFormBuilderDesc": "Twórz złożone formularze z różnymi typami pytań, zarówno publiczne, jak i prywatne, Dostosuj je do swoich potrzeb, dodając obrazki i banery.",
+      "liveResults": "Wyniki na żywo",
+      "liveResultsDesc": "Przeglądaj odpowiedzi na Twoje formularze w czasie rzeczywistym. Zobacz, jak ludzie odpowiadają na Twoje pytania i uzyskaj natychmiastowe informacje zwrotne oraz statystyki.",
+      "rateAndReview": "Oceny i komentarze",
+      "rateAndReviewDesc": "Podziel się swoimi myślami i opiniami o formularzach stworzonych przez innych użytkowników. Oceniaj i komentuj formularze, aby wspomóc twórców lub nakierować innych użytkowników."
+    }
+  },
   "errorPage": {
     "header": "Ups! Coś poszło nie tak.",
     "message": "Wystąpił nieoczekiwany błąd. Wróć na stronę główną, aby kontynuować przeglądanie.",
