@@ -7,7 +7,7 @@ import { PublicEnvScript } from "next-runtime-env";
 import { Montserrat, Noto_Serif, Roboto_Mono } from "next/font/google";
 import { PropsWithChildren } from "react";
 
-const noto_serif = Noto_Serif({
+const notoSerif = Noto_Serif({
   subsets: ["latin-ext"],
   variable: "--font-serif",
   display: "swap",
@@ -19,7 +19,7 @@ const montserrat = Montserrat({
   display: "swap",
 });
 
-const roboto_mono = Roboto_Mono({
+const robotoMono = Roboto_Mono({
   subsets: ["latin-ext"],
   variable: "--font-mono",
   display: "swap",
@@ -31,7 +31,7 @@ export const RootLayout = async ({ children }: PropsWithChildren) => {
   return (
     <html
       lang={locale}
-      className={`${noto_serif.variable} ${montserrat.variable} ${roboto_mono.variable} antialiased`}
+      className={`${notoSerif.variable} ${montserrat.variable} ${robotoMono.variable} antialiased`}
       suppressHydrationWarning
     >
       {/* eslint-disable-next-line @next/next/no-head-element */}
