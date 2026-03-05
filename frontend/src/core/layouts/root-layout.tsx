@@ -8,19 +8,19 @@ import { Cascadia_Mono, Montserrat, Noto_Serif } from "next/font/google";
 import { PropsWithChildren } from "react";
 
 const noto_serif = Noto_Serif({
-  subsets: ["latin"],
+  subsets: ["latin-ext"],
   variable: "--font-serif",
   display: "swap",
 });
 
 const montserrat = Montserrat({
-  subsets: ["latin"],
+  subsets: ["latin-ext"],
   variable: "--font-sans",
   display: "swap",
 });
 
 const cascadia_mono = Cascadia_Mono({
-  subsets: ["latin"],
+  subsets: ["latin-ext"],
   variable: "--font-mono",
   display: "swap",
 });
@@ -38,7 +38,7 @@ export const RootLayout = async ({ children }: PropsWithChildren) => {
       <head>
         <PublicEnvScript />
       </head>
-      <body className="flex min-h-screen flex-col">
+      <body className="bg-background text-foreground flex min-h-screen flex-col font-sans text-pretty">
         <ServerProviders>
           <ClientProviders>
             <NavBar />
