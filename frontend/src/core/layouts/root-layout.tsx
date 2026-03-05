@@ -4,7 +4,8 @@ import { ClientProviders } from "@/core/providers/client-providers";
 import { ServerProviders } from "@/core/providers/server-providers";
 import { getLocale } from "next-intl/server";
 import { PublicEnvScript } from "next-runtime-env";
-import { Cascadia_Mono, Montserrat, Noto_Serif } from "next/font/google";
+import { Montserrat, Noto_Serif } from "next/font/google";
+import localFont from "next/font/local";
 import { PropsWithChildren } from "react";
 
 const noto_serif = Noto_Serif({
@@ -19,8 +20,19 @@ const montserrat = Montserrat({
   display: "swap",
 });
 
-const cascadia_mono = Cascadia_Mono({
-  subsets: ["latin-ext"],
+const cascadia_mono = localFont({
+  src: [
+    {
+      path: "/fonts/CascadiaMono-VariableFont_wght.ttf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "/fonts/CascadiaMono-Italic-VariableFont_wght.ttf",
+      weight: "400",
+      style: "italic",
+    },
+  ],
   variable: "--font-mono",
   display: "swap",
 });
