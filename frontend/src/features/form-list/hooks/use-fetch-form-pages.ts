@@ -16,8 +16,8 @@ import {
 import { AxiosError } from "axios";
 
 const getFetchFormPagesQueryOptions = (
-  formFilterOptionsDto?: FormFilterOptionsDto,
-  formSortOptionsDto?: SortOptionsDto<FormSortOption>,
+  filterOptionsDto?: FormFilterOptionsDto,
+  sortOptionsDto?: SortOptionsDto<FormSortOption>,
   pageOptionsDto?: Omit<PageOptionsDto, "page">,
 ) =>
   infiniteQueryOptions<
@@ -26,17 +26,17 @@ const getFetchFormPagesQueryOptions = (
   >({
     queryKey: [
       "forms",
-      formFilterOptionsDto,
-      formSortOptionsDto,
-      pageOptionsDto,
-    ] as const,
+      filterOptionsDto ?? null,
+      sortOptionsDto ?? null,
+      pageOptionsDto ?? null,
+    ],
     queryFn: async ({ pageParam }) => {
       const { data } = await apiService.get<
         PaginatedResponseDto<FormListResponseDto>
       >("/api/v1/forms", {
         params: {
-          ...formFilterOptionsDto,
-          ...formSortOptionsDto,
+          ...filterOptionsDto,
+          ...sortOptionsDto,
           ...pageOptionsDto,
           page: pageParam,
         },
@@ -46,32 +46,31 @@ const getFetchFormPagesQueryOptions = (
     initialPageParam: 0,
     getNextPageParam: ({ page }) =>
       page.number + 1 < page.totalPages ? page.number + 1 : undefined,
-    staleTime: 1000 * 60 * 10, // 10 minutes
   });
 
 export const useFetchFormPages = (
-  formFilterOptionsDto?: FormFilterOptionsDto,
-  formSortOptionsDto?: SortOptionsDto<FormSortOption>,
+  filterOptionsDto?: FormFilterOptionsDto,
+  sortOptionsDto?: SortOptionsDto<FormSortOption>,
   pageOptionsDto?: Omit<PageOptionsDto, "page">,
 ) =>
   useInfiniteQuery(
     getFetchFormPagesQueryOptions(
-      formFilterOptionsDto,
-      formSortOptionsDto,
+      filterOptionsDto,
+      sortOptionsDto,
       pageOptionsDto,
     ),
   );
 
 export const prefetchFormPages = (
   queryClient: QueryClient,
-  formFilterOptionsDto?: FormFilterOptionsDto,
-  formSortOptionsDto?: SortOptionsDto<FormSortOption>,
+  filterOptionsDto?: FormFilterOptionsDto,
+  sortOptionsDto?: SortOptionsDto<FormSortOption>,
   pageOptionsDto?: Omit<PageOptionsDto, "page">,
 ) =>
   queryClient.prefetchInfiniteQuery(
     getFetchFormPagesQueryOptions(
-      formFilterOptionsDto,
-      formSortOptionsDto,
+      filterOptionsDto,
+      sortOptionsDto,
       pageOptionsDto,
     ),
   );

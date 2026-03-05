@@ -28,7 +28,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import z from "zod";
+import * as z from "zod";
 
 type FormData = z.infer<ReturnType<typeof getSubmissionSchema>>;
 
@@ -45,6 +45,7 @@ export const Submission = ({ formDetails }: SubmissionProps) => {
   const createSubmission = useCreateSubmission(formDetails.slug);
   const { data: mySubmission, isLoading } = useFetchMySubmission(
     formDetails.slug,
+    session?.user.id ?? "",
     {
       enabled: !!session && formDetails.saveSubmissions,
     },

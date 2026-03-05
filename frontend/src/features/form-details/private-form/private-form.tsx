@@ -22,7 +22,7 @@ import { HttpStatusCode } from "axios";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import z from "zod";
+import * as z from "zod";
 
 type PrivateFormData = z.infer<ReturnType<typeof getPrivateFormSchema>>;
 

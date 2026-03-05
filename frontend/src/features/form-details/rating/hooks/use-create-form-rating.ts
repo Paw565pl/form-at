@@ -5,7 +5,6 @@ import {
   FormRatingResponseDto,
 } from "@/core/types/rating";
 
-import { getFetchFormDetailsQueryOptions } from "@/features/form-details/hooks/use-fetch-form-details";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
@@ -15,7 +14,7 @@ export const useCreateFormRating = (formIdOrSlug: string) =>
     AxiosError<ErrorResponseDto>,
     FormRatingRequestDto
   >({
-    mutationKey: ["forms", formIdOrSlug, "rating", "create"] as const,
+    mutationKey: ["forms", formIdOrSlug, "rating", "create"],
     mutationFn: async (request) => {
       const { data } = await apiService.post<FormRatingResponseDto>(
         `/api/v1/forms/${formIdOrSlug}/rating`,
@@ -23,9 +22,9 @@ export const useCreateFormRating = (formIdOrSlug: string) =>
       );
       return data;
     },
-    onSettled: (_, __, ___, ____, { client }) => {
+    onSuccess: (_, __, ___, { client }) => {
       client.invalidateQueries({
-        queryKey: getFetchFormDetailsQueryOptions(formIdOrSlug).queryKey,
+        queryKey: ["forms"],
       });
     },
   });

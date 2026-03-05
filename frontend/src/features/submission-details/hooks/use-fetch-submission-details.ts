@@ -4,31 +4,31 @@ import { SubmissionResponseDto } from "@/core/types/submission";
 import { QueryClient, queryOptions, useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
-export const getFetchSubmissionDetailsQueryOptions = (
-  idOrSlug: string,
+const getFetchSubmissionDetailsQueryOptions = (
+  formIdOrSlug: string,
   submissionId: string,
 ) =>
   queryOptions<SubmissionResponseDto, AxiosError<ErrorResponseDto>>({
-    queryKey: ["forms", idOrSlug, "submissions", submissionId] as const,
+    queryKey: ["forms", formIdOrSlug, "submissions", submissionId],
     queryFn: async () => {
       const { data } = await apiService.get<SubmissionResponseDto>(
-        `/api/v1/forms/${idOrSlug}/submissions/${submissionId}`,
+        `/api/v1/forms/${formIdOrSlug}/submissions/${submissionId}`,
       );
       return data;
     },
-    staleTime: 1000 * 60 * 10, // 10 minutes
   });
 
 export const useFetchSubmissionDetails = (
-  idOrSlug: string,
+  formIdOrSlug: string,
   submissionId: string,
-) => useQuery(getFetchSubmissionDetailsQueryOptions(idOrSlug, submissionId));
+) =>
+  useQuery(getFetchSubmissionDetailsQueryOptions(formIdOrSlug, submissionId));
 
 export const prefetchSubmissionDetails = (
   queryClient: QueryClient,
-  idOrSlug: string,
+  formIdOrSlug: string,
   submissionId: string,
 ) =>
   queryClient.prefetchQuery(
-    getFetchSubmissionDetailsQueryOptions(idOrSlug, submissionId),
+    getFetchSubmissionDetailsQueryOptions(formIdOrSlug, submissionId),
   );

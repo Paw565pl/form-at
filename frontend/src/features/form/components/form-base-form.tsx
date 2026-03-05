@@ -38,7 +38,7 @@ import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { ComponentType, useEffect, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
-import z from "zod";
+import * as z from "zod";
 
 type FormData = z.infer<ReturnType<typeof getFormSchema>>;
 

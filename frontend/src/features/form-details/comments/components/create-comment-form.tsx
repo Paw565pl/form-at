@@ -10,7 +10,7 @@ import { useTranslations } from "next-intl";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
+import * as z from "zod";
 
 type CommentFormData = z.infer<ReturnType<typeof getCommentSchema>>;
 

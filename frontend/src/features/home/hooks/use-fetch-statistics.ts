@@ -1,37 +1,21 @@
 import { apiService } from "@/core/services/api-service";
 import { ErrorResponseDto } from "@/core/types/error-response-dto";
 import { StatisticsResponseDto } from "@/core/types/statistics";
-import {
-  QueryClient,
-  queryOptions,
-  useQuery,
-  UseQueryOptions,
-} from "@tanstack/react-query";
+import { QueryClient, queryOptions, useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
-export const getFetchStatistics = (
-  options?: Omit<
-    UseQueryOptions<StatisticsResponseDto, AxiosError<ErrorResponseDto>>,
-    "queryKey"
-  >,
-) =>
+const getFetchStatisticsQueryOptions = () =>
   queryOptions<StatisticsResponseDto, AxiosError<ErrorResponseDto>>({
-    queryKey: ["statistics"] as const,
+    queryKey: ["statistics"],
     queryFn: async () => {
       const { data } =
         await apiService.get<StatisticsResponseDto>(`/api/v1/statistics`);
       return data;
     },
-    staleTime: 1000 * 60 * 10, // 10 minutes
-    ...options,
   });
 
-export const useFetchStatistics = (
-  options?: Omit<
-    UseQueryOptions<StatisticsResponseDto, AxiosError<ErrorResponseDto>>,
-    "queryKey"
-  >,
-) => useQuery(getFetchStatistics(options));
+export const useFetchStatistics = () =>
+  useQuery(getFetchStatisticsQueryOptions());
 
 export const prefetchStatistics = (queryClient: QueryClient) =>
-  queryClient.prefetchQuery(getFetchStatistics());
+  queryClient.prefetchQuery(getFetchStatisticsQueryOptions());

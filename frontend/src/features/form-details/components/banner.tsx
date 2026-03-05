@@ -26,9 +26,13 @@ export const Banner = ({ form }: BannerProps) => {
   const router = useRouter();
   const { data: session } = useSession();
 
-  const { data: mySubmission } = useFetchMySubmission(form.slug, {
-    enabled: !!session && form.saveSubmissions,
-  });
+  const { data: mySubmission } = useFetchMySubmission(
+    form.slug,
+    session?.user.id ?? "",
+    {
+      enabled: !!session && form.saveSubmissions,
+    },
+  );
 
   return (
     <section className="relative flex h-64 w-full items-end md:h-110">

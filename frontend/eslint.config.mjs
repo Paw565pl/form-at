@@ -6,6 +6,7 @@ import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
 import eslintConfigPrettier from "eslint-config-prettier/flat";
 import noRelativeImportPaths from "eslint-plugin-no-relative-import-paths";
+import eslintPluginZod from "eslint-plugin-zod";
 import { defineConfig, globalIgnores } from "eslint/config";
 import tseslint from "typescript-eslint";
 
@@ -16,6 +17,7 @@ export default defineConfig(
   tseslint.configs.strict,
   tseslint.configs.stylistic,
   tanstackQueryPlugin.configs["flat/recommended"],
+  eslintPluginZod.configs.recommended,
   {
     plugins: {
       "no-relative-import-paths": noRelativeImportPaths,

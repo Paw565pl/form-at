@@ -13,7 +13,7 @@ export const useCreateSubmission = (formIdOrSlug: string) =>
     AxiosError<ErrorResponseDto>,
     SubmissionRequestDto
   >({
-    mutationKey: ["forms", formIdOrSlug, "submissions", "create"] as const,
+    mutationKey: ["forms", formIdOrSlug, "submissions", "create"],
     mutationFn: async (request) => {
       const { data } = await apiService.post(
         `/api/v1/forms/${formIdOrSlug}/submissions`,
@@ -21,7 +21,7 @@ export const useCreateSubmission = (formIdOrSlug: string) =>
       );
       return data;
     },
-    onSettled: (_, __, ___, _____, { client }) => {
+    onSuccess: (_, __, ___, { client }) => {
       client.invalidateQueries({
         queryKey: ["forms", formIdOrSlug, "submissions"],
       });

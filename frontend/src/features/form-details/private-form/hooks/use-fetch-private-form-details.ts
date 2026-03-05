@@ -13,8 +13,9 @@ export const getFetchPrivateFormDetailsQueryOptions = (
   >,
 ) =>
   queryOptions<FormDetailResponseDto, AxiosError<ErrorResponseDto>>({
+    // excluding password for security
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
-    queryKey: ["forms", idOrSlug, "access"] as const,
+    queryKey: ["forms", idOrSlug, "access"],
     queryFn: async () => {
       const { data } = await apiService.post<FormDetailResponseDto>(
         `/api/v1/forms/${idOrSlug}/access`,
@@ -22,7 +23,7 @@ export const getFetchPrivateFormDetailsQueryOptions = (
       );
       return data;
     },
-    staleTime: 1000 * 60 * 10, // 10 minutes
+    staleTime: 1000 * 60 * 1, // 1 minute
     ...options,
   });
 

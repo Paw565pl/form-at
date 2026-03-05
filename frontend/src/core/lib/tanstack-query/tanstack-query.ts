@@ -22,14 +22,14 @@ const makeQueryClient = () => {
       queries: {
         // With SSR, we usually want to set some default staleTime
         // above 0 to avoid refetching immediately on the client
-        staleTime: 60 * 1000, // 1 minute
+        staleTime: 1000 * 60 * 5, // 5 minutes
         retry: (failureCount, error) => {
-          if (
-            (isAxiosError(error) &&
-              nonRetryableErrorCodes.has(error.status ?? 0)) ||
-            failureCount > MAX_RETRY_COUNT
-          )
+          const isNonRetryableError =
+            isAxiosError(error) &&
+            nonRetryableErrorCodes.has(error.status ?? 0);
+          if (isNonRetryableError || failureCount > MAX_RETRY_COUNT) {
             return false;
+          }
 
           return true;
         },
