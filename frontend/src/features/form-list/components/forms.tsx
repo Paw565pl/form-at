@@ -24,7 +24,7 @@ import { Activity } from "react";
 export type FormListLayout = "grid" | "list";
 
 interface FormsProps {
-  readonly initialFormListLayout: FormListLayout;
+  readonly initialFormListLayout?: string;
 }
 
 export const Forms = ({ initialFormListLayout }: FormsProps) => {
