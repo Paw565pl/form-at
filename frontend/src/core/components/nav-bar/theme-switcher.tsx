@@ -15,12 +15,12 @@ export const ThemeSwitcher = () => {
   const t = useTranslations("navBar");
   const { resolvedTheme, setTheme } = useTheme();
 
-  // needed for theme checks
-  const [mounted, setMounted] = useState(false);
+  // needed to fix theme hydration error
+  const [isMounted, setIsMounted] = useState(false);
   // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(() => setMounted(true), []);
+  useEffect(() => setIsMounted(true), []);
 
-  if (!mounted) {
+  if (!isMounted) {
     return (
       <Button size="icon-sm" variant="outline">
         <ICONS.lightMode />
