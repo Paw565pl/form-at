@@ -13,34 +13,41 @@ import { useEffect, useState } from "react";
 
 export const ThemeSwitcher = () => {
   const t = useTranslations("navBar");
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
 
   // needed for theme checks
   const [mounted, setMounted] = useState(false);
   // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => setMounted(true), []);
 
-  if (!mounted)
+  if (!mounted) {
     return (
       <Button size="icon-sm" variant="outline">
         <ICONS.lightMode />
       </Button>
     );
+  }
+
+  const isResolvedThemeDark = resolvedTheme === "dark";
 
   return (
     <Tooltip>
       <TooltipTrigger asChild>
         <Button
-          aria-label={theme === "dark" ? t("lightMode") : t("darkMode")}
+          aria-label={isResolvedThemeDark ? t("lightMode") : t("darkMode")}
           variant="outline"
           size="icon-sm"
-          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          onClick={() =>
+            setTheme((previousTheme) =>
+              previousTheme === "dark" ? "light" : "dark",
+            )
+          }
         >
-          {theme === "dark" ? <ICONS.lightMode /> : <ICONS.darkMode />}
+          {isResolvedThemeDark ? <ICONS.lightMode /> : <ICONS.darkMode />}
         </Button>
       </TooltipTrigger>
       <TooltipContent>
-        <span>{theme === "dark" ? t("lightMode") : t("darkMode")}</span>
+        <span>{isResolvedThemeDark ? t("lightMode") : t("darkMode")}</span>
       </TooltipContent>
     </Tooltip>
   );
