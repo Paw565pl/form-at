@@ -12,17 +12,27 @@ import { Filters } from "@/features/form-list/components/filters";
 import { GridView } from "@/features/form-list/components/grid-view";
 import { ListView } from "@/features/form-list/components/list-view";
 import { useFetchFormPages } from "@/features/form-list/hooks/use-fetch-form-pages";
+import { useFormListLayout } from "@/features/form-list/hooks/use-form-list-layout";
 import {
   formFilterSearchParams,
   formSortSearchParams,
 } from "@/features/form-list/search-params/form-search-params";
 import { useTranslations } from "next-intl";
 import { useQueryStates } from "nuqs";
-import { useState } from "react";
+import { Activity } from "react";
 
-export const Forms = () => {
+export type FormListLayout = "grid" | "list";
+
+interface FormsProps {
+  readonly initialFormListLayout?: string;
+}
+
+export const Forms = ({ initialFormListLayout }: FormsProps) => {
   const t = useTranslations("formListPage");
-  const [isGridLayout, setIsGridLayout] = useState(true);
+  const [formListLayout, setFormListLayout] = useFormListLayout(
+    initialFormListLayout,
+  );
+
   const [filtersDto] = useQueryStates(formFilterSearchParams);
   const [sortDto] = useQueryStates(formSortSearchParams);
   const { data: formPages, error } = useFetchFormPages(filtersDto, sortDto);
@@ -49,8 +59,8 @@ export const Forms = () => {
                 <Button
                   aria-label={t("options.gridView")}
                   size="icon"
-                  variant={isGridLayout ? "default" : "outline"}
-                  onClick={() => setIsGridLayout(true)}
+                  variant={formListLayout === "grid" ? "default" : "outline"}
+                  onClick={() => setFormListLayout("grid")}
                 >
                   <ICONS.grid />
                 </Button>
@@ -65,8 +75,8 @@ export const Forms = () => {
                 <Button
                   aria-label={t("options.listView")}
                   size="icon"
-                  variant={isGridLayout ? "outline" : "default"}
-                  onClick={() => setIsGridLayout(false)}
+                  variant={formListLayout === "list" ? "default" : "outline"}
+                  onClick={() => setFormListLayout("list")}
                 >
                   <ICONS.list />
                 </Button>
@@ -79,7 +89,13 @@ export const Forms = () => {
         </div>
       </header>
 
-      {isGridLayout ? <GridView /> : <ListView />}
+      <Activity mode={formListLayout === "grid" ? "visible" : "hidden"}>
+        <GridView />
+      </Activity>
+
+      <Activity mode={formListLayout === "list" ? "visible" : "hidden"}>
+        <ListView />
+      </Activity>
 
       <ScrollToTopButton />
     </section>
