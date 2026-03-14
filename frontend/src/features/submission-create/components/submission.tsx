@@ -95,7 +95,7 @@ export const Submission = ({ formDetails }: SubmissionProps) => {
         })),
     };
 
-    if (formDetails.saveSubmissions) {
+    if (formDetails.saveSubmissions && formDetails.authorName) {
       createSubmission.mutate(request, {
         onError: (error) => {
           if (error.status === HttpStatusCode.Conflict) {
