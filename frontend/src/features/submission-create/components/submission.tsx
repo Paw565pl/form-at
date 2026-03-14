@@ -20,6 +20,7 @@ import { useFetchMySubmission } from "@/features/form-details/my-submission/hook
 import { useCreateSubmission } from "@/features/submission-create/hooks/use-create-submission";
 import { getSubmissionSchema } from "@/features/submission-create/schemas/submission-schema";
 import { SubmissionCreateLoading } from "@/features/submission-create/submission-create-loading";
+import { AnswerFeedback } from "@/features/submission/components/answer-feedback";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HttpStatusCode } from "axios";
 import { useSession } from "next-auth/react";
@@ -52,7 +53,10 @@ export const Submission = ({ formDetails }: SubmissionProps) => {
   );
 
   const [isSubmissionComplete, setIsSubmissionComplete] = useState(false);
+  const [answersData, setAnswersData] =
+    useState<SubmissionAnswerRequestDto[]>();
   const hasSubmission = !!mySubmission || isSubmissionComplete;
+  const showAnswers = hasSubmission && formDetails.showAnswersFeedback;
 
   const formSchema = getSubmissionSchema(t);
   const form = useForm<FormData>({
@@ -102,10 +106,12 @@ export const Submission = ({ formDetails }: SubmissionProps) => {
         },
         onSuccess: () => {
           setIsSubmissionComplete(true);
+          setAnswersData(request.answers);
         },
       });
     } else {
       setIsSubmissionComplete(true);
+      setAnswersData(request.answers);
     }
   };
 
@@ -306,24 +312,35 @@ export const Submission = ({ formDetails }: SubmissionProps) => {
       )}
 
       {hasSubmission && (
-        <Card className="flex flex-col items-center justify-center gap-5 p-6">
-          <div className="bg-primary/10 flex h-16 w-16 items-center justify-center rounded-full">
-            <ICONS.check className="text-primary h-10 w-10" />
-          </div>
-          <div className="flex flex-col items-center gap-2">
-            <h2 className="mb-2 text-xl font-medium">
-              {t("submissionCreated")}
-            </h2>
-            <p>{formDetails.thanksMessage || t("defaultThanksMessage")}</p>
-          </div>
-          <Button
-            size="sm"
-            variant="default"
-            onClick={() => router.replace(`/forms/${formDetails.slug}`)}
-          >
-            {t("backToDetails")}
-          </Button>
-        </Card>
+        <>
+          <Card className="flex flex-col items-center justify-center gap-5 p-6">
+            <div className="bg-primary/10 flex h-16 w-16 items-center justify-center rounded-full">
+              <ICONS.check className="text-primary h-10 w-10" />
+            </div>
+            <div className="flex flex-col items-center gap-2">
+              <h2 className="mb-2 text-xl font-medium">
+                {t("submissionCreated")}
+              </h2>
+              <p>{formDetails.thanksMessage || t("defaultThanksMessage")}</p>
+            </div>
+            <Button
+              size="sm"
+              variant="default"
+              onClick={() => router.replace(`/forms/${formDetails.slug}`)}
+            >
+              {t("backToDetails")}
+            </Button>
+          </Card>
+          {showAnswers && (
+            <section>
+              <h2 className="pb-2 pl-2 text-xl">{t("yourAnswers")}</h2>
+              <AnswerFeedback
+                formQuestions={formDetails.questions}
+                answers={answersData}
+              />
+            </section>
+          )}
+        </>
       )}
     </section>
   );

@@ -1,21 +1,17 @@
 "use client";
 
 import { Button } from "@/core/components/ui/button";
-import { Card } from "@/core/components/ui/card";
-import { Checkbox } from "@/core/components/ui/checkbox";
-import { Label } from "@/core/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/core/components/ui/radio-group";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/core/components/ui/tooltip";
 import { ICONS } from "@/core/config/icons";
-import { cn } from "@/core/lib/cn";
 import { useFetchFormDetails } from "@/features/form-details/hooks/use-fetch-form-details";
 import { DeleteSubmissionAlertDialog } from "@/features/submission-details/components/delete-submission-alert-dialog";
 import { useFetchSubmissionDetails } from "@/features/submission-details/hooks/use-fetch-submission-details";
 import { SubmissionDetailsLoading } from "@/features/submission-details/submission-details-loading";
+import { AnswerFeedback } from "@/features/submission/components/answer-feedback";
 import { HttpStatusCode } from "axios";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
@@ -31,7 +27,6 @@ export const SubmissionDetails = ({
   submissionId,
 }: SubmissionDetailsProps) => {
   const t = useTranslations("submissionDetailsPage");
-  const gt = useTranslations("global");
 
   const {
     data: formData,
@@ -84,116 +79,10 @@ export const SubmissionDetails = ({
         />
       </header>
 
-      <div className="flex flex-col gap-4">
-        {formData.questions.map((question, index) => {
-          const openAnswer = submissionData.answers.find(
-            (a) => a.questionId === question.id,
-          )?.openAnswer;
-          const selectedOptions =
-            submissionData.answers.find((a) => a.questionId === question.id)
-              ?.chosenAnswerIds || [];
-
-          return (
-            <Card key={question.id} className="gap-2 p-4">
-              <header className="flex flex-col gap-4">
-                <div className="flex flex-col flex-wrap gap-1 sm:flex-row sm:items-center sm:justify-between">
-                  <div className="flex gap-1">
-                    <span className="text-muted-foreground">{index + 1}.</span>
-                    <h2 className="font-medium">
-                      {question.content}{" "}
-                      {question.isRequired && (
-                        <span className="text-muted-foreground">*</span>
-                      )}
-                    </h2>
-                  </div>
-                  <span className="text-muted-foreground ml-3 text-sm">
-                    {gt(`questionTypes.${question.type}`)}
-                  </span>
-                </div>
-              </header>
-
-              {question.type === "OPEN" &&
-                (openAnswer ? (
-                  <p className="mx-3 text-sm">{openAnswer}</p>
-                ) : (
-                  <p className="text-muted-foreground mx-3 text-sm">
-                    {t("emptyOpenAnswer")}
-                  </p>
-                ))}
-
-              {question.type === "SINGLE_CHOICE" && (
-                <RadioGroup disabled value={selectedOptions[0]}>
-                  {question.answers.map((answer) => (
-                    <div key={answer.id} className="flex items-center gap-2">
-                      <RadioGroupItem
-                        value={answer.id}
-                        id={answer.id}
-                        className="cursor-default! opacity-100!"
-                      />
-                      <Label htmlFor={answer.id} className="font-normal">
-                        {answer.content}
-                      </Label>
-                      {answer.isCorrect ? (
-                        <ICONS.check
-                          className={cn(
-                            "text-green-400",
-                            selectedOptions[0] !== answer.id && "opacity-30",
-                          )}
-                        />
-                      ) : (
-                        <ICONS.close
-                          className={cn(
-                            "text-destructive",
-                            selectedOptions[0] !== answer.id && "opacity-30",
-                          )}
-                        />
-                      )}
-                    </div>
-                  ))}
-                </RadioGroup>
-              )}
-
-              {question.type === "MULTIPLE_CHOICE" && (
-                <div className="flex flex-col gap-2">
-                  {question.answers.map((answer) => (
-                    <div key={answer.id} className="flex items-center gap-2">
-                      <Checkbox
-                        checked={selectedOptions.includes(answer.id)}
-                        id={answer.id}
-                        disabled
-                        className="cursor-default! opacity-100!"
-                      />
-                      <Label
-                        htmlFor={answer.id}
-                        className="cursor-default! font-normal opacity-100!"
-                      >
-                        {answer.content}
-                      </Label>
-                      {answer.isCorrect ? (
-                        <ICONS.check
-                          className={cn(
-                            "text-green-400",
-                            !selectedOptions.includes(answer.id) &&
-                              "opacity-30",
-                          )}
-                        />
-                      ) : (
-                        <ICONS.close
-                          className={cn(
-                            "text-destructive",
-                            !selectedOptions.includes(answer.id) &&
-                              "opacity-30",
-                          )}
-                        />
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </Card>
-          );
-        })}
-      </div>
+      <AnswerFeedback
+        formQuestions={formData.questions}
+        answers={submissionData.answers}
+      />
     </section>
   );
 };
