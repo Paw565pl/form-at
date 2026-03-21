@@ -26,7 +26,7 @@ import { HttpStatusCode } from "axios";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
@@ -57,6 +57,16 @@ export const Submission = ({ formDetails }: SubmissionProps) => {
     useState<SubmissionAnswerRequestDto[]>();
   const hasSubmission = !!mySubmission || isSubmissionComplete;
   const showAnswers = hasSubmission && formDetails.showAnswersFeedback;
+  const feedbackAnswers = useMemo<SubmissionAnswerRequestDto[] | undefined>(
+    () =>
+      answersData ??
+      mySubmission?.answers.map((answer) => ({
+        questionId: answer.questionId,
+        chosenAnswerIds: [...answer.chosenAnswerIds],
+        openAnswer: answer.openAnswer,
+      })),
+    [answersData, mySubmission],
+  );
 
   const formSchema = getSubmissionSchema(t);
   const form = useForm<FormData>({
@@ -336,7 +346,7 @@ export const Submission = ({ formDetails }: SubmissionProps) => {
               <h2 className="pb-2 pl-2 text-xl">{t("yourAnswers")}</h2>
               <AnswersFeedback
                 formQuestions={formDetails.questions}
-                answers={answersData}
+                answers={feedbackAnswers}
               />
             </section>
           )}
