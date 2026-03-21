@@ -8,15 +8,15 @@ import { QuestionResponseDto } from "@/core/types/question";
 import { SubmissionAnswerRequestDto } from "@/core/types/submission";
 import { useTranslations } from "next-intl";
 
-interface AnswerFeedbackProps {
+interface AnswersFeedbackProps {
   readonly formQuestions: QuestionResponseDto[];
   readonly answers?: SubmissionAnswerRequestDto[];
 }
 
-export const AnswerFeedback = ({
+export const AnswersFeedback = ({
   formQuestions,
   answers,
-}: AnswerFeedbackProps) => {
+}: AnswersFeedbackProps) => {
   const gt = useTranslations("global");
 
   return (
@@ -28,7 +28,6 @@ export const AnswerFeedback = ({
         const selectedOptions =
           answers?.find((a) => a.questionId === question.id)?.chosenAnswerIds ||
           [];
-        console.log("selectedOptions", selectedOptions);
 
         return (
           <Card key={question.id} className="gap-2 p-4">

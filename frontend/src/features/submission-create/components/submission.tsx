@@ -20,7 +20,7 @@ import { useFetchMySubmission } from "@/features/form-details/my-submission/hook
 import { useCreateSubmission } from "@/features/submission-create/hooks/use-create-submission";
 import { getSubmissionSchema } from "@/features/submission-create/schemas/submission-schema";
 import { SubmissionCreateLoading } from "@/features/submission-create/submission-create-loading";
-import { AnswerFeedback } from "@/features/submission/components/answer-feedback";
+import { AnswersFeedback } from "@/features/submission/components/answers-feedback";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HttpStatusCode } from "axios";
 import { useSession } from "next-auth/react";
@@ -334,7 +334,7 @@ export const Submission = ({ formDetails }: SubmissionProps) => {
           {showAnswers && (
             <section>
               <h2 className="pb-2 pl-2 text-xl">{t("yourAnswers")}</h2>
-              <AnswerFeedback
+              <AnswersFeedback
                 formQuestions={formDetails.questions}
                 answers={answersData}
               />

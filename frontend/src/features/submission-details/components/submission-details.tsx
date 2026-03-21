@@ -11,7 +11,7 @@ import { useFetchFormDetails } from "@/features/form-details/hooks/use-fetch-for
 import { DeleteSubmissionAlertDialog } from "@/features/submission-details/components/delete-submission-alert-dialog";
 import { useFetchSubmissionDetails } from "@/features/submission-details/hooks/use-fetch-submission-details";
 import { SubmissionDetailsLoading } from "@/features/submission-details/submission-details-loading";
-import { AnswerFeedback } from "@/features/submission/components/answer-feedback";
+import { AnswersFeedback } from "@/features/submission/components/answers-feedback";
 import { HttpStatusCode } from "axios";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
@@ -79,7 +79,7 @@ export const SubmissionDetails = ({
         />
       </header>
 
-      <AnswerFeedback
+      <AnswersFeedback
         formQuestions={formData.questions}
         answers={submissionData.answers}
       />
