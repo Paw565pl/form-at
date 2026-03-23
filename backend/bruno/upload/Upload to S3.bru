@@ -1,0 +1,28 @@
+meta {
+  name: Upload to S3
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:9000/uploads
+  body: multipartForm
+  auth: none
+}
+
+body:multipart-form {
+  X-Amz-Date: 20260323T161006Z
+  x-amz-signature: 45ce4544421f7d45177089059584b291d31924eaf0a03c5c8b9afbe36ec26fbb
+  x-amz-algorithm: AWS4-HMAC-SHA256
+  x-amz-credential: rustfsadmin/20260323/us-east-1/s3/aws4_request
+  policy: eyJleHBpcmF0aW9uIjoiMjAyNi0wMy0yM1QxNjoyNTowNi40OTBaIiwiY29uZGl0aW9ucyI6W1siZXEiLCIkYnVja2V0IiwidXBsb2FkcyJdLFsiZXEiLCIka2V5IiwiODA3NTI3MmMtNDhmYi00NmZmLWFlZDgtOTQ2ODUzMjMwNDU5LzlhYzA1OGE5LWFjY2MtNDc1NS05NGRjLWJhYWM2MGI3MzIyNi5hdmlmIl0sWyJlcSIsIiRmaWxlbmFtZSIsInRlc3QtYXZpZiJdLFsiZXEiLCIkQ29udGVudC1UeXBlIiwiaW1hZ2UvYXZpZiJdLFsiY29udGVudC1sZW5ndGgtcmFuZ2UiLDEsMTA0ODU3NjBdLFsiZXEiLCIkeC1hbXotYWxnb3JpdGhtIiwiQVdTNC1ITUFDLVNIQTI1NiJdLFsiZXEiLCIkeC1hbXotY3JlZGVudGlhbCIsInJ1c3Rmc2FkbWluLzIwMjYwMzIzL3VzLWVhc3QtMS9zMy9hd3M0X3JlcXVlc3QiXSxbImVxIiwiJHgtYW16LWRhdGUiLCIyMDI2MDMyM1QxNjEwMDZaIl1dfQ==
+  key: 8075272c-48fb-46ff-aed8-946853230459/9ac058a9-accc-4755-94dc-baac60b73226.avif
+  filename: test-avif
+  Content-Type: image/avif
+  file: @file()
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
