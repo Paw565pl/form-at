@@ -71,7 +71,7 @@ repositories {
 
 val mapstructVersion = "1.6.3"
 val slugifyVersion = "3.0.7"
-val s3SdkVersion = "2.42.18"
+val minioSdkVersion = "9.0.0"
 val linguaVersion = "1.2.2"
 val restAssuredVersion = "6.0.0"
 val dataFakerVersion = "2.5.4"
@@ -86,7 +86,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
     implementation("org.mapstruct:mapstruct:$mapstructVersion")
     implementation("com.github.slugify:slugify:$slugifyVersion")
-    implementation("software.amazon.awssdk:s3:$s3SdkVersion")
+    implementation("io.minio:minio:$minioSdkVersion")
     implementation("com.github.pemistahl:lingua:$linguaVersion")
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")

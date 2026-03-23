@@ -1,39 +1,19 @@
 package format.backend.upload.config;
 
 import format.backend.upload.properties.S3Properties;
-import java.net.URI;
-import lombok.RequiredArgsConstructor;
+import io.minio.MinioClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
-import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 
 @Configuration
-@RequiredArgsConstructor
 class S3Config {
 
-    private final S3Properties s3Properties;
-
     @Bean
-    S3Client s3Client() {
-        return S3Client.builder()
-                .endpointOverride(URI.create(s3Properties.getUrl()))
+    MinioClient minioClient(S3Properties s3Properties) {
+        return MinioClient.builder()
+                .endpoint(s3Properties.getUrl())
+                .credentials(s3Properties.getAccessKey(), s3Properties.getSecretKey())
                 .region(s3Properties.getRegion())
-                .credentialsProvider(StaticCredentialsProvider.create(
-                        AwsBasicCredentials.create(s3Properties.getAccessKey(), s3Properties.getSecretKey())))
-                .forcePathStyle(s3Properties.getForcePathStyle())
-                .build();
-    }
-
-    @Bean
-    S3Presigner s3Presigner() {
-        return S3Presigner.builder()
-                .endpointOverride(URI.create(s3Properties.getUrl()))
-                .region(s3Properties.getRegion())
-                .credentialsProvider(StaticCredentialsProvider.create(
-                        AwsBasicCredentials.create(s3Properties.getAccessKey(), s3Properties.getSecretKey())))
                 .build();
     }
 }

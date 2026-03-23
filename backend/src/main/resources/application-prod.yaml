@@ -16,7 +16,6 @@ logging:
 
 s3:
   url: http://rustfs:9000
-  force-path-style: true
   region: us-east-1
   access-key: rustfsadmin
   secret-key: rustfsadmin
