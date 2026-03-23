@@ -9,7 +9,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface PendingUploadRepository extends MongoRepository<@NonNull PendingUploadEntity, @NonNull String> {
-    Slice<@NonNull PendingUploadEntity> findAllByExpiresAtBefore(Instant now, Pageable pageable);
+    Slice<@NonNull PendingUploadEntity> findAllByExpiresAtBefore(Instant timestamp, Pageable pageable);
 
     long deleteAllByKeyIn(Collection<String> keys);
 }
