@@ -15,7 +15,6 @@ import jakarta.validation.Payload;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.util.Arrays;
-import java.util.List;
 import lombok.val;
 
 @Retention(RUNTIME)
@@ -32,25 +31,22 @@ public @interface ValidImageExtension {
 
 class ImageExtensionValidator implements ConstraintValidator<ValidImageExtension, String> {
 
-    private static final List<String> validImageExtensions = Arrays.stream(ImageExtension.values())
-            .map(ImageExtension::getExtensionValue)
-            .toList();
+    private static final String ERROR_MESSAGE = String.format(
+            "File has invalid extension, only %s are allowed",
+            String.join(
+                    ", ",
+                    Arrays.stream(ImageExtension.values())
+                            .map(ImageExtension::getValue)
+                            .toList()));
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         if (value == null) return true;
 
-        val trimmedValue = value.trim();
-        val lastDotIndex = trimmedValue.lastIndexOf('.');
-        val fileExtension = lastDotIndex == -1 ? trimmedValue : trimmedValue.substring(lastDotIndex + 1);
-        val isValid = ImageExtension.fromExtensionValue(fileExtension).isPresent();
-
+        val isValid = ImageExtension.fromFilename(value).isPresent();
         if (!isValid) {
-            val errorMessage = String.format(
-                    "File has invalid extension '%s', only %s are allowed",
-                    fileExtension, String.join(", ", validImageExtensions));
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate(errorMessage).addConstraintViolation();
+            context.buildConstraintViolationWithTemplate(ERROR_MESSAGE).addConstraintViolation();
         }
 
         return isValid;
