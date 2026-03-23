@@ -65,7 +65,8 @@ public class FormValidator {
                         Stream.of(thumbnailKey), questions.stream().map(QuestionRequestDto::imageKey))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toUnmodifiableSet());
-        val validUploadKeys = uploadService.getValidUploadKeys(uploadKeys);
+        val validUploadKeys =
+                uploadKeys.stream().filter(uploadService::isUploaded).collect(Collectors.toUnmodifiableSet());
 
         val isThumbnailUploaded =
                 Optional.ofNullable(thumbnailKey).map(validUploadKeys::contains).orElse(true);
