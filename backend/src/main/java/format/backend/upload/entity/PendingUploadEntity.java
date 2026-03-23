@@ -29,6 +29,9 @@ public class PendingUploadEntity {
     @Field(name = "key")
     private @NonNull String key;
 
+    @Field(name = "filename")
+    private @NonNull String filename;
+
     @Field(name = "userId")
     private @NonNull String userId;
 
