@@ -15,6 +15,7 @@ import jakarta.validation.Payload;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.util.Arrays;
+import java.util.stream.Collectors;
 import lombok.val;
 
 @Retention(RUNTIME)
@@ -33,11 +34,7 @@ class ImageExtensionValidator implements ConstraintValidator<ValidImageExtension
 
     private static final String ERROR_MESSAGE = String.format(
             "File has invalid extension, only %s are allowed",
-            String.join(
-                    ", ",
-                    Arrays.stream(ImageExtension.values())
-                            .map(ImageExtension::getValue)
-                            .toList()));
+            Arrays.stream(ImageExtension.values()).map(ImageExtension::getValue).collect(Collectors.joining(", ")));
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
