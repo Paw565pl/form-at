@@ -1,9 +1,11 @@
 package format.backend.upload.service;
 
+import static io.minio.Http.Method.GET;
+
+import com.github.slugify.Slugify;
 import format.backend.upload.dto.BatchUploadRequestDto;
-import format.backend.upload.dto.UploadRequestResponseDto;
 import format.backend.upload.entity.PendingUploadEntity;
-import format.backend.upload.properties.MinioProperties;
+import format.backend.upload.properties.S3Properties;
 import format.backend.upload.repository.PendingUploadRepository;
 import format.backend.upload.validator.ImageExtension;
 import io.minio.BucketExistsArgs;
@@ -13,71 +15,59 @@ import io.minio.MinioClient;
 import io.minio.PostPolicy;
 import io.minio.RemoveObjectsArgs;
 import io.minio.StatObjectArgs;
-import io.minio.Time;
 import io.minio.errors.ErrorResponseException;
 import io.minio.errors.MinioException;
-import io.minio.http.Method;
-import io.minio.messages.DeleteObject;
+import io.minio.messages.DeleteRequest;
 import jakarta.annotation.PostConstruct;
-import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.time.Duration;
 import java.time.Instant;
-import java.time.ZonedDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class UploadService {
 
+    private final S3Properties s3Properties;
     private final MinioClient minioClient;
-    private final MinioProperties minioProperties;
+
+    private final Slugify slugify;
     private final PendingUploadRepository pendingUploadRepository;
 
-    private static final long MAX_FILE_SIZE = 10L * 1024 * 1024; // 10 MB
-    private static final Duration expiryDuration = Duration.ofMinutes(20);
+    private static final int MAX_CONTENT_LENGTH = 10 * 1024 * 1024; // 10 MB
+    private static final String VALID_CONTENT_TYPE = "image/%s".formatted(ImageExtension.AVIF.getValue());
+    private static final Duration UPLOAD_EXPIRY_DURATION = Duration.ofMinutes(15);
 
     @PostConstruct
-    private void createMinioBucket() throws MinioException, IOException, NoSuchAlgorithmException, InvalidKeyException {
-        val exists = minioClient.bucketExists(BucketExistsArgs.builder()
-                .bucket(minioProperties.getBucketName())
-                .build());
-        if (!exists)
-            minioClient.makeBucket(MakeBucketArgs.builder()
-                    .bucket(minioProperties.getBucketName())
-                    .build());
+    private void createBucket() throws MinioException {
+        val exists = minioClient.bucketExists(
+                BucketExistsArgs.builder().bucket(s3Properties.getBucket()).build());
+        if (!exists) {
+            minioClient.makeBucket(
+                    MakeBucketArgs.builder().bucket(s3Properties.getBucket()).build());
+        }
     }
 
     @Transactional
-    public List<UploadRequestResponseDto> getBatchUploadPresignedFormData(
-            String userId, BatchUploadRequestDto requestDto) {
+    public List<Map<String, String>> getBatchUploadPresignedFormData(String userId, BatchUploadRequestDto requestDto) {
         val pendingUploads = requestDto.files().stream()
                 .map(r -> {
-                    val fileName =
-                            r.fileName().replaceAll("[^A-Za-z0-9._-]", "_").trim();
-                    val lastDotIndex = fileName.lastIndexOf('.');
-                    val fileExtension = lastDotIndex == -1 ? fileName : fileName.substring(lastDotIndex + 1);
+                    val key = "%s/%s.%s".formatted(userId, UUID.randomUUID(), ImageExtension.AVIF.getValue());
+                    val safeFilename = slugify.slugify(r.filename());
+                    val expiresAt = Instant.now().plus(UPLOAD_EXPIRY_DURATION);
 
-                    val key = String.format("%s/%s", UUID.randomUUID(), fileName);
-                    val contentType = ImageExtension.fromExtensionValue(fileExtension)
-                            .map(ImageExtension::getContentType)
-                            .orElse("*/*");
-                    val expiresAt = Instant.now().plus(expiryDuration);
-
-                    return new PendingUploadEntity(key, fileName, contentType, userId, expiresAt);
+                    return new PendingUploadEntity(key, safeFilename, userId, expiresAt);
                 })
                 .toList();
         pendingUploadRepository.saveAll(pendingUploads);
@@ -85,43 +75,36 @@ public class UploadService {
         return pendingUploads.stream()
                 .map(u -> {
                     val postPolicy = new PostPolicy(
-                            minioProperties.getBucketName(),
-                            ZonedDateTime.now(Time.UTC).plus(expiryDuration));
-                    postPolicy.addContentLengthRangeCondition(1, MAX_FILE_SIZE);
+                            s3Properties.getBucket(), u.getExpiresAt().atZone(ZoneOffset.UTC));
+                    postPolicy.addContentLengthRangeCondition(1, MAX_CONTENT_LENGTH);
                     postPolicy.addEqualsCondition("key", u.getKey());
-                    postPolicy.addEqualsCondition("filename", u.getFileName());
-                    postPolicy.addEqualsCondition(HttpHeaders.CONTENT_TYPE, u.getContentType());
+                    postPolicy.addEqualsCondition("filename", u.getFilename());
+                    postPolicy.addEqualsCondition(HttpHeaders.CONTENT_TYPE, VALID_CONTENT_TYPE);
 
                     try {
                         val formData = minioClient.getPresignedPostFormData(postPolicy);
-                        return UploadRequestResponseDto.fromFormData(
-                                formData, u.getFileName(), u.getKey(), u.getContentType());
-                    } catch (MinioException | InvalidKeyException | IOException | NoSuchAlgorithmException e) {
-                        log.error("Could not create upload request", e);
-                        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+                        return formData;
+                    } catch (MinioException e) {
+                        log.error("Could not create upload presigned post form data", e);
+                        throw new RuntimeException(e);
                     }
                 })
                 .toList();
     }
 
-    public Set<String> getValidUploadKeys(Set<String> keys) {
-        if (keys.isEmpty()) return Set.of();
-        return keys.stream().filter(this::isUploaded).collect(Collectors.toUnmodifiableSet());
-    }
-
-    private boolean isUploaded(String key) {
+    public boolean isUploaded(String key) {
         if (key == null) return false;
 
         try {
             minioClient.statObject(StatObjectArgs.builder()
-                    .bucket(minioProperties.getBucketName())
+                    .bucket(s3Properties.getBucket())
                     .object(key)
                     .build());
             return true;
         } catch (ErrorResponseException e) {
-            // this is thrown for 404 Not Found
+            // this is thrown for 404 not found
             return false;
-        } catch (MinioException | InvalidKeyException | IOException | NoSuchAlgorithmException e) {
+        } catch (MinioException e) {
             log.error("An unexpected error occurred for stat object with key {}", key, e);
             return false;
         }
@@ -136,12 +119,12 @@ public class UploadService {
 
         try {
             return minioClient.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder()
-                    .method(Method.GET)
-                    .bucket(minioProperties.getBucketName())
+                    .method(GET)
+                    .bucket(s3Properties.getBucket())
                     .object(key)
-                    .expiry((int) Duration.ofHours(24).getSeconds())
+                    .expiry(24, TimeUnit.HOURS)
                     .build());
-        } catch (MinioException | InvalidKeyException | IOException | NoSuchAlgorithmException e) {
+        } catch (MinioException e) {
             log.error("Could not create GET presigned url for key {}", key, e);
             return null;
         }
@@ -150,18 +133,18 @@ public class UploadService {
     public void deleteAllByKeys(Set<String> keys) {
         if (keys.isEmpty()) return;
 
-        val deleteObjects = keys.stream().map(DeleteObject::new).toList();
-        val removeObjects = minioClient.removeObjects(RemoveObjectsArgs.builder()
-                .bucket(minioProperties.getBucketName())
+        val deleteObjects = keys.stream().map(DeleteRequest.Object::new).toList();
+        val deleteResults = minioClient.removeObjects(RemoveObjectsArgs.builder()
+                .bucket(s3Properties.getBucket())
                 .objects(deleteObjects)
                 .build());
 
-        for (val removeObject : removeObjects) {
+        for (val deleteResult : deleteResults) {
             try {
-                val error = removeObject.get();
-                if (error != null) log.error("Error while removing file for key {}", error.objectName());
-            } catch (MinioException | InvalidKeyException | IOException | NoSuchAlgorithmException e) {
-                log.error("Caught exception while removing file", e);
+                val error = deleteResult.get();
+                if (error != null) log.error("Error while removing object with key {} - {}", error.objectName(), error);
+            } catch (MinioException e) {
+                log.error("Could not retrieve delete error result", e);
             }
         }
     }
