@@ -3,11 +3,11 @@ import com.diffplug.spotless.LineEnding
 plugins {
     java
     idea
-    id("org.springframework.boot") version "4.0.3"
-    id("org.springframework.boot.aot") version "4.0.3" apply false
+    id("org.springframework.boot") version "4.0.4"
+    id("org.springframework.boot.aot") version "4.0.4" apply false
     id("io.spring.dependency-management") version "1.1.7"
     id("se.solrike.sonarlint") version "2.2.0"
-    id("com.diffplug.spotless") version "8.2.1"
+    id("com.diffplug.spotless") version "8.4.0"
 }
 
 if (project.hasProperty("aot")) {
