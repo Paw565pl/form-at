@@ -4,6 +4,7 @@ import static io.minio.Http.Method.GET;
 
 import com.github.slugify.Slugify;
 import format.backend.upload.dto.BatchUploadRequestDto;
+import format.backend.upload.dto.UploadRequestResponseDto;
 import format.backend.upload.entity.PendingUploadEntity;
 import format.backend.upload.properties.S3Properties;
 import format.backend.upload.repository.PendingUploadRepository;
@@ -23,7 +24,6 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -60,7 +60,8 @@ public class UploadService {
     }
 
     @Transactional
-    public List<Map<String, String>> getBatchUploadPresignedFormData(String userId, BatchUploadRequestDto requestDto) {
+    public List<UploadRequestResponseDto> getBatchUploadPresignedFormData(
+            String userId, BatchUploadRequestDto requestDto) {
         val pendingUploads = requestDto.files().stream()
                 .map(r -> {
                     val key = "%s/%s.%s".formatted(userId, UUID.randomUUID(), ImageExtension.AVIF.getValue());
@@ -83,7 +84,8 @@ public class UploadService {
 
                     try {
                         val formData = minioClient.getPresignedPostFormData(postPolicy);
-                        return formData;
+                        return UploadRequestResponseDto.fromFormData(
+                                formData, u.getKey(), u.getFilename(), VALID_CONTENT_TYPE);
                     } catch (MinioException e) {
                         log.error("Could not create upload presigned post form data", e);
                         throw new RuntimeException(e);
