@@ -10,7 +10,7 @@ public class LanguageReadConverter implements Converter<@NonNull String, @NonNul
 
     @Override
     public Language convert(@NonNull String source) {
-        return Language.fromValue(source)
+        return Language.from(source)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid language mongo value: " + source));
     }
 }
