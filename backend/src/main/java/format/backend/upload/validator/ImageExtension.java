@@ -22,10 +22,11 @@ public enum ImageExtension {
     }
 
     public static Optional<ImageExtension> fromFilename(String filename) {
-        val lowerCaseFilename = filename.trim().toLowerCase();
-        val lastDotIndex = lowerCaseFilename.lastIndexOf('.');
-        val extension = lastDotIndex == -1 ? lowerCaseFilename : lowerCaseFilename.substring(lastDotIndex + 1);
+        val trimmedFilename = filename.trim();
+        val lastDotIndex = trimmedFilename.lastIndexOf('.');
+        if (lastDotIndex == -1) return Optional.empty();
 
+        val extension = trimmedFilename.substring(lastDotIndex + 1);
         return from(extension);
     }
 }
