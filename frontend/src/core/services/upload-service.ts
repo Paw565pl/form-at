@@ -32,6 +32,7 @@ type UploadResult =
     };
 
 class UploadService {
+  private readonly TARGET_CONTENT_TYPE = "image/avif";
   private readonly s3Client = axios.create({
     baseURL:
       typeof window === "undefined"
@@ -44,26 +45,28 @@ class UploadService {
     files: File[],
     onProgress?: (percent: number) => void,
   ): Promise<UploadResult> {
-    const nonEmptyFiles = files.filter((f) => f.size !== 0);
-    if (nonEmptyFiles.length === 0) {
+    const compressedFiles = await Promise.all(
+      files.filter((f) => f.size !== 0).map((f) => this.compressImageFile(f)),
+    );
+    if (compressedFiles.length === 0) {
       return { isSuccess: true, filesToKeys: new Map() };
     }
 
-    const totalBytes = nonEmptyFiles.reduce((acc, f) => acc + f.size, 0);
-    const uploadedBytesPerFile = new Array<number>(nonEmptyFiles.length).fill(
+    const totalBytes = compressedFiles.reduce((acc, f) => acc + f.size, 0);
+    const uploadedBytesPerFile = new Array<number>(compressedFiles.length).fill(
       0,
     );
     onProgress?.(0);
 
     try {
       const uploadRequestDto: BatchUploadRequestDto = {
-        files: nonEmptyFiles.map((f) => ({ filename: f.name })),
+        files: compressedFiles.map((f) => ({ filename: f.name })),
       };
       const { data: uploadsMetadata } = await apiService.post<
         UploadPayloadDto[]
       >("/api/v1/upload/request", uploadRequestDto);
 
-      if (uploadsMetadata.length !== nonEmptyFiles.length) {
+      if (uploadsMetadata.length !== compressedFiles.length) {
         return {
           isSuccess: false,
           error: new Error("mismatch of files and upload keys"),
@@ -77,7 +80,7 @@ class UploadService {
             formData.append(key, value),
           );
 
-          const file = nonEmptyFiles[index];
+          const file = compressedFiles[index];
           if (!file) return formData;
 
           formData.append("file", file);
@@ -102,12 +105,55 @@ class UploadService {
       }
 
       const filesToKeys = new Map(
-        nonEmptyFiles.map((file, index) => [file, uploadsMetadata[index].key]),
+        compressedFiles.map((file, index) => [
+          file,
+          uploadsMetadata[index].key,
+        ]),
       );
       return { isSuccess: true, filesToKeys };
     } catch (e) {
       const error = Error.isError(e) ? e : new Error("unknown s3 upload error");
       return { isSuccess: false, error };
+    }
+  }
+
+  private async compressImageFile(file: File): Promise<File> {
+    const src = URL.createObjectURL(file);
+
+    try {
+      const image = new Image();
+      image.src = src;
+
+      await new Promise((resolve, reject) => {
+        image.onload = () => resolve(null);
+        image.onerror = (e) => reject(e);
+      });
+
+      const width = Math.min(image.width, 1400);
+      const resizedBitmap = await createImageBitmap(image, {
+        resizeWidth: width,
+      });
+      const canvas = new OffscreenCanvas(
+        resizedBitmap.width,
+        resizedBitmap.height,
+      );
+
+      const bitmaprenderer = canvas.getContext("bitmaprenderer");
+      if (bitmaprenderer) {
+        bitmaprenderer.transferFromImageBitmap(resizedBitmap);
+      } else {
+        const ctx2d = canvas.getContext("2d");
+        ctx2d?.drawImage(resizedBitmap, 0, 0);
+      }
+
+      const blob = await canvas.convertToBlob({
+        type: this.TARGET_CONTENT_TYPE,
+        quality: 0.8,
+      });
+
+      return new File([blob], file.name, { type: this.TARGET_CONTENT_TYPE });
+    } finally {
+      URL.revokeObjectURL(src);
     }
   }
 }
