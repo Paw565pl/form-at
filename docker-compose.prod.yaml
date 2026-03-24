@@ -20,7 +20,6 @@ services:
     restart: on-failure
     ports:
       - "9000:9000"
-      - "9001:9001"
     environment:
       RUSTFS_ACCESS_KEY: rustfsadmin
       RUSTFS_SECRET_KEY: rustfsadmin
@@ -29,13 +28,7 @@ services:
     volumes:
       - rustfs-data:/data
     healthcheck:
-      test:
-        [
-          "CMD",
-          "sh",
-          "-c",
-          "curl -f http://127.0.0.1:9000/health && curl -f http://127.0.0.1:9001/rustfs/console/health",
-        ]
+      test: ["CMD", "sh", "-c", "curl -f http://127.0.0.1:9000/health"]
       interval: 1m30s
       timeout: 30s
       retries: 5
