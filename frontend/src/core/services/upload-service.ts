@@ -48,7 +48,7 @@ class UploadService {
     onProgress?: (percent: number) => void,
   ): Promise<UploadResult> {
     const compressedFiles = await Promise.all(
-      files.filter((f) => f.size !== 0).map((f) => this.compressImageFile(f)),
+      files.map((f) => this.compressImageFile(f)),
     );
     if (compressedFiles.length === 0) {
       return { isSuccess: true, filesToKeys: new Map() };
@@ -107,10 +107,7 @@ class UploadService {
       }
 
       const filesToKeys = new Map(
-        compressedFiles.map((file, index) => [
-          file,
-          uploadsMetadata[index].key,
-        ]),
+        files.map((file, index) => [file, uploadsMetadata[index].key]),
       );
       return { isSuccess: true, filesToKeys };
     } catch (e) {
