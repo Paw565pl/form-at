@@ -3,7 +3,7 @@ import { serverEnv } from "@/core/lib/env/server-env";
 import { apiService } from "@/core/services/api-service";
 import axios from "axios";
 
-interface FileUploadRequestDto {
+interface BatchUploadRequestDto {
   readonly files: {
     readonly filename: string;
   }[];
@@ -50,24 +50,25 @@ class UploadService {
     }
 
     const totalBytes = nonEmptyFiles.reduce((acc, f) => acc + f.size, 0);
-    const uploadedBytesPerFile: number[] = new Array(nonEmptyFiles.length).fill(
+    const uploadedBytesPerFile = new Array<number>(nonEmptyFiles.length).fill(
       0,
     );
     onProgress?.(0);
 
     try {
-      const uploadRequestDto: FileUploadRequestDto = {
+      const uploadRequestDto: BatchUploadRequestDto = {
         files: nonEmptyFiles.map((f) => ({ filename: f.name })),
       };
       const { data: uploadsMetadata } = await apiService.post<
         UploadPayloadDto[]
       >("/api/v1/upload/request", uploadRequestDto);
 
-      if (uploadsMetadata.length !== nonEmptyFiles.length)
+      if (uploadsMetadata.length !== nonEmptyFiles.length) {
         return {
           isSuccess: false,
           error: new Error("mismatch of files and upload keys"),
         };
+      }
 
       const uploadsFormData: FormData[] = uploadsMetadata
         .map((uploadMetadata, index) => {
