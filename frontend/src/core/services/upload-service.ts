@@ -47,12 +47,12 @@ class UploadService {
     files: File[],
     onProgress?: (percent: number) => void,
   ): Promise<UploadResult> {
+    if (files.length === 0) {
+      return { isSuccess: true, filesToKeys: new Map() };
+    }
     const compressedFiles = await Promise.all(
       files.map((f) => this.compressImageFile(f)),
     );
-    if (compressedFiles.length === 0) {
-      return { isSuccess: true, filesToKeys: new Map() };
-    }
 
     const totalBytes = compressedFiles.reduce((acc, f) => acc + f.size, 0);
     const uploadedBytesPerFile = new Array<number>(compressedFiles.length).fill(
