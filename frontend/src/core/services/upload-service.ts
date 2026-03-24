@@ -32,11 +32,11 @@ type UploadResult =
     };
 
 class UploadService {
-  private readonly minioClient = axios.create({
+  private readonly s3Client = axios.create({
     baseURL:
       typeof window === "undefined"
-        ? serverEnv.MINIO_URL
-        : getClientEnv("NEXT_PUBLIC_MINIO_URL"),
+        ? serverEnv.S3_URL
+        : getClientEnv("NEXT_PUBLIC_S3_URL"),
     timeout: 0,
   });
 
@@ -84,7 +84,7 @@ class UploadService {
         })
         .filter((f) => f.has("file"));
       for (let i = 0; i < uploadsFormData.length; i++) {
-        await this.minioClient.post("", uploadsFormData[i], {
+        await this.s3Client.post("", uploadsFormData[i], {
           onUploadProgress(event) {
             if (!onProgress || !event.total) return;
 
@@ -105,9 +105,7 @@ class UploadService {
       );
       return { isSuccess: true, filesToKeys };
     } catch (e) {
-      const error = Error.isError(e)
-        ? e
-        : new Error("unknown minio upload error");
+      const error = Error.isError(e) ? e : new Error("unknown s3 upload error");
       return { isSuccess: false, error };
     }
   }

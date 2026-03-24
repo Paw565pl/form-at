@@ -16,7 +16,7 @@ export const serverEnv = createEnv({
     AUTH_KEYCLOAK_AUTH_URL: z.url().trim().min(1),
     AUTH_KEYCLOAK_TOKEN_URL: z.url().trim().min(1),
     AUTH_KEYCLOAK_LOGOUT_URL: z.url().trim().min(1),
-    MINIO_URL: z.url().trim().min(1),
+    S3_URL: z.url().trim().min(1),
   },
   experimental__runtimeEnv: process.env,
   skipValidation: process.env.CI ? true : false,

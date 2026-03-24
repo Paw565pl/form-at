@@ -6,11 +6,11 @@ import * as z from "zod";
 const clientEnv = createEnv({
   client: {
     NEXT_PUBLIC_API_BASE_URL: z.url().trim().min(1),
-    NEXT_PUBLIC_MINIO_URL: z.url().trim().min(1),
+    NEXT_PUBLIC_S3_URL: z.url().trim().min(1),
   },
   runtimeEnv: {
     NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL,
-    NEXT_PUBLIC_MINIO_URL: process.env.NEXT_PUBLIC_MINIO_URL,
+    NEXT_PUBLIC_S3_URL: process.env.NEXT_PUBLIC_S3_URL,
   },
   skipValidation: true,
 });

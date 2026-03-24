@@ -20,8 +20,8 @@ RUN \
 # Rebuild the source code only when needed
 FROM base AS builder
 
-ARG MINIO_URL
-ENV MINIO_URL=$MINIO_URL
+ARG S3_URL
+ENV S3_URL=$S3_URL
 
 WORKDIR /app
 
