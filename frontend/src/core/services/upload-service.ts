@@ -32,7 +32,9 @@ type UploadResult =
     };
 
 class UploadService {
-  private readonly TARGET_CONTENT_TYPE = "image/avif";
+  private readonly TARGET_EXTENSION = "avif";
+  private readonly TARGET_CONTENT_TYPE = `image/${this.TARGET_EXTENSION}`;
+
   private readonly s3Client = axios.create({
     baseURL:
       typeof window === "undefined"
@@ -151,7 +153,17 @@ class UploadService {
         quality: 0.8,
       });
 
-      return new File([blob], file.name, { type: this.TARGET_CONTENT_TYPE });
+      const trimmedFilename = file.name.trim();
+      const lastDotIndex = trimmedFilename.lastIndexOf(".");
+      const filenameWithoutExtension =
+        lastDotIndex > 0
+          ? trimmedFilename.substring(0, lastDotIndex)
+          : trimmedFilename;
+      const finalFilename = `${filenameWithoutExtension}.${this.TARGET_EXTENSION}`;
+
+      return new File([blob], finalFilename, {
+        type: this.TARGET_CONTENT_TYPE,
+      });
     } finally {
       URL.revokeObjectURL(src);
     }
