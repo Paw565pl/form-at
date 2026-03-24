@@ -78,14 +78,16 @@ public class UploadService {
                     val postPolicy = new PostPolicy(
                             s3Properties.getBucket(), u.getExpiresAt().atZone(ZoneOffset.UTC));
                     postPolicy.addContentLengthRangeCondition(1, MAX_CONTENT_LENGTH);
+                    postPolicy.addEqualsCondition("x-amz-meta-filename", u.getFilename());
                     postPolicy.addEqualsCondition("key", u.getKey());
-                    postPolicy.addEqualsCondition("filename", u.getFilename());
                     postPolicy.addEqualsCondition(HttpHeaders.CONTENT_TYPE, VALID_CONTENT_TYPE);
+                    val contentDisposition = "inline; filename=\"%s\"".formatted(u.getFilename());
+                    postPolicy.addEqualsCondition(HttpHeaders.CONTENT_DISPOSITION, contentDisposition);
 
                     try {
                         val formData = minioClient.getPresignedPostFormData(postPolicy);
                         return UploadRequestResponseDto.fromFormData(
-                                formData, u.getKey(), u.getFilename(), VALID_CONTENT_TYPE);
+                                formData, u.getKey(), u.getFilename(), VALID_CONTENT_TYPE, contentDisposition);
                     } catch (MinioException e) {
                         log.error("Could not create upload presigned post form data", e);
                         throw new RuntimeException(e);
