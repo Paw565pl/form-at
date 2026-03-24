@@ -151,6 +151,7 @@
       "passwordRequired": "Password is required for private forms.",
       "oneQuestionRequired": "At least one question must be required.",
       "imageFileType": "Image file must be of type PNG, JPEG, JPG, WEBP or AVIF.",
+      "imageFileNonEmpty": "Image file size cannot be empty.",
       "imageFileSize": "Image file size cannot exceed {size}.",
       "questionContentMin": "Question content must be at least {count} characters.",
       "questionContentMax": "Question content must be at most {count} characters.",
