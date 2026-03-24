@@ -138,6 +138,7 @@ public class UploadService {
                     .bucket(s3Properties.getBucket())
                     .object(key)
                     .expiry(24, TimeUnit.HOURS)
+                    .versionId("dummy")
                     .build());
         } catch (MinioException e) {
             log.error("Could not create GET presigned url for key {}", key, e);
