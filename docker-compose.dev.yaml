@@ -46,7 +46,7 @@ services:
       - "8080:8080"
     depends_on:
       - mongodb
-      - minio
+      - rustfs
       - keycloak
     develop:
       watch:
