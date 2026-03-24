@@ -5,18 +5,19 @@ import axios from "axios";
 
 interface FileUploadRequestDto {
   readonly files: {
-    readonly fileName: string;
+    readonly filename: string;
   }[];
 }
 
-interface UploadMetadata {
-  readonly filename: string;
-  readonly "x-amz-date": string;
+interface UploadPayloadDto {
+  readonly "X-Amz-Date": string;
   readonly "x-amz-signature": string;
   readonly "x-amz-algorithm": string;
-  readonly key: string;
   readonly "x-amz-credential": string;
   readonly policy: string;
+
+  readonly key: string;
+  readonly filename: string;
   readonly "Content-Type": string;
 }
 
@@ -31,7 +32,7 @@ type UploadResult =
     };
 
 class UploadService {
-  private minioClient = axios.create({
+  private readonly minioClient = axios.create({
     baseURL:
       typeof window === "undefined"
         ? serverEnv.MINIO_URL
@@ -44,8 +45,9 @@ class UploadService {
     onProgress?: (percent: number) => void,
   ): Promise<UploadResult> {
     const nonEmptyFiles = files.filter((f) => f.size !== 0);
-    if (nonEmptyFiles.length === 0)
+    if (nonEmptyFiles.length === 0) {
       return { isSuccess: true, filesToKeys: new Map() };
+    }
 
     const totalBytes = nonEmptyFiles.reduce((acc, f) => acc + f.size, 0);
     const uploadedBytesPerFile: number[] = new Array(nonEmptyFiles.length).fill(
@@ -55,12 +57,11 @@ class UploadService {
 
     try {
       const uploadRequestDto: FileUploadRequestDto = {
-        files: nonEmptyFiles.map((f) => ({ fileName: f.name })),
+        files: nonEmptyFiles.map((f) => ({ filename: f.name })),
       };
-      const { data: uploadsMetadata } = await apiService.post<UploadMetadata[]>(
-        "/api/v1/upload/request",
-        uploadRequestDto,
-      );
+      const { data: uploadsMetadata } = await apiService.post<
+        UploadPayloadDto[]
+      >("/api/v1/upload/request", uploadRequestDto);
 
       if (uploadsMetadata.length !== nonEmptyFiles.length)
         return {
