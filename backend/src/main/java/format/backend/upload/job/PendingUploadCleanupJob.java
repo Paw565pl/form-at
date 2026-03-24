@@ -20,7 +20,7 @@ class PendingUploadCleanupJob {
     private final PendingUploadRepository pendingUploadRepository;
     private final UploadService uploadService;
 
-    private static final int BATCH_SIZE = 500;
+    private static final int BATCH_SIZE = 1_000;
 
     @Scheduled(cron = "0 0 2 * * *")
     void run() {
@@ -29,7 +29,7 @@ class PendingUploadCleanupJob {
         val now = Instant.now();
         val pageable = Pageable.ofSize(BATCH_SIZE);
 
-        var deletedCount = 0;
+        var deletedCount = 0L;
         var expiredPendingUploads = pendingUploadRepository.findAllByExpiresAtBefore(now, pageable);
 
         while (expiredPendingUploads.hasContent()) {
@@ -38,9 +38,7 @@ class PendingUploadCleanupJob {
                     .collect(Collectors.toUnmodifiableSet());
             uploadService.deleteAllByKeys(keys);
 
-            pendingUploadRepository.deleteAll(expiredPendingUploads);
-            deletedCount += expiredPendingUploads.getNumberOfElements();
-
+            deletedCount += pendingUploadRepository.deleteAllByKeyIn(keys);
             expiredPendingUploads = pendingUploadRepository.findAllByExpiresAtBefore(now, pageable);
         }
 
