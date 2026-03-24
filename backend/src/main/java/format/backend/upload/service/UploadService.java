@@ -87,7 +87,7 @@ public class UploadService {
                     try {
                         val formData = minioClient.getPresignedPostFormData(postPolicy);
                         return UploadRequestResponseDto.fromFormData(
-                                formData, u.getKey(), u.getFilename(), VALID_CONTENT_TYPE, contentDisposition);
+                                formData, u.getFilename(), u.getKey(), VALID_CONTENT_TYPE, contentDisposition);
                     } catch (MinioException e) {
                         log.error("Could not create upload presigned post form data", e);
                         throw new RuntimeException(e);
