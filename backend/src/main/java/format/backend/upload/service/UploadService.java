@@ -81,13 +81,11 @@ public class UploadService {
                     postPolicy.addEqualsCondition("x-amz-meta-filename", u.getFilename());
                     postPolicy.addEqualsCondition("key", u.getKey());
                     postPolicy.addEqualsCondition(HttpHeaders.CONTENT_TYPE, VALID_CONTENT_TYPE);
-                    val contentDisposition = "inline; filename=\"%s\"".formatted(u.getFilename());
-                    postPolicy.addEqualsCondition(HttpHeaders.CONTENT_DISPOSITION, contentDisposition);
 
                     try {
                         val formData = minioClient.getPresignedPostFormData(postPolicy);
                         return UploadRequestResponseDto.fromFormData(
-                                formData, u.getFilename(), u.getKey(), VALID_CONTENT_TYPE, contentDisposition);
+                                formData, u.getFilename(), u.getKey(), VALID_CONTENT_TYPE);
                     } catch (MinioException e) {
                         log.error("Could not create upload presigned post form data", e);
                         throw new RuntimeException(e);

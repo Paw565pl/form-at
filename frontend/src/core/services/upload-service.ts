@@ -19,7 +19,6 @@ interface UploadPayloadDto {
   readonly "x-amz-meta-filename": string;
   readonly key: string;
   readonly "Content-Type": string;
-  readonly "Content-Disposition": string;
 }
 
 type UploadResult =
