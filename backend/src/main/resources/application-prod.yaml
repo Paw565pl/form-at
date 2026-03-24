@@ -16,7 +16,7 @@ logging:
 
 s3:
   url: http://rustfs:9000
-  region: us-east-1
+  region: eu-central-1
   access-key: rustfsadmin
   secret-key: rustfsadmin
   bucket: uploads
