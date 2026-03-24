@@ -65,7 +65,7 @@ public class UploadService {
         val pendingUploads = requestDto.files().stream()
                 .map(r -> {
                     val key = "%s/%s.%s".formatted(userId, UUID.randomUUID(), ImageExtension.AVIF.getValue());
-                    val safeFilename = slugify.slugify(r.filename());
+                    val safeFilename = getSafeFilename(r.filename());
                     val expiresAt = Instant.now().plus(UPLOAD_EXPIRY_DURATION);
 
                     return new PendingUploadEntity(key, safeFilename, userId, expiresAt);
@@ -94,6 +94,18 @@ public class UploadService {
                     }
                 })
                 .toList();
+    }
+
+    private String getSafeFilename(String filename) {
+        val lastDotIndex = filename.lastIndexOf('.');
+        val filenameWithoutExtension = lastDotIndex > 0 ? filename.substring(0, lastDotIndex) : filename;
+        val filenameSlug = slugify.slugify(filenameWithoutExtension);
+        val safeFilenameWithoutExtension = filenameSlug.isBlank() ? "file" : filenameSlug;
+
+        return lastDotIndex > 0
+                ? safeFilenameWithoutExtension
+                        + filename.substring(lastDotIndex).toLowerCase()
+                : safeFilenameWithoutExtension;
     }
 
     public boolean isUploaded(String key) {
