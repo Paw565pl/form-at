@@ -8,7 +8,8 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -27,7 +28,7 @@ class PendingUploadCleanupJob {
         log.info("Started pending upload cleanup job");
 
         val now = Instant.now();
-        val pageable = Pageable.ofSize(BATCH_SIZE);
+        val pageable = PageRequest.of(0, BATCH_SIZE, Sort.by("expiresAt").ascending());
 
         var deletedCount = 0L;
         var expiredPendingUploads = pendingUploadRepository.findAllByExpiresAtBefore(now, pageable);
