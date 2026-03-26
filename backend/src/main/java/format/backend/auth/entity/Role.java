@@ -16,9 +16,7 @@ public enum Role {
 
     private final String value;
 
-    /**
-     * Returns the role with prefix "ROLE_".
-     */
+    /** Returns the role with prefix "ROLE_". */
     public String getPrefixedValue() {
         return "ROLE_" + value;
     }

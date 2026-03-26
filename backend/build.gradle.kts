@@ -32,14 +32,15 @@ idea {
 }
 
 spotless {
+    encoding = Charsets.UTF_8
     lineEndings = LineEnding.UNIX
 
     java {
-        forbidWildcardImports()
-        removeUnusedImports()
         importOrder()
+        removeUnusedImports()
+        forbidWildcardImports()
         cleanthat()
-        palantirJavaFormat("2.89.0")
+        palantirJavaFormat("2.90.0").formatJavadoc(true)
         trimTrailingWhitespace()
         leadingTabsToSpaces()
         endWithNewline()
