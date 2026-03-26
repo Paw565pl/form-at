@@ -15,6 +15,7 @@ public record UploadRequestResponseDto(
 
         // custom fields
         @JsonProperty(filenameJson) @NonNull String filename,
+        @JsonProperty(userIdJson) @NonNull String userId,
         @NonNull String key,
         @JsonProperty(HttpHeaders.CONTENT_TYPE) @NonNull String contentType) {
     private static final String xAmzDateJson = "X-Amz-Date";
@@ -23,9 +24,10 @@ public record UploadRequestResponseDto(
     private static final String xAmzCredentialJson = "x-amz-credential";
     private static final String policyJson = "policy";
     private static final String filenameJson = "x-amz-meta-filename";
+    private static final String userIdJson = "x-amz-meta-user-id";
 
     public static UploadRequestResponseDto fromFormData(
-            Map<String, String> formData, String filename, String key, String contentType) {
+            Map<String, String> formData, String filename, String userId, String key, String contentType) {
         return new UploadRequestResponseDto(
                 formData.get(xAmzDateJson),
                 formData.get(xAmzSignatureJson),
@@ -33,6 +35,7 @@ public record UploadRequestResponseDto(
                 formData.get(xAmzCredentialJson),
                 formData.get(policyJson),
                 filename,
+                userId,
                 key,
                 contentType);
     }

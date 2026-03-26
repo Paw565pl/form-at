@@ -64,8 +64,8 @@ public class UploadService {
             String userId, BatchUploadRequestDto requestDto) {
         val pendingUploads = requestDto.files().stream()
                 .map(r -> {
-                    val key = "%s/%s.%s".formatted(userId, UUID.randomUUID(), ImageExtension.AVIF.getValue());
                     val safeFilename = getSafeFilename(r.filename());
+                    val key = "%s/%s".formatted(UUID.randomUUID(), safeFilename);
                     val expiresAt = Instant.now().plus(UPLOAD_EXPIRY_DURATION);
 
                     return new PendingUploadEntity(key, safeFilename, userId, expiresAt);
@@ -79,13 +79,14 @@ public class UploadService {
                             s3Properties.getBucket(), u.getExpiresAt().atZone(ZoneOffset.UTC));
                     postPolicy.addContentLengthRangeCondition(1, MAX_CONTENT_LENGTH);
                     postPolicy.addEqualsCondition("x-amz-meta-filename", u.getFilename());
+                    postPolicy.addEqualsCondition("x-amz-meta-user-id", u.getUserId());
                     postPolicy.addEqualsCondition("key", u.getKey());
                     postPolicy.addEqualsCondition(HttpHeaders.CONTENT_TYPE, VALID_CONTENT_TYPE);
 
                     try {
                         val formData = minioClient.getPresignedPostFormData(postPolicy);
                         return UploadRequestResponseDto.fromFormData(
-                                formData, u.getFilename(), u.getKey(), VALID_CONTENT_TYPE);
+                                formData, u.getFilename(), u.getUserId(), u.getKey(), VALID_CONTENT_TYPE);
                     } catch (MinioException e) {
                         log.error("Could not create upload presigned post form data", e);
                         throw new RuntimeException(e);

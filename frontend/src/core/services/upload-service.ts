@@ -17,6 +17,7 @@ interface UploadPayloadDto {
   readonly policy: string;
 
   readonly "x-amz-meta-filename": string;
+  readonly "x-amz-meta-user-id": string;
   readonly key: string;
   readonly "Content-Type": string;
 }
