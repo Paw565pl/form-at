@@ -5,10 +5,10 @@ import static io.minio.Http.Method.GET;
 import com.github.slugify.Slugify;
 import format.backend.upload.dto.BatchUploadRequestDto;
 import format.backend.upload.dto.UploadRequestResponseDto;
+import format.backend.upload.entity.ImageType;
 import format.backend.upload.entity.PendingUploadEntity;
 import format.backend.upload.properties.S3Properties;
 import format.backend.upload.repository.PendingUploadRepository;
-import format.backend.upload.validator.ImageExtension;
 import io.minio.BucketExistsArgs;
 import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MakeBucketArgs;
@@ -46,7 +46,6 @@ public class UploadService {
     private final PendingUploadRepository pendingUploadRepository;
 
     private static final int MAX_CONTENT_LENGTH = 10 * 1024 * 1024; // 10 MB
-    private static final String VALID_CONTENT_TYPE = "image/%s".formatted(ImageExtension.AVIF.getValue());
     private static final Duration UPLOAD_EXPIRY_DURATION = Duration.ofMinutes(15);
 
     @PostConstruct
@@ -75,18 +74,22 @@ public class UploadService {
 
         return pendingUploads.stream()
                 .map(u -> {
+                    val contentType = ImageType.fromFilename(u.getFilename())
+                            .orElseThrow(() -> new IllegalStateException(
+                                    "Could not resolve ImageType for filename: " + u.getFilename()))
+                            .getContentType();
                     val postPolicy = new PostPolicy(
                             s3Properties.getBucket(), u.getExpiresAt().atZone(ZoneOffset.UTC));
                     postPolicy.addContentLengthRangeCondition(1, MAX_CONTENT_LENGTH);
                     postPolicy.addEqualsCondition("x-amz-meta-filename", u.getFilename());
                     postPolicy.addEqualsCondition("x-amz-meta-user-id", u.getUserId());
                     postPolicy.addEqualsCondition("key", u.getKey());
-                    postPolicy.addEqualsCondition(HttpHeaders.CONTENT_TYPE, VALID_CONTENT_TYPE);
+                    postPolicy.addEqualsCondition(HttpHeaders.CONTENT_TYPE, contentType);
 
                     try {
                         val formData = minioClient.getPresignedPostFormData(postPolicy);
                         return UploadRequestResponseDto.fromFormData(
-                                formData, u.getFilename(), u.getUserId(), u.getKey(), VALID_CONTENT_TYPE);
+                                formData, u.getFilename(), u.getUserId(), u.getKey(), contentType);
                     } catch (MinioException e) {
                         log.error("Could not create upload presigned post form data", e);
                         throw new RuntimeException(e);

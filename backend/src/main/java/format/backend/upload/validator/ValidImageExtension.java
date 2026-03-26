@@ -8,6 +8,7 @@ import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.ElementType.TYPE_USE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+import format.backend.upload.entity.ImageType;
 import jakarta.validation.Constraint;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -34,13 +35,13 @@ class ImageExtensionValidator implements ConstraintValidator<ValidImageExtension
 
     private static final String ERROR_MESSAGE = String.format(
             "File has invalid extension, only %s are allowed",
-            Arrays.stream(ImageExtension.values()).map(ImageExtension::getValue).collect(Collectors.joining(", ")));
+            Arrays.stream(ImageType.values()).map(ImageType::getExtension).collect(Collectors.joining(", ")));
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         if (value == null) return true;
 
-        val isValid = ImageExtension.fromFilename(value).isPresent();
+        val isValid = ImageType.fromFilename(value).isPresent();
         if (!isValid) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate(ERROR_MESSAGE).addConstraintViolation();
