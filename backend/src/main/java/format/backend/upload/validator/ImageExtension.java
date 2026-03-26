@@ -13,7 +13,7 @@ public enum ImageExtension {
 
     private final String value;
 
-    public static Optional<ImageExtension> from(String extension) {
+    public static Optional<ImageExtension> fromExtension(String extension) {
         if (!Objects.equals(extension.toLowerCase(), AVIF.value)) {
             return Optional.empty();
         }
@@ -27,6 +27,6 @@ public enum ImageExtension {
         if (lastDotIndex == -1) return Optional.empty();
 
         val extension = trimmedFilename.substring(lastDotIndex + 1);
-        return from(extension);
+        return fromExtension(extension);
     }
 }
