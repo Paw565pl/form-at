@@ -274,11 +274,17 @@ export const FormBaseForm = ({
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {Object.values(FormStatus).map((status) => (
-                        <SelectItem key={status} value={status}>
-                          {t(`formStatuses.${status}`)}
-                        </SelectItem>
-                      ))}
+                      {Object.values(FormStatus)
+                        .filter(
+                          (status) =>
+                            !formDataDefaultValues.name &&
+                            status !== FormStatus.Closed,
+                        )
+                        .map((status) => (
+                          <SelectItem key={status} value={status}>
+                            {t(`formStatuses.${status}`)}
+                          </SelectItem>
+                        ))}
                     </SelectContent>
                   </Select>
                   <p className="ml-3 text-sm sm:ml-0">
