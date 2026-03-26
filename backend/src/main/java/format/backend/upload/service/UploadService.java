@@ -97,14 +97,14 @@ public class UploadService {
     private String getSafeFilename(String filename) {
         val trimmedFilename = filename.trim();
         val lastDotIndex = trimmedFilename.lastIndexOf('.');
+
         val filenameWithoutExtension = lastDotIndex > 0 ? trimmedFilename.substring(0, lastDotIndex) : trimmedFilename;
         val filenameSlug = slugify.slugify(filenameWithoutExtension);
         val safeFilenameWithoutExtension = filenameSlug.isBlank() ? "file" : filenameSlug;
 
-        return lastDotIndex > 0
-                ? safeFilenameWithoutExtension
-                        + trimmedFilename.substring(lastDotIndex).toLowerCase()
-                : safeFilenameWithoutExtension;
+        if (lastDotIndex == -1) return safeFilenameWithoutExtension;
+        return safeFilenameWithoutExtension
+                + trimmedFilename.substring(lastDotIndex).toLowerCase();
     }
 
     public boolean isUploaded(String key) {
