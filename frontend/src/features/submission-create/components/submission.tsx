@@ -30,6 +30,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
+import { ThanksMessageCard } from "./thanks-message-card";
 
 type FormData = z.infer<ReturnType<typeof getSubmissionSchema>>;
 
@@ -322,24 +323,12 @@ export const Submission = ({ formDetails }: SubmissionProps) => {
 
       {hasSubmission && (
         <>
-          <Card className="flex flex-col items-center justify-center gap-5 p-6">
-            <div className="bg-primary/10 flex h-16 w-16 items-center justify-center rounded-full">
-              <ICONS.check className="text-primary h-10 w-10" />
-            </div>
-            <div className="flex flex-col items-center gap-2">
-              <h2 className="mb-2 text-xl font-medium">
-                {t("submissionCreated")}
-              </h2>
-              <p>{formDetails.thanksMessage || t("defaultThanksMessage")}</p>
-            </div>
-            <Button
-              size="sm"
-              variant="default"
-              onClick={() => router.replace(`/forms/${formDetails.slug}`)}
-            >
-              {t("backToDetails")}
-            </Button>
-          </Card>
+          {answersData && (
+            <ThanksMessageCard
+              thanksMessage={formDetails.thanksMessage}
+              slug={formDetails.slug}
+            />
+          )}
           {showAnswers && (
             <section>
               <h2 className="pb-2 pl-2 text-xl">{t("yourAnswers")}</h2>
