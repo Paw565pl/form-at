@@ -90,6 +90,10 @@ export const Submission = ({ formDetails }: SubmissionProps) => {
   if (isLoading) return <SubmissionCreateLoading />;
 
   const onSubmit = (data: FormData) => {
+    if (!formDetails.saveSubmissions || !formDetails.authorName) {
+      setIsSubmissionComplete(true);
+      return;
+    }
     const request: SubmissionRequestDto = {
       ...data,
       answers: data.answers
@@ -105,24 +109,19 @@ export const Submission = ({ formDetails }: SubmissionProps) => {
         })),
     };
 
-    if (formDetails.saveSubmissions && formDetails.authorName) {
-      createSubmission.mutate(request, {
-        onError: (error) => {
-          if (error.status === HttpStatusCode.Conflict) {
-            toast.error(t("errors.submissionExists"));
-          } else {
-            toast.error(t("errors.unexpected"));
-          }
-        },
-        onSuccess: () => {
-          setIsSubmissionComplete(true);
-          setAnswersData(request.answers);
-        },
-      });
-    } else {
-      setIsSubmissionComplete(true);
-      setAnswersData(request.answers);
-    }
+    createSubmission.mutate(request, {
+      onError: (error) => {
+        if (error.status === HttpStatusCode.Conflict) {
+          toast.error(t("errors.submissionExists"));
+        } else {
+          toast.error(t("errors.unexpected"));
+        }
+      },
+      onSuccess: () => {
+        setIsSubmissionComplete(true);
+        setAnswersData(request.answers);
+      },
+    });
   };
 
   return (
