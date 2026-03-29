@@ -17,6 +17,7 @@ import {
   SubmissionRequestDto,
 } from "@/core/types/submission";
 import { useFetchMySubmission } from "@/features/form-details/my-submission/hooks/use-fetch-my-submission";
+import { ThanksMessageCard } from "@/features/submission-create/components/thanks-message-card";
 import { useCreateSubmission } from "@/features/submission-create/hooks/use-create-submission";
 import { getSubmissionSchema } from "@/features/submission-create/schemas/submission-schema";
 import { SubmissionCreateLoading } from "@/features/submission-create/submission-create-loading";
@@ -25,12 +26,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { HttpStatusCode } from "axios";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
-import { ThanksMessageCard } from "./thanks-message-card";
 
 type FormData = z.infer<ReturnType<typeof getSubmissionSchema>>;
 
@@ -41,7 +40,6 @@ interface SubmissionProps {
 export const Submission = ({ formDetails }: SubmissionProps) => {
   const t = useTranslations("submissionCreatePage");
   const gt = useTranslations("global");
-  const router = useRouter();
   const { data: session } = useSession();
 
   const createSubmission = useCreateSubmission(formDetails.slug);
@@ -54,19 +52,21 @@ export const Submission = ({ formDetails }: SubmissionProps) => {
   );
 
   const [isSubmissionComplete, setIsSubmissionComplete] = useState(false);
-  const [answersData, setAnswersData] =
+  const [usersAnswersData, setUsersAnswersData] =
     useState<SubmissionAnswerRequestDto[]>();
-  const hasSubmission = !!mySubmission || isSubmissionComplete;
-  const showAnswers = hasSubmission && formDetails.showAnswersFeedback;
+  const hasUserSubmitedForm = !!mySubmission || isSubmissionComplete;
+  const showUsersAnswers =
+    hasUserSubmitedForm && formDetails.showAnswersFeedback;
+
   const feedbackAnswers = useMemo<SubmissionAnswerRequestDto[] | undefined>(
     () =>
-      answersData ??
+      usersAnswersData ??
       mySubmission?.answers.map((answer) => ({
         questionId: answer.questionId,
         chosenAnswerIds: [...answer.chosenAnswerIds],
         openAnswer: answer.openAnswer,
       })),
-    [answersData, mySubmission],
+    [usersAnswersData, mySubmission],
   );
 
   const formSchema = getSubmissionSchema(t);
@@ -120,7 +120,7 @@ export const Submission = ({ formDetails }: SubmissionProps) => {
       },
       onSuccess: () => {
         setIsSubmissionComplete(true);
-        setAnswersData(request.answers);
+        setUsersAnswersData(request.answers);
       },
     });
   };
@@ -151,7 +151,7 @@ export const Submission = ({ formDetails }: SubmissionProps) => {
         </Card>
       </header>
 
-      {!hasSubmission && (
+      {!hasUserSubmitedForm && (
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-col gap-4"
@@ -321,24 +321,21 @@ export const Submission = ({ formDetails }: SubmissionProps) => {
         </form>
       )}
 
-      {hasSubmission && (
-        <>
-          {answersData && (
-            <ThanksMessageCard
-              thanksMessage={formDetails.thanksMessage}
-              slug={formDetails.slug}
-            />
-          )}
-          {showAnswers && (
-            <section>
-              <h2 className="pb-2 pl-2 text-xl">{t("yourAnswers")}</h2>
-              <AnswersFeedback
-                formQuestions={formDetails.questions}
-                answers={feedbackAnswers}
-              />
-            </section>
-          )}
-        </>
+      {hasUserSubmitedForm && usersAnswersData && (
+        <ThanksMessageCard
+          thanksMessage={formDetails.thanksMessage}
+          slug={formDetails.slug}
+        />
+      )}
+
+      {hasUserSubmitedForm && showUsersAnswers && (
+        <section>
+          <h2 className="pb-2 pl-2 text-xl">{t("yourAnswers")}</h2>
+          <AnswersFeedback
+            formQuestions={formDetails.questions}
+            answers={feedbackAnswers}
+          />
+        </section>
       )}
     </section>
   );
