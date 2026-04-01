@@ -290,14 +290,14 @@
     "defaultThanksMessage": "Dziękuję za poświęcony czas i wypełnienie formularza.",
     "backToDetails": "Powrót do strony formularza",
     "questionImageAlt": "Zdjęcie pytania {number}",
+    "yourAnswers": "Twoje odpowiedzi",
     "errors": {
       "oneAnswerRequired": "Musisz wybrać co najmniej jedną odpowiedź.",
       "openAnswerMin": "Odpowiedź musi mieć co najmniej {count} znaków.",
       "openAnswerMax": "Odpowiedź może mieć maksymalnie {count} znaków.",
       "submissionExists": "Ten formularz został już przez Ciebie wypełniony.",
       "unexpected": "Wystąpił nieoczekiwany błąd."
-    },
-    "yourAnswers": "Twoje odpowiedzi"
+    }
   },
   "submissionListPage": {
     "back": "Wróć do szczegółów formularza",
