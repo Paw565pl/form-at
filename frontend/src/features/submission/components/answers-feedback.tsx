@@ -22,12 +22,11 @@ export const AnswersFeedback = ({
   return (
     <div className="flex flex-col gap-4">
       {formQuestions.map((question, index) => {
-        const openAnswer = answers?.find(
+        const matchingAnswer = answers?.find(
           (a) => a.questionId === question.id,
-        )?.openAnswer;
-        const selectedOptions =
-          answers?.find((a) => a.questionId === question.id)?.chosenAnswerIds ||
-          [];
+        );
+        const openAnswer = matchingAnswer?.openAnswer;
+        const selectedOptions = matchingAnswer?.chosenAnswerIds || [];
 
         return (
           <Card key={question.id} className="gap-2 p-4">
