@@ -91,38 +91,39 @@ export const Submission = ({ formDetails }: SubmissionProps) => {
   if (isLoading) return <SubmissionCreateLoading />;
 
   const onSubmit = (data: FormData) => {
-    if (!formDetails.saveSubmissions || !formDetails.authorName) {
-      setIsSubmissionComplete(true);
-      return;
-    }
     const request: SubmissionRequestDto = {
       ...data,
       answers: data.answers
         .filter(
           // filter out empty answers for non-required questions
-          (answer: SubmissionAnswerRequestDto) =>
+          (answer) =>
             answer.chosenAnswerIds.length > 0 || answer.openAnswer !== "",
         )
-        .map((answer: SubmissionAnswerRequestDto) => ({
+        .map((answer) => ({
           questionId: answer.questionId,
           chosenAnswerIds: answer.chosenAnswerIds,
           openAnswer: answer.openAnswer || null,
         })),
     };
 
-    createSubmission.mutate(request, {
-      onError: (error) => {
-        if (error.status === HttpStatusCode.Conflict) {
-          toast.error(t("errors.submissionExists"));
-        } else {
-          toast.error(t("errors.unexpected"));
-        }
-      },
-      onSuccess: () => {
-        setIsSubmissionComplete(true);
-        setUsersAnswersData(request.answers);
-      },
-    });
+    if (formDetails.saveSubmissions && formDetails.authorName) {
+      createSubmission.mutate(request, {
+        onError: (error) => {
+          if (error.status === HttpStatusCode.Conflict) {
+            toast.error(t("errors.submissionExists"));
+          } else {
+            toast.error(t("errors.unexpected"));
+          }
+        },
+        onSuccess: () => {
+          setIsSubmissionComplete(true);
+          setUsersAnswersData(request.answers);
+        },
+      });
+    } else {
+      setIsSubmissionComplete(true);
+      setUsersAnswersData(request.answers);
+    }
   };
 
   return (
