@@ -72,19 +72,21 @@ export const Banner = ({ form }: BannerProps) => {
       )}
 
       <div className="absolute right-2 bottom-2 flex items-center gap-2 md:right-4 md:bottom-4">
-        {!mySubmission ? (
-          <Button
-            onClick={() => router.push(`/forms/${form.slug}/submissions/new`)}
-          >
-            <ICONS.fillSubmission />
-            {t("fillOutForm")}
-          </Button>
-        ) : (
+        {mySubmission && form.showAnswersFeedback && (
           <Button
             onClick={() => router.push(`/forms/${form.slug}/submissions/new`)}
           >
             <ICONS.submissions />
             {t("viewMySubmission")}
+          </Button>
+        )}
+
+        {!mySubmission && (
+          <Button
+            onClick={() => router.push(`/forms/${form.slug}/submissions/new`)}
+          >
+            <ICONS.fillSubmission />
+            {t("fillOutForm")}
           </Button>
         )}
 
