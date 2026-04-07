@@ -4,7 +4,8 @@
       "SINGLE_CHOICE": "Single Choice",
       "MULTIPLE_CHOICE": "Multiple Choice",
       "OPEN": "Open Ended"
-    }
+    },
+    "emptyOpenAnswer": "No answer provided."
   },
   "homePage": {
     "appDescription": "Welcome to formAT, the ultimate form builder and survey tool! Whether you're gathering feedback, conducting research, or collecting data, formAT has you covered.",
@@ -204,6 +205,7 @@
       "cancel": "Cancel",
       "confirm": "Confirm",
       "fillOutForm": "Fill Out the Form",
+      "viewMySubmission": "View My Submission",
       "back": "Go Back to Forms List",
       "formFinished": "Completed on {finishedAt}",
       "moreOptions": "More Options",
@@ -289,6 +291,7 @@
     "defaultThanksMessage": "Thank you for your time and effort in completing the form.",
     "backToDetails": "Back to Form Details",
     "questionImageAlt": "Question {number} image",
+    "yourAnswers": "Your Answers",
     "errors": {
       "oneAnswerRequired": "You must pick at least one answer.",
       "openAnswerMin": "Answer must be at least {count} characters.",
@@ -310,7 +313,6 @@
     "submissionBy": "Submission by {authorName}",
     "submissionByUnknown": "Submission by Unknown User",
     "backToSubmissions": "Back to Submissions List",
-    "emptyOpenAnswer": "No answer provided.",
     "deleteSubmission": "Delete Submission",
     "deleteDialogTitle": "Are you sure you want to delete this submission?",
     "deleteDialogDescription": "This action cannot be undone and the submission will be deleted permanently.",
