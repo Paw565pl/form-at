@@ -32,6 +32,12 @@ const withNextIntl = createNextIntlPlugin({
   requestConfig: "./src/core/lib/i18n/request.ts",
   experimental: {
     createMessagesDeclaration: "./messages/en.json",
+    messages: {
+      path: "./messages",
+      locales: "infer",
+      format: "json",
+      precompile: true,
+    },
   },
 });
 
