@@ -17,15 +17,16 @@ import {
   SubmissionRequestDto,
 } from "@/core/types/submission";
 import { useFetchMySubmission } from "@/features/form-details/my-submission/hooks/use-fetch-my-submission";
+import { ThanksMessageCard } from "@/features/submission-create/components/thanks-message-card";
 import { useCreateSubmission } from "@/features/submission-create/hooks/use-create-submission";
 import { getSubmissionSchema } from "@/features/submission-create/schemas/submission-schema";
 import { SubmissionCreateLoading } from "@/features/submission-create/submission-create-loading";
+import { AnswersFeedback } from "@/features/submission/components/answers-feedback";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HttpStatusCode } from "axios";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
@@ -39,7 +40,6 @@ interface SubmissionProps {
 export const Submission = ({ formDetails }: SubmissionProps) => {
   const t = useTranslations("submissionCreatePage");
   const gt = useTranslations("global");
-  const router = useRouter();
   const { data: session } = useSession();
 
   const createSubmission = useCreateSubmission(formDetails.slug);
@@ -52,7 +52,22 @@ export const Submission = ({ formDetails }: SubmissionProps) => {
   );
 
   const [isSubmissionComplete, setIsSubmissionComplete] = useState(false);
-  const hasSubmission = !!mySubmission || isSubmissionComplete;
+  const [usersAnswersData, setUsersAnswersData] =
+    useState<SubmissionAnswerRequestDto[]>();
+  const hasUserSubmitedForm = !!mySubmission || isSubmissionComplete;
+  const showUsersAnswers =
+    hasUserSubmitedForm && formDetails.showAnswersFeedback;
+
+  const feedbackAnswers = useMemo<SubmissionAnswerRequestDto[] | undefined>(
+    () =>
+      usersAnswersData ??
+      mySubmission?.answers.map((answer) => ({
+        questionId: answer.questionId,
+        chosenAnswerIds: [...answer.chosenAnswerIds],
+        openAnswer: answer.openAnswer,
+      })),
+    [usersAnswersData, mySubmission],
+  );
 
   const formSchema = getSubmissionSchema(t);
   const form = useForm<FormData>({
@@ -81,17 +96,17 @@ export const Submission = ({ formDetails }: SubmissionProps) => {
       answers: data.answers
         .filter(
           // filter out empty answers for non-required questions
-          (answer: SubmissionAnswerRequestDto) =>
+          (answer) =>
             answer.chosenAnswerIds.length > 0 || answer.openAnswer !== "",
         )
-        .map((answer: SubmissionAnswerRequestDto) => ({
+        .map((answer) => ({
           questionId: answer.questionId,
           chosenAnswerIds: answer.chosenAnswerIds,
           openAnswer: answer.openAnswer || null,
         })),
     };
 
-    if (formDetails.saveSubmissions) {
+    if (formDetails.saveSubmissions && formDetails.authorName) {
       createSubmission.mutate(request, {
         onError: (error) => {
           if (error.status === HttpStatusCode.Conflict) {
@@ -102,10 +117,12 @@ export const Submission = ({ formDetails }: SubmissionProps) => {
         },
         onSuccess: () => {
           setIsSubmissionComplete(true);
+          setUsersAnswersData(request.answers);
         },
       });
     } else {
       setIsSubmissionComplete(true);
+      setUsersAnswersData(request.answers);
     }
   };
 
@@ -135,7 +152,7 @@ export const Submission = ({ formDetails }: SubmissionProps) => {
         </Card>
       </header>
 
-      {!hasSubmission && (
+      {!hasUserSubmitedForm && (
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-col gap-4"
@@ -305,25 +322,21 @@ export const Submission = ({ formDetails }: SubmissionProps) => {
         </form>
       )}
 
-      {hasSubmission && (
-        <Card className="flex flex-col items-center justify-center gap-5 p-6">
-          <div className="bg-primary/10 flex h-16 w-16 items-center justify-center rounded-full">
-            <ICONS.check className="text-primary h-10 w-10" />
-          </div>
-          <div className="flex flex-col items-center gap-2">
-            <h2 className="mb-2 text-xl font-medium">
-              {t("submissionCreated")}
-            </h2>
-            <p>{formDetails.thanksMessage || t("defaultThanksMessage")}</p>
-          </div>
-          <Button
-            size="sm"
-            variant="default"
-            onClick={() => router.replace(`/forms/${formDetails.slug}`)}
-          >
-            {t("backToDetails")}
-          </Button>
-        </Card>
+      {hasUserSubmitedForm && usersAnswersData && (
+        <ThanksMessageCard
+          thanksMessage={formDetails.thanksMessage}
+          slug={formDetails.slug}
+        />
+      )}
+
+      {hasUserSubmitedForm && showUsersAnswers && (
+        <section>
+          <h2 className="pb-2 pl-2 text-xl">{t("yourAnswers")}</h2>
+          <AnswersFeedback
+            formQuestions={formDetails.questions}
+            answers={feedbackAnswers}
+          />
+        </section>
       )}
     </section>
   );

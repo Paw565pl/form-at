@@ -4,7 +4,8 @@
       "SINGLE_CHOICE": "Wybór pojedynczy",
       "MULTIPLE_CHOICE": "Wybór wielokrotny",
       "OPEN": "Odpowiedź otwarta"
-    }
+    },
+    "emptyOpenAnswer": "Nie udzielono odpowiedzi."
   },
   "homePage": {
     "appDescription": "Witaj w formAT, najlepszym narzędziu do tworzenia formularzy i ankiet! Niezależnie od tego, czy zbierasz opinie, prowadzisz badania, czy gromadzisz dane, formAT to idealne rozwiązanie dla Ciebie.",
@@ -203,6 +204,7 @@
       "cancel": "Anuluj",
       "confirm": "Potwierdź",
       "fillOutForm": "Wypełnij formularz",
+      "viewMySubmission": "Pokaż moje odpowiedzi",
       "back": "Wróć do listy formularzy",
       "formFinished": "Wypełniono {finishedAt}",
       "moreOptions": "Więcej opcji",
@@ -288,6 +290,7 @@
     "defaultThanksMessage": "Dziękuję za poświęcony czas i wypełnienie formularza.",
     "backToDetails": "Powrót do strony formularza",
     "questionImageAlt": "Zdjęcie pytania {number}",
+    "yourAnswers": "Twoje odpowiedzi",
     "errors": {
       "oneAnswerRequired": "Musisz wybrać co najmniej jedną odpowiedź.",
       "openAnswerMin": "Odpowiedź musi mieć co najmniej {count} znaków.",
@@ -309,7 +312,6 @@
     "submissionBy": "Odpowiedź użytkownika {authorName}",
     "submissionByUnknown": "Odpowiedź nieznanego użytkownika",
     "backToSubmissions": "Powrót do listy odpowiedzi",
-    "emptyOpenAnswer": "Nie udzielono odpowiedzi.",
     "deleteSubmission": "Usuń odpowiedź",
     "deleteDialogTitle": "Czy na pewno chcesz usunąć tę odpowiedź?",
     "deleteDialogDescription": "Tej operacji nie można cofnąć, a odpowiedź zostanie trwale usunięta.",
