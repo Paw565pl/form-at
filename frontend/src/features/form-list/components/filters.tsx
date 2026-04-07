@@ -17,7 +17,7 @@ import { useRef } from "react";
 
 export const Filters = () => {
   const t = useTranslations("formListPage.options");
-  const [, setFilters] = useQueryStates(formFilterSearchParams);
+  const [{ searchQuery }, setFilters] = useQueryStates(formFilterSearchParams);
   const [{ sort }, setSort] = useQueryStates(formSortSearchParams);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -60,6 +60,7 @@ export const Filters = () => {
       >
         <Input
           ref={searchInputRef}
+          defaultValue={searchQuery ?? undefined}
           placeholder={t("searchPlaceholder")}
           type="search"
           className="md:min-w-60"
