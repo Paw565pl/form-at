@@ -31,7 +31,7 @@ public class KeycloakJwtClaimsExtractor {
         return roles.stream()
                 .filter(String.class::isInstance)
                 .map(String.class::cast)
-                .map(Role::fromValue)
+                .map(Role::from)
                 .flatMap(Optional::stream)
                 .collect(Collectors.toUnmodifiableSet());
     }

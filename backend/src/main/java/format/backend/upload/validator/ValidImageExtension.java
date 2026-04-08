@@ -8,6 +8,7 @@ import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.ElementType.TYPE_USE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+import format.backend.upload.entity.ImageType;
 import jakarta.validation.Constraint;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -15,7 +16,7 @@ import jakarta.validation.Payload;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.util.Arrays;
-import java.util.List;
+import java.util.stream.Collectors;
 import lombok.val;
 
 @Retention(RUNTIME)
@@ -32,25 +33,18 @@ public @interface ValidImageExtension {
 
 class ImageExtensionValidator implements ConstraintValidator<ValidImageExtension, String> {
 
-    private static final List<String> validImageExtensions = Arrays.stream(ImageExtension.values())
-            .map(ImageExtension::getExtensionValue)
-            .toList();
+    private static final String ERROR_MESSAGE = String.format(
+            "File has invalid extension, only %s are allowed",
+            Arrays.stream(ImageType.values()).map(ImageType::getExtension).collect(Collectors.joining(", ")));
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         if (value == null) return true;
 
-        val trimmedValue = value.trim();
-        val lastDotIndex = trimmedValue.lastIndexOf('.');
-        val fileExtension = lastDotIndex == -1 ? trimmedValue : trimmedValue.substring(lastDotIndex + 1);
-        val isValid = ImageExtension.fromExtensionValue(fileExtension).isPresent();
-
+        val isValid = ImageType.fromFilename(value).isPresent();
         if (!isValid) {
-            val errorMessage = String.format(
-                    "File has invalid extension '%s', only %s are allowed",
-                    fileExtension, String.join(", ", validImageExtensions));
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate(errorMessage).addConstraintViolation();
+            context.buildConstraintViolationWithTemplate(ERROR_MESSAGE).addConstraintViolation();
         }
 
         return isValid;

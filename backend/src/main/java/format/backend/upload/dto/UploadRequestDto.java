@@ -7,4 +7,4 @@ import org.jspecify.annotations.NonNull;
 
 public record UploadRequestDto(
         @ValidImageExtension
-        @Size(min = 3, max = 200, message = "FileName must be between 3 and 200 characters long") @NotBlank(message = "FileName cannot be blank") @NonNull String fileName) {}
+        @Size(min = 3, max = 200, message = "Filename must be between 3 and 200 characters long") @NotBlank(message = "Filename cannot be blank") @NonNull String filename) {}

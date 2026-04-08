@@ -66,8 +66,10 @@ export const useUpdateForm = (idOrSlug: string) => {
       return data;
     },
     onSuccess: (_, __, ___, { client }) => {
-      setUploadProgressPercent(null);
       client.invalidateQueries({ queryKey: ["forms"] });
+    },
+    onSettled: () => {
+      setUploadProgressPercent(null);
     },
   });
 

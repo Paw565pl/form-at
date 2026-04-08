@@ -3,20 +3,22 @@ import { serverEnv } from "@/core/lib/env/server-env";
 import { apiService } from "@/core/services/api-service";
 import axios from "axios";
 
-interface FileUploadRequestDto {
+interface BatchUploadRequestDto {
   readonly files: {
-    readonly fileName: string;
+    readonly filename: string;
   }[];
 }
 
-interface UploadMetadata {
-  readonly filename: string;
-  readonly "x-amz-date": string;
+interface UploadPayloadDto {
+  readonly "X-Amz-Date": string;
   readonly "x-amz-signature": string;
   readonly "x-amz-algorithm": string;
-  readonly key: string;
   readonly "x-amz-credential": string;
   readonly policy: string;
+
+  readonly "x-amz-meta-filename": string;
+  readonly "x-amz-meta-user-id": string;
+  readonly key: string;
   readonly "Content-Type": string;
 }
 
@@ -31,11 +33,14 @@ type UploadResult =
     };
 
 class UploadService {
-  private minioClient = axios.create({
+  private readonly TARGET_EXTENSION = "avif";
+  private readonly TARGET_CONTENT_TYPE = `image/${this.TARGET_EXTENSION}`;
+
+  private readonly s3Client = axios.create({
     baseURL:
       typeof window === "undefined"
-        ? serverEnv.MINIO_URL
-        : getClientEnv("NEXT_PUBLIC_MINIO_URL"),
+        ? serverEnv.S3_URL
+        : getClientEnv("NEXT_PUBLIC_S3_URL"),
     timeout: 0,
   });
 
@@ -43,30 +48,33 @@ class UploadService {
     files: File[],
     onProgress?: (percent: number) => void,
   ): Promise<UploadResult> {
-    const nonEmptyFiles = files.filter((f) => f.size !== 0);
-    if (nonEmptyFiles.length === 0)
+    if (files.length === 0) {
       return { isSuccess: true, filesToKeys: new Map() };
+    }
+    const compressedFiles = await Promise.all(
+      files.map((f) => this.compressImageFile(f)),
+    );
 
-    const totalBytes = nonEmptyFiles.reduce((acc, f) => acc + f.size, 0);
-    const uploadedBytesPerFile: number[] = new Array(nonEmptyFiles.length).fill(
+    const totalBytes = compressedFiles.reduce((acc, f) => acc + f.size, 0);
+    const uploadedBytesPerFile = new Array<number>(compressedFiles.length).fill(
       0,
     );
     onProgress?.(0);
 
     try {
-      const uploadRequestDto: FileUploadRequestDto = {
-        files: nonEmptyFiles.map((f) => ({ fileName: f.name })),
+      const uploadRequestDto: BatchUploadRequestDto = {
+        files: compressedFiles.map((f) => ({ filename: f.name })),
       };
-      const { data: uploadsMetadata } = await apiService.post<UploadMetadata[]>(
-        "/api/v1/upload/request",
-        uploadRequestDto,
-      );
+      const { data: uploadsMetadata } = await apiService.post<
+        UploadPayloadDto[]
+      >("/api/v1/upload/request", uploadRequestDto);
 
-      if (uploadsMetadata.length !== nonEmptyFiles.length)
+      if (uploadsMetadata.length !== compressedFiles.length) {
         return {
           isSuccess: false,
           error: new Error("mismatch of files and upload keys"),
         };
+      }
 
       const uploadsFormData: FormData[] = uploadsMetadata
         .map((uploadMetadata, index) => {
@@ -75,7 +83,7 @@ class UploadService {
             formData.append(key, value),
           );
 
-          const file = nonEmptyFiles[index];
+          const file = compressedFiles[index];
           if (!file) return formData;
 
           formData.append("file", file);
@@ -83,7 +91,7 @@ class UploadService {
         })
         .filter((f) => f.has("file"));
       for (let i = 0; i < uploadsFormData.length; i++) {
-        await this.minioClient.post("", uploadsFormData[i], {
+        await this.s3Client.post("", uploadsFormData[i], {
           onUploadProgress(event) {
             if (!onProgress || !event.total) return;
 
@@ -100,14 +108,62 @@ class UploadService {
       }
 
       const filesToKeys = new Map(
-        nonEmptyFiles.map((file, index) => [file, uploadsMetadata[index].key]),
+        files.map((file, index) => [file, uploadsMetadata[index].key]),
       );
       return { isSuccess: true, filesToKeys };
     } catch (e) {
-      const error = Error.isError(e)
-        ? e
-        : new Error("unknown minio upload error");
+      const error = Error.isError(e) ? e : new Error("unknown s3 upload error");
       return { isSuccess: false, error };
+    }
+  }
+
+  private async compressImageFile(file: File): Promise<File> {
+    const src = URL.createObjectURL(file);
+
+    try {
+      const image = new Image();
+      image.src = src;
+
+      await new Promise((resolve, reject) => {
+        image.onload = () => resolve(null);
+        image.onerror = (e) => reject(e);
+      });
+
+      const width = Math.min(image.width, 1400);
+      const resizedBitmap = await createImageBitmap(image, {
+        resizeWidth: width,
+      });
+      const canvas = new OffscreenCanvas(
+        resizedBitmap.width,
+        resizedBitmap.height,
+      );
+
+      const bitmaprenderer = canvas.getContext("bitmaprenderer");
+      if (bitmaprenderer) {
+        bitmaprenderer.transferFromImageBitmap(resizedBitmap);
+      } else {
+        const ctx2d = canvas.getContext("2d");
+        ctx2d?.drawImage(resizedBitmap, 0, 0);
+      }
+
+      const blob = await canvas.convertToBlob({
+        type: this.TARGET_CONTENT_TYPE,
+        quality: 0.8,
+      });
+
+      const trimmedFilename = file.name.trim();
+      const lastDotIndex = trimmedFilename.lastIndexOf(".");
+      const filenameWithoutExtension =
+        lastDotIndex > 0
+          ? trimmedFilename.substring(0, lastDotIndex)
+          : trimmedFilename;
+      const finalFilename = `${filenameWithoutExtension}.${this.TARGET_EXTENSION}`;
+
+      return new File([blob], finalFilename, {
+        type: this.TARGET_CONTENT_TYPE,
+      });
+    } finally {
+      URL.revokeObjectURL(src);
     }
   }
 }

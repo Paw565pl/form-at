@@ -3,11 +3,11 @@ import com.diffplug.spotless.LineEnding
 plugins {
     java
     idea
-    id("org.springframework.boot") version "4.0.3"
-    id("org.springframework.boot.aot") version "4.0.3" apply false
+    id("org.springframework.boot") version "4.0.5"
+    id("org.springframework.boot.aot") version "4.0.5" apply false
     id("io.spring.dependency-management") version "1.1.7"
     id("se.solrike.sonarlint") version "2.2.0"
-    id("com.diffplug.spotless") version "8.2.1"
+    id("com.diffplug.spotless") version "8.4.0"
 }
 
 if (project.hasProperty("aot")) {
@@ -32,14 +32,15 @@ idea {
 }
 
 spotless {
+    encoding = Charsets.UTF_8
     lineEndings = LineEnding.UNIX
 
     java {
-        forbidWildcardImports()
-        removeUnusedImports()
         importOrder()
+        removeUnusedImports()
+        forbidWildcardImports()
         cleanthat()
-        palantirJavaFormat("2.89.0")
+        palantirJavaFormat("2.90.0").formatJavadoc(true)
         trimTrailingWhitespace()
         leadingTabsToSpaces()
         endWithNewline()
@@ -71,7 +72,7 @@ repositories {
 
 val mapstructVersion = "1.6.3"
 val slugifyVersion = "3.0.7"
-val minioVersion = "8.6.0"
+val minioSdkVersion = "9.0.0"
 val linguaVersion = "1.2.2"
 val restAssuredVersion = "6.0.0"
 val dataFakerVersion = "2.5.4"
@@ -86,7 +87,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
     implementation("org.mapstruct:mapstruct:$mapstructVersion")
     implementation("com.github.slugify:slugify:$slugifyVersion")
-    implementation("io.minio:minio:$minioVersion")
+    implementation("io.minio:minio:$minioSdkVersion")
     implementation("com.github.pemistahl:lingua:$linguaVersion")
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")

@@ -58,6 +58,9 @@ export const useCreateForm = () => {
       setUploadProgressPercent(null);
       client.invalidateQueries({ queryKey: ["forms"] });
     },
+    onSettled: () => {
+      setUploadProgressPercent(null);
+    },
   });
 
   return { ...mutation, uploadProgressPercent };

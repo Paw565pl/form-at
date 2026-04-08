@@ -14,8 +14,9 @@ logging:
   level:
     root: error
 
-minio:
-  endpoint: http://minio:9000
-  access-key: root
-  secret-key: password
-  bucket-name: uploads
+s3:
+  url: http://rustfs:9000
+  region: eu-central-1
+  access-key: rustfsadmin
+  secret-key: rustfsadmin
+  bucket: uploads

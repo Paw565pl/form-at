@@ -8,7 +8,8 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -20,16 +21,16 @@ class PendingUploadCleanupJob {
     private final PendingUploadRepository pendingUploadRepository;
     private final UploadService uploadService;
 
-    private static final int BATCH_SIZE = 500;
+    private static final int BATCH_SIZE = 1_000;
 
     @Scheduled(cron = "0 0 2 * * *")
     void run() {
         log.info("Started pending upload cleanup job");
 
         val now = Instant.now();
-        val pageable = Pageable.ofSize(BATCH_SIZE);
+        val pageable = PageRequest.of(0, BATCH_SIZE, Sort.by("expiresAt").ascending());
 
-        var deletedCount = 0;
+        var deletedCount = 0L;
         var expiredPendingUploads = pendingUploadRepository.findAllByExpiresAtBefore(now, pageable);
 
         while (expiredPendingUploads.hasContent()) {
@@ -38,9 +39,7 @@ class PendingUploadCleanupJob {
                     .collect(Collectors.toUnmodifiableSet());
             uploadService.deleteAllByKeys(keys);
 
-            pendingUploadRepository.deleteAll(expiredPendingUploads);
-            deletedCount += expiredPendingUploads.getNumberOfElements();
-
+            deletedCount += pendingUploadRepository.deleteAllByKeyIn(keys);
             expiredPendingUploads = pendingUploadRepository.findAllByExpiresAtBefore(now, pageable);
         }
 

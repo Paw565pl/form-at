@@ -15,8 +15,10 @@ export const FormDetailsPage = async ({
   const { slug } = await params;
 
   const queryClient = getQueryClient();
-  await prefetchFormDetails(queryClient, slug);
-  prefetchFormCommentPages(queryClient, slug);
+  await Promise.all([
+    prefetchFormDetails(queryClient, slug),
+    prefetchFormCommentPages(queryClient, slug),
+  ]);
 
   const publicFormQueryState = queryClient.getQueryState(
     getFetchFormDetailsQueryOptions(slug).queryKey,

@@ -152,6 +152,7 @@
       "passwordRequired": "Hasło jest wymagane dla prywatnych formularzy.",
       "oneQuestionRequired": "Co najmniej jedno pytanie musi być wymagane.",
       "imageFileType": "Plik obrazu musi być w formacie PNG, JPEG, JPG, WEBP lub AVIF.",
+      "imageFileNonEmpty": "Plik nie może być pusty.",
       "imageFileSize": "Rozmiar pliku nie może przekraczać {size}.",
       "questionContentMin": "Treść pytania musi mieć co najmniej {count} znaki.",
       "questionContentMax": "Treść pytania może mieć maksymalnie {count} znaków.",

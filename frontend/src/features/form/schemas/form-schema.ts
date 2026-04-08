@@ -5,20 +5,14 @@ import {
   Language,
 } from "@/core/types/form";
 import { QuestionType } from "@/core/types/question";
+import {
+  MAX_FILE_SIZE_IN_BYTES,
+  VALID_IMAGE_TYPES,
+} from "@/features/form/constants/image";
 import { useTranslations } from "next-intl";
 import * as z from "zod";
 
 type TranslateError = ReturnType<typeof useTranslations<"formBaseForm">>;
-
-export const validImageTypes: string[] = [
-  "image/png",
-  "image/jpeg",
-  "image/jpg",
-  "image/webp",
-  "image/avif",
-] as const;
-
-const maxFileSizeInBytes = 10 * 1024 * 1024;
 
 const getAnswerSchema = (t: TranslateError) =>
   z.object({
@@ -45,7 +39,18 @@ const getQuestionSchema = (t: TranslateError) =>
         .max(6, t("errors.answersCountMax", { count: "6" })),
       // file is new file selected by user
       // string is existing url
-      image: z.file().or(z.string().trim()).optional(),
+      image: z
+        .file()
+        .min(1, t("errors.imageFileNonEmpty"))
+        .max(
+          MAX_FILE_SIZE_IN_BYTES,
+          t("errors.imageFileSize", {
+            size: `${MAX_FILE_SIZE_IN_BYTES / 1024 / 1024} MB`,
+          }),
+        )
+        .mime([...VALID_IMAGE_TYPES])
+        .or(z.string().trim())
+        .optional(),
     })
     .superRefine((data, ctx) => {
       if (data.type !== QuestionType.Open && data.answers.length < 2) {
@@ -55,6 +60,7 @@ const getQuestionSchema = (t: TranslateError) =>
           message: t("errors.answersCountMin", { count: "2" }),
         });
       }
+
       if (
         !data.answers.some((a) => a.isCorrect) &&
         data.type !== QuestionType.Open
@@ -64,23 +70,6 @@ const getQuestionSchema = (t: TranslateError) =>
           code: "custom",
           message: t("errors.oneCorrectAnswer"),
         });
-      }
-      if (data.image instanceof File) {
-        if (!validImageTypes.includes(data.image.type)) {
-          ctx.addIssue({
-            path: ["image"],
-            code: "custom",
-            message: t("errors.imageFileType"),
-          });
-        }
-
-        if (data.image.size > maxFileSizeInBytes) {
-          ctx.addIssue({
-            path: ["image"],
-            code: "custom",
-            message: t("errors.imageFileSize", { size: "10 MB" }),
-          });
-        }
       }
     });
 
@@ -120,7 +109,18 @@ export const getFormSchema = (t: TranslateError) =>
       showAnswersFeedback: z.boolean(),
       // file is new file selected by user
       // string is existing url
-      thumbnail: z.file().or(z.string().trim()).optional(),
+      thumbnail: z
+        .file()
+        .min(1, t("errors.imageFileNonEmpty"))
+        .max(
+          MAX_FILE_SIZE_IN_BYTES,
+          t("errors.imageFileSize", {
+            size: `${MAX_FILE_SIZE_IN_BYTES / 1024 / 1024} MB`,
+          }),
+        )
+        .mime([...VALID_IMAGE_TYPES])
+        .or(z.string().trim())
+        .optional(),
       questions: z
         .array(getQuestionSchema(t))
         .min(3, t("errors.questionsCountMin", { count: "3" }))
@@ -134,28 +134,12 @@ export const getFormSchema = (t: TranslateError) =>
           message: t("errors.passwordRequired"),
         });
       }
+
       if (!data.questions.some((q) => q.isRequired)) {
         ctx.addIssue({
           path: ["questions"],
           code: "custom",
           message: t("errors.oneQuestionRequired"),
         });
-      }
-      if (data.thumbnail instanceof File) {
-        if (!validImageTypes.includes(data.thumbnail.type)) {
-          ctx.addIssue({
-            path: ["thumbnail"],
-            code: "custom",
-            message: t("errors.imageFileType"),
-          });
-        }
-
-        if (data.thumbnail.size > maxFileSizeInBytes) {
-          ctx.addIssue({
-            path: ["thumbnail"],
-            code: "custom",
-            message: t("errors.imageFileSize", { size: "10 MB" }),
-          });
-        }
       }
     });

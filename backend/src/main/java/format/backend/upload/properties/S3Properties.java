@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.jspecify.annotations.NonNull;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
@@ -11,14 +12,16 @@ import org.springframework.validation.annotation.Validated;
 @Setter
 @ToString
 @Validated
-@ConfigurationProperties("minio")
-public class MinioProperties {
+@ConfigurationProperties("s3")
+public class S3Properties {
 
-    @NotBlank private String endpoint;
+    private @NotBlank @NonNull String url;
 
-    @NotBlank private String accessKey;
+    private @NotBlank @NonNull String region;
 
-    @NotBlank private String secretKey;
+    private @NotBlank @NonNull String accessKey;
 
-    @NotBlank private String bucketName;
+    private @NotBlank @NonNull String secretKey;
+
+    private @NotBlank @NonNull String bucket;
 }
