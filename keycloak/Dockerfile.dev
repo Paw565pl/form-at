@@ -1,5 +1,27 @@
+FROM node:24-alpine AS theme-build
+
+WORKDIR /theme
+
+RUN apk add --no-cache libc6-compat maven && \
+    corepack enable pnpm
+
+COPY keycloak-theme/ ./
+
+RUN mv dist_keycloak_prebuilt dist_keycloak
+
+ENV CI=true
+
+RUN pnpm install && \
+    if pnpm run build-keycloak-theme; then \
+      echo "------------ THEME BUILD SUCCEEDED ------------"; \
+    else \
+      echo "------------ THEME BUILD FAILED, USING AN EXISTING BUILD IF AVAILABLE ------------"; \
+    fi
+
 FROM quay.io/keycloak/keycloak:26.5
 
 COPY config-dev.json /opt/keycloak/data/import/
+
+COPY --from=theme-build /theme/dist_keycloak/*.jar /opt/keycloak/providers/
 
 CMD [ "start-dev", "--import-realm" ]
