@@ -1,0 +1,41 @@
+name: Build Keycloak theme
+run-name: ${{ github.actor }} is building keycloak-theme
+on:
+  pull_request:
+    paths:
+      - "keycloak/keycloak-theme/**"
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: ./keycloak/keycloak-theme
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          package_json_file: ./keycloak/keycloak-theme/package.json
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          cache: pnpm
+          cache-dependency-path: ./keycloak/keycloak-theme/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Check formatting with Prettier
+        run: pnpm format:check
+
+      - name: Check linting with ESLint
+        run: pnpm lint
+
+      - name: Build project
+        run: pnpm build
