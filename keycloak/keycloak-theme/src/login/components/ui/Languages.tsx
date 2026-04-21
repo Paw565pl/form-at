@@ -7,7 +7,7 @@
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useI18n } from "@/login/i18n";
-import { Button } from "../../../components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Check, Globe } from "lucide-react";
 
 export function Languages() {

@@ -16,11 +16,11 @@ import { useSetClassName } from "keycloakify/tools/useSetClassName";
 import { RotateCcw, User } from "lucide-react";
 import type { ReactNode } from "react";
 import { useEffect } from "react";
-import { useI18n } from "../../i18n";
-import { useKcContext } from "../../KcContext";
-import { Languages } from "../ui/Languages";
-import { useInitializeTemplate } from "./useInitializeTemplate";
-import { Logo } from "../logo";
+import { useI18n } from "@/login/i18n";
+import { useKcContext } from "@/login/KcContext";
+import { Languages } from "@/login/components/ui/Languages";
+import { useInitializeTemplate } from "@/login/components/Template/useInitializeTemplate";
+import { Logo } from "@/login/components/logo";
 
 export function Template(props: {
   displayInfo?: boolean;

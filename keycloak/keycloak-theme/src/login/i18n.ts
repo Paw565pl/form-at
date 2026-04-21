@@ -6,7 +6,7 @@
  */
 
 import { i18nBuilder } from "@keycloakify/login-ui/i18n";
-import type { ThemeName } from "../kc.gen";
+import type { ThemeName } from "@/kc.gen";
 
 /** @see: https://docs.keycloakify.dev/features/i18n */
 const { I18nProvider, useI18n } = i18nBuilder
