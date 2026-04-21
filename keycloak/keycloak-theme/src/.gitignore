@@ -17,6 +17,14 @@
 # login/components/Template/Template.tsx
 # login/components/ui/Langauges.tsx
 # login/components/ui/ThemeToggle.tsx
+# login/pages/delete-account-confirm/Page.stories.tsx
+# login/pages/delete-account-confirm/Page.stories.tsx
+# login/pages/error/Page.stories.tsx
+# login/pages/error/Page.stories.tsx
+# login/pages/link-idp-action/Page.stories.tsx
+# login/pages/link-idp-action/Page.stories.tsx
+# login/pages/login-x509-info/Page.stories.tsx
+# login/pages/login-x509-info/Page.stories.tsx
 # login/pages/register/Page.stories.tsx
 # login/pages/register/Page.stories.tsx
 # login/pages/webauthn-authenticate/Page.stories.tsx
@@ -28,13 +36,10 @@
 # === @keycloakify/login-ui-storybook v250004.2.0 ===
 /login/mocks/KcPageStory.tsx
 /login/pages/code/Page.stories.tsx
-/login/pages/delete-account-confirm/Page.stories.tsx
 /login/pages/delete-credential/Page.stories.tsx
-/login/pages/error/Page.stories.tsx
 /login/pages/frontchannel-logout/Page.stories.tsx
 /login/pages/idp-review-user-profile/Page.stories.tsx
 /login/pages/info/Page.stories.tsx
-/login/pages/link-idp-action/Page.stories.tsx
 /login/pages/login/Page.stories.tsx
 /login/pages/login-config-totp/Page.stories.tsx
 /login/pages/login-idp-link-confirm/Page.stories.tsx
@@ -54,7 +59,6 @@
 /login/pages/login-update-profile/Page.stories.tsx
 /login/pages/login-username/Page.stories.tsx
 /login/pages/login-verify-email/Page.stories.tsx
-/login/pages/login-x509-info/Page.stories.tsx
 /login/pages/logout-confirm/Page.stories.tsx
 /login/pages/saml-post-form/Page.stories.tsx
 /login/pages/select-authenticator/Page.stories.tsx
@@ -104,13 +108,11 @@
 /login/pages/code/Page.stories.tsx
 /login/pages/code/Page.tsx
 /login/pages/delete-account-confirm/index.ts
-/login/pages/delete-account-confirm/Page.stories.tsx
 /login/pages/delete-account-confirm/Page.tsx
 /login/pages/delete-credential/index.ts
 /login/pages/delete-credential/Page.stories.tsx
 /login/pages/delete-credential/Page.tsx
 /login/pages/error/index.ts
-/login/pages/error/Page.stories.tsx
 /login/pages/error/Page.tsx
 /login/pages/frontchannel-logout/index.ts
 /login/pages/frontchannel-logout/Page.stories.tsx
@@ -122,7 +124,6 @@
 /login/pages/info/Page.stories.tsx
 /login/pages/info/Page.tsx
 /login/pages/link-idp-action/index.ts
-/login/pages/link-idp-action/Page.stories.tsx
 /login/pages/link-idp-action/Page.tsx
 /login/pages/login/Form.tsx
 /login/pages/login/index.ts
@@ -189,7 +190,6 @@
 /login/pages/login-verify-email/Page.stories.tsx
 /login/pages/login-verify-email/Page.tsx
 /login/pages/login-x509-info/index.ts
-/login/pages/login-x509-info/Page.stories.tsx
 /login/pages/login-x509-info/Page.tsx
 /login/pages/logout-confirm/index.ts
 /login/pages/logout-confirm/Page.stories.tsx
