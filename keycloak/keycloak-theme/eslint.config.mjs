@@ -16,7 +16,7 @@ export default defineConfig(
       files: ["**/*.{ts,tsx}"],
       extends: [
         eslint.configs.recommended,
-        tseslint.configs.recommended,
+        tseslint.configs.strict,
         tseslint.configs.stylistic,
         reactHooks.configs.flat.recommended,
         reactRefresh.configs.vite,
