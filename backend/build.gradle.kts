@@ -47,7 +47,7 @@ spotless {
         formatAnnotations()
     }
 
-    val prettierVersion = "3.8.1"
+    val prettierVersion = "3.8.3"
 
     yaml {
         target("src/**/*.yaml")

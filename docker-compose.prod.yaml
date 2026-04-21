@@ -16,7 +16,7 @@ services:
       start_period: 30s
 
   rustfs:
-    image: rustfs/rustfs:1.0.0-alpha.90
+    image: rustfs/rustfs:1.0.0-alpha.96
     restart: on-failure
     ports:
       - "9000:9000"

@@ -7,7 +7,7 @@
     "postinstall": "keycloakify sync-extensions",
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
+    "lint": "eslint",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
     "preview": "vite preview",
