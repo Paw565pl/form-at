@@ -11,6 +11,10 @@ export default defineConfig({
     tailwindcss(),
     keycloakify({
       accountThemeImplementation: "none",
+      keycloakVersionTargets: {
+        "22-to-25": false,
+        "all-other-versions": "theme.jar",
+      },
     }),
   ],
   resolve: {
