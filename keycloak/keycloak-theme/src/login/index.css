@@ -7,7 +7,7 @@
 
 @import url(./assets/fonts/inter/inter.css) layer(base);
 
-@import url("https://fonts.googleapis.com/css2?family=Montserrat&family=Noto+Serif&family=Roboto+Mono&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&family=Noto+Serif:wght@100;200;300;400;500;600;700;800;900&family=Roboto+Mono:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 @import "tailwindcss";
 @import "tw-animate-css";
