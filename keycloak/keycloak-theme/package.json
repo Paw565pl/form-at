@@ -11,7 +11,7 @@
     "format": "prettier . --write",
     "format:check": "prettier . --check",
     "preview": "vite preview",
-    "build-keycloak-theme": "npm run build && keycloakify build",
+    "build-keycloak-theme": "pnpm run build && keycloakify build",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
