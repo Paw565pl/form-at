@@ -5,12 +5,15 @@
  * $ npx keycloakify own --path "components/ui/checkbox.tsx" --revert
  */
 
-import { Checkbox as CheckboxPrimitive } from "radix-ui";
 import { CheckIcon } from "lucide-react";
+import { Checkbox as CheckboxPrimitive } from "radix-ui";
 import * as React from "react";
 
 import { cn } from "@/components/lib/utils";
-function Checkbox({ className, ...props }: React.ComponentProps<typeof CheckboxPrimitive.Root>) {
+function Checkbox({
+  className,
+  ...props
+}: React.ComponentProps<typeof CheckboxPrimitive.Root>) {
   return (
     <CheckboxPrimitive.Root
       data-slot="checkbox"
@@ -20,7 +23,10 @@ function Checkbox({ className, ...props }: React.ComponentProps<typeof CheckboxP
       )}
       {...props}
     >
-      <CheckboxPrimitive.Indicator data-slot="checkbox-indicator" className="grid place-content-center text-white transition-none">
+      <CheckboxPrimitive.Indicator
+        data-slot="checkbox-indicator"
+        className="grid place-content-center text-white transition-none"
+      >
         <CheckIcon className="size-4" />
       </CheckboxPrimitive.Indicator>
     </CheckboxPrimitive.Root>

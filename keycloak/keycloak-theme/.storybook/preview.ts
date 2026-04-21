@@ -56,7 +56,11 @@ const preview: Preview = {
 
         function getHardCodedWeight(title) {
           for (let i = 0; i < orderedPagesPrefix.length; i++) {
-            if (title.toLowerCase().startsWith(orderedPagesPrefix[i].toLowerCase())) {
+            if (
+              title
+                .toLowerCase()
+                .startsWith(orderedPagesPrefix[i].toLowerCase())
+            ) {
               return orderedPagesPrefix.length - i;
             }
           }

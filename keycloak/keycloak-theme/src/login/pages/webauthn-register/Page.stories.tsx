@@ -5,7 +5,11 @@
  * $ npx keycloakify own --path "login/pages/webauthn-register/Page.stories.tsx" --revert
  */
 
-import { createKcPageStory, type Meta, type StoryObj } from "@/login/mocks/KcPageStory";
+import {
+  createKcPageStory,
+  type Meta,
+  type StoryObj,
+} from "@/login/mocks/KcPageStory";
 
 const { KcPageStory } = createKcPageStory({ pageId: "webauthn-register.ftl" });
 
@@ -73,7 +77,8 @@ export const WithErrorDuringRegistration: Story = {
       isSetRetry: false,
       isAppInitiatedAction: false,
       message: {
-        summary: "An error occurred during WebAuthn registration. Please try again.",
+        summary:
+          "An error occurred during WebAuthn registration. Please try again.",
         type: "error",
       },
     },

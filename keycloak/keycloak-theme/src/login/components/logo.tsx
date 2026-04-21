@@ -3,7 +3,14 @@ interface LogoProps {
 }
 
 export const Logo = ({ className }: LogoProps) => (
-  <svg className={className} width="40" height="20" viewBox="0 0 25 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg
+    className={className}
+    width="40"
+    height="20"
+    viewBox="0 0 25 12"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
     <g clipPath="url(#clip0_490_82)">
       <path
         d="M6 11C8.76142 11 11 8.76142 11 6C11 3.23858 8.76142 1 6 1C3.23858 1 1 3.23858 1 6C1 8.76142 3.23858 11 6 11Z"
@@ -12,8 +19,18 @@ export const Logo = ({ className }: LogoProps) => (
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      <path d="M8.5 3.5L3.5 8.5" stroke="#1F7771" strokeWidth="1.5" strokeLinejoin="round" />
-      <path d="M3.5 3.5L8.5 8.5" stroke="#1F7771" strokeWidth="1.5" strokeLinejoin="round" />
+      <path
+        d="M8.5 3.5L3.5 8.5"
+        stroke="#1F7771"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M3.5 3.5L8.5 8.5"
+        stroke="#1F7771"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
     </g>
     <g clipPath="url(#clip1_490_82)">
       <path
@@ -23,7 +40,12 @@ export const Logo = ({ className }: LogoProps) => (
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      <path d="M14 5.75L15.6667 7.5L19 4" stroke="#1F7771" strokeWidth="1.5" strokeLinejoin="round" />
+      <path
+        d="M14 5.75L15.6667 7.5L19 4"
+        stroke="#1F7771"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
     </g>
     <defs>
       <clipPath id="clip0_490_82">

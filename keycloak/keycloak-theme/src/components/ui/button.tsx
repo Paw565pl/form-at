@@ -5,10 +5,10 @@
  * $ npx keycloakify own --path "components/ui/button.tsx" --revert
  */
 
-import { Slot as SlotPrimitive } from "radix-ui";
-import { cva, type VariantProps } from "class-variance-authority";
-import * as React from "react";
 import { cn } from "@/components/lib/utils";
+import { cva, type VariantProps } from "class-variance-authority";
+import { Slot as SlotPrimitive } from "radix-ui";
+import * as React from "react";
 
 const buttonVariants = cva(
   "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive cursor-pointer",
@@ -16,10 +16,14 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: "bg-primary text-white hover:bg-primary/90 shadow-xs",
-        destructive: "bg-destructive text-white hover:bg-destructive/90 dark:brightness-90 shadow-xs",
-        outline: "border bg-input shadow-xs hover:bg-input/70 hover:border-primary ",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-xs",
-        ghost: "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
+        destructive:
+          "bg-destructive text-white hover:bg-destructive/90 dark:brightness-90 shadow-xs",
+        outline:
+          "border bg-input shadow-xs hover:bg-input/70 hover:border-primary ",
+        secondary:
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-xs",
+        ghost:
+          "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
@@ -50,7 +54,13 @@ function Button({
   }) {
   const Comp = asChild ? SlotPrimitive.Slot : "button";
 
-  return <Comp data-slot="button" className={cn(buttonVariants({ variant, size, className }))} {...props} />;
+  return (
+    <Comp
+      data-slot="button"
+      className={cn(buttonVariants({ variant, size, className }))}
+      {...props}
+    />
+  );
 }
 
 // eslint-disable-next-line react-refresh/only-export-components

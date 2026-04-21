@@ -5,9 +5,15 @@
  * $ npx keycloakify own --path "login/pages/webauthn-authenticate/Page.stories.tsx" --revert
  */
 
-import { createKcPageStory, type Meta, type StoryObj } from "@/login/mocks/KcPageStory";
+import {
+  createKcPageStory,
+  type Meta,
+  type StoryObj,
+} from "@/login/mocks/KcPageStory";
 
-const { KcPageStory } = createKcPageStory({ pageId: "webauthn-authenticate.ftl" });
+const { KcPageStory } = createKcPageStory({
+  pageId: "webauthn-authenticate.ftl",
+});
 
 const meta = {
   title: "login/webauthn-authenticate.ftl",

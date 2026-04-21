@@ -8,19 +8,24 @@
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { useKcContext } from "@/login/KcContext";
+import { useInitializeTemplate } from "@/login/components/Template/useInitializeTemplate";
+import { Logo } from "@/login/components/logo";
+import { Languages } from "@/login/components/ui/Languages";
 import { ModeToggle } from "@/login/components/ui/ThemeToggle";
+import { useI18n } from "@/login/i18n";
 import { kcSanitize } from "@keycloakify/login-ui/kcSanitize";
 import { useKcClsx } from "@keycloakify/login-ui/useKcClsx";
 import { useSetClassName } from "keycloakify/tools/useSetClassName";
 import { RotateCcw, User } from "lucide-react";
 import type { ReactNode } from "react";
 import { useEffect } from "react";
-import { useI18n } from "@/login/i18n";
-import { useKcContext } from "@/login/KcContext";
-import { Languages } from "@/login/components/ui/Languages";
-import { useInitializeTemplate } from "@/login/components/Template/useInitializeTemplate";
-import { Logo } from "@/login/components/logo";
 
 export function Template(props: {
   displayInfo?: boolean;
@@ -33,7 +38,15 @@ export function Template(props: {
   bodyClassName?: string;
   children: ReactNode;
 }) {
-  const { displayInfo = false, displayMessage = true, headerNode, socialProvidersNode = null, infoNode = null, bodyClassName, children } = props;
+  const {
+    displayInfo = false,
+    displayMessage = true,
+    headerNode,
+    socialProvidersNode = null,
+    infoNode = null,
+    bodyClassName,
+    children,
+  } = props;
 
   const { kcContext } = useKcContext();
 
@@ -61,7 +74,7 @@ export function Template(props: {
 
   return (
     <main className="bg-background text-foreground flex min-h-screen flex-col font-sans text-pretty">
-      <nav className="flex items-center gap-2 justify-between p-2">
+      <nav className="flex items-center justify-between gap-2 p-2">
         <div className="text-primary flex items-center text-lg font-semibold">
           <Logo />
           <h1>formAT</h1>
@@ -72,19 +85,31 @@ export function Template(props: {
         </div>
       </nav>
 
-      <div className="flex w-full flex-col gap-4 px-5 py-10 lg:px-30 items-center md:mt-20">
-        <Card className="flex flex-col gap-4 p-4 min-w-1/2">
+      <div className="flex w-full flex-col items-center gap-4 px-5 py-10 md:mt-20 lg:px-30">
+        <Card className="flex min-w-1/2 flex-col gap-4 p-4">
           {(() => {
-            const node = !(auth !== undefined && auth.showUsername && !auth.showResetCredentials) ? (
-              <h1 className="text-xl font-bold ml-2">{headerNode}</h1>
+            const node = !(
+              auth !== undefined &&
+              auth.showUsername &&
+              !auth.showResetCredentials
+            ) ? (
+              <h1 className="ml-2 text-xl font-bold">{headerNode}</h1>
             ) : (
-              <div id="kc-username" className="flex items-center justify-between gap-2">
-                <div className="flex gap-4 items-center">
+              <div
+                id="kc-username"
+                className="flex items-center justify-between gap-2"
+              >
+                <div className="flex items-center gap-4">
                   <User className="text-muted-foreground size-6" />
 
                   <div className="flex flex-col gap-0.5">
-                    <span className="text-xs font-normal text-muted-foreground">{msgStr("attemptedUsernameLoggingInAs")}</span>
-                    <label className="font-semibold text-lg" id="kc-attempted-username">
+                    <span className="text-muted-foreground text-xs font-normal">
+                      {msgStr("attemptedUsernameLoggingInAs")}
+                    </span>
+                    <label
+                      className="text-lg font-semibold"
+                      id="kc-attempted-username"
+                    >
                       {auth.attemptedUsername}
                     </label>
                   </div>
@@ -94,7 +119,11 @@ export function Template(props: {
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button variant="outline" size="icon" asChild>
-                        <a id="reset-login" href={url.loginRestartFlowUrl} aria-label={msgStr("restartLoginTooltip")}>
+                        <a
+                          id="reset-login"
+                          href={url.loginRestartFlowUrl}
+                          aria-label={msgStr("restartLoginTooltip")}
+                        >
                           <RotateCcw className="size-4" />
                         </a>
                       </Button>
@@ -111,32 +140,45 @@ export function Template(props: {
           })()}
 
           <div id="kc-content" className="space-y-4">
-            {displayMessage && message !== undefined && (message.type !== "warning" || !isAppInitiatedAction) && (
-              <Alert variant={message.type}>
-                <AlertDescription>
-                  <span
-                    dangerouslySetInnerHTML={{
-                      __html: kcSanitize(message.summary),
-                    }}
-                  />
-                </AlertDescription>
-              </Alert>
-            )}
+            {displayMessage &&
+              message !== undefined &&
+              (message.type !== "warning" || !isAppInitiatedAction) && (
+                <Alert variant={message.type}>
+                  <AlertDescription>
+                    <span
+                      dangerouslySetInnerHTML={{
+                        __html: kcSanitize(message.summary),
+                      }}
+                    />
+                  </AlertDescription>
+                </Alert>
+              )}
 
             {socialProvidersNode}
             {children}
 
             {auth !== undefined && auth.showTryAnotherWayLink && (
-              <form id="kc-select-try-another-way-form" action={url.loginAction} method="post">
+              <form
+                id="kc-select-try-another-way-form"
+                action={url.loginAction}
+                method="post"
+              >
                 <div className={kcClsx("kcFormGroupClass")}>
                   <input type="hidden" name="tryAnotherWay" value="on" />
 
-                  <Button type="button" className="w-full" variant="outline" asChild>
+                  <Button
+                    type="button"
+                    className="w-full"
+                    variant="outline"
+                    asChild
+                  >
                     <a
                       href="#"
                       id="try-another-way"
                       onClick={(event) => {
-                        document.forms["kc-select-try-another-way-form" as never].submit();
+                        document.forms[
+                          "kc-select-try-another-way-form" as never
+                        ].submit();
                         event.preventDefault();
                         return false;
                       }}
@@ -147,7 +189,11 @@ export function Template(props: {
                 </div>
               </form>
             )}
-            {displayInfo && <div className="text-center text-sm text-muted-foreground">{infoNode}</div>}
+            {displayInfo && (
+              <div className="text-muted-foreground text-center text-sm">
+                {infoNode}
+              </div>
+            )}
           </div>
         </Card>
       </div>

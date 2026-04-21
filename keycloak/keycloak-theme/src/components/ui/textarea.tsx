@@ -5,8 +5,8 @@
  * $ npx keycloakify own --path "components/ui/textarea.tsx" --revert
  */
 
-import * as React from "react";
 import { cn } from "@/components/lib/utils";
+import * as React from "react";
 
 function Textarea({ className, ...props }: React.ComponentProps<"textarea">) {
   return (
