@@ -9,5 +9,4 @@
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
   ],
-  "exclude": ["src/**/*.stories.tsx", "src/**/mocks/**"]
 }

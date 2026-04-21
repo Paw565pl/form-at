@@ -12,7 +12,7 @@
     "format:check": "prettier . --check",
     "preview": "vite preview",
     "build-keycloak-theme": "pnpm run build && keycloakify build",
-    "storybook": "storybook dev -p 6006",
+    "storybook": "BROWSER=none storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
   "dependencies": {

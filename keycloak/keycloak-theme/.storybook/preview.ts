@@ -9,7 +9,7 @@ const preview: Preview = {
       },
     },
     options: {
-      storySort: (a: { title: string }, b: { title: string }) => {
+      storySort: (a, b) => {
         const orderedPagesPrefix = [
           "Introduction",
           "login/login.ftl",
@@ -54,7 +54,7 @@ const preview: Preview = {
           "account/totp.ftl",
         ];
 
-        function getHardCodedWeight(title: string) {
+        function getHardCodedWeight(title) {
           for (let i = 0; i < orderedPagesPrefix.length; i++) {
             if (
               title
