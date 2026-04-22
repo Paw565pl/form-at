@@ -1,4 +1,19 @@
-FROM quay.io/keycloak/keycloak:26.5
+FROM node:24-alpine AS theme-builder
+
+WORKDIR /theme
+
+ENV CI=true
+
+RUN apk add --no-cache maven && \
+    corepack enable pnpm
+
+COPY keycloak-theme/ .
+RUN pnpm install --frozen-lockfile && \
+    pnpm build-keycloak-theme
+
+FROM quay.io/keycloak/keycloak:26.6
+
+COPY --from=theme-builder /theme/dist_keycloak/theme.jar /opt/keycloak/providers/
 
 COPY config-dev.json /opt/keycloak/data/import/
 

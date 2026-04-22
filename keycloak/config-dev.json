@@ -1,6 +1,7 @@
 {
   "id": "360b45af-3630-4553-848c-3f93a6a18b30",
   "realm": "form-at",
+  "loginTheme": "keycloak-theme",
   "notBefore": 0,
   "defaultSignatureAlgorithm": "RS256",
   "revokeRefreshToken": false,
@@ -2650,7 +2651,7 @@
     "cibaInterval": "5",
     "realmReusableOtpCode": "false"
   },
-  "keycloakVersion": "26.5.4",
+  "keycloakVersion": "26.6.1",
   "userManagedAccessAllowed": false,
   "organizationsEnabled": false,
   "verifiableCredentialsEnabled": false,
