@@ -1,3 +1,4 @@
+import { Footer } from "@/core/components/footer/footer";
 import { NavBar } from "@/core/components/nav-bar/nav-bar";
 import { Toaster } from "@/core/components/ui/sonner";
 import { ClientProviders } from "@/core/providers/client-providers";
@@ -45,6 +46,7 @@ export const RootLayout = async ({ children }: PropsWithChildren) => {
             <main className="container mx-auto flex flex-1 flex-col">
               {children}
             </main>
+            <Footer />
             <Toaster position="top-right" closeButton />
           </ClientProviders>
         </ServerProviders>

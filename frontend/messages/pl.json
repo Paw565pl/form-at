@@ -51,6 +51,10 @@
     "languageSwitcher": "Zmień język",
     "openMobileMenu": "Otwórz menu"
   },
+  "footer": {
+    "privacy": "Polityka prywatności",
+    "GitHub": "GitHub"
+  },
   "formListPage": {
     "title": "Wyświetlanie {count, plural, one {# formularza} other {# formularzy}}",
     "options": {
@@ -328,5 +332,9 @@
     "viewSubmissions": "Odpowiedzi formularza",
     "noOpenQuestions": "Pytania otwarte nie są wyświetlane.",
     "answerCount": "{count, plural, one {# odpowiedź} other {# odpowiedzi}}"
+  },
+  "privacyPage": {
+    "title": "Polityka Prywatności",
+    "subtitle": "FormAT to niekomercyjny projekt uniwersytecki. Zobowiązujemy się do przejrzystego i ograniczonego przetwarzania danych."
   }
 }

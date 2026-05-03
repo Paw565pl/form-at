@@ -51,6 +51,10 @@
     "languageSwitcher": "Change language",
     "openMobileMenu": "Open menu"
   },
+  "footer": {
+    "privacy": "Privacy",
+    "GitHub": "GitHub"
+  },
   "formListPage": {
     "title": "Showing {count, plural, one {# form} other {# forms}}",
     "options": {
@@ -328,5 +332,9 @@
     "viewSubmissions": "Form Submissions",
     "noOpenQuestions": "Open answer questions are not displayed.",
     "answerCount": "{count, plural, one {# answer} other {# answers}}"
+  },
+  "privacyPage": {
+    "title": "Privacy Policy",
+    "subtitle": "FormAT is a non-commercial university project. We are committed to handling data in a transparent and limited manner"
   }
 }
