@@ -24,6 +24,7 @@ services:
       RUSTFS_ACCESS_KEY: rustfsadmin
       RUSTFS_SECRET_KEY: rustfsadmin
       RUSTFS_CONSOLE_ENABLE: false
+      RUSTFS_CORS_ALLOWED_ORIGINS: http://localhost:3000
       RUSTFS_OBS_LOGGER_LEVEL: error
     volumes:
       - rustfs-data:/data
