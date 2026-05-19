@@ -65,7 +65,7 @@ configurations { compileOnly { extendsFrom(configurations.annotationProcessor.ge
 repositories { mavenCentral() }
 
 val mapstructVersion = "1.6.3"
-val slugifyVersion = "4.0.0"
+val slugifyVersion = "3.0.7"
 val minioSdkVersion = "9.0.0"
 val linguaVersion = "1.2.2"
 val restAssuredVersion = "6.0.0"
