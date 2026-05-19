@@ -3,11 +3,11 @@ import com.diffplug.spotless.LineEnding
 plugins {
     java
     idea
-    id("org.springframework.boot") version "4.0.5"
-    id("org.springframework.boot.aot") version "4.0.5" apply false
+    id("org.springframework.boot") version "4.0.6"
+    id("org.springframework.boot.aot") version "4.0.6" apply false
     id("io.spring.dependency-management") version "1.1.7"
     id("se.solrike.sonarlint") version "2.2.0"
-    id("com.diffplug.spotless") version "8.4.0"
+    id("com.diffplug.spotless") version "8.5.1"
 }
 
 if (project.hasProperty("aot")) {
@@ -15,14 +15,12 @@ if (project.hasProperty("aot")) {
 }
 
 group = "format"
+
 version = "0.0.1"
+
 description = "backend"
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(25)
-    }
-}
+java { toolchain { languageVersion = JavaLanguageVersion.of(25) } }
 
 idea {
     module {
@@ -47,6 +45,8 @@ spotless {
         formatAnnotations()
     }
 
+    kotlinGradle { ktfmt().kotlinlangStyle() }
+
     val prettierVersion = "3.8.3"
 
     yaml {
@@ -60,18 +60,12 @@ spotless {
     }
 }
 
-configurations {
-    compileOnly {
-        extendsFrom(configurations.annotationProcessor.get())
-    }
-}
+configurations { compileOnly { extendsFrom(configurations.annotationProcessor.get()) } }
 
-repositories {
-    mavenCentral()
-}
+repositories { mavenCentral() }
 
 val mapstructVersion = "1.6.3"
-val slugifyVersion = "3.0.7"
+val slugifyVersion = "4.0.0"
 val minioSdkVersion = "9.0.0"
 val linguaVersion = "1.2.2"
 val restAssuredVersion = "6.0.0"
@@ -97,7 +91,9 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
     testImplementation("org.springframework.boot:spring-boot-starter-actuator-test")
     testImplementation("org.springframework.boot:spring-boot-starter-security-test")
-    testImplementation("org.springframework.boot:spring-boot-starter-security-oauth2-resource-server-test")
+    testImplementation(
+        "org.springframework.boot:spring-boot-starter-security-oauth2-resource-server-test"
+    )
     testImplementation("org.springframework.boot:spring-boot-starter-validation-test")
     testImplementation("org.springframework.boot:spring-boot-starter-data-mongodb-test")
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
@@ -119,11 +115,9 @@ tasks.withType<JavaCompile> {
             "-Xlint:fallthrough",
             "-Xlint:try",
             "-Xlint:finally",
-            "-Werror"
+            "-Werror",
         )
     )
 }
 
-tasks.withType<Test> {
-    useJUnitPlatform()
-}
+tasks.withType<Test> { useJUnitPlatform() }
