@@ -9,6 +9,11 @@ import {
 } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
+const dataDiscoveryTime = new WeakMap<
+  SubmissionStatisticsResponseDto[],
+  number
+>();
+
 export const getFetchFormStatisticsQueryOptions = (
   formIdOrSlug: string,
   options?: Omit<
@@ -29,6 +34,22 @@ export const getFetchFormStatisticsQueryOptions = (
         return data;
       },
       staleTime: 1000 * 60 * 60, // 60 minutes
+      refetchInterval: ({ state: { data, error } }) => {
+        if (!data || error) return 2_000;
+
+        let discoveredAt = dataDiscoveryTime.get(data);
+        if (!discoveredAt) {
+          discoveredAt = Date.now();
+          dataDiscoveryTime.set(data, discoveredAt);
+        }
+
+        const unchangedDurationMs = Date.now() - discoveredAt;
+
+        if (unchangedDurationMs > 60_000) return 10_000;
+        if (unchangedDurationMs > 15_000) return 5_000;
+
+        return 2_000;
+      },
       ...options,
     },
   );
