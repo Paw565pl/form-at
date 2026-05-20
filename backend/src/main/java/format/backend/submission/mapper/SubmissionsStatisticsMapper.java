@@ -14,7 +14,7 @@ public interface SubmissionsStatisticsMapper {
     default List<SubmissionStatisticsResponseDto> toResponseDtos(
             SubmissionsStatisticsEntity submissionsStatisticsEntity) {
         return submissionsStatisticsEntity.getQuestions().entrySet().stream()
-                .map((entry) -> {
+                .map(entry -> {
                     val questionId = entry.getKey();
                     val submissionsStatistics = entry.getValue();
 

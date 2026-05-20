@@ -73,8 +73,7 @@ public class SubmissionsStatisticsService {
         submissionsStatisticsRepository.save(submissionsStatistics);
     }
 
-    @Transactional
-    protected void update(SubmissionEntity submission, int delta) {
+    private void update(SubmissionEntity submission, int delta) {
         val update = new Update();
 
         for (val answer : submission.getAnswers()) {
@@ -108,6 +107,7 @@ public class SubmissionsStatisticsService {
     }
 
     @Transactional
+    @SuppressWarnings("java:S6809")
     public void reset(FormEntity form) {
         delete(form.getId());
         create(form);
