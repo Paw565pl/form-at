@@ -35,7 +35,8 @@ export const getFetchFormStatisticsQueryOptions = (
       },
       staleTime: 1000 * 60 * 60, // 60 minutes
       refetchInterval: ({ state: { data, error } }) => {
-        if (!data || error) return 2_000;
+        if (error) return false;
+        if (!data) return 2_000;
 
         let discoveredAt = dataDiscoveryTime.get(data);
         if (!discoveredAt) {
