@@ -9,7 +9,6 @@ import format.backend.form.entity.QuestionEntity;
 import format.backend.form.service.FormService;
 import format.backend.submission.dto.SubmissionRequestDto;
 import format.backend.submission.dto.SubmissionResponseDto;
-import format.backend.submission.dto.SubmissionStatisticsResponseDto;
 import format.backend.submission.entity.SubmissionEntity;
 import format.backend.submission.exception.SubmissionAlreadyCreatedForUserException;
 import format.backend.submission.exception.SubmissionNotFoundException;
@@ -56,10 +55,9 @@ public class SubmissionService {
 
     private final FormService formService;
     private final UserService userService;
+    private final SubmissionsStatisticsService submissionsStatisticsService;
 
     private static final String FORM_ID_FIELD = "formId";
-    private static final String QUESTION_ID_FIELD = "questionId";
-    private static final String CHOSEN_ANSWER_IDS_FIELD = "answers.chosenAnswerIds";
 
     private void isOwnerOrAdminCheck(Optional<String> authorId, KeycloakJwtClaims keycloakJwtClaims) {
         val isFormOwner =
@@ -124,43 +122,6 @@ public class SubmissionService {
         return submissionMapper.toResponseDto(submission, authorName);
     }
 
-    public List<SubmissionStatisticsResponseDto> findSubmissionsStatisticsByFormIdOrSlug(
-            KeycloakJwtClaims keycloakJwtClaims, String formIdOrSlug) {
-        val form = formService.findOrThrow(formIdOrSlug);
-        isOwnerOrAdminCheck(Optional.ofNullable(form.getAuthorId()), keycloakJwtClaims);
-        if (!form.getSaveSubmissions() || form.getAuthorId() == null) {
-            throw new SubmissionOperationNotSupported(formIdOrSlug);
-        }
-
-        val operations = new ArrayList<AggregationOperation>();
-
-        operations.add(Aggregation.match(Criteria.where(FORM_ID_FIELD)
-                .is(form.getId())
-                .and("answers.chosenAnswerIds.0")
-                .exists(true)));
-        operations.add(Aggregation.unwind("answers"));
-        operations.add(Aggregation.match(Criteria.where(CHOSEN_ANSWER_IDS_FIELD).ne(List.of())));
-        operations.add(Aggregation.unwind(CHOSEN_ANSWER_IDS_FIELD));
-        operations.add(Aggregation.group("answers.questionId", CHOSEN_ANSWER_IDS_FIELD)
-                .count()
-                .as("totalCount"));
-        operations.add(Aggregation.project()
-                .and("_id.questionId")
-                .as(QUESTION_ID_FIELD)
-                .and("_id.chosenAnswerIds")
-                .as("entry.answerId")
-                .and("totalCount")
-                .as("entry.totalCount")
-                .andExclude("_id"));
-        operations.add(Aggregation.group(QUESTION_ID_FIELD).push("entry").as("submissionStatistics"));
-        operations.add(Aggregation.project().and("_id").as(QUESTION_ID_FIELD).andInclude("submissionStatistics"));
-
-        val results = mongoTemplate.aggregate(
-                Aggregation.newAggregation(operations), SubmissionEntity.class, SubmissionStatisticsResponseDto.class);
-
-        return results.getMappedResults();
-    }
-
     public SubmissionResponseDto findByFormIdOrSlugAndAuthorId(
             KeycloakJwtClaims keycloakJwtClaims, String formIdOrSlug) {
         val form = formService.findOrThrow(formIdOrSlug);
@@ -219,6 +180,7 @@ public class SubmissionService {
         try {
             val savedSubmissionEntity = submissionRepository.save(submissionEntity);
             formService.incrementSubmissionsCountById(form.getId());
+            submissionsStatisticsService.increment(savedSubmissionEntity);
 
             val authorName = Optional.ofNullable(keycloakJwtClaims)
                     .map(KeycloakJwtClaims::username)
@@ -243,5 +205,6 @@ public class SubmissionService {
 
         submissionRepository.delete(submission);
         formService.decrementSubmissionsCountById(form.getId());
+        submissionsStatisticsService.decrement(submission);
     }
 }

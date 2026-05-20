@@ -29,6 +29,7 @@ import format.backend.form.validator.FormValidator;
 import format.backend.form_rating.entity.FormRatingEntity;
 import format.backend.form_rating.repository.FormRatingRepository;
 import format.backend.submission.repository.SubmissionRepository;
+import format.backend.submission.service.SubmissionsStatisticsService;
 import format.backend.upload.service.UploadService;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,6 +82,7 @@ public class FormService {
     private final FormRatingRepository formRatingRepository;
     private final UserService userService;
     private final UploadService uploadService;
+    private final SubmissionsStatisticsService submissionsStatisticsService;
 
     public static final String AUTHOR_ID_FIELD = "authorId";
     private static final Map<String, String> SORT_FIELDS = Stream.of(
@@ -280,6 +282,7 @@ public class FormService {
 
         try {
             val savedFormEntity = formRepository.save(formEntity);
+            if (savedFormEntity.getSaveSubmissions()) submissionsStatisticsService.create(savedFormEntity);
 
             val imageKeys = Stream.concat(
                             Stream.ofNullable(requestDto.thumbnailKey()),
@@ -322,6 +325,8 @@ public class FormService {
         try {
             val savedFormEntity = formRepository.save(updatedFormEntity);
             submissionRepository.deleteAllByFormId(savedFormEntity.getId());
+            if (savedFormEntity.getSaveSubmissions()) submissionsStatisticsService.reset(savedFormEntity);
+            else submissionsStatisticsService.delete(savedFormEntity.getId());
 
             val requestImageKeys = Stream.concat(
                             Stream.ofNullable(requestDto.thumbnailKey()),
@@ -368,6 +373,7 @@ public class FormService {
         commentRatingRepository.deleteAllByCommentIdIn(commentIds);
 
         submissionRepository.deleteAllByFormId(formEntity.getId());
+        submissionsStatisticsService.delete(formEntity.getId());
         formRatingRepository.deleteAllByFormId(formEntity.getId());
     }
 
