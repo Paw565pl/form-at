@@ -1,5 +1,6 @@
 package format.backend.upload.entity;
 
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.Getter;
@@ -15,7 +16,7 @@ public enum ImageType {
     private final String contentType;
 
     public static Optional<ImageType> fromExtension(String extension) {
-        if (!Objects.equals(extension.toLowerCase(), AVIF.extension)) {
+        if (!Objects.equals(extension.toLowerCase(Locale.ROOT), AVIF.extension)) {
             return Optional.empty();
         }
 

@@ -4,6 +4,7 @@ import format.backend.form.dto.QuestionRequestDto;
 import format.backend.form.dto.QuestionResponseDto;
 import format.backend.form.entity.QuestionEntity;
 import format.backend.form.entity.QuestionType;
+import org.jspecify.annotations.Nullable;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -13,7 +14,7 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = AnswerMapper.class)
 public interface QuestionMapper {
 
-    QuestionResponseDto toResponseDto(QuestionEntity questionEntity, String image);
+    QuestionResponseDto toResponseDto(QuestionEntity questionEntity, @Nullable String image);
 
     @Mapping(target = "id", ignore = true)
     QuestionEntity toEntity(QuestionRequestDto questionRequestDto);

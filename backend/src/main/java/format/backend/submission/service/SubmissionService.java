@@ -78,11 +78,11 @@ public class SubmissionService {
                 Aggregation.match(Criteria.where(FORM_ID_FIELD).is(form.getId())),
                 Aggregation.count().as("count"));
 
-        final long total = Optional.ofNullable(mongoTemplate
+        final int total = Optional.ofNullable(mongoTemplate
                         .aggregate(Aggregation.newAggregation(countOperations), SubmissionEntity.class, Document.class)
                         .getUniqueMappedResult())
-                .map(d -> (long) d.getInteger("count"))
-                .orElse(0L);
+                .map(d -> d.getInteger("count"))
+                .orElse(0);
         if (total == 0) return Page.empty(pageable);
 
         val operations = new ArrayList<AggregationOperation>();
@@ -159,6 +159,7 @@ public class SubmissionService {
                 .collect(Collectors.toUnmodifiableMap(QuestionEntity::getId, Function.identity()));
         for (val submissionAnswer : submissionEntity.getAnswers()) {
             val question = questionsById.get(submissionAnswer.getQuestionId());
+            if (question == null) continue;
 
             switch (question.getType()) {
                 case SINGLE_CHOICE, MULTIPLE_CHOICE -> {

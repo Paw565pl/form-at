@@ -24,6 +24,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -108,7 +109,7 @@ public class UploadService {
 
         if (lastDotIndex == -1) return safeFilenameWithoutExtension;
         return safeFilenameWithoutExtension
-                + trimmedFilename.substring(lastDotIndex).toLowerCase();
+                + trimmedFilename.substring(lastDotIndex).toLowerCase(Locale.ROOT);
     }
 
     public boolean isUploaded(String key) {
