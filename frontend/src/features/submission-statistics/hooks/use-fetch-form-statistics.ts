@@ -46,8 +46,8 @@ export const getFetchFormStatisticsQueryOptions = (
 
         const unchangedDurationMs = Date.now() - discoveredAt;
 
-        if (unchangedDurationMs > 60_000) return 10_000;
         if (unchangedDurationMs > 15_000) return 5_000;
+        if (unchangedDurationMs > 60_000) return 10_000;
 
         return 2_000;
       },
