@@ -7,7 +7,7 @@ plugins {
     id("org.springframework.boot.aot") version "4.0.6" apply false
     id("io.spring.dependency-management") version "1.1.7"
     id("se.solrike.sonarlint") version "2.2.0"
-    id("com.diffplug.spotless") version "8.5.1"
+    id("com.diffplug.spotless") version "8.6.0"
 }
 
 if (project.hasProperty("aot")) {
