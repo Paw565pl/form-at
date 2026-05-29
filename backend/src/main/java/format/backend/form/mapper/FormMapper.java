@@ -16,14 +16,16 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = QuestionMapper.class)
 public interface FormMapper {
 
-    FormListResponseDto toListResponseDto(FormEntity formEntity, String thumbnail, @Nullable String authorName);
+    FormListResponseDto toListResponseDto(
+            FormEntity formEntity, @Nullable String thumbnail, @Nullable String authorName);
 
-    FormListResponseDto toListResponseDto(FormListAggregationResult formListAggregationResult, String thumbnail);
+    FormListResponseDto toListResponseDto(
+            FormListAggregationResult formListAggregationResult, @Nullable String thumbnail);
 
     @Mapping(target = "questions", source = "questions")
     FormDetailResponseDto toDetailResponseDto(
             FormEntity formEntity,
-            String thumbnail,
+            @Nullable String thumbnail,
             List<QuestionResponseDto> questions,
             @Nullable String authorName,
             @Nullable Integer userRating);
@@ -40,7 +42,7 @@ public interface FormMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "version", ignore = true)
-    FormEntity toEntity(FormRequestDto formRequestDto, String slug, String passwordHash, String authorId);
+    FormEntity toEntity(FormRequestDto formRequestDto, String slug, @Nullable String passwordHash, String authorId);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "questionsCount", expression = "java(formRequestDto.questions().size())")
@@ -52,5 +54,8 @@ public interface FormMapper {
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "version", ignore = true)
     FormEntity updateEntityFromDto(
-            FormRequestDto formRequestDto, @MappingTarget FormEntity entity, String slug, String passwordHash);
+            FormRequestDto formRequestDto,
+            @MappingTarget FormEntity entity,
+            String slug,
+            @Nullable String passwordHash);
 }

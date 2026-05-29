@@ -16,7 +16,7 @@ services:
       start_period: 30s
 
   rustfs:
-    image: rustfs/rustfs:1.0.0-beta.3
+    image: rustfs/rustfs:1.0.0-beta.5
     restart: on-failure
     ports:
       - "9000:9000"
@@ -26,6 +26,7 @@ services:
       RUSTFS_CONSOLE_ENABLE: false
       RUSTFS_CORS_ALLOWED_ORIGINS: http://localhost:3000
       RUSTFS_OBS_LOGGER_LEVEL: error
+      RUSTFS_ALLOW_INSECURE_DEFAULT_CREDENTIALS: true
     volumes:
       - rustfs-data:/data
     healthcheck:

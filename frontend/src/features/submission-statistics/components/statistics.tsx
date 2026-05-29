@@ -12,7 +12,7 @@ import {
 import { ICONS } from "@/core/config/icons";
 import { useFetchFormDetails } from "@/features/form-details/hooks/use-fetch-form-details";
 import { FormStatisticsLoading } from "@/features/submission-statistics/form-statistics-loading";
-import { useFetchFormStatistics } from "@/features/submission-statistics/hooks/use-fetch-form-statistics";
+import { useFetchFormSubmissionsStatistics } from "@/features/submission-statistics/hooks/use-fetch-form-submissions-statistics";
 import { HttpStatusCode } from "axios";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
@@ -36,7 +36,7 @@ export const Statistics = ({ formIdOrSlug }: StatisticsProps) => {
     data: formStatistics,
     isLoading: isLoadingFormStatistics,
     error: formStatisticsError,
-  } = useFetchFormStatistics(formIdOrSlug);
+  } = useFetchFormSubmissionsStatistics(formIdOrSlug);
 
   if (formError) {
     if (formError.status === HttpStatusCode.NotFound) return notFound();
@@ -55,8 +55,9 @@ export const Statistics = ({ formIdOrSlug }: StatisticsProps) => {
     !formStatistics ||
     isLoadingFormDetails ||
     isLoadingFormStatistics
-  )
+  ) {
     return <FormStatisticsLoading />;
+  }
 
   return (
     <section
@@ -95,18 +96,19 @@ export const Statistics = ({ formIdOrSlug }: StatisticsProps) => {
         </Button>
       </header>
 
-      {formData.submissionsCount === 0 && (
+      {formStatistics.submissionsCount === 0 && (
         <p className="text-center">{t("noSubmissions")}</p>
       )}
 
-      {formData.submissionsCount > 0 && (
+      {formStatistics.submissionsCount > 0 && (
         <div className="flex flex-col gap-4">
           {formData.questions
             .filter((question) => question.type !== "OPEN")
             .map((question, index) => {
-              const questionStatistics = formStatistics.find(
-                (qs) => qs.questionId === question.id,
-              );
+              const questionStatistics = formStatistics.questions[
+                question.id
+              ] || { answers: {} };
+
               return (
                 <Card key={question.id} className="gap-2 p-4">
                   <header className="flex flex-col gap-4">
@@ -127,15 +129,15 @@ export const Statistics = ({ formIdOrSlug }: StatisticsProps) => {
                       </span>
                     </div>
                   </header>
+
                   <div className="flex flex-col gap-2">
                     {question.answers.map((answer) => {
                       const answerCount =
-                        questionStatistics?.submissionStatistics.find(
-                          (as) => as.answerId === answer.id,
-                        )?.totalCount || 0;
+                        questionStatistics.answers[answer.id] || 0;
                       const percentage = Math.round(
-                        (answerCount / formData.submissionsCount) * 100,
+                        (answerCount / formStatistics.submissionsCount) * 100,
                       );
+
                       return (
                         <Field className="w-full max-w-sm" key={answer.id}>
                           <FieldLabel htmlFor={`${answer.id}-percentage`}>

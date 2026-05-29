@@ -1,6 +1,7 @@
 package format.backend.auth.entity;
 
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
@@ -25,6 +26,6 @@ public enum Role {
             Arrays.stream(values()).collect(Collectors.toUnmodifiableMap(r -> r.value, Function.identity()));
 
     public static Optional<Role> from(String role) {
-        return Optional.ofNullable(valueToRoleMap.get(role.toLowerCase()));
+        return Optional.ofNullable(valueToRoleMap.get(role.toLowerCase(Locale.ROOT)));
     }
 }

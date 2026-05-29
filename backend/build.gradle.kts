@@ -2,12 +2,11 @@ import com.diffplug.spotless.LineEnding
 
 plugins {
     java
-    idea
     id("org.springframework.boot") version "4.0.6"
     id("org.springframework.boot.aot") version "4.0.6" apply false
     id("io.spring.dependency-management") version "1.1.7"
     id("se.solrike.sonarlint") version "2.2.0"
-    id("com.diffplug.spotless") version "8.5.1"
+    id("com.diffplug.spotless") version "8.6.0"
 }
 
 if (project.hasProperty("aot")) {
@@ -21,13 +20,6 @@ version = "0.0.1"
 description = "backend"
 
 java { toolchain { languageVersion = JavaLanguageVersion.of(25) } }
-
-idea {
-    module {
-        isDownloadJavadoc = true
-        isDownloadSources = true
-    }
-}
 
 spotless {
     encoding = Charsets.UTF_8
@@ -66,7 +58,7 @@ repositories { mavenCentral() }
 
 val mapstructVersion = "1.6.3"
 val slugifyVersion = "3.0.7"
-val minioSdkVersion = "9.0.0"
+val minioSdkVersion = "9.0.1"
 val linguaVersion = "1.2.2"
 val restAssuredVersion = "6.0.0"
 val dataFakerVersion = "2.5.4"

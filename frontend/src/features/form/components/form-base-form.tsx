@@ -713,7 +713,7 @@ export const FormBaseForm = ({
                   )}
                 />
 
-                {typeof watchedQuestions[qIdx].image === "string" && (
+                {typeof watchedQuestions[qIdx]?.image === "string" && (
                   <div className="relative h-48">
                     <Image
                       src={watchedQuestions[qIdx].image}
@@ -787,11 +787,11 @@ export const FormBaseForm = ({
                               onClick={(e) => {
                                 if (
                                   typeof defaultValues?.questions[qIdx]
-                                    .image === "string"
+                                    ?.image === "string"
                                 ) {
                                   form.setValue(
                                     `questions.${qIdx}.image`,
-                                    defaultValues?.questions[qIdx].image,
+                                    defaultValues.questions[qIdx].image,
                                   );
                                 }
 

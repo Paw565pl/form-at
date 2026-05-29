@@ -1,9 +1,8 @@
-export interface SubmissionStatisticsResponseDto {
-  readonly questionId: string;
-  readonly submissionStatistics: SubmissionAnswersStatisticsResponseDto[];
+export interface SubmissionsStatisticsResponseDto {
+  readonly submissionsCount: number;
+  readonly questions: Readonly<Record<string, Statistics>>;
 }
 
-export interface SubmissionAnswersStatisticsResponseDto {
-  readonly answerId: string;
-  readonly totalCount: number;
+interface Statistics {
+  readonly answers: Readonly<Record<string, number>>;
 }
