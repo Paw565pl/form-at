@@ -2,7 +2,6 @@ import com.diffplug.spotless.LineEnding
 
 plugins {
     java
-    idea
     id("org.springframework.boot") version "4.0.6"
     id("org.springframework.boot.aot") version "4.0.6" apply false
     id("io.spring.dependency-management") version "1.1.7"
@@ -21,13 +20,6 @@ version = "0.0.1"
 description = "backend"
 
 java { toolchain { languageVersion = JavaLanguageVersion.of(25) } }
-
-idea {
-    module {
-        isDownloadJavadoc = true
-        isDownloadSources = true
-    }
-}
 
 spotless {
     encoding = Charsets.UTF_8
