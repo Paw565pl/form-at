@@ -108,7 +108,10 @@ class UploadService {
       }
 
       const filesToKeys = new Map(
-        files.map((file, index) => [file, uploadsMetadata[index].key]),
+        files.map((file, index) => [
+          file,
+          uploadsMetadata[index]?.key as string,
+        ]),
       );
       return { isSuccess: true, filesToKeys };
     } catch (e) {
