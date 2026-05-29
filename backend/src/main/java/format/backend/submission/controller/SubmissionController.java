@@ -4,11 +4,10 @@ import format.backend.auth.annotation.IsAuthenticated;
 import format.backend.auth.jwt.KeycloakJwtClaimsExtractor;
 import format.backend.submission.dto.SubmissionRequestDto;
 import format.backend.submission.dto.SubmissionResponseDto;
-import format.backend.submission.dto.SubmissionStatisticsResponseDto;
+import format.backend.submission.dto.SubmissionsStatisticsResponseDto;
 import format.backend.submission.service.SubmissionService;
 import format.backend.submission.service.SubmissionsStatisticsService;
 import jakarta.validation.Valid;
-import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -55,7 +54,7 @@ public class SubmissionController {
 
     @IsAuthenticated
     @GetMapping("/statistics")
-    public List<SubmissionStatisticsResponseDto> findSubmissionsStatisticsByFormIdOrSlug(
+    public SubmissionsStatisticsResponseDto findSubmissionsStatisticsByFormIdOrSlug(
             @AuthenticationPrincipal Jwt jwt, @PathVariable String formIdOrSlug) {
         return submissionsStatisticsService.findByFormIdOrSlug(keycloakJwtClaimsExtractor.getClaims(jwt), formIdOrSlug);
     }

@@ -5,20 +5,18 @@ import format.backend.auth.jwt.KeycloakJwtClaims;
 import format.backend.form.entity.AnswerEntity;
 import format.backend.form.entity.FormEntity;
 import format.backend.form.entity.QuestionType;
-import format.backend.form.exception.FormNotFoundException;
-import format.backend.form.repository.FormRepository;
-import format.backend.submission.dto.SubmissionStatisticsResponseDto;
+import format.backend.form.service.FormService;
+import format.backend.submission.dto.SubmissionsStatisticsResponseDto;
 import format.backend.submission.entity.SubmissionEntity;
 import format.backend.submission.entity.SubmissionsStatisticsEntity;
 import format.backend.submission.exception.SubmissionOperationNotSupported;
 import format.backend.submission.mapper.SubmissionsStatisticsMapper;
 import format.backend.submission.repository.SubmissionsStatisticsRepository;
-import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import org.bson.types.ObjectId;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -32,18 +30,17 @@ import org.springframework.web.server.ResponseStatusException;
 @RequiredArgsConstructor
 public class SubmissionsStatisticsService {
 
+    @Lazy
+    private final FormService formService;
+
     private final MongoTemplate mongoTemplate;
-    private final FormRepository formRepository;
 
     private final SubmissionsStatisticsRepository submissionsStatisticsRepository;
     private final SubmissionsStatisticsMapper submissionsStatisticsMapper;
 
-    public List<SubmissionStatisticsResponseDto> findByFormIdOrSlug(
+    public SubmissionsStatisticsResponseDto findByFormIdOrSlug(
             KeycloakJwtClaims keycloakJwtClaims, String formIdOrSlug) {
-        val formOpt = ObjectId.isValid(formIdOrSlug)
-                ? formRepository.findById(formIdOrSlug)
-                : formRepository.findBySlug(formIdOrSlug);
-        val form = formOpt.orElseThrow(() -> new FormNotFoundException(formIdOrSlug));
+        val form = formService.findOrThrow(formIdOrSlug);
         val formId = form.getId();
 
         val isFormOwner = Objects.equals(form.getAuthorId(), keycloakJwtClaims.sub());
@@ -53,8 +50,9 @@ public class SubmissionsStatisticsService {
             throw new SubmissionOperationNotSupported(formIdOrSlug);
         }
 
-        return submissionsStatisticsMapper.toResponseDtos(
-                submissionsStatisticsRepository.findById(formId).orElse(new SubmissionsStatisticsEntity(formId)));
+        val submissionsStatisticsEntity =
+                submissionsStatisticsRepository.findById(formId).orElse(new SubmissionsStatisticsEntity(formId));
+        return submissionsStatisticsMapper.toDto(submissionsStatisticsEntity, form.getSubmissionsCount());
     }
 
     @Transactional
