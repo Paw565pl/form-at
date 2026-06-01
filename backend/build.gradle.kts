@@ -56,6 +56,7 @@ configurations { compileOnly { extendsFrom(configurations.annotationProcessor.ge
 
 repositories { mavenCentral() }
 
+val otelLogbackAppenderVersion = "2.28.1-alpha"
 val mapstructVersion = "1.6.3"
 val slugifyVersion = "3.0.7"
 val minioSdkVersion = "9.0.1"
@@ -67,6 +68,10 @@ val sonarJavaVersion = "8.9.4.40912"
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("org.springframework.boot:spring-boot-starter-opentelemetry")
+    implementation(
+        "io.opentelemetry.instrumentation:opentelemetry-logback-appender-1.0:$otelLogbackAppenderVersion"
+    )
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-security-oauth2-resource-server")
     implementation("org.springframework.boot:spring-boot-starter-validation")
@@ -82,6 +87,7 @@ dependencies {
     annotationProcessor("org.mapstruct:mapstruct-processor:$mapstructVersion")
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
     testImplementation("org.springframework.boot:spring-boot-starter-actuator-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-opentelemetry-test")
     testImplementation("org.springframework.boot:spring-boot-starter-security-test")
     testImplementation(
         "org.springframework.boot:spring-boot-starter-security-oauth2-resource-server-test"

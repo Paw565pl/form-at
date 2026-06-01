@@ -20,3 +20,24 @@ s3:
   access-key: rustfsadmin
   secret-key: rustfsadmin
   bucket: uploads
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0 # TODO: delete later
+
+  otlp:
+    metrics:
+      export:
+        url: http://aspire-dashboard:4318/v1/metrics
+
+  opentelemetry:
+    tracing:
+      export:
+        otlp:
+          endpoint: http://aspire-dashboard:4318/v1/tracing
+
+    logging:
+      export:
+        otlp:
+          endpoint: http://aspire-dashboard:4318/v1/logging
