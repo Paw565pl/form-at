@@ -1,6 +1,6 @@
 spring:
   application:
-    name: backend
+    name: format-backend
 
   mvc:
     problemdetails:
