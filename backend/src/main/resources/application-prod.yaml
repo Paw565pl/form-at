@@ -30,14 +30,15 @@ management:
     metrics:
       export:
         url: http://aspire-dashboard:4318/v1/metrics
+        url: http://aspire-dashboard:18890/v1/metrics
 
   opentelemetry:
     tracing:
       export:
         otlp:
-          endpoint: http://aspire-dashboard:4318/v1/tracing
+          endpoint: http://aspire-dashboard:18890/v1/traces
 
     logging:
       export:
         otlp:
-          endpoint: http://aspire-dashboard:4318/v1/logging
+          endpoint: http://aspire-dashboard:18890/v1/logs
