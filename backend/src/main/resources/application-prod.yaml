@@ -29,8 +29,8 @@ management:
   otlp:
     metrics:
       export:
-        url: http://aspire-dashboard:4318/v1/metrics
         url: http://aspire-dashboard:18890/v1/metrics
+        step: 5s # TODO: delete later
 
   opentelemetry:
     tracing:
