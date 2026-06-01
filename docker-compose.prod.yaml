@@ -105,6 +105,14 @@ services:
       retries: 5
       start_period: 30s
 
+  aspire-dashboard:
+    image: mcr.microsoft.com/dotnet/aspire-dashboard:13
+    restart: on-failure
+    ports:
+      - "18888:18888"
+    environment:
+      ASPIRE_DASHBOARD_UNSECURED_ALLOW_ANONYMOUS: true
+      
 volumes:
   mongodb-data:
   rustfs-data:
