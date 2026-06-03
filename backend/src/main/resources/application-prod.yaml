@@ -22,6 +22,11 @@ s3:
   bucket: uploads
 
 management:
+  metrics:
+    mongodb:
+      command:
+        enabled: false
+
   tracing:
     sampling:
       probability: 1.0 # TODO: delete later
