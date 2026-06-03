@@ -1,5 +1,7 @@
 FROM bellsoft/liberica-runtime-container:jdk-25-slim-glibc AS builder
 
+ENV SPRING_PROFILES_ACTIVE=prod
+
 WORKDIR /app
 
 COPY gradle gradle
@@ -14,6 +16,8 @@ RUN ./gradlew --no-daemon clean bootJar -Paot && \
     java -Djarmode=tools -jar app.jar extract --layers --destination extracted
 
 FROM bellsoft/liberica-runtime-container:jre-25-cds-glibc
+
+ENV SPRING_PROFILES_ACTIVE=prod
 
 WORKDIR /app
 
