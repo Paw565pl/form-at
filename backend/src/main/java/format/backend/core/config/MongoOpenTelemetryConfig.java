@@ -12,7 +12,7 @@ class MongoOpenTelemetryConfig {
 
     @Bean
     MongoClientSettingsBuilderCustomizer mongoMetricsSynchronousContextProvider(ObservationRegistry registry) {
-        return (clientSettingsBuilder) -> clientSettingsBuilder
+        return clientSettingsBuilder -> clientSettingsBuilder
                 .contextProvider(ContextProviderFactory.create(registry))
                 .addCommandListener(new MongoObservationCommandListener(registry));
     }
