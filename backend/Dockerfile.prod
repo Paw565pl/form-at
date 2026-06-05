@@ -19,15 +19,15 @@ WORKDIR /app
 
 RUN apk --no-cache add curl && \
     addgroup --system spring && \
-    adduser --system --disabled-password --ingroup spring --home /home/spring spring
+    adduser --system --disabled-password --ingroup spring spring
 
 COPY --from=builder --chown=spring /app/extracted/dependencies/ ./
 COPY --from=builder --chown=spring /app/extracted/spring-boot-loader/ ./
 COPY --from=builder --chown=spring /app/extracted/snapshot-dependencies/ ./
 COPY --from=builder --chown=spring /app/extracted/application/ ./
 
-USER spring:spring
+USER spring
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-XX:+UseCompactObjectHeaders", "-Dspring.aot.enabled=true", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-XX:+UseZGC", "-XX:+UseCompactObjectHeaders", "-Dspring.aot.enabled=true", "-jar", "app.jar"]
