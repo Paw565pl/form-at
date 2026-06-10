@@ -8,11 +8,11 @@ import com.github.pemistahl.lingua.api.LanguageDetectorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
-public class LinguaConfig {
+@Configuration(proxyBeanMethods = false)
+class LinguaConfig {
 
     @Bean
-    public LanguageDetector languageDetector() {
+    LanguageDetector languageDetector() {
         return LanguageDetectorBuilder.fromLanguages(ENGLISH, POLISH)
                 .withPreloadedLanguageModels()
                 .withLowAccuracyMode()

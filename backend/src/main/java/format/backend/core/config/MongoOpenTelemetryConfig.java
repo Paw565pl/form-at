@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.observability.ContextProviderFactory;
 import org.springframework.data.mongodb.observability.MongoObservationCommandListener;
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 class MongoOpenTelemetryConfig {
 
     @Bean
