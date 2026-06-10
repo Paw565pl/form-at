@@ -157,6 +157,9 @@ services:
     environment:
       DASHBOARD__OTLP__AUTHMODE: ApiKey
       DASHBOARD__OTLP__PRIMARYAPIKEY: aspiredashboardotlpsecret
+      LOGGING__LOGLEVEL__DEFAULT: error
+      LOGGING__LOGLEVEL__MICROSOFT.ASPNETCORE: error
+      LOGGING__LOGLEVEL__ASPIRE.DASHBOARD.DASHBOARDWEBAPPLICATION: information
 
 volumes:
   mongodb-data:
