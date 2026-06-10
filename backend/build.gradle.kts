@@ -30,7 +30,7 @@ spotless {
         removeUnusedImports()
         forbidWildcardImports()
         cleanthat()
-        palantirJavaFormat("2.90.0").formatJavadoc(true)
+        palantirJavaFormat("2.92.0").formatJavadoc(true)
         trimTrailingWhitespace()
         leadingTabsToSpaces()
         endWithNewline()
@@ -39,7 +39,7 @@ spotless {
 
     kotlinGradle { ktfmt().kotlinlangStyle() }
 
-    val prettierVersion = "3.8.3"
+    val prettierVersion = "3.8.4"
 
     yaml {
         target("src/**/*.yaml")
