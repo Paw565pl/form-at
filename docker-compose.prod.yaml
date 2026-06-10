@@ -91,6 +91,7 @@ services:
       KC_FEATURE_OPENTELEMETRY_LOGS: enabled
       KC_TELEMETRY_LOGS_ENABLED: true
       KC_TELEMETRY_LOGS_LEVEL: warn
+      KC_LOG_LEVEL: warn
     healthcheck:
       test:
         [
