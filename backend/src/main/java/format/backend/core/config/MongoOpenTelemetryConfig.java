@@ -1,19 +1,19 @@
 package format.backend.core.config;
 
+import com.mongodb.observability.ObservabilitySettings;
 import io.micrometer.observation.ObservationRegistry;
 import org.springframework.boot.mongodb.autoconfigure.MongoClientSettingsBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.mongodb.observability.ContextProviderFactory;
-import org.springframework.data.mongodb.observability.MongoObservationCommandListener;
 
 @Configuration(proxyBeanMethods = false)
 class MongoOpenTelemetryConfig {
 
     @Bean
-    MongoClientSettingsBuilderCustomizer mongoMetricsSynchronousContextProvider(ObservationRegistry registry) {
-        return clientSettingsBuilder -> clientSettingsBuilder
-                .contextProvider(ContextProviderFactory.create(registry))
-                .addCommandListener(new MongoObservationCommandListener(registry));
+    MongoClientSettingsBuilderCustomizer mongoDbObservabilitySettings(ObservationRegistry observationRegistry) {
+        return (clientSettingsBuilder) ->
+                clientSettingsBuilder.observabilitySettings(ObservabilitySettings.micrometerBuilder()
+                        .observationRegistry(observationRegistry)
+                        .build());
     }
 }
