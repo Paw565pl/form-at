@@ -2,8 +2,8 @@ import com.diffplug.spotless.LineEnding
 
 plugins {
     java
-    id("org.springframework.boot") version "4.0.6"
-    id("org.springframework.boot.aot") version "4.0.6" apply false
+    id("org.springframework.boot") version "4.1.0"
+    id("org.springframework.boot.aot") version "4.1.0" apply false
     id("io.spring.dependency-management") version "1.1.7"
     id("se.solrike.sonarlint") version "2.2.0"
     id("com.diffplug.spotless") version "8.6.0"
