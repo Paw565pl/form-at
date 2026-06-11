@@ -11,7 +11,7 @@ class MongoOpenTelemetryConfig {
 
     @Bean
     MongoClientSettingsBuilderCustomizer mongoDbObservabilitySettings(ObservationRegistry observationRegistry) {
-        return (clientSettingsBuilder) ->
+        return clientSettingsBuilder ->
                 clientSettingsBuilder.observabilitySettings(ObservabilitySettings.micrometerBuilder()
                         .observationRegistry(observationRegistry)
                         .build());
