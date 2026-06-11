@@ -36,20 +36,14 @@ management:
     metrics:
       export:
         url: http://aspire-dashboard:18890/v1/metrics
-        headers:
-          x-otlp-api-key: ${OTLP_API_KEY}
 
   opentelemetry:
     tracing:
       export:
         otlp:
           endpoint: http://aspire-dashboard:18890/v1/traces
-          headers:
-            x-otlp-api-key: ${OTLP_API_KEY}
 
     logging:
       export:
         otlp:
           endpoint: http://aspire-dashboard:18890/v1/logs
-          headers:
-            x-otlp-api-key: ${OTLP_API_KEY}

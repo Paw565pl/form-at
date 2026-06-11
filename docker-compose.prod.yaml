@@ -115,7 +115,7 @@ services:
       - "8080:8080"
     environment:
       CORS_ALLOWED_ORIGINS: http://localhost:3000
-      OTLP_API_KEY: aspiredashboardotlpsecret
+      OTEL_EXPORTER_OTLP_HEADERS: x-otlp-api-key=aspiredashboardotlpsecret
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
       interval: 1m30s
