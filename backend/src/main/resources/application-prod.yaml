@@ -13,6 +13,7 @@ spring:
 logging:
   level:
     root: error
+    format.backend: warn
 
 s3:
   url: http://rustfs:9000
@@ -20,3 +21,29 @@ s3:
   access-key: rustfsadmin
   secret-key: rustfsadmin
   bucket: uploads
+
+management:
+  metrics:
+    mongodb:
+      command:
+        enabled: false
+
+  tracing:
+    sampling:
+      probability: 1.0
+
+  otlp:
+    metrics:
+      export:
+        url: http://aspire-dashboard:18890/v1/metrics
+
+  opentelemetry:
+    tracing:
+      export:
+        otlp:
+          endpoint: http://aspire-dashboard:18890/v1/traces
+
+    logging:
+      export:
+        otlp:
+          endpoint: http://aspire-dashboard:18890/v1/logs

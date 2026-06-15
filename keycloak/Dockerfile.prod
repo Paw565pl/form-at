@@ -20,6 +20,9 @@ ENV KC_DB=${KC_DB}
 
 ENV KC_HEALTH_ENABLED=true
 ENV KC_METRICS_ENABLED=true
+ENV KC_TRACING_ENABLED=true
+ENV KC_FEATURE_OPENTELEMETRY_LOGS=enabled
+ENV KC_TELEMETRY_LOGS_ENABLED=true
 
 COPY --from=theme-builder /theme/dist_keycloak/theme.jar /opt/keycloak/providers/
 
