@@ -335,6 +335,28 @@
   },
   "privacyPage": {
     "title": "Privacy Policy",
-    "subtitle": "FormAT is a non-commercial university project. We are committed to handling data in a transparent and limited manner"
+    "lastUpdated": "Last updated",
+    "policy": {
+      "header1": "Introduction",
+      "content1": "This privacy policy for formAT describes how and why we might access, collect, store, use and/or share your personal information when you use our services. Reading this privacy policy will help you understand your privacy rights and choices. We are responsible for making decisions about how your personal information is processed. If you do not agree with our policies, please do not use our services. If you still have any questions or concerns, please contact us at ADMIN EMAIL ADDRESS.",
+      "header2": "What information do we collect?",
+      "content2": "We collect information about you in various ways when you use our services. We collect personal information you provide to us. For example, we collect your name, email address, username, and password when you create an account. We also collect the content of the forms you create and the answers to those forms. We collect information about your use of our services. For example, we collect information about the forms you create, the forms you submit, and how you interact with our services.",
+      "header3": "How do we process your information?",
+      "content3": "We process your information to provide, improve and administer our services, communicate with you, for security or other purposes within your consent. We use your information to facilitate account creation and authentication and otherwise manage user accounts. We may process your information so you can create and log in to your account, as well as keep your account in working order.",
+      "header4": "When and with whom do we share your personal information?",
+      "content4": "We may need to share your personal information when you interact with public areas of the platform. Such personal information may be viewed by all users and may be publicly made available outside the services in perpetuity. Similarly, other users will be able to view your activity and view your profile. The personal information we share may include: usernames.",
+      "header5": "Do we use cookies and other tracking technologies?",
+      "content5": "We may use cookies and similar tracking technologies to gather information when you interact with our services. Some online tracking technologies help us maintain the security of your services and your account, fix bugs, save your preferences and assist with basic platform functions.",
+      "header6": "How long do we keep your information?",
+      "content6": "We will only keep your personal information for as long as it is necessary for the purposes set out in this privacy policy. No purpose in this notice will require us keeping your personal information for longer than the period of time in which users have an account with us. When we have no need to process your personal information, we will either delete or anonymise such information, or, if this is not possible (for example, because your personal information has been stored in backup archives), then we will securely store your personal information and isolate it from any further processing until deletion is possible.",
+      "header7": "How do we keep your information safe?",
+      "content7": "We have implemented appropriate and reasonable technical and organisational security measures designated to protect the security of any personal information we process. However, despite our safeguards and efforts to secure your information, no electronic transmission over the Internet or information storage technology can be guaranteed to be 100% secure, so we cannot promise or guarantee that hackers, cybercriminals, or other unauthorised third parties will not be able to defeat out security and improperly collect, assess, steal, or modify your information. Although we will do our best to protect your personal information, transmission of personal information to and from our services is at your own risk. You should only access the platform within a secure environment.",
+      "header8": "What are your privacy rights?",
+      "content8": "We are relying on your consent to process your personal information, which may be express and/or implied consent. You have the right the withdraw your consent at any time, by contacting us at ADMIN EMAIL ADDRESS. Upon your request, we will deactivate or delete your account and information from your active databases. Most web browsers are set to accept cookies by default. If you prefer, you can usually choose to set your browser to remove cookies and to reject cookies. If you choose to do so, this could affect certain features or services of your platform.",
+      "header9": "How can you review, update, or delete the data we collect from you?",
+      "content9": "You have the right to request access to your personal information we collect from you, details about how we have processed it, correct inaccuracies, or delete your personal information. You may also have the right to withdraw your consent to our processing of your personal information. To request to review, update, or delete your personal information, please contact us at ADMIN EMAIL ADDRESS.",
+      "header10": "Do we make updates to this policy?",
+      "content10": "We may update this privacy policy from time to time. The updated version will be indicated by an updated date at the top of this privacy policy. We encourage you to review this privacy policy frequently to be informed of how we are protecting you information."
+    }
   }
 }
