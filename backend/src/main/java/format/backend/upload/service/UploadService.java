@@ -24,6 +24,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -108,7 +109,7 @@ public class UploadService {
 
         if (lastDotIndex == -1) return safeFilenameWithoutExtension;
         return safeFilenameWithoutExtension
-                + trimmedFilename.substring(lastDotIndex).toLowerCase();
+                + trimmedFilename.substring(lastDotIndex).toLowerCase(Locale.ROOT);
     }
 
     public boolean isUploaded(String key) {
@@ -142,8 +143,6 @@ public class UploadService {
                     .bucket(s3Properties.getBucket())
                     .object(key)
                     .expiry(24, TimeUnit.HOURS)
-                    // related to https://github.com/minio/minio-java/issues/1692
-                    .versionId("dummy")
                     .build());
         } catch (MinioException e) {
             log.error("Could not create GET presigned url for key {}", key, e);

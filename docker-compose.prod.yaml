@@ -15,8 +15,33 @@ services:
       retries: 5
       start_period: 30s
 
+  postgres:
+    image: postgres:18-alpine
+    restart: on-failure
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: format
+    volumes:
+      - postgres-data:/var/lib/postgresql
+      - ./keycloak/postgres/keycloack-schema-init.sql:/docker-entrypoint-initdb.d/keycloack-schema-init.sql
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready",
+          "-U",
+          "$$POSTGRES_USER",
+          "-d",
+          "$$POSTGRES_DB",
+        ]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+
   rustfs:
-    image: rustfs/rustfs:1.0.0-alpha.96
+    image: rustfs/rustfs:1.0.0-beta.8
     restart: on-failure
     ports:
       - "9000:9000"
@@ -24,7 +49,9 @@ services:
       RUSTFS_ACCESS_KEY: rustfsadmin
       RUSTFS_SECRET_KEY: rustfsadmin
       RUSTFS_CONSOLE_ENABLE: false
+      RUSTFS_CORS_ALLOWED_ORIGINS: http://localhost:3000
       RUSTFS_OBS_LOGGER_LEVEL: error
+      RUSTFS_ALLOW_INSECURE_DEFAULT_CREDENTIALS: true
     volumes:
       - rustfs-data:/data
     healthcheck:
@@ -37,16 +64,34 @@ services:
   keycloak:
     build:
       context: ./keycloak
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile.prod
+      args:
+        KC_DB: postgres
     restart: on-failure
     ports:
       - "7000:7000"
     environment:
-      KC_BOOTSTRAP_ADMIN_USERNAME: admin
-      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_HTTP_ENABLED: true
       KC_HOSTNAME: localhost
       KC_HTTP_PORT: 7000
-      KC_HEALTH_ENABLED: true
+      KC_DB_URL: jdbc:postgresql://postgres:5432/format
+      KC_DB_SCHEMA: keycloak
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: password
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+
+      NEXT_JS_FRONTEND_SECRET: nextjsfrontendsecret
+
+      KC_TELEMETRY_ENDPOINT: http://aspire-dashboard:18889
+      KC_TELEMETRY_HEADER_X_OTLP_API_KEY: aspiredashboardotlpsecret
+      KC_TRACING_ENABLED: true
+      KC_TRACING_SAMPLER_RATIO: 1.0
+
+      KC_FEATURE_OPENTELEMETRY_LOGS: enabled
+      KC_TELEMETRY_LOGS_ENABLED: true
+      KC_TELEMETRY_LOGS_LEVEL: warn
+      KC_LOG_LEVEL: warn
     healthcheck:
       test:
         [
@@ -57,6 +102,9 @@ services:
       timeout: 30s
       retries: 5
       start_period: 30s
+    depends_on:
+      postgres:
+        condition: service_healthy
 
   backend:
     build:
@@ -66,8 +114,14 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SPRING_PROFILES_ACTIVE: prod
       CORS_ALLOWED_ORIGINS: http://localhost:3000
+      OTEL_EXPORTER_OTLP_HEADERS: x-otlp-api-key=aspiredashboardotlpsecret
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
     depends_on:
       mongodb:
         condition: service_healthy
@@ -75,34 +129,39 @@ services:
         condition: service_healthy
       keycloak:
         condition: service_healthy
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
-      interval: 1m30s
-      timeout: 30s
-      retries: 5
-      start_period: 30s
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile.prod
-      args:
-        - S3_URL=http://rustfs:9000
     restart: on-failure
     ports:
       - "3000:3000"
     env_file:
       - ./frontend/.env.local
-    depends_on:
-      backend:
-        condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
       interval: 1m30s
       timeout: 30s
       retries: 5
       start_period: 30s
+    depends_on:
+      backend:
+        condition: service_healthy
+
+  aspire-dashboard:
+    image: mcr.microsoft.com/dotnet/aspire-dashboard:13
+    restart: on-failure
+    ports:
+      - "18888:18888"
+    environment:
+      DASHBOARD__OTLP__AUTHMODE: ApiKey
+      DASHBOARD__OTLP__PRIMARYAPIKEY: aspiredashboardotlpsecret
+      LOGGING__LOGLEVEL__DEFAULT: error
+      LOGGING__LOGLEVEL__MICROSOFT.ASPNETCORE: error
+      LOGGING__LOGLEVEL__ASPIRE.DASHBOARD.DASHBOARDWEBAPPLICATION: information
 
 volumes:
   mongodb-data:
+  postgres-data:
   rustfs-data:

@@ -29,9 +29,12 @@ import format.backend.form.validator.FormValidator;
 import format.backend.form_rating.entity.FormRatingEntity;
 import format.backend.form_rating.repository.FormRatingRepository;
 import format.backend.submission.repository.SubmissionRepository;
+import format.backend.submission.service.SubmissionsStatisticsService;
 import format.backend.upload.service.UploadService;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -81,8 +84,9 @@ public class FormService {
     private final FormRatingRepository formRatingRepository;
     private final UserService userService;
     private final UploadService uploadService;
+    private final SubmissionsStatisticsService submissionsStatisticsService;
 
-    public static final String AUTHOR_ID_FIELD = "authorId";
+    private static final String AUTHOR_ID_FIELD = "authorId";
     private static final Map<String, String> SORT_FIELDS = Stream.of(
                     "estimatedDuration", "questionsCount", "submissionsCount", "createdAt", "updatedAt")
             .collect(Collectors.toUnmodifiableMap(String::toLowerCase, Function.identity()));
@@ -184,23 +188,29 @@ public class FormService {
                 .aggregate(Aggregation.newAggregation(operations), FormEntity.class, FormListAggregationResult.class)
                 .getMappedResults();
         val content = forms.stream()
-                .map(f -> formMapper.toListResponseDto(f, uploadService.getFileUrl(f.thumbnailKey())))
+                .map(f -> formMapper.toListResponseDto(
+                        f,
+                        Optional.ofNullable(f.thumbnailKey())
+                                .map(uploadService::getFileUrl)
+                                .orElse(null)))
                 .toList();
 
         return new PageImpl<>(content, pageable, total);
     }
 
     private List<Sort.Order> getSortOrders(Pageable pageable, boolean isTextQuery) {
-        val textScoreSortOrder = isTextQuery ? Stream.of(Sort.Order.desc("score")) : Stream.<Sort.Order>empty();
-        val pageableSortOrders = pageable.getSort().stream()
-                .filter(o -> SORT_FIELDS.containsKey(o.getProperty().toLowerCase()))
-                .map(o -> new Sort.Order(
-                        o.getDirection(), SORT_FIELDS.get(o.getProperty().toLowerCase())));
-        val tieBreaker = Stream.of(Sort.Order.asc("_id"));
+        val sortOrders = new ArrayList<Sort.Order>();
 
-        return Stream.of(textScoreSortOrder, pageableSortOrders, tieBreaker)
-                .flatMap(Function.identity())
-                .toList();
+        if (isTextQuery) sortOrders.add(Sort.Order.desc("score"));
+
+        for (val order : pageable.getSort()) {
+            val field = SORT_FIELDS.get(order.getProperty().toLowerCase(Locale.ROOT));
+            if (field != null) sortOrders.add(new Sort.Order(order.getDirection(), field));
+        }
+
+        sortOrders.add(Sort.Order.asc("_id"));
+
+        return Collections.unmodifiableList(sortOrders);
     }
 
     public FormEntity findOrThrow(String idOrSlug) {
@@ -257,14 +267,19 @@ public class FormService {
 
     private FormDetailResponseDto mapToDetailResponseDto(FormEntity formEntity, @Nullable Integer userRating) {
         val questions = formEntity.getQuestions().stream()
-                .map(q -> questionMapper.toResponseDto(q, uploadService.getFileUrl(q.getImageKey())))
+                .map(q -> questionMapper.toResponseDto(
+                        q, q.getImageKey() != null ? uploadService.getFileUrl(q.getImageKey()) : null))
                 .toList();
         val authorName = Optional.ofNullable(formEntity.getAuthorId())
                 .map(authorId -> userService.findOrThrow(authorId).getUsername())
                 .orElse(null);
 
         return formMapper.toDetailResponseDto(
-                formEntity, uploadService.getFileUrl(formEntity.getThumbnailKey()), questions, authorName, userRating);
+                formEntity,
+                formEntity.getThumbnailKey() != null ? uploadService.getFileUrl(formEntity.getThumbnailKey()) : null,
+                questions,
+                authorName,
+                userRating);
     }
 
     @Transactional
@@ -280,6 +295,7 @@ public class FormService {
 
         try {
             val savedFormEntity = formRepository.save(formEntity);
+            if (savedFormEntity.getSaveSubmissions()) submissionsStatisticsService.create(savedFormEntity);
 
             val imageKeys = Stream.concat(
                             Stream.ofNullable(requestDto.thumbnailKey()),
@@ -322,6 +338,8 @@ public class FormService {
         try {
             val savedFormEntity = formRepository.save(updatedFormEntity);
             submissionRepository.deleteAllByFormId(savedFormEntity.getId());
+            if (savedFormEntity.getSaveSubmissions()) submissionsStatisticsService.reset(savedFormEntity);
+            else submissionsStatisticsService.delete(savedFormEntity.getId());
 
             val requestImageKeys = Stream.concat(
                             Stream.ofNullable(requestDto.thumbnailKey()),
@@ -368,6 +386,7 @@ public class FormService {
         commentRatingRepository.deleteAllByCommentIdIn(commentIds);
 
         submissionRepository.deleteAllByFormId(formEntity.getId());
+        submissionsStatisticsService.delete(formEntity.getId());
         formRatingRepository.deleteAllByFormId(formEntity.getId());
     }
 

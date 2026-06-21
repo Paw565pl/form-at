@@ -12,9 +12,9 @@ export const getFetchPrivateFormDetailsQueryOptions = (
     "queryKey"
   >,
 ) =>
+  // excluding password for security
+  // eslint-disable-next-line @tanstack/query/exhaustive-deps
   queryOptions<FormDetailResponseDto, AxiosError<ErrorResponseDto>>({
-    // excluding password for security
-    // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: ["forms", idOrSlug, "access"],
     queryFn: async () => {
       const { data } = await apiService.post<FormDetailResponseDto>(

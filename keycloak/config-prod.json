@@ -446,56 +446,7 @@
   "webAuthnPolicyPasswordlessAvoidSameAuthenticatorRegister": false,
   "webAuthnPolicyPasswordlessAcceptableAaguids": [],
   "webAuthnPolicyPasswordlessExtraOrigins": [],
-  "users": [
-    {
-      "id": "56ca468f-f0f2-4707-bd34-5dc139e8e07d",
-      "username": "admin",
-      "email": "admin@local.dev",
-      "emailVerified": false,
-      "enabled": true,
-      "createdTimestamp": 1761057870807,
-      "totp": false,
-      "credentials": [
-        {
-          "id": "df88b0e1-3667-4e37-ab67-e2402c3673e4",
-          "type": "password",
-          "userLabel": "My password",
-          "createdDate": 1761057885825,
-          "secretData": "{\"value\":\"hu0okdmA7jbof+/L9dEB15ZWfU5oKpbJzNbGkHwafC0=\",\"salt\":\"ujavZ0uzF/V5H5yVroS4sg==\",\"additionalParameters\":{}}",
-          "credentialData": "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
-        }
-      ],
-      "disableableCredentialTypes": [],
-      "requiredActions": [],
-      "realmRoles": ["default-roles-form-at", "admin"],
-      "notBefore": 0,
-      "groups": []
-    },
-    {
-      "id": "8075272c-48fb-46ff-aed8-946853230459",
-      "username": "test",
-      "email": "test@local.dev",
-      "emailVerified": false,
-      "enabled": true,
-      "createdTimestamp": 1761057839061,
-      "totp": false,
-      "credentials": [
-        {
-          "id": "bfea45c3-422c-4ea0-83c0-3fcc260e9197",
-          "type": "password",
-          "userLabel": "My password",
-          "createdDate": 1761057856519,
-          "secretData": "{\"value\":\"5m90tMHftyLhXJRmLwaDKXTm4Cbnwc8F4oPxke72Q18=\",\"salt\":\"ThRbbb1gZ8d4niH0BH+qBA==\",\"additionalParameters\":{}}",
-          "credentialData": "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
-        }
-      ],
-      "disableableCredentialTypes": [],
-      "requiredActions": [],
-      "realmRoles": ["default-roles-form-at"],
-      "notBefore": 0,
-      "groups": []
-    }
-  ],
+  "users": [],
   "scopeMappings": [
     {
       "clientScope": "offline_access",
@@ -711,7 +662,7 @@
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "secret": "nextjsfrontendsecret",
+      "secret": "${NEXT_JS_FRONTEND_SECRET}",
       "redirectUris": ["http://localhost:3000/api/auth/callback/keycloak"],
       "webOrigins": ["http://localhost:3000"],
       "notBefore": 0,

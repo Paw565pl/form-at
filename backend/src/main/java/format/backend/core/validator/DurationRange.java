@@ -27,10 +27,10 @@ public @interface DurationRange {
 
     Class<? extends Payload>[] payload() default {};
 
-    /** @return minimum duration value in ISO 8601 format, e.g. "PT1S" for 1 second */
+    /** Returns minimum duration value in ISO 8601 format, e.g. "PT1S" for 1 second */
     String min() default "PT0S";
 
-    /** @return maximum duration value in ISO 8601 format, e.g. "PT1S" for 1 second */
+    /** Returns maximum duration value in ISO 8601 format, e.g. "PT1S" for 1 second */
     String max() default "P100Y";
 }
 

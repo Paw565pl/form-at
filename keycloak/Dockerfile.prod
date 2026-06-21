@@ -1,0 +1,39 @@
+FROM node:24-alpine AS theme-builder
+
+WORKDIR /theme
+
+ENV CI=true
+
+RUN apk add --no-cache maven && \
+    corepack enable pnpm
+
+COPY keycloak-theme/ .
+RUN pnpm install --frozen-lockfile && \
+    pnpm build-keycloak-theme
+
+FROM quay.io/keycloak/keycloak:26.6 AS base
+
+FROM base AS builder
+
+ARG KC_DB
+ENV KC_DB=${KC_DB}
+
+ENV KC_HEALTH_ENABLED=true
+ENV KC_METRICS_ENABLED=true
+ENV KC_TRACING_ENABLED=true
+ENV KC_FEATURE_OPENTELEMETRY_LOGS=enabled
+ENV KC_TELEMETRY_LOGS_ENABLED=true
+
+COPY --from=theme-builder /theme/dist_keycloak/theme.jar /opt/keycloak/providers/
+
+COPY config-prod.json /opt/keycloak/data/import/
+
+RUN /opt/keycloak/bin/kc.sh build
+
+FROM base AS runner
+
+COPY --from=builder /opt/keycloak/ /opt/keycloak/
+
+ENTRYPOINT [ "/opt/keycloak/bin/kc.sh" ]
+
+CMD [ "start", "--optimized", "--import-realm" ]

@@ -2,12 +2,11 @@ import com.diffplug.spotless.LineEnding
 
 plugins {
     java
-    idea
-    id("org.springframework.boot") version "4.0.5"
-    id("org.springframework.boot.aot") version "4.0.5" apply false
+    id("org.springframework.boot") version "4.1.0"
+    id("org.springframework.boot.aot") version "4.1.0" apply false
     id("io.spring.dependency-management") version "1.1.7"
     id("se.solrike.sonarlint") version "2.2.0"
-    id("com.diffplug.spotless") version "8.4.0"
+    id("com.diffplug.spotless") version "8.6.0"
 }
 
 if (project.hasProperty("aot")) {
@@ -15,21 +14,12 @@ if (project.hasProperty("aot")) {
 }
 
 group = "format"
+
 version = "0.0.1"
+
 description = "backend"
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(25)
-    }
-}
-
-idea {
-    module {
-        isDownloadJavadoc = true
-        isDownloadSources = true
-    }
-}
+java { toolchain { languageVersion = JavaLanguageVersion.of(25) } }
 
 spotless {
     encoding = Charsets.UTF_8
@@ -40,14 +30,16 @@ spotless {
         removeUnusedImports()
         forbidWildcardImports()
         cleanthat()
-        palantirJavaFormat("2.90.0").formatJavadoc(true)
+        palantirJavaFormat("2.92.0").formatJavadoc(true)
         trimTrailingWhitespace()
         leadingTabsToSpaces()
         endWithNewline()
         formatAnnotations()
     }
 
-    val prettierVersion = "3.8.3"
+    kotlinGradle { ktfmt().kotlinlangStyle() }
+
+    val prettierVersion = "3.8.4"
 
     yaml {
         target("src/**/*.yaml")
@@ -60,19 +52,14 @@ spotless {
     }
 }
 
-configurations {
-    compileOnly {
-        extendsFrom(configurations.annotationProcessor.get())
-    }
-}
+configurations { compileOnly { extendsFrom(configurations.annotationProcessor.get()) } }
 
-repositories {
-    mavenCentral()
-}
+repositories { mavenCentral() }
 
+val otelLogbackAppenderVersion = "2.28.1-alpha"
 val mapstructVersion = "1.6.3"
 val slugifyVersion = "3.0.7"
-val minioSdkVersion = "9.0.0"
+val minioSdkVersion = "9.0.1"
 val linguaVersion = "1.2.2"
 val restAssuredVersion = "6.0.0"
 val dataFakerVersion = "2.5.4"
@@ -81,6 +68,10 @@ val sonarJavaVersion = "8.9.4.40912"
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("org.springframework.boot:spring-boot-starter-opentelemetry")
+    implementation(
+        "io.opentelemetry.instrumentation:opentelemetry-logback-appender-1.0:$otelLogbackAppenderVersion"
+    )
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-security-oauth2-resource-server")
     implementation("org.springframework.boot:spring-boot-starter-validation")
@@ -96,8 +87,11 @@ dependencies {
     annotationProcessor("org.mapstruct:mapstruct-processor:$mapstructVersion")
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
     testImplementation("org.springframework.boot:spring-boot-starter-actuator-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-opentelemetry-test")
     testImplementation("org.springframework.boot:spring-boot-starter-security-test")
-    testImplementation("org.springframework.boot:spring-boot-starter-security-oauth2-resource-server-test")
+    testImplementation(
+        "org.springframework.boot:spring-boot-starter-security-oauth2-resource-server-test"
+    )
     testImplementation("org.springframework.boot:spring-boot-starter-validation-test")
     testImplementation("org.springframework.boot:spring-boot-starter-data-mongodb-test")
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
@@ -119,11 +113,9 @@ tasks.withType<JavaCompile> {
             "-Xlint:fallthrough",
             "-Xlint:try",
             "-Xlint:finally",
-            "-Werror"
+            "-Werror",
         )
     )
 }
 
-tasks.withType<Test> {
-    useJUnitPlatform()
-}
+tasks.withType<Test> { useJUnitPlatform() }

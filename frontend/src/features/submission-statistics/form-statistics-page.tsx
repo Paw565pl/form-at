@@ -6,7 +6,7 @@ import {
   prefetchFormDetails,
 } from "@/features/form-details/hooks/use-fetch-form-details";
 import { Statistics } from "@/features/submission-statistics/components/statistics";
-import { prefetchFormStatistics } from "@/features/submission-statistics/hooks/use-fetch-form-statistics";
+import { prefetchFormSubmissionsStatistics } from "@/features/submission-statistics/hooks/use-fetch-form-submissions-statistics";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { notFound } from "next/navigation";
 
@@ -19,7 +19,7 @@ export const FormStatisticsPage = async ({
   const queryClient = getQueryClient();
   await Promise.all([
     prefetchFormDetails(queryClient, slug),
-    prefetchFormStatistics(queryClient, slug),
+    prefetchFormSubmissionsStatistics(queryClient, slug),
   ]);
 
   const formDetails = queryClient.getQueryData(
