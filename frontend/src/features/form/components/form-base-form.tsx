@@ -33,6 +33,7 @@ import { VALID_IMAGE_TYPES } from "@/features/form/constants/image";
 import { getFormSchema } from "@/features/form/schemas/form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
+import { useNavigationGuard } from "next-navigation-guard";
 import Image from "next/image";
 import { ComponentType, useEffect, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
@@ -114,6 +115,11 @@ export const FormBaseForm = ({
   useEffect(() => {
     if (Object.keys(form.formState.errors).length > 0) form.trigger();
   }, [form, t]);
+
+  useNavigationGuard({
+    enabled: form.formState.isDirty && !isPending,
+    confirm: () => window.confirm("bajojajo bajojajo"),
+  });
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const watchedThumbnail = form.watch("thumbnail");
