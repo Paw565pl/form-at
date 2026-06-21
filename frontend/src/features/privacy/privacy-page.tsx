@@ -1,15 +1,12 @@
 import { Card } from "@/core/components/ui/card";
-import { getFormatter, getMessages, getTranslations } from "next-intl/server";
+import { getFormatter, getTranslations } from "next-intl/server";
 
 const LAST_UPDATED_DATE = new Date("2026-06-21");
 
 export const PrivacyPage = async () => {
   const t = await getTranslations("privacyPage");
   const format = await getFormatter();
-  const messages = await getMessages();
-  const sections = Object.keys(messages.privacyPage.policy)
-    .filter((key) => key.startsWith("header"))
-    .map((key) => Number(key.replace("header", "")));
+  const sections = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
   return (
     <section id="privacy" className="px-5 py-10 lg:px-30">
@@ -25,7 +22,7 @@ export const PrivacyPage = async () => {
           return (
             <div key={i} className="flex flex-col gap-1">
               <h2 className="text-muted-foreground">
-                {i + 1}. {t(`policy.header${i}`)}
+                {i}. {t(`policy.header${i}`)}
               </h2>
               <p>{t(`policy.content${i}`)}</p>
             </div>
