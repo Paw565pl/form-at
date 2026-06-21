@@ -6,7 +6,7 @@ const LAST_UPDATED_DATE = new Date("2026-06-21");
 export const PrivacyPage = async () => {
   const t = await getTranslations("privacyPage");
   const format = await getFormatter();
-  const sections = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const sections = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const;
 
   return (
     <section id="privacy" className="px-5 py-10 lg:px-30">
