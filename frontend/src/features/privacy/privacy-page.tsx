@@ -7,6 +7,10 @@ export const PrivacyPage = async () => {
   const t = await getTranslations("privacyPage");
   const format = await getFormatter();
   const messages = await getMessages();
+  const sections = Object.keys(messages.privacyPage.policy)
+    .filter((key) => key.startsWith("header"))
+    .map((key) => Number(key.replace("header", "")));
+
   return (
     <section id="privacy" className="px-5 py-10 lg:px-30">
       <Card className="flex w-full flex-col justify-between gap-4 p-4">
@@ -17,15 +21,13 @@ export const PrivacyPage = async () => {
           </span>
         </div>
 
-        {Array.from({
-          length: Object.keys(messages.privacyPage.policy).length / 2,
-        }).map((_, i) => {
+        {sections.map((i) => {
           return (
             <div key={i} className="flex flex-col gap-1">
               <h2 className="text-muted-foreground">
-                {i + 1}. {t(`policy.header${i + 1}`)}
+                {i + 1}. {t(`policy.header${i}`)}
               </h2>
-              <p>{t(`policy.content${i + 1}`)}</p>
+              <p>{t(`policy.content${i}`)}</p>
             </div>
           );
         })}
