@@ -8,7 +8,7 @@ export const Footer = async () => {
   const repoUrl = "https://github.com/Paw565pl/form-at";
 
   return (
-    <footer className="bg-background flex w-full flex-col items-center justify-center gap-1 sm:gap-2 p-2 sm:flex-row">
+    <footer className="bg-background flex w-full flex-col items-center justify-center gap-1 p-2 sm:flex-row sm:gap-2">
       <span className="text-muted-foreground px-3 text-sm">
         &copy; {currentYear} formAT
       </span>

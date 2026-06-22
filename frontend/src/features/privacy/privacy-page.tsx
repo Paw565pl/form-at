@@ -1,12 +1,23 @@
 import { Card } from "@/core/components/ui/card";
 import { getFormatter, getTranslations } from "next-intl/server";
 
-const LAST_UPDATED_DATE = new Date("2026-06-21");
+const LAST_UPDATED_DATE = new Date(2026, 6, 22);
 
 export const PrivacyPage = async () => {
   const t = await getTranslations("privacyPage");
   const format = await getFormatter();
-  const sections = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const;
+  const sections = [
+    "introduction",
+    "collection",
+    "processing",
+    "sharing",
+    "cookies",
+    "retention",
+    "security",
+    "rights",
+    "access",
+    "updates",
+  ] as const;
 
   return (
     <section id="privacy" className="px-5 py-10 lg:px-30">
@@ -18,13 +29,13 @@ export const PrivacyPage = async () => {
           </span>
         </div>
 
-        {sections.map((i) => {
+        {sections.map((section, i) => {
           return (
-            <div key={i} className="flex flex-col gap-1">
+            <div key={section} className="flex flex-col gap-1">
               <h2 className="text-muted-foreground">
-                {i}. {t(`policy.header${i}`)}
+                {i + 1}. {t(`policy.${section}.header`)}
               </h2>
-              <p>{t(`policy.content${i}`)}</p>
+              <p>{t(`policy.${section}.content`)}</p>
             </div>
           );
         })}
