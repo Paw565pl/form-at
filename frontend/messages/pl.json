@@ -53,7 +53,7 @@
   },
   "footer": {
     "privacy": "Polityka prywatności",
-    "GitHub": "GitHub"
+    "github": "GitHub"
   },
   "formListPage": {
     "title": "Wyświetlanie {count, plural, one {# formularza} other {# formularzy}}",

@@ -53,7 +53,7 @@
   },
   "footer": {
     "privacy": "Privacy",
-    "GitHub": "GitHub"
+    "github": "GitHub"
   },
   "formListPage": {
     "title": "Showing {count, plural, one {# form} other {# forms}}",

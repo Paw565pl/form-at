@@ -19,7 +19,7 @@ export const Footer = async () => {
 
       <Button size="sm" asChild variant="link">
         <Link href={repoUrl} target="_blank" rel="noopener noreferrer">
-          {t("GitHub")}
+          {t("github")}
         </Link>
       </Button>
     </footer>
