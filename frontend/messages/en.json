@@ -343,7 +343,7 @@
       },
       "collection": {
         "header": "What information do we collect?",
-        "content": "We collect information about you in various ways when you use our services. We collect personal information you provide to us. For example, we collect your email address, username, and password when you create an account. We also collect information about your use of our services. For example, we collect information about the forms you create, the forms you submit, and how you interact with our services."
+        "content": "We collect information about you in various ways when you use our services. We collect personal information you provide to us. For example, we collect your email address and username when you create an account. We also collect information about your use of our services. For example, we collect information about the forms you create, the forms you submit, and how you interact with our services."
       },
       "processing": {
         "header": "How do we process your information?",
@@ -351,7 +351,7 @@
       },
       "sharing": {
         "header": "When and with whom do we share your personal information?",
-        "content": "We may need to share your personal information when you interact with public areas of the platform. Such personal information may be viewed by all users and may be publicly made available outside the services in perpetuity. Similarly, other users will be able to view your activity and view your profile. The personal information we share may include: usernames. We do not share your personal information with third parties."
+        "content": "We may need to share your personal information when you interact with public areas of the platform. Such personal information may be viewed by all users and may be publicly made available outside the services in perpetuity. Similarly, other users will be able to view your activity and view your profile. The personal information we share may include: usernames."
       },
       "cookies": {
         "header": "Do we use cookies and other tracking technologies?",

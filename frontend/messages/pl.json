@@ -343,7 +343,7 @@
       },
       "collection": {
         "header": "Jakie dane zbieramy?",
-        "content": "Zbieramy tylko dane osobowe, które nam przekazujesz korzystając z naszych usług. Na przykład, przechowujemy Twój adres e-mail, nazwę użytkownika i hasło, które podajesz podczas rejestracji konta. Zbieramy również dane, które udostępniasz w ramach korzystania z naszych usług. Na przykład, przechowujemy dane, które podajesz w formularzach, ankietach i innych interaktywnych funkcjach naszej platformy."
+        "content": "Zbieramy tylko dane osobowe, które nam przekazujesz korzystając z naszych usług. Na przykład, przechowujemy Twój adres e-mail, nazwę użytkownika, które podajesz podczas rejestracji konta. Zbieramy również dane, które udostępniasz w ramach korzystania z naszych usług. Na przykład, przechowujemy dane, które podajesz w formularzach, ankietach i innych interaktywnych funkcjach naszej platformy."
       },
       "processing": {
         "header": "W jaki sposób wykorzystujemy Twoje dane?",
@@ -351,7 +351,7 @@
       },
       "sharing": {
         "header": "Kiedy i komu udostępniamy Twoje dane?",
-        "content": "Możemy udostępniać Twoje dane osobowe, gdy używasz publicznych funkcji platformy. Takie informacje mogą być widoczne dla wszystkich użytkowników i mogą zostać udostępnione poza naszą platformą. Inni użytkownicy będą mogli zobaczyć Twoją aktywność oraz profil użytkownika. Udostępniane dane mogą obejmować: nazwy użytkowników. Nie udostępniamy Twoich danych osobowych stronom trzecim."
+        "content": "Możemy udostępniać Twoje dane osobowe, gdy używasz publicznych funkcji platformy. Takie informacje mogą być widoczne dla wszystkich użytkowników i mogą zostać udostępnione poza naszą platformą. Inni użytkownicy będą mogli zobaczyć Twoją aktywność oraz profil użytkownika. Udostępniane dane mogą obejmować: nazwy użytkowników."
       },
       "cookies": {
         "header": "Czy korzystamy z ciasteczek i innych technologii śledzących?",
