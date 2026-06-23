@@ -270,6 +270,12 @@
   "components": {
     "scrollToTopButton": {
       "ariaLabel": "Scroll to the top of the page"
+    },
+    "leavePageDialog": {
+      "title": "Are you sure you want to leave this page?",
+      "description": "Any unsaved changes will be lost.",
+      "cancel": "Cancel",
+      "leave": "Leave"
     }
   },
   "userProfilePage": {

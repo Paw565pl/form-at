@@ -1,5 +1,6 @@
 "use client";
 
+import { LeavePageAlertDialog } from "@/core/components/leave-page-alert-dialog/leave-page-alert-dialog";
 import { Button } from "@/core/components/ui/button";
 import { Card } from "@/core/components/ui/card";
 import { Checkbox } from "@/core/components/ui/checkbox";
@@ -116,9 +117,8 @@ export const FormBaseForm = ({
     if (Object.keys(form.formState.errors).length > 0) form.trigger();
   }, [form, t]);
 
-  useNavigationGuard({
-    enabled: form.formState.isDirty && !isPending,
-    confirm: () => window.confirm("bajojajo bajojajo"),
+  const navGuard = useNavigationGuard({
+    enabled: Object.keys(form.formState.touchedFields).length > 0 && !isPending,
   });
 
   // eslint-disable-next-line react-hooks/incompatible-library
@@ -1013,6 +1013,8 @@ export const FormBaseForm = ({
           onDialogOpen={(onFormValid) => form.handleSubmit(onFormValid)()}
         />
       </form>
+
+      <LeavePageAlertDialog navGuard={navGuard} />
     </section>
   );
 };

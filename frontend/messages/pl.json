@@ -270,6 +270,12 @@
   "components": {
     "scrollToTopButton": {
       "ariaLabel": "Przewiń na górę strony"
+    },
+    "leavePageDialog": {
+      "title": "Czy na pewno chcesz opuścić tę stronę?",
+      "description": "Wszystkie niezapisane zmiany zostaną utracone.",
+      "cancel": "Anuluj",
+      "leave": "Opuść"
     }
   },
   "userProfilePage": {
