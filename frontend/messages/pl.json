@@ -51,6 +51,10 @@
     "languageSwitcher": "Zmień język",
     "openMobileMenu": "Otwórz menu"
   },
+  "footer": {
+    "privacy": "Polityka prywatności",
+    "github": "GitHub"
+  },
   "formListPage": {
     "title": "Wyświetlanie {count, plural, one {# formularza} other {# formularzy}}",
     "options": {
@@ -328,5 +332,51 @@
     "viewSubmissions": "Odpowiedzi formularza",
     "noOpenQuestions": "Pytania otwarte nie są wyświetlane.",
     "answerCount": "{count, plural, one {# odpowiedź} other {# odpowiedzi}}"
+  },
+  "privacyPage": {
+    "title": "Polityka Prywatności",
+    "lastUpdated": "Ostatnia aktualizacja",
+    "policy": {
+      "introduction": {
+        "header": "Wprowadzenie",
+        "content": "Ta polityka prywatności dla formAT opisuje, w jaki sposób i dlaczego zbieramy, przechowujemy i przetwarzamy Twoje dane osobowe podczas korzystania z naszych usług. Zapoznanie się z tym dokumentem pomoże Ci zrozumieć swoje prawa dotyczące prywatności i jak możesz je egzekwować. Jeżeli nie wyrażasz zgody na przetwarzanie Twoich danych osobowych w sposób opisany w niniejszej polityce prywatności, prosimy o niekorzystanie z naszych usług. Jeżeli masz jakiekolwiek pytania dotyczące tej polityki prywatności lub praktyk stosowanych przez naszą platformę, prosimy o kontakt pod adresem format-support@gmail.com."
+      },
+      "collection": {
+        "header": "Jakie dane zbieramy?",
+        "content": "Zbieramy tylko dane osobowe, które nam przekazujesz korzystając z naszych usług. Na przykład, przechowujemy Twój adres e-mail, nazwę użytkownika, które podajesz podczas rejestracji konta. Zbieramy również dane, które udostępniasz w ramach korzystania z naszych usług. Na przykład, przechowujemy dane, które podajesz w formularzach, ankietach i innych interaktywnych funkcjach naszej platformy."
+      },
+      "processing": {
+        "header": "W jaki sposób wykorzystujemy Twoje dane?",
+        "content": "Wykorzystujemy Twoje dane do świadczenia, poprawiania i zarządzania naszymi usługami, komunikacji z Tobą, a także w celach bezpieczeństwa lub innych celów w ramach Twojej zgody. Używamy Twoich danych do ułatwienia tworzenia kont i uwierzytelniania oraz zarządzania kontami użytkowników. Możemy przetwarzać Twoje dane, abyś mógł tworzyć i logować się na swoje konto, a także utrzymywać je w działającym stanie."
+      },
+      "sharing": {
+        "header": "Kiedy i komu udostępniamy Twoje dane?",
+        "content": "Możemy udostępniać Twoje dane osobowe, gdy używasz publicznych funkcji platformy. Takie informacje mogą być widoczne dla wszystkich użytkowników i mogą zostać udostępnione poza naszą platformą. Inni użytkownicy będą mogli zobaczyć Twoją aktywność oraz profil użytkownika. Udostępniane dane mogą obejmować: nazwy użytkowników."
+      },
+      "cookies": {
+        "header": "Czy korzystamy z plików cookie i innych technologii śledzących?",
+        "content": "Korzystamy z plików cookie tylko w zakresie niezbędnym do prawidłowego funkcjonowania naszej platformy, w tym do uwierzytelniania użytkowników i zarządzania sesjami. Nie używamy plików cookie ani innych technologii śledzących do celów reklamowych."
+      },
+      "retention": {
+        "header": "Jak długo przechowujemy Twoje dane?",
+        "content": "Będziemy przechowywać Twoje dane osobowe tylko tak długo, jak jest to konieczne dla celów określonych w niniejszej polityce prywatności. Żaden z celów wskazanych w tej informacji nie wymaga od nas przechowywania Twoich danych osobowych dłużej niż okres, w którym użytkownicy posiadają konto u nas. Gdy nie będziemy już potrzebować przetwarzać Twoich danych osobowych, usuniemy je lub zanonimizujemy, a jeśli nie będzie to możliwe (np. ponieważ Twoje dane zostały zapisane w kopii zapasowej), przechowamy je bezpiecznie i odizolujemy od dalszego przetwarzania aż do czasu, gdy będzie możliwe ich usunięcie."
+      },
+      "security": {
+        "header": "W jaki sposób chronimy Twoje dane?",
+        "content": "Wdrożyliśmy odpowiednie i rozsądne techniczne oraz organizacyjne środki bezpieczeństwa mające na celu ochronę przetwarzanych przez nas danych osobowych. Jednak pomimo naszych zabezpieczeń i wysiłków żaden przesył elektroniczny przez Internet ani technologia przechowywania informacji nie gwarantuje 100% bezpieczeństwa, dlatego nie możemy obiecać ani zagwarantować, że hakerzy, cyberprzestępcy lub inne nieuprawnione podmioty nie będą w stanie obejść naszych zabezpieczeń i bezprawnie pozyskać, ocenić, ukraść lub zmodyfikować Twoich informacji. Chociaż dołożymy wszelkich starań, aby chronić Twoje dane osobowe, przesyłanie danych osobowych do i z naszych usług odbywa się na Twoje ryzyko. Korzystaj z platformy tylko w bezpiecznym środowisku."
+      },
+      "rights": {
+        "header": "Jakie prawa Ci przysługują?",
+        "content": "Opieramy się na Twojej zgodzie przy przetwarzaniu danych osobowych — może być ona wyrażona w sposób jednoznaczny lub domniemany. Masz prawo wycofać zgodę w dowolnym momencie, kontaktując się z nami pod adresem format-support@gmail.com. Na Twoje żądanie dezaktywujemy lub usuniemy Twoje konto oraz związane z nim dane z naszych aktywnych baz danych. Większość przeglądarek domyślnie akceptuje pliki cookie. Jeśli wolisz, zwykle możesz ustawić przeglądarkę tak, aby usuwała lub odrzucała pliki cookie. Wybranie takiej opcji może wpłynąć na działanie niektórych funkcji lub usług platformy."
+      },
+      "access": {
+        "header": "W jaki sposób możesz przeglądać, aktualizować lub usuwać dane, które od Ciebie zbieramy?",
+        "content": "Masz prawo zażądać dostępu do swoich danych osobowych, które od Ciebie zbieramy, uzyskać informacje o tym, jak je przetwarzamy, poprawić nieścisłości lub usunąć swoje dane osobowe. Możesz także mieć prawo wycofać zgodę na przetwarzanie swoich danych osobowych. Aby zażądać przeglądu, aktualizacji lub usunięcia swoich danych osobowych, skontaktuj się z nami pod adresem format-support@gmail.com."
+      },
+      "updates": {
+        "header": "Czy zamierzamy aktualizować tę politykę prywatności?",
+        "content": "Możemy od czasu do czasu aktualizować tę politykę prywatności. Zmiany będą oznaczone zaktualizowaną datą na początku tej polityki prywatności. Zachęcamy do regularnego przeglądania tej polityki, aby być poinformowanym o tym, jak chronimy Twoje dane."
+      }
+    }
   }
 }
