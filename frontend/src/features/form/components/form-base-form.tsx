@@ -1,5 +1,6 @@
 "use client";
 
+import { LeavePageAlertDialog } from "@/core/components/leave-page-alert-dialog/leave-page-alert-dialog";
 import { Button } from "@/core/components/ui/button";
 import { Card } from "@/core/components/ui/card";
 import { Checkbox } from "@/core/components/ui/checkbox";
@@ -33,6 +34,7 @@ import { VALID_IMAGE_TYPES } from "@/features/form/constants/image";
 import { getFormSchema } from "@/features/form/schemas/form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
+import { useNavigationGuard } from "next-navigation-guard";
 import Image from "next/image";
 import { ComponentType, useEffect, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
@@ -114,6 +116,10 @@ export const FormBaseForm = ({
   useEffect(() => {
     if (Object.keys(form.formState.errors).length > 0) form.trigger();
   }, [form, t]);
+
+  const navGuard = useNavigationGuard({
+    enabled: Object.keys(form.formState.touchedFields).length > 0 && !isPending,
+  });
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const watchedThumbnail = form.watch("thumbnail");
@@ -1007,6 +1013,8 @@ export const FormBaseForm = ({
           onDialogOpen={(onFormValid) => form.handleSubmit(onFormValid)()}
         />
       </form>
+
+      <LeavePageAlertDialog navGuard={navGuard} />
     </section>
   );
 };

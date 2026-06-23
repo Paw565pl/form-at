@@ -1,5 +1,6 @@
 "use client";
 
+import { LeavePageAlertDialog } from "@/core/components/leave-page-alert-dialog/leave-page-alert-dialog";
 import { Button } from "@/core/components/ui/button";
 import { Card } from "@/core/components/ui/card";
 import { Checkbox } from "@/core/components/ui/checkbox";
@@ -26,6 +27,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { HttpStatusCode } from "axios";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
+import { useNavigationGuard } from "next-navigation-guard";
 import { useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -87,6 +89,10 @@ export const Submission = ({ formDetails }: SubmissionProps) => {
   useEffect(() => {
     if (Object.keys(form.formState.errors).length > 0) form.trigger();
   }, [form, t]);
+
+  const navGuard = useNavigationGuard({
+    enabled: form.formState.isDirty && !createSubmission.isSuccess,
+  });
 
   if (isLoading) return <SubmissionCreateLoading />;
 
@@ -338,6 +344,8 @@ export const Submission = ({ formDetails }: SubmissionProps) => {
           />
         </section>
       )}
+
+      <LeavePageAlertDialog navGuard={navGuard} />
     </section>
   );
 };
