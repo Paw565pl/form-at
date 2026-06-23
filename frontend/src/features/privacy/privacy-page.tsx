@@ -1,7 +1,7 @@
 import { Card } from "@/core/components/ui/card";
 import { getFormatter, getTranslations } from "next-intl/server";
 
-const LAST_UPDATED_DATE = new Date(2026, 6, 22);
+const LAST_UPDATED_DATE = new Date(2026, 5, 22);
 
 export const PrivacyPage = async () => {
   const t = await getTranslations("privacyPage");
