@@ -35,3 +35,9 @@ s3:
   access-key: rustfsadmin
   secret-key: rustfsadmin
   bucket: uploads
+
+management:
+  otlp:
+    metrics:
+      export:
+        enabled: false
