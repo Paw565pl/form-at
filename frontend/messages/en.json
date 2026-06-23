@@ -355,7 +355,7 @@
       },
       "cookies": {
         "header": "Do we use cookies and other tracking technologies?",
-        "content": "We may use cookies and similar tracking technologies to gather information when you interact with our services. Some online tracking technologies help us maintain the security of your services and your account, fix bugs, save your preferences and assist with basic platform functions."
+        "content": "We only use cookies as necessary for the proper functioning of our platform, including user authentication and session management. We do not use cookies or other tracking technologies for advertising purposes."
       },
       "retention": {
         "header": "How long do we keep your information?",

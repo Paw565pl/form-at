@@ -29,16 +29,14 @@ export const PrivacyPage = async () => {
           </span>
         </div>
 
-        {sections.map((section, i) => {
-          return (
-            <div key={section} className="flex flex-col gap-1">
-              <h2 className="text-muted-foreground">
-                {i + 1}. {t(`policy.${section}.header`)}
-              </h2>
-              <p>{t(`policy.${section}.content`)}</p>
-            </div>
-          );
-        })}
+        {sections.map((section, i) => (
+          <div key={section} className="flex flex-col gap-1">
+            <h2 className="text-muted-foreground">
+              {i + 1}. {t(`policy.${section}.header`)}
+            </h2>
+            <p>{t(`policy.${section}.content`)}</p>
+          </div>
+        ))}
       </Card>
     </section>
   );

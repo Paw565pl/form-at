@@ -354,8 +354,8 @@
         "content": "Możemy udostępniać Twoje dane osobowe, gdy używasz publicznych funkcji platformy. Takie informacje mogą być widoczne dla wszystkich użytkowników i mogą zostać udostępnione poza naszą platformą. Inni użytkownicy będą mogli zobaczyć Twoją aktywność oraz profil użytkownika. Udostępniane dane mogą obejmować: nazwy użytkowników."
       },
       "cookies": {
-        "header": "Czy korzystamy z ciasteczek i innych technologii śledzących?",
-        "content": "Możemy korzystać z ciasteczek i podobnych technologii śledzących w celu gromadzenia danych, gdy korzystasz z naszych usług. Niektóre technologie śledzące pomagają nam utrzymać bezpieczeństwo Twoich usług i konta, naprawiać błędy, zapisywać Twoje preferencje i wspierać podstawowe funkcje platformy."
+        "header": "Czy korzystamy z plików cookie i innych technologii śledzących?",
+        "content": "Korzystamy z plików cookie tylko w zakresie niezbędnym do prawidłowego funkcjonowania naszej platformy, w tym do uwierzytelniania użytkowników i zarządzania sesjami. Nie używamy plików cookie ani innych technologii śledzących do celów reklamowych."
       },
       "retention": {
         "header": "Jak długo przechowujemy Twoje dane?",
