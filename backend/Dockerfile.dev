@@ -5,7 +5,9 @@ WORKDIR /app
 COPY gradle gradle
 COPY gradlew build.gradle.kts settings.gradle.kts ./
 
-RUN chmod u+x ./gradlew && ./gradlew dependencies --no-daemon
+RUN --mount=type=cache,target=/home/gradle/.gradle \ 
+    chmod u+x ./gradlew && \
+    ./gradlew dependencies --no-daemon
 
 COPY . .
 

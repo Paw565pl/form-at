@@ -9,7 +9,9 @@ RUN apk add --no-cache maven && \
     corepack enable pnpm
 
 COPY keycloak-theme/ .
-RUN pnpm install --frozen-lockfile && \
+
+RUN --mount=type=cache,target=/root/.local/share/pnpm/store \
+    pnpm install --frozen-lockfile && \
     pnpm build-keycloak-theme
 
 FROM quay.io/keycloak/keycloak:26.6
