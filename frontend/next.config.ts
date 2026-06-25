@@ -7,7 +7,7 @@ const getS3RemotePattern = (): RemotePattern => {
   if (!serverEnv.S3_URL) return { hostname: "localhost" };
 
   const url = new URL(serverEnv.S3_URL);
-  url.pathname = "/**";
+  url.pathname += "/**";
 
   return {
     protocol: url.protocol.replace(":", "") as "http" | "https",
