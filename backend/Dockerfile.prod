@@ -7,7 +7,9 @@ WORKDIR /app
 COPY gradle gradle
 COPY gradlew build.gradle.kts settings.gradle.kts ./
 
-RUN chmod u+x ./gradlew && ./gradlew dependencies --no-daemon
+RUN --mount=type=cache,target=/home/gradle/.gradle \ 
+    chmod u+x ./gradlew && \
+    ./gradlew dependencies --no-daemon
 
 COPY . .
 
@@ -34,4 +36,4 @@ USER spring
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-XX:+UseZGC", "-XX:+UseCompactObjectHeaders", "-Dspring.aot.enabled=true", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-XX:+UseCompactObjectHeaders", "-Dspring.aot.enabled=true", "-jar", "app.jar"]

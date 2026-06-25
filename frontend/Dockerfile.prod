@@ -1,66 +1,70 @@
-FROM node:24-alpine AS base
+FROM platformatic/node-caged:26-alpine AS base
 
-# Install dependencies only when needed
 FROM base AS deps
 
 WORKDIR /app
 
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache libc6-compat && \
+  npm install -g corepack
 
-# Install dependencies based on the preferred package manager
+# Copy package-related files first to leverage Docker's caching mechanism
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* pnpm-workspace.yaml .npmrc* ./
-RUN \
-    if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
-    elif [ -f package-lock.json ]; then npm ci; \
-    elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i --frozen-lockfile; \
-    else echo "Lockfile not found." && exit 1; \
-    fi
 
-# Rebuild the source code only when needed
+# Install project dependencies with frozen lockfile for reproducible builds
+RUN --mount=type=cache,target=/root/.npm \
+  --mount=type=cache,target=/usr/local/share/.cache/yarn \
+  --mount=type=cache,target=/root/.local/share/pnpm/store \
+  if [ -f package-lock.json ]; then npm ci --no-audit --no-fund; \
+  elif [ -f yarn.lock ]; then corepack enable yarn && yarn install --frozen-lockfile --production=false; \
+  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm install --frozen-lockfile; \
+  else echo "Lockfile not found." && exit 1; \
+  fi
+
 FROM base AS builder
+
+ARG S3_URL
+ENV S3_URL=$S3_URL
+
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV CI=1
 
 WORKDIR /app
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-ENV NEXT_TELEMETRY_DISABLED=1
-ENV CI=1
+RUN npm install -g corepack
 
-RUN \
-    if [ -f yarn.lock ]; then yarn run build; \
-    elif [ -f package-lock.json ]; then npm run build; \
-    elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build; \
-    else echo "Lockfile not found." && exit 1; \
-    fi
+# Build Next.js application
+RUN --mount=type=cache,target=/app/.next/cache \
+  if [ -f package-lock.json ]; then npm run build; \
+  elif [ -f yarn.lock ]; then corepack enable yarn && yarn build; \
+  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm build; \
+  else echo "Lockfile not found." && exit 1; \
+  fi
 
-# Production image, copy all the files and run next
 FROM base AS runner
 
 WORKDIR /app
 
-ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_ENV=production
+ENV HOSTNAME="0.0.0.0"
+ENV PORT=3000
 
-RUN addgroup --system --gid 1001 nodejs && \
-    adduser --system --uid 1001 nextjs && \
-    apk add --no-cache curl
-
-COPY --from=builder --chown=nextjs /app/public ./public
+RUN addgroup --system --gid 1001 nextjs && \
+  adduser --system --uid 1001 nextjs && \
+  apk add --no-cache curl
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs /app/public ./public
+COPY --from=builder --chown=nextjs:nextjs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nextjs /app/.next/static ./.next/static
 
 USER nextjs
 
 EXPOSE 3000
 
-ENV HOSTNAME="0.0.0.0"
-ENV PORT=3000
-
-# server.js is created by next build from the standalone output
-# https://nextjs.org/docs/pages/api-reference/config/next-config-js/output
 CMD ["node", "server.js"]
