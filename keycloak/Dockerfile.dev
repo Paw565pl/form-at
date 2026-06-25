@@ -5,6 +5,7 @@ WORKDIR /theme
 ENV CI=true
 
 RUN apk add --no-cache maven && \
+    npm install -g corepack && \
     corepack enable pnpm
 
 COPY keycloak-theme/ .
