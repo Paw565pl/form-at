@@ -6,7 +6,7 @@ plugins {
     id("org.springframework.boot.aot") version "4.1.0" apply false
     id("io.spring.dependency-management") version "1.1.7"
     id("se.solrike.sonarlint") version "2.2.0"
-    id("com.diffplug.spotless") version "8.6.0"
+    id("com.diffplug.spotless") version "8.7.0"
 }
 
 if (project.hasProperty("aot")) {
@@ -30,7 +30,7 @@ spotless {
         removeUnusedImports()
         forbidWildcardImports()
         cleanthat()
-        palantirJavaFormat("2.92.0").formatJavadoc(true)
+        palantirJavaFormat("2.94.0").formatJavadoc(true)
         trimTrailingWhitespace()
         leadingTabsToSpaces()
         endWithNewline()
@@ -56,10 +56,10 @@ configurations { compileOnly { extendsFrom(configurations.annotationProcessor.ge
 
 repositories { mavenCentral() }
 
-val otelLogbackAppenderVersion = "2.28.1-alpha"
+val otelLogbackAppenderVersion = "2.29.0-alpha"
 val mapstructVersion = "1.6.3"
 val slugifyVersion = "3.0.7"
-val minioSdkVersion = "9.0.1"
+val minioSdkVersion = "9.0.3"
 val linguaVersion = "1.2.2"
 val restAssuredVersion = "6.0.0"
 val dataFakerVersion = "2.5.4"
