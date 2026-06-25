@@ -1,4 +1,4 @@
-FROM node:24-alpine AS theme-builder
+FROM node:26-alpine AS theme-builder
 
 WORKDIR /theme
 
@@ -23,6 +23,7 @@ ENV KC_METRICS_ENABLED=true
 ENV KC_TRACING_ENABLED=true
 ENV KC_FEATURE_OPENTELEMETRY_LOGS=enabled
 ENV KC_TELEMETRY_LOGS_ENABLED=true
+ENV KC_FEATURE_HTTP_OPTIMIZED_SERIALIZERS=enabled
 
 COPY --from=theme-builder /theme/dist_keycloak/theme.jar /opt/keycloak/providers/
 
