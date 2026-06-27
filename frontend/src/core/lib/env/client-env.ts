@@ -7,10 +7,12 @@ const clientEnv = createEnv({
   client: {
     NEXT_PUBLIC_API_BASE_URL: z.url().trim().min(1),
     NEXT_PUBLIC_S3_URL: z.url().trim().min(1),
+    NEXT_PUBLIC_APP_URL: z.url().trim().min(1).default("http://localhost:3000"),
   },
   runtimeEnv: {
     NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL,
     NEXT_PUBLIC_S3_URL: process.env.NEXT_PUBLIC_S3_URL,
+    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
   },
   skipValidation: true,
 });
