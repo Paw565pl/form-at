@@ -59,10 +59,10 @@ export const Home = () => {
       <header className="flex flex-col items-center lg:p-12">
         <div className="text-primary flex items-center text-4xl font-semibold lg:text-6xl">
           <Logo className="size-20 lg:size-36" />
-          <h1>formAT</h1>
+          <h1>{t("app.name")}</h1>
         </div>
         <p className="text-muted-foreground text-center text-lg lg:mx-20">
-          {t("appDescription")}
+          {t("app.description")}
         </p>
       </header>
 

@@ -8,7 +8,10 @@
     "emptyOpenAnswer": "No answer provided."
   },
   "homePage": {
-    "appDescription": "Welcome to formAT, the ultimate form builder and survey tool! Whether you're gathering feedback, conducting research, or collecting data, formAT has you covered.",
+    "app": {
+      "name": "formAT",
+      "description": "Welcome to formAT, the ultimate form builder and survey tool! Whether you're gathering feedback, conducting research, or collecting data, formAT has you covered."
+    },
     "getStarted": "Ready to get started?",
     "createNewForm": "Create New Form",
     "stats": {

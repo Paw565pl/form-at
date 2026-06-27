@@ -2,11 +2,12 @@ import type { MetadataRoute } from "next";
 import { getTranslations } from "next-intl/server";
 
 const manifest = async (): Promise<MetadataRoute.Manifest> => {
-  const t = await getTranslations("homePage");
+  const t = await getTranslations("homePage.app");
+
   return {
-    name: "formAT",
-    short_name: "formAT",
-    description: t("appDescription"),
+    name: t("name"),
+    short_name: t("name"),
+    description: t("description"),
     icons: [
       {
         src: "/web-app-manifest-192x192.png",
