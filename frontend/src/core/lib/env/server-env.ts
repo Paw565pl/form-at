@@ -23,4 +23,5 @@ export const serverEnv = createEnv({
   },
   experimental__runtimeEnv: process.env,
   skipValidation: process.env.CI ? true : false,
+  emptyStringAsUndefined: true,
 });

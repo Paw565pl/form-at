@@ -11,8 +11,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
   return {
     title: t("name"),
     description: t("description"),
-    metadataBase:
-      getClientEnv("NEXT_PUBLIC_APP_URL") ?? "http://localhost:3000",
+    metadataBase: getClientEnv("NEXT_PUBLIC_APP_URL"),
 
     openGraph: {
       type: "website",
