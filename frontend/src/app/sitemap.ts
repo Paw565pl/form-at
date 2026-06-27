@@ -2,7 +2,8 @@ import { getClientEnv } from "@/core/lib/env/client-env";
 import type { MetadataRoute } from "next";
 
 const sitemap = (): MetadataRoute.Sitemap => {
-  const baseUrl = getClientEnv("NEXT_PUBLIC_APP_URL") as string;
+  const baseUrl =
+    getClientEnv("NEXT_PUBLIC_APP_URL") ?? "http://localhost:3000";
 
   return [
     {
