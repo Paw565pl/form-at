@@ -8,7 +8,10 @@
     "emptyOpenAnswer": "Nie udzielono odpowiedzi."
   },
   "homePage": {
-    "appDescription": "Witaj w formAT, najlepszym narzędziu do tworzenia formularzy i ankiet! Niezależnie od tego, czy zbierasz opinie, prowadzisz badania, czy gromadzisz dane, formAT to idealne rozwiązanie dla Ciebie.",
+    "app": {
+      "name": "formAT",
+      "description": "Witaj w formAT, najlepszym narzędziu do tworzenia formularzy i ankiet! Niezależnie od tego, czy zbierasz opinie, prowadzisz badania, czy gromadzisz dane, formAT to idealne rozwiązanie dla Ciebie."
+    },
     "getStarted": "Zaczynamy?",
     "createNewForm": "Utwórz nowy formularz",
     "stats": {

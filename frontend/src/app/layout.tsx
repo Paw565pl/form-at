@@ -5,20 +5,19 @@ import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 
 export const generateMetadata = async (): Promise<Metadata> => {
-  const t = await getTranslations("homePage");
+  const t = await getTranslations("homePage.app");
   const locale = await getLocale();
-  const appName = "formAT";
 
   return {
-    title: appName,
-    description: t("appDescription"),
+    title: t("name"),
+    description: t("description"),
     metadataBase: getClientEnv("NEXT_PUBLIC_APP_URL"),
 
     openGraph: {
       type: "website",
-      siteName: appName,
-      title: appName,
-      description: t("appDescription"),
+      siteName: t("name"),
+      title: t("name"),
+      description: t("description"),
       locale,
     },
 
