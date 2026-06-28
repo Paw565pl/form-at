@@ -1,10 +1,10 @@
-## formAT
+# formAT
 
 Welcome to formAT, the ultimate form builder and survey tool! Whether you're gathering feedback, conducting research, or collecting data, formAT has you covered.
 
 **Live Demo** available at: *https://format-app.cc/*
 
-### Features
+## Features
 
 - **User Authentication** - Secure account creation and user management
 - **Advanced Form Builder** - Complex configuration with multiple question types
@@ -14,7 +14,7 @@ Welcome to formAT, the ultimate form builder and survey tool! Whether you're gat
 - **Responsive Design** - Works seamlessly on desktop and mobile devices
 - **Observability** - Distributed metrics for monitoring and debugging
 
-### Tech Stack
+## Tech Stack
 
 - **Frontend:** Next.js + Shadcn
 - **Backend:** Spring Boot
@@ -24,7 +24,7 @@ Welcome to formAT, the ultimate form builder and survey tool! Whether you're gat
 - **Observability:** OpenTelemetry
 - **Containerization:** Docker
 
-### Installation & Configuration
+## Installation & Configuration
 
 **Requirements**: Docker
 
