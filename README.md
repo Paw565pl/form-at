@@ -2,7 +2,7 @@
 
 Welcome to formAT, the ultimate form builder and survey tool! Whether you're gathering feedback, conducting research, or collecting data, formAT has you covered.
 
-**Live Demo** available at: *https://format-app.cc/*
+**Live Demo** available at: [https://format-app.cc/](https://format-app.cc/)
 
 ## Features
 
@@ -35,10 +35,10 @@ git clone https://github.com/Paw565pl/form-at.git
 cd form-at
 ```
 
-2. Configure environment variables:
+2. Configure frontend environment variables:
 
 ```bash
-cp .env.example .env.local
+cp /frontend/.env.example /frontend/.env.local
 # edit .env.local with your configuration
 ```
 
@@ -47,11 +47,11 @@ cp .env.example .env.local
 **Production:**
 
 ```bash
-docker compose -f "docker-compose.prod.yaml" up
+docker compose -f docker-compose.prod.yaml up
 ```
 
 **Development:**
 
 ```bash
-docker compose -f "docker-compose.dev.yaml" up
+docker compose -f docker-compose.dev.yaml up
 ```
