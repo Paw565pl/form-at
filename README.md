@@ -2,7 +2,7 @@
 
 Welcome to formAT, the ultimate form builder and survey tool! Whether you're gathering feedback, conducting research, or collecting data, formAT has you covered.
 
-**Live Demo** available at: [https://format-app.cc/](https://format-app.cc/)
+**Live Demo** available at: [https://format-app.cc](https://format-app.cc)
 
 ## Features
 
