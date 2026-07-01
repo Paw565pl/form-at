@@ -123,7 +123,7 @@ class FormRetrieveIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    void shouldReturnOkWhenAccessingUnPublicFormAnonymously() {
+    void shouldReturnOkWhenAccessingUnpublicFormAnonymously() {
         var form = mongoTemplate.save(FormTestDataFactory.create(FormStatus.UNPUBLIC));
 
         given().pathParam(PATH_PARAM, form.getId())
