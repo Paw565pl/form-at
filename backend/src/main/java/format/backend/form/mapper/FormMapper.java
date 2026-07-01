@@ -19,6 +19,9 @@ public interface FormMapper {
     FormListResponseDto toListResponseDto(
             FormEntity formEntity, @Nullable String thumbnail, @Nullable String authorName);
 
+    @Mapping(
+            target = "estimatedDuration",
+            expression = "java(java.time.Duration.ofSeconds(formListAggregationResult.estimatedDurationSeconds()))")
     FormListResponseDto toListResponseDto(
             FormListAggregationResult formListAggregationResult, @Nullable String thumbnail);
 

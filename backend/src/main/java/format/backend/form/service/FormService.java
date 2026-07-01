@@ -205,7 +205,9 @@ public class FormService {
 
         for (val order : pageable.getSort()) {
             val field = SORT_FIELDS.get(order.getProperty().toLowerCase(Locale.ROOT));
-            if (field != null) sortOrders.add(new Sort.Order(order.getDirection(), field));
+            if (field != null)
+                sortOrders.add(new Sort.Order(
+                        order.getDirection(), field.equals("estimatedDuration") ? "estimatedDurationSeconds" : field));
         }
 
         sortOrders.add(Sort.Order.asc("_id"));
