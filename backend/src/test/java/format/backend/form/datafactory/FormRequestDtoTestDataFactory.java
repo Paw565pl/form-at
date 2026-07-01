@@ -28,7 +28,7 @@ public abstract class FormRequestDtoTestDataFactory {
                 List.of(new AnswerRequestDto("answer a", false), new AnswerRequestDto("answer b", false)));
 
         return new FormRequestDto(
-                "form",
+                "form dto",
                 null,
                 Language.EN,
                 FormStatus.PUBLIC,
