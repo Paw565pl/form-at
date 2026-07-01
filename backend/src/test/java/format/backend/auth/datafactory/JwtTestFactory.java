@@ -24,7 +24,9 @@ public abstract class JwtTestFactory {
                 .claim("sub", userEntity.getId())
                 .claim("preferred_username", userEntity.getUsername())
                 .claim("email", userEntity.getEmail())
-                .claim("realm_access", Map.of("roles", roles))
+                .claim(
+                        "realm_access",
+                        Map.of("roles", roles.stream().map(Role::getValue).toList()))
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds(3600))
                 .build();
