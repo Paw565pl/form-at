@@ -21,7 +21,7 @@ class FormListIntegrationTest extends BaseIntegrationTest {
     private static final String PATH = "/api/v1/forms";
 
     @Test
-    void shouldReturnEmptyList() {
+    void shouldReturnEmptyListWhenNoData() {
         given().when().get(PATH).then().statusCode(HttpStatus.OK.value()).body("page.totalElements", is(0));
     }
 
@@ -48,6 +48,25 @@ class FormListIntegrationTest extends BaseIntegrationTest {
                 .body("page.totalElements", is(3))
                 .body("page.totalPages", is(2))
                 .body("content", hasSize(2));
+    }
+
+    @Test
+    void shouldFilterBySearchQuery() {
+        var formMatch = FormTestDataFactory.create();
+        formMatch.setName("cat form");
+        mongoTemplate.save(formMatch);
+
+        var formNoMatch = FormTestDataFactory.create();
+        formNoMatch.setName("dog form");
+        mongoTemplate.save(formNoMatch);
+
+        given().queryParam("searchQuery", "cat")
+                .when()
+                .get(PATH)
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("page.totalElements", is(1))
+                .body("content[0].id", is(formMatch.getId()));
     }
 
     @Test
@@ -127,25 +146,6 @@ class FormListIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    void shouldFilterBySearchQuery() {
-        var formMatch = FormTestDataFactory.create();
-        formMatch.setName("cat form");
-        mongoTemplate.save(formMatch);
-
-        var formNoMatch = FormTestDataFactory.create();
-        formNoMatch.setName("dog form");
-        mongoTemplate.save(formNoMatch);
-
-        given().queryParam("searchQuery", "cat")
-                .when()
-                .get(PATH)
-                .then()
-                .statusCode(HttpStatus.OK.value())
-                .body("page.totalElements", is(1))
-                .body("content[0].id", is(formMatch.getId()));
-    }
-
-    @Test
     void shouldSortByCreatedAtDescendingByDefault() {
         var olderForm = FormTestDataFactory.create();
         mongoTemplate.save(olderForm);
@@ -182,26 +182,99 @@ class FormListIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    void shouldSortBySubmissionsCountDescending() {
-        var formFew = FormTestDataFactory.create();
-        formFew.setSubmissionsCount(5L);
-        mongoTemplate.save(formFew);
+    void shouldSortByEstimatedDuration() {
+        var form1 = FormTestDataFactory.create();
+        form1.setEstimatedDuration(Duration.ofMinutes(10));
+        mongoTemplate.save(form1);
 
-        var formMany = FormTestDataFactory.create();
-        formMany.setSubmissionsCount(500L);
-        mongoTemplate.save(formMany);
+        var form2 = FormTestDataFactory.create();
+        form2.setEstimatedDuration(Duration.ofMinutes(5));
+        mongoTemplate.save(form2);
 
-        given().queryParam("sort", "submissionsCount,desc")
+        mongoTemplate.getCollection("forms").find().forEach(IO::println);
+
+        given().queryParam("sort", "estimatedDuration")
                 .when()
                 .get(PATH)
                 .then()
                 .statusCode(HttpStatus.OK.value())
-                .body("content[0].id", is(formMany.getId()))
-                .body("content[1].id", is(formFew.getId()));
+                .body("page.totalElements", is(2))
+                .body("content[0].id", is(form2.getId()))
+                .body("content[1].id", is(form1.getId()));
     }
 
     @Test
-    void shouldSetCorrectAuthorName() {
+    void shouldSortByQuestionsCount() {
+        var form1 = FormTestDataFactory.create();
+        form1.setQuestionsCount(4);
+        mongoTemplate.save(form1);
+
+        var form2 = FormTestDataFactory.create();
+        form2.setQuestionsCount(3);
+        mongoTemplate.save(form2);
+
+        given().queryParam("sort", "questionsCount")
+                .when()
+                .get(PATH)
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("page.totalElements", is(2))
+                .body("content[0].id", is(form2.getId()))
+                .body("content[1].id", is(form1.getId()));
+    }
+
+    @Test
+    void shouldSortBySubmissionsCount() {
+        var form1 = FormTestDataFactory.create();
+        form1.setSubmissionsCount(4L);
+        mongoTemplate.save(form1);
+
+        var form2 = FormTestDataFactory.create();
+        form2.setSubmissionsCount(3L);
+        mongoTemplate.save(form2);
+
+        given().queryParam("sort", "submissionsCount")
+                .when()
+                .get(PATH)
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("page.totalElements", is(2))
+                .body("content[0].id", is(form2.getId()))
+                .body("content[1].id", is(form1.getId()));
+    }
+
+    @Test
+    void shouldSortByCreatedAt() {
+        var form1 = mongoTemplate.save(FormTestDataFactory.create());
+        var form2 = mongoTemplate.save(FormTestDataFactory.create());
+
+        given().queryParam("sort", "createdAt")
+                .when()
+                .get(PATH)
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("page.totalElements", is(2))
+                .body("content[0].id", is(form1.getId()))
+                .body("content[1].id", is(form2.getId()));
+    }
+
+    @Test
+    void shouldSortByUpdatedAt() {
+        var form1 = mongoTemplate.save(FormTestDataFactory.create());
+        var form2 = mongoTemplate.save(FormTestDataFactory.create());
+
+        given().queryParam("sort", "updatedAt")
+                .when()
+                .get(PATH)
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("page.totalElements", is(2))
+                .body("content[0].id", is(form1.getId()))
+                .body("content[1].id", is(form2.getId()));
+    }
+
+    @Test
+    void shouldHaveCorrectAuthorName() {
         var user = mongoTemplate.save(UserTestDataFactory.create());
         mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC, user.getId()));
 
