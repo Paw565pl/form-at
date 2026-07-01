@@ -8,7 +8,7 @@ import static org.mockito.Mockito.when;
 
 import format.backend.auth.datafactory.JwtTestFactory;
 import format.backend.auth.datafactory.UserTestDataFactory;
-import format.backend.core.BaseIntegrationTest;
+import format.backend.core.integration.BaseIntegrationTest;
 import format.backend.form.datafactory.FormTestDataFactory;
 import format.backend.form.entity.FormStatus;
 import format.backend.form.entity.Language;

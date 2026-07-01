@@ -1,4 +1,4 @@
-package format.backend.core;
+package format.backend.core.integration;
 
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
