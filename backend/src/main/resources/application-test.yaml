@@ -1,0 +1,12 @@
+logging:
+  level:
+    root: warn
+
+management:
+  otlp:
+    metrics:
+      export:
+        enabled: false
+
+cors:
+  allowed-origins: "*"
