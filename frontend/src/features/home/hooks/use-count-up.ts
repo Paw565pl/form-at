@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
 
-export const useCountUp = (target: number, duration = 1000) => {
+export const useCountUp = (target: number, maxDuration = 1000) => {
   const [value, setValue] = useState(0);
+
   useEffect(() => {
+    const adjustedDuration = Math.max(150, Math.min(maxDuration, target * 40));
+    const steps = Math.max(1, adjustedDuration / 16);
+    const increment = target / steps;
     let start = 0;
-    const increment = target / (duration / 16);
+
     const interval = setInterval(() => {
       start += increment;
       if (start >= target) {
@@ -15,6 +19,6 @@ export const useCountUp = (target: number, duration = 1000) => {
       }
     }, 16);
     return () => clearInterval(interval);
-  }, [target, duration]);
+  }, [target, maxDuration]);
   return value;
 };
