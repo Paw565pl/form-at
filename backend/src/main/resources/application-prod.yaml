@@ -15,13 +15,6 @@ logging:
     root: error
     format.backend: warn
 
-s3:
-  url: http://rustfs:9000
-  region: eu-central-1
-  access-key: rustfsadmin
-  secret-key: rustfsadmin
-  bucket: uploads
-
 management:
   metrics:
     mongodb:
@@ -47,3 +40,10 @@ management:
       export:
         otlp:
           endpoint: http://aspire-dashboard:18890/v1/logs
+
+s3:
+  url: http://rustfs:9000
+  region: eu-central-1
+  access-key: rustfsadmin
+  secret-key: rustfsadmin
+  bucket: uploads
