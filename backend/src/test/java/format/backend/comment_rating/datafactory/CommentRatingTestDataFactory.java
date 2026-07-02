@@ -7,7 +7,7 @@ public abstract class CommentRatingTestDataFactory {
     public static CommentRatingEntity create(String commentId, String authorId, boolean isPositive) {
         var commentRating = new CommentRatingEntity(commentId);
         commentRating.setAuthorId(authorId);
-        commentRating.setType(isPositive ? 1 : 0);
+        commentRating.setType(isPositive ? 1 : -1);
 
         return commentRating;
     }
