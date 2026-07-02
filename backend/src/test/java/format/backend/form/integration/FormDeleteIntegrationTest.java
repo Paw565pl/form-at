@@ -8,7 +8,7 @@ import static org.mockito.Mockito.when;
 import format.backend.auth.datafactory.JwtTestFactory;
 import format.backend.auth.datafactory.UserTestDataFactory;
 import format.backend.auth.entity.Role;
-import format.backend.comment.datafactory.CommentTestDataFactory;
+import format.backend.comment.datafactory.datafactory.CommentTestDataFactory;
 import format.backend.comment.entity.CommentEntity;
 import format.backend.comment_rating.datafactory.CommentRatingTestDataFactory;
 import format.backend.comment_rating.entity.CommentRatingEntity;
