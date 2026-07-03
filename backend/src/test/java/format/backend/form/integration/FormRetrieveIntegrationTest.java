@@ -70,7 +70,6 @@ class FormRetrieveIntegrationTest extends BaseIntegrationTest {
     @Test
     void shouldReturnUnauthorizedWhenAccessingClosedFormAnonymously() {
         var form = mongoTemplate.save(FormTestDataFactory.create(FormStatus.CLOSED));
-
         given().pathParam(PATH_PARAM, form.getId()).when().get(PATH).then().statusCode(HttpStatus.UNAUTHORIZED.value());
     }
 

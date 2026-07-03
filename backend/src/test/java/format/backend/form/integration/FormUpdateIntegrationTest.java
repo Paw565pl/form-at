@@ -1,6 +1,7 @@
 package format.backend.form.integration;
 
 import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -10,6 +11,7 @@ import format.backend.auth.datafactory.UserTestDataFactory;
 import format.backend.core.integration.BaseIntegrationTest;
 import format.backend.form.datafactory.FormRequestDtoTestDataFactory;
 import format.backend.form.datafactory.FormTestDataFactory;
+import format.backend.form.entity.FormEntity;
 import format.backend.form.entity.FormStatus;
 import io.restassured.http.ContentType;
 import java.util.Map;
@@ -162,5 +164,15 @@ class FormUpdateIntegrationTest extends BaseIntegrationTest {
                 .body("id", is(existingForm.getId()))
                 .body("name", is(requestBody.name()))
                 .body("submissionsCount", is(0));
+
+        var savedForms = mongoTemplate.findAll(FormEntity.class);
+        assertThat(savedForms).hasSize(1);
+
+        var savedForm = savedForms.getFirst();
+        assertThat(savedForm.getAuthorId()).isEqualTo(user.getId());
+        assertThat(savedForm.getQuestionsCount())
+                .isEqualTo(requestBody.questions().size());
+        assertThat(savedForm.getQuestions()).hasSize(requestBody.questions().size());
+        assertThat(savedForm.getSubmissionsCount()).isEqualTo(0);
     }
 }

@@ -1,6 +1,7 @@
 package format.backend.form.integration;
 
 import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -9,9 +10,12 @@ import static org.mockito.Mockito.when;
 
 import format.backend.auth.datafactory.JwtTestFactory;
 import format.backend.auth.datafactory.UserTestDataFactory;
+import format.backend.auth.entity.UserEntity;
 import format.backend.core.integration.BaseIntegrationTest;
 import format.backend.form.datafactory.FormRequestDtoTestDataFactory;
 import format.backend.form.datafactory.FormTestDataFactory;
+import format.backend.form.dto.FormRequestDto;
+import format.backend.form.entity.FormEntity;
 import format.backend.form.entity.FormStatus;
 import io.restassured.http.ContentType;
 import java.util.Map;
@@ -125,10 +129,14 @@ class FormCreateIntegrationTest extends BaseIntegrationTest {
                 .body("id", notNullValue())
                 .body("name", is(requestBody.name()))
                 .body("authorName", is(user.getUsername()))
+                .body("status", is(FormStatus.PUBLIC.name()))
+                .body("submissionsCount", is(0))
                 .body("questions", hasSize(requestBody.questions().size()))
                 .body(
                         "questions[0].answers",
                         hasSize(requestBody.questions().getFirst().answers().size()));
+
+        verifyDbState(user, requestBody);
     }
 
     @Test
@@ -148,6 +156,25 @@ class FormCreateIntegrationTest extends BaseIntegrationTest {
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
                 .body("id", notNullValue())
-                .body("status", is(FormStatus.PRIVATE.name()));
+                .body("name", is(requestBody.name()))
+                .body("authorName", is(user.getUsername()))
+                .body("status", is(FormStatus.PRIVATE.name()))
+                .body("submissionsCount", is(0));
+
+        verifyDbState(user, requestBody);
+    }
+
+    private void verifyDbState(UserEntity user, FormRequestDto requestBody) {
+        var savedForms = mongoTemplate.findAll(FormEntity.class);
+        assertThat(savedForms).hasSize(1);
+
+        var savedForm = savedForms.getFirst();
+        assertThat(savedForm.getAuthorId()).isEqualTo(user.getId());
+        assertThat(savedForm.getQuestionsCount())
+                .isEqualTo(requestBody.questions().size());
+        assertThat(savedForm.getQuestions()).hasSize(requestBody.questions().size());
+        assertThat(savedForm.getSubmissionsCount()).isEqualTo(0);
+        assertThat(savedForm.getRatingsCount()).isEqualTo(0);
+        assertThat(savedForm.getRatingsSum()).isEqualTo(0);
     }
 }
