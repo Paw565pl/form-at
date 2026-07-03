@@ -79,7 +79,7 @@ class CommentRatingDeleteIntegrationTest extends BaseIntegrationTest {
         var form2 = mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC));
 
         var user = mongoTemplate.save(UserTestDataFactory.create());
-        var comment = mongoTemplate.save(CommentTestDataFactory.create(form1.getId(), user.getId(), "Comment content"));
+        var comment = mongoTemplate.save(CommentTestDataFactory.create(form1.getId(), user.getId()));
 
         var token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
@@ -98,7 +98,7 @@ class CommentRatingDeleteIntegrationTest extends BaseIntegrationTest {
     void shouldReturnNotFoundWhenCommentNotRatedByUser() {
         var form = mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC));
         var user = mongoTemplate.save(UserTestDataFactory.create());
-        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), user.getId(), "Comment content"));
+        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), user.getId()));
 
         var token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
@@ -117,7 +117,7 @@ class CommentRatingDeleteIntegrationTest extends BaseIntegrationTest {
     void shouldDeleteUpvoteAndDecrementCommentRatingScore() {
         var form = mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC));
         var user = mongoTemplate.save(UserTestDataFactory.create());
-        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), user.getId(), "Comment content"));
+        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), user.getId()));
 
         var rating = mongoTemplate.save(CommentRatingTestDataFactory.create(comment.getId(), user.getId(), true));
         mongoTemplate.updateFirst(
@@ -148,7 +148,7 @@ class CommentRatingDeleteIntegrationTest extends BaseIntegrationTest {
     void shouldDeleteDownvoteAndIncrementCommentRatingScore() {
         var form = mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC));
         var user = mongoTemplate.save(UserTestDataFactory.create());
-        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), user.getId(), "Comment content"));
+        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), user.getId()));
 
         var rating = mongoTemplate.save(CommentRatingTestDataFactory.create(comment.getId(), user.getId(), false));
         mongoTemplate.updateFirst(

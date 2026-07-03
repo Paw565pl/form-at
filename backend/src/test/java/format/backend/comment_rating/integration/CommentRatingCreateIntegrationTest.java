@@ -89,7 +89,7 @@ public class CommentRatingCreateIntegrationTest extends BaseIntegrationTest {
         var form2 = mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC));
 
         var user = mongoTemplate.save(UserTestDataFactory.create());
-        var comment = mongoTemplate.save(CommentTestDataFactory.create(form1.getId(), user.getId(), "Comment content"));
+        var comment = mongoTemplate.save(CommentTestDataFactory.create(form1.getId(), user.getId()));
 
         var token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
@@ -110,7 +110,7 @@ public class CommentRatingCreateIntegrationTest extends BaseIntegrationTest {
     void shouldAddNewUpvoteAndIncrementCommentRatingScore() {
         var form = mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC));
         var user = mongoTemplate.save(UserTestDataFactory.create());
-        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), user.getId(), "Comment content"));
+        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), user.getId()));
 
         var token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
@@ -137,7 +137,7 @@ public class CommentRatingCreateIntegrationTest extends BaseIntegrationTest {
     void shouldAddNewDownvoteAndDecrementCommentRatingScore() {
         var form = mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC));
         var user = mongoTemplate.save(UserTestDataFactory.create());
-        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), user.getId(), "Comment content"));
+        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), user.getId()));
 
         var token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
@@ -163,7 +163,7 @@ public class CommentRatingCreateIntegrationTest extends BaseIntegrationTest {
     void shouldUpdateUpvoteToDownvoteAndApplyMinusTwoDelta() {
         var form = mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC));
         var user = mongoTemplate.save(UserTestDataFactory.create());
-        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), user.getId(), "Comment content"));
+        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), user.getId()));
 
         mongoTemplate.save(CommentRatingTestDataFactory.create(comment.getId(), user.getId(), true));
         mongoTemplate.updateFirst(
@@ -195,7 +195,7 @@ public class CommentRatingCreateIntegrationTest extends BaseIntegrationTest {
     void shouldUpdateDownvoteToUpvoteAndApplyPlusTwoDelta() {
         var form = mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC));
         var user = mongoTemplate.save(UserTestDataFactory.create());
-        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), user.getId(), "Comment content"));
+        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), user.getId()));
 
         mongoTemplate.save(CommentRatingTestDataFactory.create(comment.getId(), user.getId(), false));
         mongoTemplate.updateFirst(
@@ -227,7 +227,7 @@ public class CommentRatingCreateIntegrationTest extends BaseIntegrationTest {
     void shouldNotModifyCommentRatingScoreWhenSubmittingSameRatingType() {
         var form = mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC));
         var user = mongoTemplate.save(UserTestDataFactory.create());
-        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), user.getId(), "Comment content"));
+        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), user.getId()));
 
         mongoTemplate.save(CommentRatingTestDataFactory.create(comment.getId(), user.getId(), true));
         mongoTemplate.updateFirst(

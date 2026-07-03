@@ -36,9 +36,9 @@ class CommentListIntegrationTest extends BaseIntegrationTest {
     @Test
     void shouldPaginateResults() {
         var form = mongoTemplate.save(FormTestDataFactory.create());
-        mongoTemplate.save(CommentTestDataFactory.create(form.getId(), "test comment 1"));
-        mongoTemplate.save(CommentTestDataFactory.create(form.getId(), "test comment 2"));
-        mongoTemplate.save(CommentTestDataFactory.create(form.getId(), "test comment 3"));
+        mongoTemplate.save(CommentTestDataFactory.create(form.getId()));
+        mongoTemplate.save(CommentTestDataFactory.create(form.getId()));
+        mongoTemplate.save(CommentTestDataFactory.create(form.getId()));
 
         given().pathParam(PATH_PARAM, form.getId())
                 .queryParam("page", 0)
@@ -56,8 +56,8 @@ class CommentListIntegrationTest extends BaseIntegrationTest {
     void shouldSortByCreatedAtDescendingByDefault() {
         var form = mongoTemplate.save(FormTestDataFactory.create());
 
-        var olderComment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), "older comment"));
-        var newerComment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), "newer comment"));
+        var olderComment = mongoTemplate.save(CommentTestDataFactory.create(form.getId()));
+        var newerComment = mongoTemplate.save(CommentTestDataFactory.create(form.getId()));
 
         given().pathParam(PATH_PARAM, form.getId())
                 .when()
@@ -73,7 +73,7 @@ class CommentListIntegrationTest extends BaseIntegrationTest {
         var form = mongoTemplate.save(FormTestDataFactory.create());
         var user = mongoTemplate.save(UserTestDataFactory.create());
 
-        mongoTemplate.save(CommentTestDataFactory.create(form.getId(), user.getId(), "test comment"));
+        mongoTemplate.save(CommentTestDataFactory.create(form.getId(), user.getId()));
 
         given().pathParam(PATH_PARAM, form.getId())
                 .when()
@@ -86,7 +86,7 @@ class CommentListIntegrationTest extends BaseIntegrationTest {
     @Test
     void shouldHaveCorrectAuthorNameWhenAuthorDoesNotExist() {
         var form = mongoTemplate.save(FormTestDataFactory.create());
-        mongoTemplate.save(CommentTestDataFactory.create(form.getId(), "test comment"));
+        mongoTemplate.save(CommentTestDataFactory.create(form.getId()));
 
         given().pathParam(PATH_PARAM, form.getId())
                 .when()
@@ -101,7 +101,7 @@ class CommentListIntegrationTest extends BaseIntegrationTest {
         var form = mongoTemplate.save(FormTestDataFactory.create());
         var user = mongoTemplate.save(UserTestDataFactory.create());
 
-        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), user.getId(), "test comment"));
+        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), user.getId()));
         mongoTemplate.save(CommentRatingTestDataFactory.create(comment.getId(), user.getId(), true));
 
         given().pathParam(PATH_PARAM, form.getId())
@@ -117,7 +117,7 @@ class CommentListIntegrationTest extends BaseIntegrationTest {
         var form = mongoTemplate.save(FormTestDataFactory.create());
         var loggedUser = mongoTemplate.save(UserTestDataFactory.create());
 
-        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), "test comment"));
+        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId()));
         mongoTemplate.save(CommentRatingTestDataFactory.create(comment.getId(), loggedUser.getId(), true));
 
         var token = JwtTestFactory.create(loggedUser);

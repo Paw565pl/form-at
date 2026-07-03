@@ -108,7 +108,7 @@ class FormDeleteIntegrationTest extends BaseIntegrationTest {
         mongoTemplate.save(SubmissionTestDataFactory.create(form.getId(), owner.getId(), List.of()));
         mongoTemplate.save(SubmissionsStatisticsTestDataFactory.create(form.getId(), Map.of()));
 
-        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), owner.getId(), ""));
+        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), owner.getId()));
         mongoTemplate.save(CommentRatingTestDataFactory.create(comment.getId(), owner.getId(), true));
 
         var token = JwtTestFactory.create(owner);

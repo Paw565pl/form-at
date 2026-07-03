@@ -86,7 +86,7 @@ class CommentUpdateIntegrationTest extends BaseIntegrationTest {
         var form2 = mongoTemplate.save(FormTestDataFactory.create());
 
         var user = mongoTemplate.save(UserTestDataFactory.create());
-        var comment = mongoTemplate.save(CommentTestDataFactory.create(form1.getId(), user.getId(), "comment"));
+        var comment = mongoTemplate.save(CommentTestDataFactory.create(form1.getId(), user.getId()));
 
         var token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
@@ -110,7 +110,7 @@ class CommentUpdateIntegrationTest extends BaseIntegrationTest {
         var ownerUser = mongoTemplate.save(UserTestDataFactory.create());
         var otherUser = mongoTemplate.save(UserTestDataFactory.create());
 
-        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), ownerUser.getId(), "comment"));
+        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), ownerUser.getId()));
 
         var attackerToken = JwtTestFactory.create(otherUser);
         when(jwtDecoder.decode(anyString())).thenReturn(attackerToken);
@@ -131,7 +131,7 @@ class CommentUpdateIntegrationTest extends BaseIntegrationTest {
     void shouldReturnBadRequestWhenContentIsNotValid() {
         var form = mongoTemplate.save(FormTestDataFactory.create());
         var user = mongoTemplate.save(UserTestDataFactory.create());
-        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), user.getId(), "comment"));
+        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), user.getId()));
 
         var token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
@@ -152,7 +152,7 @@ class CommentUpdateIntegrationTest extends BaseIntegrationTest {
     void shouldUpdateCommentSuccessfully() {
         var form = mongoTemplate.save(FormTestDataFactory.create());
         var user = mongoTemplate.save(UserTestDataFactory.create());
-        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), user.getId(), "comment"));
+        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), user.getId()));
 
         var token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
@@ -187,7 +187,7 @@ class CommentUpdateIntegrationTest extends BaseIntegrationTest {
     void shouldUpdateCommentAndReturnUserRatingIfExists() {
         var form = mongoTemplate.save(FormTestDataFactory.create());
         var user = mongoTemplate.save(UserTestDataFactory.create());
-        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), user.getId(), "comment"));
+        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), user.getId()));
 
         mongoTemplate.save(CommentRatingTestDataFactory.create(comment.getId(), user.getId(), true));
 
@@ -212,7 +212,7 @@ class CommentUpdateIntegrationTest extends BaseIntegrationTest {
     void shouldResolveFormIdBySlugAndUpdateComment() {
         var form = mongoTemplate.save(FormTestDataFactory.create());
         var user = mongoTemplate.save(UserTestDataFactory.create());
-        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), user.getId(), "comment"));
+        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), user.getId()));
 
         var token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);

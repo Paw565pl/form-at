@@ -79,7 +79,7 @@ class CommentDeleteIntegrationTest extends BaseIntegrationTest {
         var form2 = mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC));
 
         var user = mongoTemplate.save(UserTestDataFactory.create());
-        var comment = mongoTemplate.save(CommentTestDataFactory.create(form1.getId(), user.getId(), "Comment content"));
+        var comment = mongoTemplate.save(CommentTestDataFactory.create(form1.getId(), user.getId()));
 
         var token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
@@ -101,7 +101,7 @@ class CommentDeleteIntegrationTest extends BaseIntegrationTest {
         var owner = mongoTemplate.save(UserTestDataFactory.create());
         var otherUser = mongoTemplate.save(UserTestDataFactory.create());
 
-        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), owner.getId(), "Comment content"));
+        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), owner.getId()));
 
         var token = JwtTestFactory.create(otherUser);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
@@ -123,7 +123,7 @@ class CommentDeleteIntegrationTest extends BaseIntegrationTest {
         var owner = mongoTemplate.save(UserTestDataFactory.create());
         var admin = mongoTemplate.save(UserTestDataFactory.create());
 
-        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), owner.getId(), "Comment content"));
+        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), owner.getId()));
 
         var token = JwtTestFactory.create(admin, List.of(Role.ADMIN));
         when(jwtDecoder.decode(anyString())).thenReturn(token);
@@ -150,7 +150,7 @@ class CommentDeleteIntegrationTest extends BaseIntegrationTest {
         var owner = mongoTemplate.save(UserTestDataFactory.create());
         var form = mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC, owner.getId()));
 
-        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), owner.getId(), "Comment content"));
+        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), owner.getId()));
         mongoTemplate.save(CommentRatingTestDataFactory.create(comment.getId(), owner.getId(), true));
 
         var token = JwtTestFactory.create(owner);
