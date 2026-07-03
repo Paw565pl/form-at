@@ -6,7 +6,7 @@ plugins {
     id("org.springframework.boot.aot") version "4.1.0" apply false
     id("io.spring.dependency-management") version "1.1.7"
     id("se.solrike.sonarlint") version "2.2.0"
-    id("com.diffplug.spotless") version "8.7.0"
+    id("com.diffplug.spotless") version "8.8.0"
 }
 
 if (project.hasProperty("aot")) {
@@ -39,7 +39,7 @@ spotless {
 
     kotlinGradle { ktfmt().kotlinlangStyle() }
 
-    val prettierVersion = "3.8.4"
+    val prettierVersion = "3.9.4"
 
     yaml {
         target("src/**/*.yaml")
@@ -62,7 +62,6 @@ val slugifyVersion = "3.0.7"
 val minioSdkVersion = "9.0.3"
 val linguaVersion = "1.2.2"
 val restAssuredVersion = "6.0.0"
-val dataFakerVersion = "2.5.4"
 val sonarJavaVersion = "8.9.4.40912"
 
 dependencies {
@@ -98,24 +97,12 @@ dependencies {
     testImplementation("org.testcontainers:testcontainers-junit-jupiter")
     testImplementation("org.testcontainers:testcontainers-mongodb")
     testImplementation("io.rest-assured:rest-assured:$restAssuredVersion")
-    testImplementation("net.datafaker:datafaker:$dataFakerVersion")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     sonarlintPlugins("org.sonarsource.java:sonar-java-plugin:$sonarJavaVersion")
 }
 
 tasks.withType<JavaCompile> {
-    options.compilerArgs.addAll(
-        listOf(
-            "-Xlint:deprecation",
-            "-Xlint:dep-ann",
-            "-Xlint:removal",
-            "-Xlint:overrides",
-            "-Xlint:fallthrough",
-            "-Xlint:try",
-            "-Xlint:finally",
-            "-Werror",
-        )
-    )
+    options.compilerArgs.addAll(listOf("-Xlint:all,-classfile,-processing,-serial", "-Werror"))
 }
 
 tasks.withType<Test> { useJUnitPlatform() }
