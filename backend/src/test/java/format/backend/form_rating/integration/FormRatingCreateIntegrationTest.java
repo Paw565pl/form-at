@@ -8,13 +8,17 @@ import static org.mockito.Mockito.when;
 
 import format.backend.auth.datafactory.JwtTestFactory;
 import format.backend.auth.datafactory.UserTestDataFactory;
+import format.backend.auth.entity.UserEntity;
 import format.backend.core.integration.BaseIntegrationTest;
 import format.backend.form.datafactory.FormTestDataFactory;
 import format.backend.form.entity.FormEntity;
 import format.backend.form_rating.datafactory.FormRatingTestDataFactory;
 import format.backend.form_rating.dto.FormRatingRequestDto;
+import format.backend.form_rating.entity.FormRatingEntity;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 
 class FormRatingCreateIntegrationTest extends BaseIntegrationTest {
@@ -72,21 +76,20 @@ class FormRatingCreateIntegrationTest extends BaseIntegrationTest {
         var token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
+        var request = new FormRatingRequestDto(4);
+
         given().auth()
                 .oauth2(token.getTokenValue())
                 .pathParam(PATH_PARAM, form.getId())
                 .contentType(ContentType.JSON)
-                .body(new FormRatingRequestDto(4))
+                .body(request)
                 .when()
                 .post(PATH)
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
-                .body("value", is(4));
+                .body("value", is(request.ratingValue()));
 
-        var updatedForm = mongoTemplate.findById(form.getId(), FormEntity.class);
-        assertThat(updatedForm).isNotNull();
-        assertThat(updatedForm.getRatingsCount()).isEqualTo(1L);
-        assertThat(updatedForm.getRatingsSum()).isEqualTo(4L);
+        verifyDbState(form, user, request, 4, 1);
     }
 
     @Test
@@ -103,21 +106,20 @@ class FormRatingCreateIntegrationTest extends BaseIntegrationTest {
         var token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
+        var request = new FormRatingRequestDto(5);
+
         given().auth()
                 .oauth2(token.getTokenValue())
                 .pathParam(PATH_PARAM, form.getId())
                 .contentType(ContentType.JSON)
-                .body(new FormRatingRequestDto(5))
+                .body(request)
                 .when()
                 .post(PATH)
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
-                .body("value", is(5));
+                .body("value", is(request.ratingValue()));
 
-        var updatedForm = mongoTemplate.findById(form.getId(), FormEntity.class);
-        assertThat(updatedForm).isNotNull();
-        assertThat(updatedForm.getRatingsSum()).isEqualTo(5L);
-        assertThat(updatedForm.getRatingsCount()).isEqualTo(1L);
+        verifyDbState(form, user, request, 5, 1);
     }
 
     @Test
@@ -134,19 +136,38 @@ class FormRatingCreateIntegrationTest extends BaseIntegrationTest {
         var token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
+        var request = new FormRatingRequestDto(5);
+
         given().auth()
                 .oauth2(token.getTokenValue())
                 .pathParam(PATH_PARAM, form.getId())
                 .contentType(ContentType.JSON)
-                .body(new FormRatingRequestDto(5))
+                .body(request)
                 .when()
                 .post(PATH)
                 .then()
-                .statusCode(HttpStatus.CREATED.value());
+                .statusCode(HttpStatus.CREATED.value())
+                .body("value", is(request.ratingValue()));
 
+        verifyDbState(form, user, request, 5, 1);
+    }
+
+    private void verifyDbState(
+            FormEntity form,
+            UserEntity user,
+            FormRatingRequestDto request,
+            long expectedRatingsSum,
+            long expectedRatingsCount) {
         var updatedForm = mongoTemplate.findById(form.getId(), FormEntity.class);
         assertThat(updatedForm).isNotNull();
-        assertThat(updatedForm.getRatingsSum()).isEqualTo(5L);
-        assertThat(updatedForm.getRatingsCount()).isEqualTo(1L);
+        assertThat(updatedForm.getRatingsSum()).isEqualTo(expectedRatingsSum);
+        assertThat(updatedForm.getRatingsCount()).isEqualTo(expectedRatingsCount);
+
+        var formRating = mongoTemplate.findOne(
+                Query.query(Criteria.where(FormRatingEntity::getFormId).is(form.getId())), FormRatingEntity.class);
+        assertThat(formRating).isNotNull();
+        assertThat(formRating.getFormId()).isEqualTo(form.getId());
+        assertThat(formRating.getAuthorId()).isEqualTo(user.getId());
+        assertThat(formRating.getValue()).isEqualTo(request.ratingValue());
     }
 }

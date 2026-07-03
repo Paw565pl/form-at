@@ -21,7 +21,7 @@ class FormRatingDeleteIntegrationTest extends BaseIntegrationTest {
     private static final String PATH = "/api/v1/forms/{%s}/rating".formatted(PATH_PARAM);
 
     @Test
-    void shouldReturnUnauthorizedOnDeleteWhenNotAuthenticated() {
+    void shouldReturnUnauthorizedWhenUserIsAnonymous() {
         var form = mongoTemplate.save(FormTestDataFactory.create());
 
         given().pathParam(PATH_PARAM, form.getId())
