@@ -15,6 +15,7 @@ public abstract class JwtTestFactory {
     }
 
     public static Jwt create(UserEntity userEntity, Collection<Role> roles) {
+        var roleValues = roles.stream().map(Role::getValue).toList();
         var now = Instant.now();
 
         return Jwt.withTokenValue("mock-token")
@@ -24,9 +25,7 @@ public abstract class JwtTestFactory {
                 .claim("sub", userEntity.getId())
                 .claim("preferred_username", userEntity.getUsername())
                 .claim("email", userEntity.getEmail())
-                .claim(
-                        "realm_access",
-                        Map.of("roles", roles.stream().map(Role::getValue).toList()))
+                .claim("realm_access", Map.of("roles", roleValues))
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds(3600))
                 .build();
