@@ -191,8 +191,6 @@ class FormListIntegrationTest extends BaseIntegrationTest {
         form2.setEstimatedDuration(Duration.ofMinutes(5));
         mongoTemplate.save(form2);
 
-        mongoTemplate.getCollection("forms").find().forEach(IO::println);
-
         given().queryParam("sort", "estimatedDuration")
                 .when()
                 .get(PATH)
