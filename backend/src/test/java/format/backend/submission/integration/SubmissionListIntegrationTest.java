@@ -23,8 +23,6 @@ class SubmissionListIntegrationTest extends BaseIntegrationTest {
     private static final String FORM_PATH_PARAM = "formIdOrSlug";
     private static final String PATH = "/api/v1/forms/{%s}/submissions".formatted(FORM_PATH_PARAM);
 
-    // --- NEGATIVE TESTS ---
-
     @Test
     void shouldReturnUnauthorizedWhenUserIsAnonymous() {
         given().pathParam(FORM_PATH_PARAM, ObjectId.get().toHexString())
@@ -89,10 +87,10 @@ class SubmissionListIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldReturnConflictWhenFormAuthorIdIsNull() {
-        var user = mongoTemplate.save(UserTestDataFactory.create());
+        var admin = mongoTemplate.save(UserTestDataFactory.create());
         var form = mongoTemplate.save(FormTestDataFactory.create());
 
-        var token = JwtTestFactory.create(user);
+        var token = JwtTestFactory.create(admin, List.of(Role.ADMIN));
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
         given().auth()
@@ -128,9 +126,13 @@ class SubmissionListIntegrationTest extends BaseIntegrationTest {
         var ownerUser = mongoTemplate.save(UserTestDataFactory.create());
         var form = mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC, ownerUser.getId()));
 
-        mongoTemplate.save(SubmissionTestDataFactory.create(form.getId(), ownerUser.getId(), List.of()));
-        mongoTemplate.save(SubmissionTestDataFactory.create(form.getId(), ownerUser.getId(), List.of()));
-        mongoTemplate.save(SubmissionTestDataFactory.create(form.getId(), ownerUser.getId(), List.of()));
+        var user1 = mongoTemplate.save(UserTestDataFactory.create());
+        var user2 = mongoTemplate.save(UserTestDataFactory.create());
+        var user3 = mongoTemplate.save(UserTestDataFactory.create());
+
+        mongoTemplate.save(SubmissionTestDataFactory.create(form.getId(), user1.getId(), List.of()));
+        mongoTemplate.save(SubmissionTestDataFactory.create(form.getId(), user2.getId(), List.of()));
+        mongoTemplate.save(SubmissionTestDataFactory.create(form.getId(), user3.getId(), List.of()));
 
         var token = JwtTestFactory.create(ownerUser);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
@@ -196,10 +198,13 @@ class SubmissionListIntegrationTest extends BaseIntegrationTest {
         var ownerUser = mongoTemplate.save(UserTestDataFactory.create());
         var form = mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC, ownerUser.getId()));
 
+        var user1 = mongoTemplate.save(UserTestDataFactory.create());
+        var user2 = mongoTemplate.save(UserTestDataFactory.create());
+
         var olderSubmission =
-                mongoTemplate.save(SubmissionTestDataFactory.create(form.getId(), ownerUser.getId(), List.of()));
+                mongoTemplate.save(SubmissionTestDataFactory.create(form.getId(), user1.getId(), List.of()));
         var newerSubmission =
-                mongoTemplate.save(SubmissionTestDataFactory.create(form.getId(), ownerUser.getId(), List.of()));
+                mongoTemplate.save(SubmissionTestDataFactory.create(form.getId(), user2.getId(), List.of()));
 
         var token = JwtTestFactory.create(ownerUser);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
