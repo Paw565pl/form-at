@@ -148,6 +148,6 @@ class FormCreateIntegrationTest extends BaseIntegrationTest {
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
                 .body("id", notNullValue())
-                .body("status", is(FormStatus.PRIVATE.toString()));
+                .body("status", is(FormStatus.PRIVATE.name()));
     }
 }
