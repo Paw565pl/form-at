@@ -142,6 +142,25 @@ class SubmissionRetrieveIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
+    void shouldReturnConflictWhenFormAuthorIdIsNull() {
+        var admin = mongoTemplate.save(UserTestDataFactory.create());
+        var form = mongoTemplate.save(FormTestDataFactory.create());
+        var submission = mongoTemplate.save(SubmissionTestDataFactory.create(form.getId(), null, List.of()));
+
+        var token = JwtTestFactory.create(admin, List.of(Role.ADMIN));
+        when(jwtDecoder.decode(anyString())).thenReturn(token);
+
+        given().auth()
+                .oauth2(token.getTokenValue())
+                .pathParam(FORM_PATH_PARAM, form.getId())
+                .pathParam(SUBMISSION_PATH_PARAM, submission.getId())
+                .when()
+                .get(PATH)
+                .then()
+                .statusCode(HttpStatus.CONFLICT.value());
+    }
+
+    @Test
     void shouldReturnSubmissionSuccessfullyWhenUserIsOwner() {
         var ownerUser = mongoTemplate.save(UserTestDataFactory.create());
         var submitter = mongoTemplate.save(UserTestDataFactory.create());
