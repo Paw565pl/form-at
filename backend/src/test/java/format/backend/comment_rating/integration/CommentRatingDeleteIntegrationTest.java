@@ -13,7 +13,6 @@ import format.backend.comment_rating.datafactory.CommentRatingTestDataFactory;
 import format.backend.comment_rating.entity.CommentRatingEntity;
 import format.backend.core.integration.BaseIntegrationTest;
 import format.backend.form.datafactory.FormTestDataFactory;
-import format.backend.form.entity.FormStatus;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -57,7 +56,7 @@ class CommentRatingDeleteIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldReturnNotFoundWhenCommentDoesNotExist() {
-        var form = mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC));
+        var form = mongoTemplate.save(FormTestDataFactory.create());
         var user = mongoTemplate.save(UserTestDataFactory.create());
 
         var token = JwtTestFactory.create(user);
@@ -75,8 +74,8 @@ class CommentRatingDeleteIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldReturnNotFoundWhenCommentBelongsToAnotherForm() {
-        var form1 = mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC));
-        var form2 = mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC));
+        var form1 = mongoTemplate.save(FormTestDataFactory.create());
+        var form2 = mongoTemplate.save(FormTestDataFactory.create());
 
         var user = mongoTemplate.save(UserTestDataFactory.create());
         var comment = mongoTemplate.save(CommentTestDataFactory.create(form1.getId(), user.getId()));
@@ -96,7 +95,7 @@ class CommentRatingDeleteIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldReturnNotFoundWhenCommentNotRatedByUser() {
-        var form = mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC));
+        var form = mongoTemplate.save(FormTestDataFactory.create());
         var user = mongoTemplate.save(UserTestDataFactory.create());
         var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), user.getId()));
 
@@ -115,7 +114,7 @@ class CommentRatingDeleteIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldDeleteUpvoteAndDecrementCommentRatingScore() {
-        var form = mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC));
+        var form = mongoTemplate.save(FormTestDataFactory.create());
         var user = mongoTemplate.save(UserTestDataFactory.create());
         var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), user.getId()));
 
@@ -137,16 +136,17 @@ class CommentRatingDeleteIntegrationTest extends BaseIntegrationTest {
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
 
-        assertThat(mongoTemplate.findById(rating.getId(), CommentRatingEntity.class))
-                .isNull();
         var updatedComment = mongoTemplate.findById(comment.getId(), CommentEntity.class);
         assertThat(updatedComment).isNotNull();
         assertThat(updatedComment.getRatingScore()).isZero();
+
+        assertThat(mongoTemplate.findById(rating.getId(), CommentRatingEntity.class))
+                .isNull();
     }
 
     @Test
     void shouldDeleteDownvoteAndIncrementCommentRatingScore() {
-        var form = mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC));
+        var form = mongoTemplate.save(FormTestDataFactory.create());
         var user = mongoTemplate.save(UserTestDataFactory.create());
         var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), user.getId()));
 
@@ -168,10 +168,11 @@ class CommentRatingDeleteIntegrationTest extends BaseIntegrationTest {
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
 
-        assertThat(mongoTemplate.findById(rating.getId(), CommentRatingEntity.class))
-                .isNull();
         var updatedComment = mongoTemplate.findById(comment.getId(), CommentEntity.class);
         assertThat(updatedComment).isNotNull();
         assertThat(updatedComment.getRatingScore()).isZero();
+
+        assertThat(mongoTemplate.findById(rating.getId(), CommentRatingEntity.class))
+                .isNull();
     }
 }

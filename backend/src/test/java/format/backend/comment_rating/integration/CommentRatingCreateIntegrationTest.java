@@ -9,10 +9,12 @@ import static org.mockito.Mockito.when;
 
 import format.backend.auth.datafactory.JwtTestFactory;
 import format.backend.auth.datafactory.UserTestDataFactory;
+import format.backend.auth.entity.UserEntity;
 import format.backend.comment.datafactory.datafactory.CommentTestDataFactory;
 import format.backend.comment.entity.CommentEntity;
 import format.backend.comment_rating.datafactory.CommentRatingTestDataFactory;
 import format.backend.comment_rating.dto.CommentRatingRequestDto;
+import format.backend.comment_rating.entity.CommentRatingEntity;
 import format.backend.comment_rating.entity.RatingType;
 import format.backend.core.integration.BaseIntegrationTest;
 import format.backend.form.datafactory.FormTestDataFactory;
@@ -25,7 +27,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
 
-public class CommentRatingCreateIntegrationTest extends BaseIntegrationTest {
+class CommentRatingCreateIntegrationTest extends BaseIntegrationTest {
 
     private static final String FORM_PATH_PARAM = "formIdOrSlug";
     private static final String COMMENT_PATH_PARAM = "commentId";
@@ -115,12 +117,14 @@ public class CommentRatingCreateIntegrationTest extends BaseIntegrationTest {
         var token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
+        var request = new CommentRatingRequestDto(RatingType.UPVOTE);
+
         given().auth()
                 .oauth2(token.getTokenValue())
                 .pathParam(FORM_PATH_PARAM, form.getId())
                 .pathParam(COMMENT_PATH_PARAM, comment.getId())
                 .contentType(ContentType.JSON)
-                .body(new CommentRatingRequestDto(RatingType.UPVOTE))
+                .body(request)
                 .when()
                 .post(PATH)
                 .then()
@@ -128,9 +132,7 @@ public class CommentRatingCreateIntegrationTest extends BaseIntegrationTest {
                 .body("id", notNullValue())
                 .body("type", is(RatingType.UPVOTE.name()));
 
-        var updatedComment = mongoTemplate.findById(comment.getId(), CommentEntity.class);
-        assertThat(updatedComment).isNotNull();
-        assertThat(updatedComment.getRatingScore()).isEqualTo(1L);
+        verifyDbState(comment, 1, user, request);
     }
 
     @Test
@@ -142,21 +144,21 @@ public class CommentRatingCreateIntegrationTest extends BaseIntegrationTest {
         var token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
+        var request = new CommentRatingRequestDto(RatingType.DOWNVOTE);
+
         given().auth()
                 .oauth2(token.getTokenValue())
                 .pathParam(FORM_PATH_PARAM, form.getId())
                 .pathParam(COMMENT_PATH_PARAM, comment.getId())
                 .contentType(ContentType.JSON)
-                .body(new CommentRatingRequestDto(RatingType.DOWNVOTE))
+                .body(request)
                 .when()
                 .post(PATH)
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
                 .body("type", is(RatingType.DOWNVOTE.name()));
 
-        var updatedComment = mongoTemplate.findById(comment.getId(), CommentEntity.class);
-        assertThat(updatedComment).isNotNull();
-        assertThat(updatedComment.getRatingScore()).isEqualTo(-1L);
+        verifyDbState(comment, -1, user, request);
     }
 
     @Test
@@ -174,21 +176,21 @@ public class CommentRatingCreateIntegrationTest extends BaseIntegrationTest {
         var token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
+        var request = new CommentRatingRequestDto(RatingType.DOWNVOTE);
+
         given().auth()
                 .oauth2(token.getTokenValue())
                 .pathParam(FORM_PATH_PARAM, form.getId())
                 .pathParam(COMMENT_PATH_PARAM, comment.getId())
                 .contentType(ContentType.JSON)
-                .body(new CommentRatingRequestDto(RatingType.DOWNVOTE))
+                .body(request)
                 .when()
                 .post(PATH)
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
-                .body("type", is(RatingType.DOWNVOTE.name()));
+                .body("type", is(request.type().name()));
 
-        var updatedComment = mongoTemplate.findById(comment.getId(), CommentEntity.class);
-        assertThat(updatedComment).isNotNull();
-        assertThat(updatedComment.getRatingScore()).isEqualTo(-1L);
+        verifyDbState(comment, -1, user, request);
     }
 
     @Test
@@ -206,21 +208,21 @@ public class CommentRatingCreateIntegrationTest extends BaseIntegrationTest {
         var token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
+        var request = new CommentRatingRequestDto(RatingType.UPVOTE);
+
         given().auth()
                 .oauth2(token.getTokenValue())
                 .pathParam(FORM_PATH_PARAM, form.getId())
                 .pathParam(COMMENT_PATH_PARAM, comment.getId())
                 .contentType(ContentType.JSON)
-                .body(new CommentRatingRequestDto(RatingType.UPVOTE))
+                .body(request)
                 .when()
                 .post(PATH)
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
-                .body("type", is(RatingType.UPVOTE.name()));
+                .body("type", is(request.type().name()));
 
-        var updatedComment = mongoTemplate.findById(comment.getId(), CommentEntity.class);
-        assertThat(updatedComment).isNotNull();
-        assertThat(updatedComment.getRatingScore()).isEqualTo(1L);
+        verifyDbState(comment, 1, user, request);
     }
 
     @Test
@@ -238,20 +240,35 @@ public class CommentRatingCreateIntegrationTest extends BaseIntegrationTest {
         var token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
+        var request = new CommentRatingRequestDto(RatingType.UPVOTE);
+
         given().auth()
                 .oauth2(token.getTokenValue())
                 .pathParam(FORM_PATH_PARAM, form.getId())
                 .pathParam(COMMENT_PATH_PARAM, comment.getId())
                 .contentType(ContentType.JSON)
-                .body(new CommentRatingRequestDto(RatingType.UPVOTE))
+                .body(request)
                 .when()
                 .post(PATH)
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
                 .body("type", is(RatingType.UPVOTE.name()));
 
+        verifyDbState(comment, 1L, user, request);
+    }
+
+    private void verifyDbState(
+            CommentEntity comment, long expectedRatingScore, UserEntity user, CommentRatingRequestDto request) {
         var updatedComment = mongoTemplate.findById(comment.getId(), CommentEntity.class);
         assertThat(updatedComment).isNotNull();
-        assertThat(updatedComment.getRatingScore()).isEqualTo(1L);
+        assertThat(updatedComment.getRatingScore()).isEqualTo(expectedRatingScore);
+
+        var commentRatings = mongoTemplate.findAll(CommentRatingEntity.class);
+        assertThat(commentRatings).hasSize(1);
+
+        var commentRating = commentRatings.getFirst();
+        assertThat(commentRating.getCommentId()).isEqualTo(comment.getId());
+        assertThat(commentRating.getAuthorId()).isEqualTo(user.getId());
+        assertThat(commentRating.getType()).isEqualTo(request.type().getValue());
     }
 }
