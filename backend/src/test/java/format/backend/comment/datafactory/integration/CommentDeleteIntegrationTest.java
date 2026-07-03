@@ -138,6 +138,11 @@ class CommentDeleteIntegrationTest extends BaseIntegrationTest {
                 .statusCode(HttpStatus.NO_CONTENT.value());
 
         assertThat(mongoTemplate.findById(comment.getId(), CommentEntity.class)).isNull();
+        assertThat(mongoTemplate.count(
+                        Query.query(Criteria.where(CommentRatingEntity::getCommentId)
+                                .is(comment.getId())),
+                        CommentRatingEntity.class))
+                .isZero();
     }
 
     @Test

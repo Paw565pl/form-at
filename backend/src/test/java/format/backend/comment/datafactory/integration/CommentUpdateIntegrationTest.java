@@ -2,8 +2,7 @@ package format.backend.comment.datafactory.integration;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -28,7 +27,7 @@ class CommentUpdateIntegrationTest extends BaseIntegrationTest {
             "/api/v1/forms/{%s}/comments/{%s}".formatted(FORM_PATH_PARAM, COMMENT_PATH_PARAM);
 
     @Test
-    void shouldReturnUnauthorizedIfUserIsAnonymous() {
+    void shouldReturnUnauthorizedWhenUserIsAnonymous() {
         var formId = ObjectId.get().toHexString();
         var commentId = ObjectId.get().toHexString();
 
@@ -170,13 +169,18 @@ class CommentUpdateIntegrationTest extends BaseIntegrationTest {
                 .put(PATH)
                 .then()
                 .statusCode(HttpStatus.OK.value())
-                .body("id", is(comment.getId()))
-                .body("content", is(newContent))
-                .body("authorName", is(user.getUsername()));
+                .body("id", notNullValue())
+                .body("authorName", is(user.getUsername()))
+                .body("content", is(newContent));
 
-        var updatedCommentInDb = mongoTemplate.findById(comment.getId(), CommentEntity.class);
-        assertThat(updatedCommentInDb).isNotNull();
-        assertThat(updatedCommentInDb.getContent()).isEqualTo(newContent);
+        var savedComments = mongoTemplate.findAll(CommentEntity.class);
+        assertThat(savedComments.size()).isEqualTo(1);
+
+        var savedComment = savedComments.getFirst();
+        assertThat(savedComment.getId()).isNotNull();
+        assertThat(savedComment.getFormId()).isEqualTo(form.getId());
+        assertThat(savedComment.getAuthorId()).isEqualTo(user.getId());
+        assertThat(savedComment.getContent()).isEqualTo(newContent);
     }
 
     @Test
@@ -206,26 +210,36 @@ class CommentUpdateIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldResolveFormIdBySlugAndUpdateComment() {
-        var form = FormTestDataFactory.create();
-        form.setSlug("slug");
-        mongoTemplate.save(form);
-
+        var form = mongoTemplate.save(FormTestDataFactory.create());
         var user = mongoTemplate.save(UserTestDataFactory.create());
         var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), user.getId(), "comment"));
 
         var token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
+        var newContent = "updated comment";
+
         given().auth()
                 .oauth2(token.getTokenValue())
                 .pathParam(FORM_PATH_PARAM, form.getSlug())
                 .pathParam(COMMENT_PATH_PARAM, comment.getId())
                 .contentType(ContentType.JSON)
-                .body(new CommentRequestDto("updated comment"))
+                .body(new CommentRequestDto(newContent))
                 .when()
                 .put(PATH)
                 .then()
                 .statusCode(HttpStatus.OK.value())
-                .body("content", is("updated comment"));
+                .body("id", notNullValue())
+                .body("authorName", is(user.getUsername()))
+                .body("content", is(newContent));
+
+        var savedComments = mongoTemplate.findAll(CommentEntity.class);
+        assertThat(savedComments.size()).isEqualTo(1);
+
+        var savedComment = savedComments.getFirst();
+        assertThat(savedComment.getId()).isNotNull();
+        assertThat(savedComment.getFormId()).isEqualTo(form.getId());
+        assertThat(savedComment.getAuthorId()).isEqualTo(user.getId());
+        assertThat(savedComment.getContent()).isEqualTo(newContent);
     }
 }

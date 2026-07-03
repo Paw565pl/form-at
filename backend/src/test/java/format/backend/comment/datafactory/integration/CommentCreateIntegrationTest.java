@@ -25,12 +25,12 @@ class CommentCreateIntegrationTest extends BaseIntegrationTest {
     private static final String PATH = "/api/v1/forms/{%s}/comments".formatted(PATH_PARAM);
 
     @Test
-    void shouldReturnUnauthorizedIfUserIsAnonymous() {
+    void shouldReturnUnauthorizedWhenUserIsAnonymous() {
         var form = mongoTemplate.save(FormTestDataFactory.create());
 
         given().pathParam(PATH_PARAM, form.getId())
                 .contentType(ContentType.JSON)
-                .body(new CommentRequestDto("This is a great form!"))
+                .body(new CommentRequestDto("test comment"))
                 .when()
                 .post(PATH)
                 .then()
@@ -48,7 +48,7 @@ class CommentCreateIntegrationTest extends BaseIntegrationTest {
                 .oauth2(token.getTokenValue())
                 .pathParam(PATH_PARAM, ObjectId.get().toHexString())
                 .contentType(ContentType.JSON)
-                .body(new CommentRequestDto("This is a great form!"))
+                .body(new CommentRequestDto("test comment"))
                 .when()
                 .post(PATH)
                 .then()
@@ -82,7 +82,7 @@ class CommentCreateIntegrationTest extends BaseIntegrationTest {
         var token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
-        var commentContent = "This is a really helpful form, thanks!";
+        var commentContent = "test comment";
 
         given().auth()
                 .oauth2(token.getTokenValue())
@@ -94,11 +94,19 @@ class CommentCreateIntegrationTest extends BaseIntegrationTest {
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
                 .body("id", notNullValue())
-                .body("content", is(commentContent))
                 .body("authorName", is(user.getUsername()))
+                .body("content", is(commentContent))
+                .body("ratingScore", is(0))
                 .body("userRating", nullValue());
 
-        var savedCommentsCount = mongoTemplate.findAll(CommentEntity.class).size();
-        assertThat(savedCommentsCount).isEqualTo(1);
+        var savedComments = mongoTemplate.findAll(CommentEntity.class);
+        assertThat(savedComments.size()).isEqualTo(1);
+
+        var savedComment = savedComments.getFirst();
+        assertThat(savedComment.getId()).isNotNull();
+        assertThat(savedComment.getFormId()).isEqualTo(form.getId());
+        assertThat(savedComment.getAuthorId()).isEqualTo(user.getId());
+        assertThat(savedComment.getContent()).isEqualTo(commentContent);
+        assertThat(savedComment.getRatingScore()).isEqualTo(0);
     }
 }
