@@ -173,8 +173,8 @@ class FormCreateIntegrationTest extends BaseIntegrationTest {
         assertThat(savedForm.getQuestionsCount())
                 .isEqualTo(requestBody.questions().size());
         assertThat(savedForm.getQuestions()).hasSize(requestBody.questions().size());
-        assertThat(savedForm.getSubmissionsCount()).isEqualTo(0);
-        assertThat(savedForm.getRatingsCount()).isEqualTo(0);
-        assertThat(savedForm.getRatingsSum()).isEqualTo(0);
+        assertThat(savedForm.getSubmissionsCount()).isZero();
+        assertThat(savedForm.getRatingsCount()).isZero();
+        assertThat(savedForm.getRatingsSum()).isZero();
     }
 }

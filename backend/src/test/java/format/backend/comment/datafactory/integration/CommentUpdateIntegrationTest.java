@@ -9,12 +9,14 @@ import static org.mockito.Mockito.when;
 
 import format.backend.auth.datafactory.JwtTestFactory;
 import format.backend.auth.datafactory.UserTestDataFactory;
+import format.backend.auth.entity.UserEntity;
 import format.backend.comment.datafactory.datafactory.CommentTestDataFactory;
 import format.backend.comment.dto.CommentRequestDto;
 import format.backend.comment.entity.CommentEntity;
 import format.backend.comment_rating.datafactory.CommentRatingTestDataFactory;
 import format.backend.core.integration.BaseIntegrationTest;
 import format.backend.form.datafactory.FormTestDataFactory;
+import format.backend.form.entity.FormEntity;
 import io.restassured.http.ContentType;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
@@ -150,6 +152,31 @@ class CommentUpdateIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
+    void shouldUpdateCommentAndReturnUserRatingIfExists() {
+        var form = mongoTemplate.save(FormTestDataFactory.create());
+        var user = mongoTemplate.save(UserTestDataFactory.create());
+        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), user.getId()));
+
+        mongoTemplate.save(CommentRatingTestDataFactory.create(comment.getId(), user.getId(), true));
+
+        var token = JwtTestFactory.create(user);
+        when(jwtDecoder.decode(anyString())).thenReturn(token);
+
+        given().auth()
+                .oauth2(token.getTokenValue())
+                .pathParam(FORM_PATH_PARAM, form.getId())
+                .pathParam(COMMENT_PATH_PARAM, comment.getId())
+                .contentType(ContentType.JSON)
+                .body(new CommentRequestDto("updated comment"))
+                .when()
+                .put(PATH)
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("id", is(comment.getId()))
+                .body("userRating", notNullValue());
+    }
+
+    @Test
     void shouldUpdateCommentSuccessfully() {
         var form = mongoTemplate.save(FormTestDataFactory.create());
         var user = mongoTemplate.save(UserTestDataFactory.create());
@@ -174,39 +201,7 @@ class CommentUpdateIntegrationTest extends BaseIntegrationTest {
                 .body("authorName", is(user.getUsername()))
                 .body("content", is(newContent));
 
-        var savedComments = mongoTemplate.findAll(CommentEntity.class);
-        assertThat(savedComments.size()).isEqualTo(1);
-
-        var savedComment = savedComments.getFirst();
-        assertThat(savedComment.getId()).isNotNull();
-        assertThat(savedComment.getFormId()).isEqualTo(form.getId());
-        assertThat(savedComment.getAuthorId()).isEqualTo(user.getId());
-        assertThat(savedComment.getContent()).isEqualTo(newContent);
-    }
-
-    @Test
-    void shouldUpdateCommentAndReturnUserRatingIfExists() {
-        var form = mongoTemplate.save(FormTestDataFactory.create());
-        var user = mongoTemplate.save(UserTestDataFactory.create());
-        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), user.getId()));
-
-        mongoTemplate.save(CommentRatingTestDataFactory.create(comment.getId(), user.getId(), true));
-
-        var token = JwtTestFactory.create(user);
-        when(jwtDecoder.decode(anyString())).thenReturn(token);
-
-        given().auth()
-                .oauth2(token.getTokenValue())
-                .pathParam(FORM_PATH_PARAM, form.getId())
-                .pathParam(COMMENT_PATH_PARAM, comment.getId())
-                .contentType(ContentType.JSON)
-                .body(new CommentRequestDto("updated comment"))
-                .when()
-                .put(PATH)
-                .then()
-                .statusCode(HttpStatus.OK.value())
-                .body("id", is(comment.getId()))
-                .body("userRating", notNullValue());
+        verifyDbState(form, user, newContent);
     }
 
     @Test
@@ -234,8 +229,12 @@ class CommentUpdateIntegrationTest extends BaseIntegrationTest {
                 .body("authorName", is(user.getUsername()))
                 .body("content", is(newContent));
 
+        verifyDbState(form, user, newContent);
+    }
+
+    private void verifyDbState(FormEntity form, UserEntity user, String newContent) {
         var savedComments = mongoTemplate.findAll(CommentEntity.class);
-        assertThat(savedComments.size()).isEqualTo(1);
+        assertThat(savedComments).hasSize(1);
 
         var savedComment = savedComments.getFirst();
         assertThat(savedComment.getId()).isNotNull();
