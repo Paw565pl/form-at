@@ -62,8 +62,8 @@ class FormCreateIntegrationTest extends BaseIntegrationTest {
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
         var optionalQuestion = new QuestionRequestDto("question", QuestionType.OPEN, null, false, List.of());
-        var request = FormRequestDtoTestDataFactory.createPublicWithCustomQuestions(
-                List.of(optionalQuestion, optionalQuestion, optionalQuestion));
+        var request = FormRequestDtoTestDataFactory.create(
+                FormStatus.PUBLIC, null, List.of(optionalQuestion, optionalQuestion, optionalQuestion));
 
         given().auth()
                 .oauth2(token.getTokenValue())
