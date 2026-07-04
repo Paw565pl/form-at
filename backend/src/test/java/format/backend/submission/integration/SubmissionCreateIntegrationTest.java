@@ -239,7 +239,7 @@ class SubmissionCreateIntegrationTest extends BaseIntegrationTest {
                 .findFirst()
                 .orElseThrow();
 
-        var invalidAnswer = new SubmissionAnswerRequestDto(openQuestion.getId(), Set.of(), "   ");
+        var invalidAnswer = new SubmissionAnswerRequestDto(openQuestion.getId(), Set.of(), " ".repeat(20));
 
         given().auth()
                 .oauth2(token.getTokenValue())
@@ -291,6 +291,32 @@ class SubmissionCreateIntegrationTest extends BaseIntegrationTest {
                 .findFirst()
                 .orElseThrow();
         var invalidAnswer = new SubmissionAnswerRequestDto(multipleChoiceQuestion.getId(), Set.of(), null);
+
+        given().auth()
+                .oauth2(token.getTokenValue())
+                .pathParam(FORM_PATH_PARAM, form.getId())
+                .contentType(ContentType.JSON)
+                .body(SubmissionRequestDtoTestDataFactory.createValidWithOverriddenAnswer(form, invalidAnswer))
+                .when()
+                .post(PATH)
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void shouldReturnBadRequestWhenMultipleChoiceQuestionHasInvalidAnswerId() {
+        var ownerUser = mongoTemplate.save(UserTestDataFactory.create());
+        var form = mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC, ownerUser.getId()));
+
+        var token = JwtTestFactory.create(ownerUser);
+        when(jwtDecoder.decode(anyString())).thenReturn(token);
+
+        var multipleChoiceQuestion = form.getQuestions().stream()
+                .filter(q -> q.getType().equals(QuestionType.MULTIPLE_CHOICE))
+                .findFirst()
+                .orElseThrow();
+        var invalidAnswer = new SubmissionAnswerRequestDto(
+                multipleChoiceQuestion.getId(), Set.of(ObjectId.get().toHexString()), null);
 
         given().auth()
                 .oauth2(token.getTokenValue())
