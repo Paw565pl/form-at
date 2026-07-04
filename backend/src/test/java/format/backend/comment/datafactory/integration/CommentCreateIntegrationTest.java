@@ -100,13 +100,13 @@ class CommentCreateIntegrationTest extends BaseIntegrationTest {
                 .body("userRating", nullValue());
 
         var savedComments = mongoTemplate.findAll(CommentEntity.class);
-        assertThat(savedComments.size()).isEqualTo(1);
+        assertThat(savedComments).hasSize(1);
 
         var savedComment = savedComments.getFirst();
         assertThat(savedComment.getId()).isNotNull();
         assertThat(savedComment.getFormId()).isEqualTo(form.getId());
         assertThat(savedComment.getAuthorId()).isEqualTo(user.getId());
         assertThat(savedComment.getContent()).isEqualTo(commentContent);
-        assertThat(savedComment.getRatingScore()).isEqualTo(0);
+        assertThat(savedComment.getRatingScore()).isZero();
     }
 }
