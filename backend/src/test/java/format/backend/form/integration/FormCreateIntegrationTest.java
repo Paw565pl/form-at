@@ -15,9 +15,12 @@ import format.backend.core.integration.BaseIntegrationTest;
 import format.backend.form.datafactory.FormRequestDtoTestDataFactory;
 import format.backend.form.datafactory.FormTestDataFactory;
 import format.backend.form.dto.FormRequestDto;
+import format.backend.form.dto.QuestionRequestDto;
 import format.backend.form.entity.FormEntity;
 import format.backend.form.entity.FormStatus;
+import format.backend.form.entity.QuestionType;
 import io.restassured.http.ContentType;
+import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -46,6 +49,26 @@ class FormCreateIntegrationTest extends BaseIntegrationTest {
                 .oauth2(token.getTokenValue())
                 .contentType(ContentType.JSON)
                 .body(Map.of())
+                .when()
+                .post(PATH)
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void shouldReturnBadRequestWhenNoRequiredQuestions() {
+        var user = mongoTemplate.save(UserTestDataFactory.create());
+        var token = JwtTestFactory.create(user);
+        when(jwtDecoder.decode(anyString())).thenReturn(token);
+
+        var optionalQuestion = new QuestionRequestDto("question", QuestionType.OPEN, null, false, List.of());
+        var request = FormRequestDtoTestDataFactory.createPublicWithCustomQuestions(
+                List.of(optionalQuestion, optionalQuestion, optionalQuestion));
+
+        given().auth()
+                .oauth2(token.getTokenValue())
+                .contentType(ContentType.JSON)
+                .body(request)
                 .when()
                 .post(PATH)
                 .then()

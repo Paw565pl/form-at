@@ -15,6 +15,24 @@ public abstract class FormRequestDtoTestDataFactory {
         return createBaseFormRequest(FormStatus.PUBLIC, null);
     }
 
+    public static FormRequestDto createPublicWithCustomQuestions(List<QuestionRequestDto> questions) {
+        return new FormRequestDto(
+                "form",
+                null,
+                Language.EN,
+                FormStatus.PUBLIC,
+                null,
+                null,
+                null,
+                Duration.ofMinutes(15),
+                null,
+                true,
+                true,
+                true,
+                true,
+                questions);
+    }
+
     public static FormRequestDto createValidPrivate(String password) {
         return createBaseFormRequest(FormStatus.PRIVATE, password);
     }
