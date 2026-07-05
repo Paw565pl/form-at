@@ -11,9 +11,9 @@ class S3Config {
     @Bean
     MinioClient minioClient(S3Properties s3Properties) {
         return MinioClient.builder()
-                .endpoint(s3Properties.getUrl())
-                .credentials(s3Properties.getAccessKey(), s3Properties.getSecretKey())
-                .region(s3Properties.getRegion())
+                .endpoint(s3Properties.url())
+                .credentials(s3Properties.accessKey(), s3Properties.secretKey())
+                .region(s3Properties.region())
                 .build();
     }
 }

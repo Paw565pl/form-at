@@ -1,6 +1,5 @@
 package format.backend.form.entity;
 
-import java.time.Duration;
 import java.time.Instant;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -18,7 +17,7 @@ public record FormListAggregationResult(
 
         @NonNull FormStatus status,
 
-        @NonNull Duration estimatedDuration,
+        @NonNull Integer estimatedDurationSeconds,
 
         @Nullable String thumbnailKey,
 

@@ -52,10 +52,10 @@ public class UploadService {
     @PostConstruct
     private void createBucket() throws MinioException {
         val exists = minioClient.bucketExists(
-                BucketExistsArgs.builder().bucket(s3Properties.getBucket()).build());
+                BucketExistsArgs.builder().bucket(s3Properties.bucket()).build());
         if (!exists) {
             minioClient.makeBucket(
-                    MakeBucketArgs.builder().bucket(s3Properties.getBucket()).build());
+                    MakeBucketArgs.builder().bucket(s3Properties.bucket()).build());
         }
     }
 
@@ -80,7 +80,7 @@ public class UploadService {
                                     "Could not resolve ImageType for filename: " + u.getFilename()))
                             .getContentType();
                     val postPolicy = new PostPolicy(
-                            s3Properties.getBucket(), u.getExpiresAt().atZone(ZoneOffset.UTC));
+                            s3Properties.bucket(), u.getExpiresAt().atZone(ZoneOffset.UTC));
                     postPolicy.addContentLengthRangeCondition(1, MAX_CONTENT_LENGTH);
                     postPolicy.addEqualsCondition("x-amz-meta-filename", u.getFilename());
                     postPolicy.addEqualsCondition("x-amz-meta-user-id", u.getUserId());
@@ -117,7 +117,7 @@ public class UploadService {
 
         try {
             minioClient.statObject(StatObjectArgs.builder()
-                    .bucket(s3Properties.getBucket())
+                    .bucket(s3Properties.bucket())
                     .object(key)
                     .build());
             return true;
@@ -140,7 +140,7 @@ public class UploadService {
         try {
             return minioClient.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder()
                     .method(GET)
-                    .bucket(s3Properties.getBucket())
+                    .bucket(s3Properties.bucket())
                     .object(key)
                     .expiry(24, TimeUnit.HOURS)
                     .build());
@@ -155,7 +155,7 @@ public class UploadService {
 
         val deleteObjects = keys.stream().map(DeleteRequest.Object::new).toList();
         val deleteResults = minioClient.removeObjects(RemoveObjectsArgs.builder()
-                .bucket(s3Properties.getBucket())
+                .bucket(s3Properties.bucket())
                 .objects(deleteObjects)
                 .build());
 

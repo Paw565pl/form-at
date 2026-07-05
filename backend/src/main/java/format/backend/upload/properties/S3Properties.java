@@ -1,27 +1,19 @@
 package format.backend.upload.properties;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 import org.jspecify.annotations.NonNull;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
-@Getter
-@Setter
-@ToString
 @Validated
 @ConfigurationProperties("s3")
-public class S3Properties {
+public record S3Properties(
+        @NotBlank @NonNull String url,
 
-    private @NotBlank @NonNull String url;
+        @NotBlank @NonNull String region,
 
-    private @NotBlank @NonNull String region;
+        @NotBlank @NonNull String accessKey,
 
-    private @NotBlank @NonNull String accessKey;
+        @NotBlank @NonNull String secretKey,
 
-    private @NotBlank @NonNull String secretKey;
-
-    private @NotBlank @NonNull String bucket;
-}
+        @NotBlank @NonNull String bucket) {}

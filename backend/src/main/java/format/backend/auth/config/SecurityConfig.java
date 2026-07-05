@@ -38,9 +38,9 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource(CorsProperties corsProperties) {
         val configuration = new CorsConfiguration();
-        configuration.setAllowedHeaders(corsProperties.getAllowedHeaders());
-        configuration.setAllowedMethods(corsProperties.getAllowedMethods());
-        configuration.setAllowedOrigins(corsProperties.getAllowedOrigins());
+        configuration.setAllowedHeaders(corsProperties.allowedHeaders());
+        configuration.setAllowedMethods(corsProperties.allowedMethods());
+        configuration.setAllowedOrigins(corsProperties.allowedOrigins());
 
         val source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

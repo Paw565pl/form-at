@@ -1,0 +1,33 @@
+package format.backend.auth.datafactory;
+
+import format.backend.auth.entity.Role;
+import format.backend.auth.entity.UserEntity;
+import java.time.Instant;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import org.springframework.security.oauth2.jwt.Jwt;
+
+public abstract class JwtTestFactory {
+
+    public static Jwt create(UserEntity userEntity) {
+        return create(userEntity, List.of());
+    }
+
+    public static Jwt create(UserEntity userEntity, Collection<Role> roles) {
+        var roleValues = roles.stream().map(Role::getValue).toList();
+        var now = Instant.now();
+
+        return Jwt.withTokenValue("mock-token")
+                .header("alg", "HS256")
+                .issuer("self")
+                .header("typ", "JWT")
+                .claim("sub", userEntity.getId())
+                .claim("preferred_username", userEntity.getUsername())
+                .claim("email", userEntity.getEmail())
+                .claim("realm_access", Map.of("roles", roleValues))
+                .issuedAt(now)
+                .expiresAt(now.plusSeconds(3600))
+                .build();
+    }
+}
