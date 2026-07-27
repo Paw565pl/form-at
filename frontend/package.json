@@ -23,7 +23,7 @@
     "clsx": "^2.1.1",
     "lucide-react": "^1.21.0",
     "next": "^16.2.9",
-    "next-auth": "5.0.0-beta.31",
+    "next-auth": "5.0.0-beta.32",
     "next-intl": "^4.13.0",
     "next-navigation-guard": "^0.2.0",
     "next-runtime-env": "^3.3.0",
