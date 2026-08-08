@@ -1,4 +1,4 @@
-FROM node:26-alpine
+FROM platformatic/node-caged:26-alpine
 
 WORKDIR /app
 
@@ -16,4 +16,4 @@ COPY . .
 
 EXPOSE 3000
 
-CMD ["pnpm", "run", "dev"]
+CMD [ "pnpm", "run", "dev" ]

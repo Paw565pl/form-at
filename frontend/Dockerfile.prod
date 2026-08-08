@@ -1,6 +1,6 @@
 FROM platformatic/node-caged:26-alpine AS base
 
-FROM base AS deps
+FROM base AS dependencies
 
 WORKDIR /app
 
@@ -9,16 +9,20 @@ RUN apk add --no-cache libc6-compat && \
   npm install -g corepack
 
 # Copy package-related files first to leverage Docker's caching mechanism
-COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* pnpm-workspace.yaml .npmrc* ./
+COPY package.json package-lock.json* .npmrc* yarn.lock* pnpm-lock.yaml* pnpm-workspace.yaml ./
 
 # Install project dependencies with frozen lockfile for reproducible builds
 RUN --mount=type=cache,target=/root/.npm \
   --mount=type=cache,target=/usr/local/share/.cache/yarn \
   --mount=type=cache,target=/root/.local/share/pnpm/store \
-  if [ -f package-lock.json ]; then npm ci --no-audit --no-fund; \
-  elif [ -f yarn.lock ]; then corepack enable yarn && yarn install --frozen-lockfile --production=false; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm install --frozen-lockfile; \
-  else echo "Lockfile not found." && exit 1; \
+  if [ -f package-lock.json ]; then \
+    npm ci --no-audit --no-fund; \
+  elif [ -f yarn.lock ]; then \
+    corepack enable yarn && yarn install --frozen-lockfile --production=false && yarn cache clean; \
+  elif [ -f pnpm-lock.yaml ]; then \
+    corepack enable pnpm && pnpm install --frozen-lockfile; \
+  else \
+    echo "Lockfile not found." && exit 1; \
   fi
 
 FROM base AS builder
@@ -31,17 +35,21 @@ ENV CI=1
 
 WORKDIR /app
 
-COPY --from=deps /app/node_modules ./node_modules
-COPY . .
-
 RUN npm install -g corepack
+
+COPY --from=dependencies /app/node_modules ./node_modules
+COPY . .
 
 # Build Next.js application
 RUN --mount=type=cache,target=/app/.next/cache \
-  if [ -f package-lock.json ]; then npm run build; \
-  elif [ -f yarn.lock ]; then corepack enable yarn && yarn build; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm build; \
-  else echo "Lockfile not found." && exit 1; \
+  if [ -f package-lock.json ]; then \
+    npm run build; \
+  elif [ -f yarn.lock ]; then \
+    corepack enable yarn && yarn build; \
+  elif [ -f pnpm-lock.yaml ]; then \
+    corepack enable pnpm && pnpm build; \
+  else \
+    echo "Lockfile not found." && exit 1; \
   fi
 
 FROM base AS runner
@@ -53,13 +61,15 @@ ENV NODE_ENV=production
 ENV HOSTNAME="0.0.0.0"
 ENV PORT=3000
 
-RUN addgroup --system --gid 1001 nextjs && \
-  adduser --system --uid 1001 nextjs && \
-  apk add --no-cache curl
+RUN apk add --no-cache curl && \
+  addgroup --system --gid 1001 nextjs && \
+  adduser --system --uid 1001 --ingroup nextjs nextjs && \
+  mkdir .next && \
+  chown nextjs:nextjs .next
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder --chown=nextjs /app/public ./public
+COPY --from=builder --chown=nextjs:nextjs /app/public ./public
 COPY --from=builder --chown=nextjs:nextjs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nextjs /app/.next/static ./.next/static
 
@@ -67,4 +77,6 @@ USER nextjs
 
 EXPOSE 3000
 
-CMD ["node", "server.js"]
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 CMD [ "curl", "-f", "http://localhost:3000/api/health" ]
+
+ENTRYPOINT [ "node", "server.js" ]
