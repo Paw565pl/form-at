@@ -1,4 +1,4 @@
-name: Frontend Build
+name: Frontend build
 run-name: ${{ github.actor }} is building frontend
 on:
   pull_request:
