@@ -1,12 +1,13 @@
-name: Build Backend
+name: Backend build
 run-name: ${{ github.actor }} is building backend
 on:
   pull_request:
     paths:
       - "backend/**"
+      - ".github/workflows/backend-build.yaml"
 
 jobs:
-  build-and-test:
+  backend-build:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     defaults:
