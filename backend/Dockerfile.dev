@@ -1,18 +1,19 @@
 FROM bellsoft/liberica-runtime-container:jdk-25-slim-glibc
 
+ENV GRADLE_OPTS="-Dorg.gradle.daemon=false"
+
 WORKDIR /app
 
 COPY gradle gradle
-COPY gradlew build.gradle.kts settings.gradle.kts ./
+COPY gradlew build.gradle.kts settings.gradle.kts gradle.properties ./
 
-RUN --mount=type=cache,target=/home/gradle/.gradle \ 
+RUN --mount=type=cache,target=/root/.gradle \
+    --mount=type=cache,target=/app/.gradle \
     chmod u+x ./gradlew && \
-    ./gradlew dependencies --no-daemon
+    ./gradlew dependencies
 
 COPY . .
 
 EXPOSE 8080
 
-ENTRYPOINT [ "./gradlew", "--no-daemon" ]
-
-CMD [ "bootRun" ]
+ENTRYPOINT [ "./gradlew", "bootRun" ]

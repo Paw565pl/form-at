@@ -1,39 +1,44 @@
 FROM bellsoft/liberica-runtime-container:jdk-25-slim-glibc AS builder
 
+ENV GRADLE_OPTS="-Dorg.gradle.daemon=false"
 ENV SPRING_PROFILES_ACTIVE=prod
 
 WORKDIR /app
 
 COPY gradle gradle
-COPY gradlew build.gradle.kts settings.gradle.kts ./
+COPY gradlew build.gradle.kts settings.gradle.kts gradle.properties ./
 
-RUN --mount=type=cache,target=/home/gradle/.gradle \ 
+RUN --mount=type=cache,target=/root/.gradle \
+    --mount=type=cache,target=/app/.gradle \
     chmod u+x ./gradlew && \
-    ./gradlew dependencies --no-daemon
+    ./gradlew dependencies
 
 COPY . .
 
-RUN ./gradlew --no-daemon clean bootJar -Paot && \
+RUN --mount=type=cache,target=/root/.gradle \
+    --mount=type=cache,target=/app/.gradle \
+    ./gradlew -Paot bootJar && \
     mv build/libs/*.jar app.jar && \
     java -Djarmode=tools -jar app.jar extract --layers --destination extracted
 
-FROM bellsoft/liberica-runtime-container:jre-25-cds-glibc
+FROM bellsoft/liberica-runtime-container:jre-25-cds-slim-glibc
 
 ENV SPRING_PROFILES_ACTIVE=prod
 
 WORKDIR /app
 
-RUN apk --no-cache add curl && \
-    addgroup --system spring && \
-    adduser --system --disabled-password --ingroup spring spring
+RUN addgroup --system --gid 1001 spring && \
+    adduser --system --uid 1001 --ingroup spring spring
 
-COPY --from=builder --chown=spring /app/extracted/dependencies/ ./
-COPY --from=builder --chown=spring /app/extracted/spring-boot-loader/ ./
-COPY --from=builder --chown=spring /app/extracted/snapshot-dependencies/ ./
-COPY --from=builder --chown=spring /app/extracted/application/ ./
+COPY --from=builder --chown=spring:spring /app/extracted/dependencies/ ./
+COPY --from=builder --chown=spring:spring /app/extracted/spring-boot-loader/ ./
+COPY --from=builder --chown=spring:spring /app/extracted/snapshot-dependencies/ ./
+COPY --from=builder --chown=spring:spring /app/extracted/application/ ./
 
 USER spring
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-XX:+UseCompactObjectHeaders", "-Dspring.aot.enabled=true", "-jar", "app.jar"]
+HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 CMD [ "wget", "-qO-", "http://localhost:8080/actuator/health" ]
+
+ENTRYPOINT [ "java", "-XX:+UseCompactObjectHeaders", "-Dspring.aot.enabled=true", "-jar", "app.jar" ]
