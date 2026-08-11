@@ -60,10 +60,11 @@ final class FormValidator implements ConstraintValidator<ValidForm, FormRequestD
     }
 
     private static boolean isRequiredQuestionsCountValid(FormRequestDto value, ConstraintValidatorContext context) {
+        if (value.questions() == null) return true;
+
         val requiredQuestionsCount = value.questions().stream()
                 .filter(QuestionRequestDto::isRequired)
                 .count();
-
         if (requiredQuestionsCount < 1) {
             context.buildConstraintViolationWithTemplate("Form must have at least one required question")
                     .addPropertyNode("questions")

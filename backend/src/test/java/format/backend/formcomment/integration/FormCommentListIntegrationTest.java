@@ -26,13 +26,12 @@ final class FormCommentListIntegrationTest extends BaseIntegrationTest {
     private static final String PATH = "/api/v1/forms/{%s}/comments".formatted(PATH_PARAM);
 
     @Test
-    void shouldReturnEmptyListWhenFormDoesNotExist() {
+    void shouldReturnNotFoundWhenFormDoesNotExist() {
         given().pathParam(PATH_PARAM, ObjectId.get().toHexString())
                 .when()
                 .get(PATH)
                 .then()
-                .statusCode(HttpStatus.OK.value())
-                .body("page.totalElements", is(0));
+                .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
     @Test

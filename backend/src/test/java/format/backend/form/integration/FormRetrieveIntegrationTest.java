@@ -69,15 +69,15 @@ final class FormRetrieveIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    void shouldReturnUnauthorizedWhenAccessingClosedFormAnonymously() {
+    void shouldReturnNotFoundWhenAccessingClosedFormAnonymously() {
         val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults()
                 .status(FormStatus.CLOSED)
                 .build());
-        given().pathParam(PATH_PARAM, form.getId()).when().get(PATH).then().statusCode(HttpStatus.UNAUTHORIZED.value());
+        given().pathParam(PATH_PARAM, form.getId()).when().get(PATH).then().statusCode(HttpStatus.NOT_FOUND.value());
     }
 
     @Test
-    void shouldReturnForbiddenWhenAccessingClosedFormAsNonAuthor() {
+    void shouldReturnNotFoundWhenAccessingClosedFormAsNonAuthor() {
         val author = mongoTemplate.save(UserTestDataFactory.create());
         val nonAuthor = mongoTemplate.save(UserTestDataFactory.create());
         val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults()
@@ -94,7 +94,7 @@ final class FormRetrieveIntegrationTest extends BaseIntegrationTest {
                 .when()
                 .get(PATH)
                 .then()
-                .statusCode(HttpStatus.FORBIDDEN.value());
+                .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
     @Test

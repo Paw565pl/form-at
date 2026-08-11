@@ -23,9 +23,11 @@ import format.backend.submission.datafactory.SubmissionTestDataFactory;
 import format.backend.submission.domain.entity.SubmissionEntity;
 import format.backend.submission.domain.entity.SubmissionsStatisticsEntity;
 import format.backend.submission.domain.entity.SubmissionsStatisticsTestDataFactory;
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import lombok.val;
+import org.awaitility.Awaitility;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -139,23 +141,29 @@ final class FormDeleteIntegrationTest extends BaseIntegrationTest {
                         Query.query(Criteria.where(FormRatingEntity::getFormId).is(form.getId())),
                         FormRatingEntity.class))
                 .isZero();
-        assertThat(mongoTemplate.count(
-                        Query.query(Criteria.where(SubmissionEntity::getFormId).is(form.getId())),
-                        SubmissionEntity.class))
-                .isZero();
-        assertThat(mongoTemplate.count(
-                        Query.query(Criteria.where(SubmissionsStatisticsEntity::getFormId)
-                                .is(form.getId())),
-                        SubmissionsStatisticsEntity.class))
-                .isZero();
-        assertThat(mongoTemplate.count(
-                        Query.query(Criteria.where(FormCommentEntity::getFormId).is(form.getId())),
-                        FormCommentEntity.class))
-                .isZero();
-        assertThat(mongoTemplate.count(
-                        Query.query(Criteria.where(FormCommentRatingEntity::getCommentId)
-                                .is(comment.getId())),
-                        FormCommentRatingEntity.class))
-                .isZero();
+        Awaitility.waitAtMost(Duration.ofSeconds(10))
+                .untilAsserted(() -> assertThat(mongoTemplate.count(
+                                Query.query(Criteria.where(SubmissionEntity::getFormId)
+                                        .is(form.getId())),
+                                SubmissionEntity.class))
+                        .isZero());
+        Awaitility.waitAtMost(Duration.ofSeconds(10))
+                .untilAsserted(() -> assertThat(mongoTemplate.count(
+                                Query.query(Criteria.where(SubmissionsStatisticsEntity::getFormId)
+                                        .is(form.getId())),
+                                SubmissionsStatisticsEntity.class))
+                        .isZero());
+        Awaitility.waitAtMost(Duration.ofSeconds(10))
+                .untilAsserted(() -> assertThat(mongoTemplate.count(
+                                Query.query(Criteria.where(FormCommentEntity::getFormId)
+                                        .is(form.getId())),
+                                FormCommentEntity.class))
+                        .isZero());
+        Awaitility.waitAtMost(Duration.ofSeconds(10))
+                .untilAsserted(() -> assertThat(mongoTemplate.count(
+                                Query.query(Criteria.where(FormCommentRatingEntity::getCommentId)
+                                        .is(comment.getId())),
+                                FormCommentRatingEntity.class))
+                        .isZero());
     }
 }

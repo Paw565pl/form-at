@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 import format.backend.auth.datafactory.JwtTestFactory;
 import format.backend.auth.datafactory.UserTestDataFactory;
 import format.backend.core.BaseIntegrationTest;
+import format.backend.form.domain.entity.AnswerEntity;
 import format.backend.form.domain.entity.FormEntity;
 import format.backend.form.domain.entity.FormStatus;
 import format.backend.form.domain.entity.FormTestDataFactory;
@@ -80,13 +81,12 @@ final class SubmissionCreateIntegrationTest extends BaseIntegrationTest {
     @Test
     void shouldReturnConflictWhenFormDoesNotSaveSubmissions() {
         val ownerUser = mongoTemplate.save(UserTestDataFactory.create());
-
-        val form = FormTestDataFactory.createWithDefaults()
+        val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults()
                 .status(FormStatus.PUBLIC)
                 .authorId(ownerUser.getId())
-                .build();
-        form.setSaveSubmissions(false);
-        mongoTemplate.save(form);
+                .saveSubmissions(false)
+                .build());
+        ;
 
         val token = JwtTestFactory.create(ownerUser);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
@@ -475,16 +475,13 @@ final class SubmissionCreateIntegrationTest extends BaseIntegrationTest {
     @Test
     void shouldCreateSubmissionSuccessfullyForGuestWhenGuestSubmissionsAllowed() {
         val ownerUser = mongoTemplate.save(UserTestDataFactory.create());
-
-        val form = FormTestDataFactory.createWithDefaults()
+        val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults()
                 .status(FormStatus.PUBLIC)
                 .authorId(ownerUser.getId())
-                .build();
-        form.setAllowsGuestSubmissions(true);
-        mongoTemplate.save(form);
+                .allowsGuestSubmissions(true)
+                .build());
 
         val requestDto = SubmissionRequestDtoTestDataFactory.createValid(form);
-
         given().pathParam(FORM_PATH_PARAM, form.getId())
                 .contentType(ContentType.JSON)
                 .body(requestDto)
@@ -533,12 +530,26 @@ final class SubmissionCreateIntegrationTest extends BaseIntegrationTest {
                 .authorId(ownerUser.getId())
                 .questions(List.of(
                         QuestionEntity.builder()
-                                .content("question")
+                                .content("optional question")
                                 .type(QuestionType.OPEN)
                                 .isRequired(false)
                                 .build(),
                         QuestionEntity.builder()
-                                .content("question")
+                                .content("question A")
+                                .type(QuestionType.SINGLE_CHOICE)
+                                .isRequired(true)
+                                .answers(List.of(
+                                        new AnswerEntity("answer A", true), new AnswerEntity("answer B", false)))
+                                .build(),
+                        QuestionEntity.builder()
+                                .content("question B")
+                                .type(QuestionType.MULTIPLE_CHOICE)
+                                .isRequired(true)
+                                .answers(List.of(
+                                        new AnswerEntity("answer A", true), new AnswerEntity("answer B", false)))
+                                .build(),
+                        QuestionEntity.builder()
+                                .content("question C")
                                 .type(QuestionType.OPEN)
                                 .isRequired(true)
                                 .build()))

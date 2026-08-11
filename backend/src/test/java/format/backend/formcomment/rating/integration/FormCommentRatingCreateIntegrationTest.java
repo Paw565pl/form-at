@@ -41,7 +41,7 @@ final class FormCommentRatingCreateIntegrationTest extends BaseIntegrationTest {
                 .contentType(ContentType.JSON)
                 .body(new UpsertFormCommentRatingRequestDto(FormCommentRatingType.UPVOTE))
                 .when()
-                .post(PATH)
+                .put(PATH)
                 .then()
                 .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
@@ -60,7 +60,7 @@ final class FormCommentRatingCreateIntegrationTest extends BaseIntegrationTest {
                 .contentType(ContentType.JSON)
                 .body(new UpsertFormCommentRatingRequestDto(FormCommentRatingType.UPVOTE))
                 .when()
-                .post(PATH)
+                .put(PATH)
                 .then()
                 .statusCode(HttpStatus.NOT_FOUND.value());
     }
@@ -80,7 +80,7 @@ final class FormCommentRatingCreateIntegrationTest extends BaseIntegrationTest {
                 .contentType(ContentType.JSON)
                 .body(new UpsertFormCommentRatingRequestDto(FormCommentRatingType.UPVOTE))
                 .when()
-                .post(PATH)
+                .put(PATH)
                 .then()
                 .statusCode(HttpStatus.NOT_FOUND.value());
     }
@@ -103,7 +103,7 @@ final class FormCommentRatingCreateIntegrationTest extends BaseIntegrationTest {
                 .contentType(ContentType.JSON)
                 .body(new UpsertFormCommentRatingRequestDto(FormCommentRatingType.UPVOTE))
                 .when()
-                .post(PATH)
+                .put(PATH)
                 .then()
                 .statusCode(HttpStatus.NOT_FOUND.value());
     }
@@ -126,9 +126,9 @@ final class FormCommentRatingCreateIntegrationTest extends BaseIntegrationTest {
                 .contentType(ContentType.JSON)
                 .body(request)
                 .when()
-                .post(PATH)
+                .put(PATH)
                 .then()
-                .statusCode(HttpStatus.CREATED.value())
+                .statusCode(HttpStatus.OK.value())
                 .body("id", notNullValue())
                 .body("type", is(FormCommentRatingType.UPVOTE.name()));
 
@@ -153,9 +153,9 @@ final class FormCommentRatingCreateIntegrationTest extends BaseIntegrationTest {
                 .contentType(ContentType.JSON)
                 .body(request)
                 .when()
-                .post(PATH)
+                .put(PATH)
                 .then()
-                .statusCode(HttpStatus.CREATED.value())
+                .statusCode(HttpStatus.OK.value())
                 .body("type", is(FormCommentRatingType.DOWNVOTE.name()));
 
         verifyDbState(comment, -1, user, request);
@@ -186,9 +186,9 @@ final class FormCommentRatingCreateIntegrationTest extends BaseIntegrationTest {
                 .contentType(ContentType.JSON)
                 .body(request)
                 .when()
-                .post(PATH)
+                .put(PATH)
                 .then()
-                .statusCode(HttpStatus.CREATED.value())
+                .statusCode(HttpStatus.OK.value())
                 .body("type", is(request.type().name()));
 
         verifyDbState(comment, -1, user, request);
@@ -219,9 +219,9 @@ final class FormCommentRatingCreateIntegrationTest extends BaseIntegrationTest {
                 .contentType(ContentType.JSON)
                 .body(request)
                 .when()
-                .post(PATH)
+                .put(PATH)
                 .then()
-                .statusCode(HttpStatus.CREATED.value())
+                .statusCode(HttpStatus.OK.value())
                 .body("type", is(request.type().name()));
 
         verifyDbState(comment, 1, user, request);
@@ -252,9 +252,9 @@ final class FormCommentRatingCreateIntegrationTest extends BaseIntegrationTest {
                 .contentType(ContentType.JSON)
                 .body(request)
                 .when()
-                .post(PATH)
+                .put(PATH)
                 .then()
-                .statusCode(HttpStatus.CREATED.value())
+                .statusCode(HttpStatus.OK.value())
                 .body("type", is(FormCommentRatingType.UPVOTE.name()));
 
         verifyDbState(comment, 1L, user, request);

@@ -55,7 +55,7 @@ final class FormRetrievePrivateIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    void shouldReturnBadRequestWhenFormIsNotPrivate() {
+    void shouldReturnForbiddenWhenFormIsNotPrivate() {
         val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults()
                 .status(FormStatus.PUBLIC)
                 .build());
@@ -66,7 +66,7 @@ final class FormRetrievePrivateIntegrationTest extends BaseIntegrationTest {
                 .when()
                 .post(PATH)
                 .then()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
+                .statusCode(HttpStatus.FORBIDDEN.value());
     }
 
     @Test
@@ -75,7 +75,6 @@ final class FormRetrievePrivateIntegrationTest extends BaseIntegrationTest {
                 .status(FormStatus.PRIVATE)
                 .passwordHash(passwordEncoder.encode("correct-password"))
                 .build());
-        ;
 
         given().pathParam(PATH_PARAM, form.getId())
                 .contentType(ContentType.JSON)

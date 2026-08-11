@@ -63,8 +63,7 @@ final class FormListIntegrationTest extends BaseIntegrationTest {
         mongoTemplate.save(
                 FormTestDataFactory.createWithDefaults().name("dog form").build());
 
-        Awaitility.await()
-                .atMost(Duration.ofSeconds(10))
+        Awaitility.waitAtMost(Duration.ofSeconds(10))
                 .untilAsserted(() -> given().queryParam("searchQuery", "cat")
                         .when()
                         .get(PATH)
@@ -171,8 +170,7 @@ final class FormListIntegrationTest extends BaseIntegrationTest {
                 .name("target target form")
                 .build());
 
-        Awaitility.await()
-                .atMost(Duration.ofSeconds(10))
+        Awaitility.waitAtMost(Duration.ofSeconds(10))
                 .untilAsserted(() -> given().queryParam("searchQuery", "target form")
                         .when()
                         .get(PATH)

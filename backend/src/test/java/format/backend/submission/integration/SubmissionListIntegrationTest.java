@@ -72,13 +72,11 @@ final class SubmissionListIntegrationTest extends BaseIntegrationTest {
     @Test
     void shouldReturnConflictWhenFormDoesNotSaveSubmissions() {
         val ownerUser = mongoTemplate.save(UserTestDataFactory.create());
-
-        val form = FormTestDataFactory.createWithDefaults()
+        val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults()
                 .status(FormStatus.PUBLIC)
                 .authorId(ownerUser.getId())
-                .build();
-        form.setSaveSubmissions(false);
-        mongoTemplate.save(form);
+                .saveSubmissions(false)
+                .build());
 
         val token = JwtTestFactory.create(ownerUser);
         when(jwtDecoder.decode(anyString())).thenReturn(token);

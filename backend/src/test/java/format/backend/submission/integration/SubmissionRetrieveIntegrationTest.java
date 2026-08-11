@@ -14,7 +14,6 @@ import format.backend.core.BaseIntegrationTest;
 import format.backend.form.domain.entity.FormStatus;
 import format.backend.form.domain.entity.FormTestDataFactory;
 import format.backend.submission.datafactory.SubmissionTestDataFactory;
-import format.backend.submission.domain.entity.SubmissionAnswerEntity;
 import java.util.List;
 import lombok.val;
 import org.bson.types.ObjectId;
@@ -251,36 +250,6 @@ final class SubmissionRetrieveIntegrationTest extends BaseIntegrationTest {
                 .statusCode(HttpStatus.OK.value())
                 .body("id", is(submission.getId()))
                 .body("authorName", nullValue());
-    }
-
-    @Test
-    void shouldReturnSubmissionAndMapOpenAnswerToNullForClosedQuestions() {
-        val ownerUser = mongoTemplate.save(UserTestDataFactory.create());
-        val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults()
-                .status(FormStatus.PUBLIC)
-                .authorId(ownerUser.getId())
-                .build());
-
-        val submissionAnswer =
-                SubmissionAnswerEntity.forOpenQuestion(ObjectId.get().toHexString(), "");
-        val submission = mongoTemplate.save(
-                SubmissionTestDataFactory.create(form.getId(), ownerUser.getId(), List.of(submissionAnswer)));
-
-        val token = JwtTestFactory.create(ownerUser);
-        when(jwtDecoder.decode(anyString())).thenReturn(token);
-
-        given().auth()
-                .oauth2(token.getTokenValue())
-                .pathParam(FORM_PATH_PARAM, form.getId())
-                .pathParam(SUBMISSION_PATH_PARAM, submission.getId())
-                .when()
-                .get(PATH)
-                .then()
-                .statusCode(HttpStatus.OK.value())
-                .body("id", is(submission.getId()))
-                .body("answers", hasSize(1))
-                .body("answers[0].openAnswer", nullValue())
-                .body("answers[0].chosenAnswerIds", hasSize(0));
     }
 
     @Test

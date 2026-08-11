@@ -27,6 +27,6 @@ public class DeleteFormRatingHandler {
                 .orElseThrow(() -> new FormNotRatedByUserException(formIdOrSlug));
 
         formRatingRepository.delete(formRatingEntity);
-        formRepository.updateRatingFields(formId, -1, formRatingEntity.getValue());
+        formRepository.updateRatingFields(formId, -1, -formRatingEntity.getValue());
     }
 }

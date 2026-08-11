@@ -35,7 +35,7 @@ final class FormRatingCreateIntegrationTest extends BaseIntegrationTest {
                 .contentType(ContentType.JSON)
                 .body(new UpsertFormRatingRequestDto(5))
                 .when()
-                .post(PATH)
+                .put(PATH)
                 .then()
                 .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
@@ -54,7 +54,7 @@ final class FormRatingCreateIntegrationTest extends BaseIntegrationTest {
                 .contentType(ContentType.JSON)
                 .body(new UpsertFormRatingRequestDto(6))
                 .when()
-                .post(PATH)
+                .put(PATH)
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
 
@@ -64,7 +64,7 @@ final class FormRatingCreateIntegrationTest extends BaseIntegrationTest {
                 .contentType(ContentType.JSON)
                 .body(new UpsertFormRatingRequestDto(0))
                 .when()
-                .post(PATH)
+                .put(PATH)
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
@@ -85,9 +85,9 @@ final class FormRatingCreateIntegrationTest extends BaseIntegrationTest {
                 .contentType(ContentType.JSON)
                 .body(request)
                 .when()
-                .post(PATH)
+                .put(PATH)
                 .then()
-                .statusCode(HttpStatus.CREATED.value())
+                .statusCode(HttpStatus.OK.value())
                 .body("value", is(request.value()));
 
         verifyDbState(form, user, request, 4, 1);
@@ -114,9 +114,9 @@ final class FormRatingCreateIntegrationTest extends BaseIntegrationTest {
                 .contentType(ContentType.JSON)
                 .body(request)
                 .when()
-                .post(PATH)
+                .put(PATH)
                 .then()
-                .statusCode(HttpStatus.CREATED.value())
+                .statusCode(HttpStatus.OK.value())
                 .body("value", is(request.value()));
 
         verifyDbState(form, user, request, 5, 1);
@@ -143,9 +143,9 @@ final class FormRatingCreateIntegrationTest extends BaseIntegrationTest {
                 .contentType(ContentType.JSON)
                 .body(request)
                 .when()
-                .post(PATH)
+                .put(PATH)
                 .then()
-                .statusCode(HttpStatus.CREATED.value())
+                .statusCode(HttpStatus.OK.value())
                 .body("value", is(request.value()));
 
         verifyDbState(form, user, request, 5, 1);
