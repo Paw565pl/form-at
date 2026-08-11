@@ -16,7 +16,7 @@ export const useCreateFormRating = (formIdOrSlug: string) =>
   >({
     mutationKey: ["forms", formIdOrSlug, "rating", "create"],
     mutationFn: async (request) => {
-      const { data } = await apiService.post<FormRatingResponseDto>(
+      const { data } = await apiService.put<FormRatingResponseDto>(
         `/api/v1/forms/${formIdOrSlug}/rating`,
         request,
       );
