@@ -9,7 +9,7 @@ Welcome to formAT, the ultimate form builder and survey tool! Whether you're gat
 - **User Authentication** - Secure account creation and user management
 - **Advanced Form Builder** - Complex configuration with multiple question types
 - **Media Support** - Upload and embed images in your forms
-  **Real-Time Results** - View responses as they come in with live support
+- **Real-Time Results** - View responses as they come in with live support
 - **Rating Forms** - Collect feedback from respondents via ratings and comments
 - **Responsive Design** - Works seamlessly on desktop and mobile devices
 - **Observability** - Distributed metrics for monitoring and debugging
