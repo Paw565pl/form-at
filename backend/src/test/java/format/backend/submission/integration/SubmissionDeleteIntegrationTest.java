@@ -140,7 +140,6 @@ final class SubmissionDeleteIntegrationTest extends BaseIntegrationTest {
                 .authorId(ownerUser.getId())
                 .saveSubmissions(false)
                 .build());
-        ;
         val submission =
                 mongoTemplate.save(SubmissionTestDataFactory.create(form.getId(), ownerUser.getId(), List.of()));
 

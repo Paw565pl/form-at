@@ -86,7 +86,6 @@ final class SubmissionCreateIntegrationTest extends BaseIntegrationTest {
                 .authorId(ownerUser.getId())
                 .saveSubmissions(false)
                 .build());
-        ;
 
         val token = JwtTestFactory.create(ownerUser);
         when(jwtDecoder.decode(anyString())).thenReturn(token);

@@ -74,7 +74,6 @@ final class SubmissionStatisticsRetrieveIntegrationTest extends BaseIntegrationT
                 .status(FormStatus.PUBLIC)
                 .authorId(ownerUser.getId())
                 .build());
-        ;
 
         val token = JwtTestFactory.create(otherUser);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
