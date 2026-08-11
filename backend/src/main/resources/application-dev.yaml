@@ -10,6 +10,12 @@ spring:
           jwk-set-uri: http://keycloak:7000/realms/form-at/protocol/openid-connect/certs
           audiences: ["spring-boot-backend"]
 
+management:
+  otlp:
+    metrics:
+      export:
+        enabled: false
+
 logging:
   level:
     data: debug
@@ -26,18 +32,13 @@ logging:
           protocol:
             command: debug
 
-management:
-  otlp:
-    metrics:
-      export:
-        enabled: false
+app:
+  cors:
+    allowed-origins: "*"
 
-cors:
-  allowed-origins: "*"
-
-s3:
-  url: http://rustfs:9000
-  region: eu-central-1
-  access-key: rustfsadmin
-  secret-key: rustfsadmin
-  bucket: uploads
+  s3:
+    url: http://rustfs:9000
+    region: eu-central-1
+    access-key: rustfsadmin
+    secret-key: rustfsadmin
+    bucket: uploads

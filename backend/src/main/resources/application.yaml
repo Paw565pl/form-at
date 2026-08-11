@@ -2,6 +2,10 @@ spring:
   application:
     name: format-backend
 
+  threads:
+    virtual:
+      enabled: true
+
   mvc:
     problemdetails:
       enabled: true
@@ -16,18 +20,22 @@ spring:
     mongodb:
       auto-index-creation: true
 
-  servlet:
-    multipart:
-      max-file-size: 5MB
-      max-request-size: 10MB
-
-  threads:
-    virtual:
-      enabled: true
+  modulith:
+    events:
+      staleness:
+        published: 10m
+        processing: 10m
+        resubmitted: 10m
+        check-interval: 1m
 
   profiles:
     default: dev
 
-cors:
-  allowed-headers: "*"
-  allowed-methods: "*"
+  mongodb:
+    representation:
+      uuid: standard
+
+app:
+  cors:
+    allowed-headers: "*"
+    allowed-methods: "*"
