@@ -144,12 +144,11 @@ tasks.withType<JavaCompile> {
         option("NullAway:AnnotatedPackages", "format.backend")
     }
 
-    // TODO: check if needed
-    //    if (name.contains("test", ignoreCase = true)) {
-    //        options.errorprone {
-    //            disable("NullAway")
-    //        }
-    //    }
+    if (name.contains("test", ignoreCase = true)) {
+        options.errorprone {
+            disable("NullAway")
+        }
+    }
 }
 
 tasks.withType<Test> {
