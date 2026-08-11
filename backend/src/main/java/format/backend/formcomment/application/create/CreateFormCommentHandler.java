@@ -8,9 +8,9 @@ import format.backend.formcomment.application.shared.FormCommentResponseDto;
 import format.backend.formcomment.domain.repository.FormCommentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 @RequiredArgsConstructor
 public class CreateFormCommentHandler {
 

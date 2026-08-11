@@ -7,10 +7,10 @@ import format.backend.form.domain.repository.FormRatingRepository;
 import format.backend.form.domain.repository.FormRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Component
+@Service
 @RequiredArgsConstructor
 public class DeleteFormRatingHandler {
 
