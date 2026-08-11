@@ -438,6 +438,7 @@ export const FormBaseForm = ({
                                 "input[type=file]",
                               );
                             if (fileInput) fileInput.value = "";
+                            form.setValue("thumbnail", undefined);
                           }}
                         >
                           <ICONS.reset />
@@ -807,6 +808,10 @@ export const FormBaseForm = ({
                                     "input[type=file]",
                                   );
                                 if (fileInput) fileInput.value = "";
+                                form.setValue(
+                                  `questions.${qIdx}.image`,
+                                  undefined,
+                                );
                               }}
                             >
                               <ICONS.reset />
