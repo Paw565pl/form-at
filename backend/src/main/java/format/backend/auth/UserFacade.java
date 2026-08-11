@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-class UserFacade {
+public class UserFacade {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
