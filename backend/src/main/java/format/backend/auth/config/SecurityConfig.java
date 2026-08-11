@@ -1,0 +1,51 @@
+package format.backend.auth.config;
+
+import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
+
+import format.backend.auth.properties.CorsProperties;
+import lombok.val;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+@EnableWebSecurity
+@EnableMethodSecurity
+@Configuration(proxyBeanMethods = false)
+class SecurityConfig {
+
+    @Bean
+    @SuppressWarnings("java:S4502") // suppress csrf warning
+    SecurityFilterChain securityFilterChain(
+            HttpSecurity http,
+            CorsConfigurationSource corsConfigurationSource,
+            KeycloakJwtConverter keycloakJwtConverter) {
+        http.csrf(AbstractHttpConfigurer::disable);
+        http.sessionManagement(session -> session.sessionCreationPolicy(STATELESS));
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource));
+
+        http.authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll());
+        http.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(keycloakJwtConverter)));
+
+        return http.build();
+    }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource(CorsProperties corsProperties) {
+        val configuration = new CorsConfiguration();
+        configuration.setAllowedHeaders(corsProperties.allowedHeaders());
+        configuration.setAllowedMethods(corsProperties.allowedMethods());
+        configuration.setAllowedOrigins(corsProperties.allowedOrigins());
+
+        val source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+
+        return source;
+    }
+}
