@@ -1,10 +1,10 @@
 package format.backend.upload.api;
 
-import dev.paw565pl.auth.IsAuthenticated;
-import dev.paw565pl.auth.UserClaims;
-import dev.paw565pl.upload.application.upload.BatchUploadRequestDto;
-import dev.paw565pl.upload.application.upload.GetBatchUploadPresignedFormDataHandler;
-import dev.paw565pl.upload.application.upload.UploadRequestResponseDto;
+import format.backend.auth.IsAuthenticated;
+import format.backend.auth.UserClaims;
+import format.backend.upload.application.upload.BatchUploadRequestDto;
+import format.backend.upload.application.upload.GetBatchUploadPresignedFormDataHandler;
+import format.backend.upload.application.upload.UploadRequestResponseDto;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
