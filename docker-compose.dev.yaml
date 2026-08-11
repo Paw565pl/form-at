@@ -1,15 +1,21 @@
 services:
   mongodb:
-    image: mongo:8-noble
+    image: mongodb/mongodb-atlas-local:8.3
+    hostname: mongodb
     restart: on-failure
     ports:
       - "27017:27017"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: password
-      MONGO_INITDB_DATABASE: format
+      MONGODB_INITDB_ROOT_USERNAME: root
+      MONGODB_INITDB_ROOT_PASSWORD: password
+      MONGODB_INITDB_DATABASE: format
+      DO_NOT_TRACK: 1
+      MONGOT_LOG_FILE: /dev/stdout
+      RUNNER_LOG_FILE: /dev/stdout
     volumes:
       - mongodb-data:/data/db
+      - mongot-data:/data/mongot
+      - mongo-config:/data/configdb
 
   rustfs:
     image: rustfs/rustfs:1.0.0-rc.1
@@ -84,4 +90,6 @@ services:
 
 volumes:
   mongodb-data:
+  mongot-data:
+  mongo-config:
   rustfs-data:

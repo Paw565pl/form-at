@@ -1,19 +1,21 @@
 services:
   mongodb:
-    image: mongo:8-noble
+    image: mongodb/mongodb-atlas-local:8.3
+    hostname: mongodb
     restart: on-failure
+    ports:
+      - "27017:27017"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: password
-      MONGO_INITDB_DATABASE: format
+      MONGODB_INITDB_ROOT_USERNAME: root
+      MONGODB_INITDB_ROOT_PASSWORD: password
+      MONGODB_INITDB_DATABASE: format
+      DO_NOT_TRACK: 1
+      MONGOT_LOG_FILE: /dev/stdout
+      RUNNER_LOG_FILE: /dev/stdout
     volumes:
       - mongodb-data:/data/db
-    healthcheck:
-      test: mongosh --eval 'db.adminCommand("ping").ok' --username $$MONGO_INITDB_ROOT_USERNAME --password $$MONGO_INITDB_ROOT_PASSWORD
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 5s
+      - mongot-data:/data/mongot
+      - mongo-config:/data/configdb
 
   postgres:
     image: postgres:18-alpine
@@ -155,5 +157,7 @@ services:
 
 volumes:
   mongodb-data:
+  mongot-data:
+  mongo-config:
   postgres-data:
   rustfs-data:
