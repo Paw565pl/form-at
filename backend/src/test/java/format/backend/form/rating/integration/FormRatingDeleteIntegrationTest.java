@@ -1,4 +1,4 @@
-package format.backend.form_rating.integration;
+package format.backend.form.rating.integration;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -7,22 +7,23 @@ import static org.mockito.Mockito.when;
 
 import format.backend.auth.datafactory.JwtTestFactory;
 import format.backend.auth.datafactory.UserTestDataFactory;
-import format.backend.core.integration.BaseIntegrationTest;
-import format.backend.form.datafactory.FormTestDataFactory;
-import format.backend.form.entity.FormEntity;
-import format.backend.form_rating.datafactory.FormRatingTestDataFactory;
-import format.backend.form_rating.entity.FormRatingEntity;
+import format.backend.core.BaseIntegrationTest;
+import format.backend.form.domain.entity.FormEntity;
+import format.backend.form.domain.entity.FormRatingEntity;
+import format.backend.form.domain.entity.FormTestDataFactory;
+import format.backend.form.rating.datafactory.FormRatingTestDataFactory;
+import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
-class FormRatingDeleteIntegrationTest extends BaseIntegrationTest {
+final class FormRatingDeleteIntegrationTest extends BaseIntegrationTest {
 
     private static final String PATH_PARAM = "formIdOrSlug";
     private static final String PATH = "/api/v1/forms/{%s}/rating".formatted(PATH_PARAM);
 
     @Test
     void shouldReturnUnauthorizedWhenUserIsAnonymous() {
-        var form = mongoTemplate.save(FormTestDataFactory.create());
+        val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults().build());
 
         given().pathParam(PATH_PARAM, form.getId())
                 .when()
@@ -33,10 +34,10 @@ class FormRatingDeleteIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldReturnNotFoundWhenDeletingNonExistentRating() {
-        var user = mongoTemplate.save(UserTestDataFactory.create());
-        var form = mongoTemplate.save(FormTestDataFactory.create());
+        val user = mongoTemplate.save(UserTestDataFactory.create());
+        val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults().build());
 
-        var token = JwtTestFactory.create(user);
+        val token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
         given().auth()
@@ -50,16 +51,15 @@ class FormRatingDeleteIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldDeleteRatingAndDecrementFormCounters() {
-        var user = mongoTemplate.save(UserTestDataFactory.create());
+        val user = mongoTemplate.save(UserTestDataFactory.create());
 
-        var form = mongoTemplate.save(FormTestDataFactory.create());
-        form.setRatingsCount(1L);
-        form.setRatingsSum(4L);
-        mongoTemplate.save(form);
+        val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults()
+                .ratingsCount(1L)
+                .ratingsSum(4L)
+                .build());
+        val existingRating = mongoTemplate.save(FormRatingTestDataFactory.create(form.getId(), user.getId(), 4));
 
-        var existingRating = mongoTemplate.save(FormRatingTestDataFactory.create(form.getId(), user.getId(), 4));
-
-        var token = JwtTestFactory.create(user);
+        val token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
         given().auth()
@@ -70,10 +70,10 @@ class FormRatingDeleteIntegrationTest extends BaseIntegrationTest {
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
 
-        var deletedRatingInDb = mongoTemplate.findById(existingRating.getId(), FormRatingEntity.class);
+        val deletedRatingInDb = mongoTemplate.findById(existingRating.getId(), FormRatingEntity.class);
         assertThat(deletedRatingInDb).isNull();
 
-        var updatedForm = mongoTemplate.findById(form.getId(), FormEntity.class);
+        val updatedForm = mongoTemplate.findById(form.getId(), FormEntity.class);
         assertThat(updatedForm).isNotNull();
         assertThat(updatedForm.getRatingsSum()).isZero();
         assertThat(updatedForm.getRatingsCount()).isZero();

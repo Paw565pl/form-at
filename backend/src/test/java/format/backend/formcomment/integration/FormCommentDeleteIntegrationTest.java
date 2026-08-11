@@ -1,28 +1,30 @@
-package format.backend.comment.datafactory.integration;
+package format.backend.formcomment.integration;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
+import format.backend.auth.Role;
 import format.backend.auth.datafactory.JwtTestFactory;
 import format.backend.auth.datafactory.UserTestDataFactory;
-import format.backend.auth.entity.Role;
-import format.backend.comment.datafactory.datafactory.CommentTestDataFactory;
-import format.backend.comment.entity.CommentEntity;
-import format.backend.comment_rating.datafactory.CommentRatingTestDataFactory;
-import format.backend.comment_rating.entity.CommentRatingEntity;
-import format.backend.core.integration.BaseIntegrationTest;
-import format.backend.form.datafactory.FormTestDataFactory;
-import format.backend.form.entity.FormStatus;
+import format.backend.core.BaseIntegrationTest;
+import format.backend.form.domain.entity.FormStatus;
+import format.backend.form.domain.entity.FormTestDataFactory;
+import format.backend.formcomment.datafactory.FormCommentTestDataFactory;
+import format.backend.formcomment.domain.entity.FormCommentEntity;
+import format.backend.formcomment.domain.entity.FormCommentRatingEntity;
+import format.backend.formcomment.domain.entity.FormCommentRatingType;
+import format.backend.formcomment.rating.datafactory.FormCommentRatingTestDataFactory;
 import java.util.List;
+import lombok.val;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 
-class CommentDeleteIntegrationTest extends BaseIntegrationTest {
+final class FormCommentDeleteIntegrationTest extends BaseIntegrationTest {
 
     private static final String FORM_PATH_PARAM = "formIdOrSlug";
     private static final String COMMENT_PATH_PARAM = "commentId";
@@ -41,8 +43,8 @@ class CommentDeleteIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldReturnNotFoundWhenFormDoesNotExist() {
-        var user = mongoTemplate.save(UserTestDataFactory.create());
-        var token = JwtTestFactory.create(user);
+        val user = mongoTemplate.save(UserTestDataFactory.create());
+        val token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
         given().auth()
@@ -57,10 +59,10 @@ class CommentDeleteIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldReturnNotFoundWhenCommentDoesNotExist() {
-        var form = mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC));
-        var user = mongoTemplate.save(UserTestDataFactory.create());
+        val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults().build());
+        val user = mongoTemplate.save(UserTestDataFactory.create());
 
-        var token = JwtTestFactory.create(user);
+        val token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
         given().auth()
@@ -75,13 +77,13 @@ class CommentDeleteIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldReturnNotFoundWhenCommentBelongsToAnotherForm() {
-        var form1 = mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC));
-        var form2 = mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC));
+        val form1 = mongoTemplate.save(FormTestDataFactory.createWithDefaults().build());
+        val form2 = mongoTemplate.save(FormTestDataFactory.createWithDefaults().build());
 
-        var user = mongoTemplate.save(UserTestDataFactory.create());
-        var comment = mongoTemplate.save(CommentTestDataFactory.create(form1.getId(), user.getId()));
+        val user = mongoTemplate.save(UserTestDataFactory.create());
+        val comment = mongoTemplate.save(FormCommentTestDataFactory.create(form1.getId(), user.getId()));
 
-        var token = JwtTestFactory.create(user);
+        val token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
         given().auth()
@@ -96,14 +98,14 @@ class CommentDeleteIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldReturnForbiddenWhenUserIsNeitherOwnerNorAdmin() {
-        var form = mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC));
+        val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults().build());
 
-        var owner = mongoTemplate.save(UserTestDataFactory.create());
-        var otherUser = mongoTemplate.save(UserTestDataFactory.create());
+        val owner = mongoTemplate.save(UserTestDataFactory.create());
+        val otherUser = mongoTemplate.save(UserTestDataFactory.create());
 
-        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), owner.getId()));
+        val comment = mongoTemplate.save(FormCommentTestDataFactory.create(form.getId(), owner.getId()));
 
-        var token = JwtTestFactory.create(otherUser);
+        val token = JwtTestFactory.create(otherUser);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
         given().auth()
@@ -118,14 +120,14 @@ class CommentDeleteIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldDeleteCommentWhenUserIsAdmin() {
-        var form = mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC));
+        val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults().build());
 
-        var owner = mongoTemplate.save(UserTestDataFactory.create());
-        var admin = mongoTemplate.save(UserTestDataFactory.create());
+        val owner = mongoTemplate.save(UserTestDataFactory.create());
+        val admin = mongoTemplate.save(UserTestDataFactory.create());
 
-        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), owner.getId()));
+        val comment = mongoTemplate.save(FormCommentTestDataFactory.create(form.getId(), owner.getId()));
 
-        var token = JwtTestFactory.create(admin, List.of(Role.ADMIN));
+        val token = JwtTestFactory.create(admin, List.of(Role.ADMIN));
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
         given().auth()
@@ -137,23 +139,28 @@ class CommentDeleteIntegrationTest extends BaseIntegrationTest {
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
 
-        assertThat(mongoTemplate.findById(comment.getId(), CommentEntity.class)).isNull();
+        assertThat(mongoTemplate.findById(comment.getId(), FormCommentEntity.class))
+                .isNull();
         assertThat(mongoTemplate.count(
-                        Query.query(Criteria.where(CommentRatingEntity::getCommentId)
+                        Query.query(Criteria.where(FormCommentRatingEntity::getCommentId)
                                 .is(comment.getId())),
-                        CommentRatingEntity.class))
+                        FormCommentRatingEntity.class))
                 .isZero();
     }
 
     @Test
     void shouldDeleteCommentAndRelatedDataWhenUserIsOwner() {
-        var owner = mongoTemplate.save(UserTestDataFactory.create());
-        var form = mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC, owner.getId()));
+        val owner = mongoTemplate.save(UserTestDataFactory.create());
+        val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults()
+                .status(FormStatus.PUBLIC)
+                .authorId(owner.getId())
+                .build());
 
-        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), owner.getId()));
-        mongoTemplate.save(CommentRatingTestDataFactory.create(comment.getId(), owner.getId(), true));
+        val comment = mongoTemplate.save(FormCommentTestDataFactory.create(form.getId(), owner.getId()));
+        mongoTemplate.save(FormCommentRatingTestDataFactory.create(
+                form.getId(), comment.getId(), owner.getId(), FormCommentRatingType.UPVOTE));
 
-        var token = JwtTestFactory.create(owner);
+        val token = JwtTestFactory.create(owner);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
         given().auth()
@@ -165,11 +172,12 @@ class CommentDeleteIntegrationTest extends BaseIntegrationTest {
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
 
-        assertThat(mongoTemplate.findById(comment.getId(), CommentEntity.class)).isNull();
+        assertThat(mongoTemplate.findById(comment.getId(), FormCommentEntity.class))
+                .isNull();
         assertThat(mongoTemplate.count(
-                        Query.query(Criteria.where(CommentRatingEntity::getCommentId)
+                        Query.query(Criteria.where(FormCommentRatingEntity::getCommentId)
                                 .is(comment.getId())),
-                        CommentRatingEntity.class))
+                        FormCommentRatingEntity.class))
                 .isZero();
     }
 }

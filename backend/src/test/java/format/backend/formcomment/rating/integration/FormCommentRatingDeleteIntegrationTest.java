@@ -1,4 +1,4 @@
-package format.backend.comment_rating.integration;
+package format.backend.formcomment.rating.integration;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -7,12 +7,14 @@ import static org.mockito.Mockito.when;
 
 import format.backend.auth.datafactory.JwtTestFactory;
 import format.backend.auth.datafactory.UserTestDataFactory;
-import format.backend.comment.datafactory.datafactory.CommentTestDataFactory;
-import format.backend.comment.entity.CommentEntity;
-import format.backend.comment_rating.datafactory.CommentRatingTestDataFactory;
-import format.backend.comment_rating.entity.CommentRatingEntity;
-import format.backend.core.integration.BaseIntegrationTest;
-import format.backend.form.datafactory.FormTestDataFactory;
+import format.backend.core.BaseIntegrationTest;
+import format.backend.form.domain.entity.FormTestDataFactory;
+import format.backend.formcomment.datafactory.FormCommentTestDataFactory;
+import format.backend.formcomment.domain.entity.FormCommentEntity;
+import format.backend.formcomment.domain.entity.FormCommentRatingEntity;
+import format.backend.formcomment.domain.entity.FormCommentRatingType;
+import format.backend.formcomment.rating.datafactory.FormCommentRatingTestDataFactory;
+import lombok.val;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -20,7 +22,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
 
-class CommentRatingDeleteIntegrationTest extends BaseIntegrationTest {
+final class FormCommentRatingDeleteIntegrationTest extends BaseIntegrationTest {
 
     private static final String FORM_PATH_PARAM = "formIdOrSlug";
     private static final String COMMENT_PATH_PARAM = "commentId";
@@ -39,9 +41,9 @@ class CommentRatingDeleteIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldReturnNotFoundWhenFormDoesNotExist() {
-        var user = mongoTemplate.save(UserTestDataFactory.create());
+        val user = mongoTemplate.save(UserTestDataFactory.create());
 
-        var token = JwtTestFactory.create(user);
+        val token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
         given().auth()
@@ -56,10 +58,10 @@ class CommentRatingDeleteIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldReturnNotFoundWhenCommentDoesNotExist() {
-        var form = mongoTemplate.save(FormTestDataFactory.create());
-        var user = mongoTemplate.save(UserTestDataFactory.create());
+        val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults().build());
+        val user = mongoTemplate.save(UserTestDataFactory.create());
 
-        var token = JwtTestFactory.create(user);
+        val token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
         given().auth()
@@ -74,13 +76,13 @@ class CommentRatingDeleteIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldReturnNotFoundWhenCommentBelongsToAnotherForm() {
-        var form1 = mongoTemplate.save(FormTestDataFactory.create());
-        var form2 = mongoTemplate.save(FormTestDataFactory.create());
+        val form1 = mongoTemplate.save(FormTestDataFactory.createWithDefaults().build());
+        val form2 = mongoTemplate.save(FormTestDataFactory.createWithDefaults().build());
 
-        var user = mongoTemplate.save(UserTestDataFactory.create());
-        var comment = mongoTemplate.save(CommentTestDataFactory.create(form1.getId(), user.getId()));
+        val user = mongoTemplate.save(UserTestDataFactory.create());
+        val comment = mongoTemplate.save(FormCommentTestDataFactory.create(form1.getId(), user.getId()));
 
-        var token = JwtTestFactory.create(user);
+        val token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
         given().auth()
@@ -95,11 +97,11 @@ class CommentRatingDeleteIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldReturnNotFoundWhenCommentNotRatedByUser() {
-        var form = mongoTemplate.save(FormTestDataFactory.create());
-        var user = mongoTemplate.save(UserTestDataFactory.create());
-        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), user.getId()));
+        val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults().build());
+        val user = mongoTemplate.save(UserTestDataFactory.create());
+        val comment = mongoTemplate.save(FormCommentTestDataFactory.create(form.getId(), user.getId()));
 
-        var token = JwtTestFactory.create(user);
+        val token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
         given().auth()
@@ -114,17 +116,18 @@ class CommentRatingDeleteIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldDeleteUpvoteAndDecrementCommentRatingScore() {
-        var form = mongoTemplate.save(FormTestDataFactory.create());
-        var user = mongoTemplate.save(UserTestDataFactory.create());
-        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), user.getId()));
+        val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults().build());
+        val user = mongoTemplate.save(UserTestDataFactory.create());
+        val comment = mongoTemplate.save(FormCommentTestDataFactory.create(form.getId(), user.getId()));
 
-        var rating = mongoTemplate.save(CommentRatingTestDataFactory.create(comment.getId(), user.getId(), true));
+        val rating = mongoTemplate.save(FormCommentRatingTestDataFactory.create(
+                form.getId(), comment.getId(), user.getId(), FormCommentRatingType.UPVOTE));
         mongoTemplate.updateFirst(
-                Query.query(Criteria.where(CommentEntity::getId).is(comment.getId())),
-                Update.update(CommentEntity::getRatingScore, 1L),
-                CommentEntity.class);
+                Query.query(Criteria.where(FormCommentEntity::getId).is(comment.getId())),
+                Update.update(FormCommentEntity::getRatingScore, 1L),
+                FormCommentEntity.class);
 
-        var token = JwtTestFactory.create(user);
+        val token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
         given().auth()
@@ -136,27 +139,28 @@ class CommentRatingDeleteIntegrationTest extends BaseIntegrationTest {
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
 
-        var updatedComment = mongoTemplate.findById(comment.getId(), CommentEntity.class);
+        val updatedComment = mongoTemplate.findById(comment.getId(), FormCommentEntity.class);
         assertThat(updatedComment).isNotNull();
         assertThat(updatedComment.getRatingScore()).isZero();
 
-        assertThat(mongoTemplate.findById(rating.getId(), CommentRatingEntity.class))
+        assertThat(mongoTemplate.findById(rating.getId(), FormCommentRatingEntity.class))
                 .isNull();
     }
 
     @Test
     void shouldDeleteDownvoteAndIncrementCommentRatingScore() {
-        var form = mongoTemplate.save(FormTestDataFactory.create());
-        var user = mongoTemplate.save(UserTestDataFactory.create());
-        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), user.getId()));
+        val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults().build());
+        val user = mongoTemplate.save(UserTestDataFactory.create());
+        val comment = mongoTemplate.save(FormCommentTestDataFactory.create(form.getId(), user.getId()));
 
-        var rating = mongoTemplate.save(CommentRatingTestDataFactory.create(comment.getId(), user.getId(), false));
+        val rating = mongoTemplate.save(FormCommentRatingTestDataFactory.create(
+                form.getId(), comment.getId(), user.getId(), FormCommentRatingType.DOWNVOTE));
         mongoTemplate.updateFirst(
-                Query.query(Criteria.where(CommentEntity::getId).is(comment.getId())),
-                Update.update(CommentEntity::getRatingScore, -1L),
-                CommentEntity.class);
+                Query.query(Criteria.where(FormCommentEntity::getId).is(comment.getId())),
+                Update.update(FormCommentEntity::getRatingScore, -1L),
+                FormCommentEntity.class);
 
-        var token = JwtTestFactory.create(user);
+        val token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
         given().auth()
@@ -168,11 +172,11 @@ class CommentRatingDeleteIntegrationTest extends BaseIntegrationTest {
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
 
-        var updatedComment = mongoTemplate.findById(comment.getId(), CommentEntity.class);
+        val updatedComment = mongoTemplate.findById(comment.getId(), FormCommentEntity.class);
         assertThat(updatedComment).isNotNull();
         assertThat(updatedComment.getRatingScore()).isZero();
 
-        assertThat(mongoTemplate.findById(rating.getId(), CommentRatingEntity.class))
+        assertThat(mongoTemplate.findById(rating.getId(), FormCommentRatingEntity.class))
                 .isNull();
     }
 }

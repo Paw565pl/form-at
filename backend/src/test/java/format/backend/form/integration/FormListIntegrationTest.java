@@ -8,15 +8,17 @@ import static org.mockito.Mockito.when;
 
 import format.backend.auth.datafactory.JwtTestFactory;
 import format.backend.auth.datafactory.UserTestDataFactory;
-import format.backend.core.integration.BaseIntegrationTest;
-import format.backend.form.datafactory.FormTestDataFactory;
-import format.backend.form.entity.FormStatus;
-import format.backend.form.entity.Language;
+import format.backend.core.BaseIntegrationTest;
+import format.backend.form.domain.entity.FormLanguage;
+import format.backend.form.domain.entity.FormStatus;
+import format.backend.form.domain.entity.FormTestDataFactory;
 import java.time.Duration;
+import lombok.val;
+import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
-class FormListIntegrationTest extends BaseIntegrationTest {
+final class FormListIntegrationTest extends BaseIntegrationTest {
 
     private static final String PATH = "/api/v1/forms";
 
@@ -27,17 +29,21 @@ class FormListIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldReturnOnlyPublic() {
-        mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC));
-        mongoTemplate.save(FormTestDataFactory.create(FormStatus.CLOSED));
+        mongoTemplate.save(FormTestDataFactory.createWithDefaults()
+                .status(FormStatus.PUBLIC)
+                .build());
+        mongoTemplate.save(FormTestDataFactory.createWithDefaults()
+                .status(FormStatus.CLOSED)
+                .build());
 
         given().when().get(PATH).then().statusCode(HttpStatus.OK.value()).body("page.totalElements", is(1));
     }
 
     @Test
     void shouldPaginateResults() {
-        mongoTemplate.save(FormTestDataFactory.create());
-        mongoTemplate.save(FormTestDataFactory.create());
-        mongoTemplate.save(FormTestDataFactory.create());
+        mongoTemplate.save(FormTestDataFactory.createWithDefaults().build());
+        mongoTemplate.save(FormTestDataFactory.createWithDefaults().build());
+        mongoTemplate.save(FormTestDataFactory.createWithDefaults().build());
 
         given().queryParam("page", 0)
                 .queryParam("size", 2)
@@ -52,34 +58,32 @@ class FormListIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldFilterBySearchQuery() {
-        var formMatch = FormTestDataFactory.create();
-        formMatch.setName("cat form");
-        mongoTemplate.save(formMatch);
+        val formMatch = mongoTemplate.save(
+                FormTestDataFactory.createWithDefaults().name("cat form").build());
+        mongoTemplate.save(
+                FormTestDataFactory.createWithDefaults().name("dog form").build());
 
-        var formNoMatch = FormTestDataFactory.create();
-        formNoMatch.setName("dog form");
-        mongoTemplate.save(formNoMatch);
-
-        given().queryParam("searchQuery", "cat")
-                .when()
-                .get(PATH)
-                .then()
-                .statusCode(HttpStatus.OK.value())
-                .body("page.totalElements", is(1))
-                .body("content[0].id", is(formMatch.getId()));
+        Awaitility.await()
+                .atMost(Duration.ofSeconds(10))
+                .untilAsserted(() -> given().queryParam("searchQuery", "cat")
+                        .when()
+                        .get(PATH)
+                        .then()
+                        .statusCode(HttpStatus.OK.value())
+                        .body("page.totalElements", is(1))
+                        .body("content[0].id", is(formMatch.getId())));
     }
 
     @Test
     void shouldFilterByLanguage() {
-        var formPl = FormTestDataFactory.create();
-        formPl.setLanguage(Language.PL);
-        mongoTemplate.save(formPl);
+        mongoTemplate.save(FormTestDataFactory.createWithDefaults()
+                .language(FormLanguage.PL)
+                .build());
+        mongoTemplate.save(FormTestDataFactory.createWithDefaults()
+                .language(FormLanguage.EN)
+                .build());
 
-        var formEn = FormTestDataFactory.create();
-        formEn.setLanguage(Language.EN);
-        mongoTemplate.save(formEn);
-
-        given().queryParam("language", Language.EN)
+        given().queryParam("language", FormLanguage.EN)
                 .when()
                 .get(PATH)
                 .then()
@@ -89,17 +93,15 @@ class FormListIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldFilterByEstimatedDuration() {
-        var form10Min = FormTestDataFactory.create();
-        form10Min.setEstimatedDuration(Duration.ofMinutes(10));
-        mongoTemplate.save(form10Min);
-
-        var form30Min = FormTestDataFactory.create();
-        form30Min.setEstimatedDuration(Duration.ofMinutes(30));
-        mongoTemplate.save(form30Min);
-
-        var form60Min = FormTestDataFactory.create();
-        form60Min.setEstimatedDuration(Duration.ofMinutes(60));
-        mongoTemplate.save(form60Min);
+        mongoTemplate.save(FormTestDataFactory.createWithDefaults()
+                .estimatedDurationSeconds(Duration.ofMinutes(10).toSeconds())
+                .build());
+        mongoTemplate.save(FormTestDataFactory.createWithDefaults()
+                .estimatedDurationSeconds(Duration.ofMinutes(30).toSeconds())
+                .build());
+        mongoTemplate.save(FormTestDataFactory.createWithDefaults()
+                .estimatedDurationSeconds(Duration.ofMinutes(60).toSeconds())
+                .build());
 
         given().queryParam("minEstimatedDuration", Duration.ofMinutes(15).toString())
                 .queryParam("maxEstimatedDuration", Duration.ofMinutes(45).toString())
@@ -112,13 +114,12 @@ class FormListIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldFilterByAllowsGuestSubmissions() {
-        var formGuests = FormTestDataFactory.create();
-        formGuests.setAllowsGuestSubmissions(true);
-        mongoTemplate.save(formGuests);
-
-        var formNoGuests = FormTestDataFactory.create();
-        formNoGuests.setAllowsGuestSubmissions(false);
-        mongoTemplate.save(formNoGuests);
+        mongoTemplate.save(FormTestDataFactory.createWithDefaults()
+                .allowsGuestSubmissions(true)
+                .build());
+        val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults()
+                .allowsGuestSubmissions(false)
+                .build());
 
         given().queryParam("allowsGuestSubmissions", false)
                 .when()
@@ -126,15 +127,17 @@ class FormListIntegrationTest extends BaseIntegrationTest {
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .body("page.totalElements", is(1))
-                .body("content[0].id", is(formNoGuests.getId()));
+                .body("content[0].id", is(form.getId()));
     }
 
     @Test
     void shouldFilterByAuthorId() {
-        var user1 = mongoTemplate.save(UserTestDataFactory.create());
-        var user2 = mongoTemplate.save(UserTestDataFactory.create());
-        var form = mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC, user1.getId()));
-        mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC, user2.getId()));
+        val user1 = mongoTemplate.save(UserTestDataFactory.create());
+        val user2 = mongoTemplate.save(UserTestDataFactory.create());
+        val form = mongoTemplate.save(
+                FormTestDataFactory.createWithDefaults().authorId(user1.getId()).build());
+        mongoTemplate.save(
+                FormTestDataFactory.createWithDefaults().authorId(user2.getId()).build());
 
         given().queryParam("authorId", user1.getId())
                 .when()
@@ -147,11 +150,10 @@ class FormListIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldSortByCreatedAtDescendingByDefault() {
-        var olderForm = FormTestDataFactory.create();
-        mongoTemplate.save(olderForm);
-
-        var newerForm = FormTestDataFactory.create();
-        mongoTemplate.save(newerForm);
+        val olderForm =
+                mongoTemplate.save(FormTestDataFactory.createWithDefaults().build());
+        val newerForm =
+                mongoTemplate.save(FormTestDataFactory.createWithDefaults().build());
 
         given().when()
                 .get(PATH)
@@ -163,33 +165,32 @@ class FormListIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldSortByTextScoreWhenSearchQueryIsProvided() {
-        var lowerScoreForm = FormTestDataFactory.create();
-        lowerScoreForm.setName("target form");
-        mongoTemplate.save(lowerScoreForm);
+        val lowerScoreForm = mongoTemplate.save(
+                FormTestDataFactory.createWithDefaults().name("target form").build());
+        val higherScoreForm = mongoTemplate.save(FormTestDataFactory.createWithDefaults()
+                .name("target target form")
+                .build());
 
-        var higherScoreForm = FormTestDataFactory.create();
-        higherScoreForm.setName("target target form");
-        mongoTemplate.save(higherScoreForm);
-
-        given().queryParam("searchQuery", "target form")
-                .when()
-                .get(PATH)
-                .then()
-                .statusCode(HttpStatus.OK.value())
-                .body("page.totalElements", is(2))
-                .body("content[0].id", is(higherScoreForm.getId()))
-                .body("content[1].id", is(lowerScoreForm.getId()));
+        Awaitility.await()
+                .atMost(Duration.ofSeconds(10))
+                .untilAsserted(() -> given().queryParam("searchQuery", "target form")
+                        .when()
+                        .get(PATH)
+                        .then()
+                        .statusCode(HttpStatus.OK.value())
+                        .body("page.totalElements", is(2))
+                        .body("content[0].id", is(higherScoreForm.getId()))
+                        .body("content[1].id", is(lowerScoreForm.getId())));
     }
 
     @Test
     void shouldSortByEstimatedDuration() {
-        var form1 = FormTestDataFactory.create();
-        form1.setEstimatedDuration(Duration.ofMinutes(10));
-        mongoTemplate.save(form1);
-
-        var form2 = FormTestDataFactory.create();
-        form2.setEstimatedDuration(Duration.ofMinutes(5));
-        mongoTemplate.save(form2);
+        val form1 = mongoTemplate.save(FormTestDataFactory.createWithDefaults()
+                .estimatedDurationSeconds(Duration.ofMinutes(10).toSeconds())
+                .build());
+        val form2 = mongoTemplate.save(FormTestDataFactory.createWithDefaults()
+                .estimatedDurationSeconds(Duration.ofMinutes(5).toSeconds())
+                .build());
 
         given().queryParam("sort", "estimatedDuration")
                 .when()
@@ -203,13 +204,10 @@ class FormListIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldSortByQuestionsCount() {
-        var form1 = FormTestDataFactory.create();
-        form1.setQuestionsCount(4);
-        mongoTemplate.save(form1);
-
-        var form2 = FormTestDataFactory.create();
-        form2.setQuestionsCount(3);
-        mongoTemplate.save(form2);
+        val form1 = mongoTemplate.save(
+                FormTestDataFactory.createWithDefaults().questionsCount(4).build());
+        val form2 = mongoTemplate.save(
+                FormTestDataFactory.createWithDefaults().questionsCount(3).build());
 
         given().queryParam("sort", "questionsCount")
                 .when()
@@ -223,13 +221,10 @@ class FormListIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldSortBySubmissionsCount() {
-        var form1 = FormTestDataFactory.create();
-        form1.setSubmissionsCount(4L);
-        mongoTemplate.save(form1);
-
-        var form2 = FormTestDataFactory.create();
-        form2.setSubmissionsCount(3L);
-        mongoTemplate.save(form2);
+        val form1 = mongoTemplate.save(
+                FormTestDataFactory.createWithDefaults().submissionsCount(4L).build());
+        val form2 = mongoTemplate.save(
+                FormTestDataFactory.createWithDefaults().submissionsCount(3L).build());
 
         given().queryParam("sort", "submissionsCount")
                 .when()
@@ -243,8 +238,8 @@ class FormListIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldSortByCreatedAt() {
-        var form1 = mongoTemplate.save(FormTestDataFactory.create());
-        var form2 = mongoTemplate.save(FormTestDataFactory.create());
+        val form1 = mongoTemplate.save(FormTestDataFactory.createWithDefaults().build());
+        val form2 = mongoTemplate.save(FormTestDataFactory.createWithDefaults().build());
 
         given().queryParam("sort", "createdAt")
                 .when()
@@ -258,8 +253,8 @@ class FormListIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldSortByUpdatedAt() {
-        var form1 = mongoTemplate.save(FormTestDataFactory.create());
-        var form2 = mongoTemplate.save(FormTestDataFactory.create());
+        val form1 = mongoTemplate.save(FormTestDataFactory.createWithDefaults().build());
+        val form2 = mongoTemplate.save(FormTestDataFactory.createWithDefaults().build());
 
         given().queryParam("sort", "updatedAt")
                 .when()
@@ -273,8 +268,9 @@ class FormListIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldHaveCorrectAuthorName() {
-        var user = mongoTemplate.save(UserTestDataFactory.create());
-        mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC, user.getId()));
+        val user = mongoTemplate.save(UserTestDataFactory.create());
+        mongoTemplate.save(
+                FormTestDataFactory.createWithDefaults().authorId(user.getId()).build());
 
         given().when()
                 .get(PATH)
@@ -286,14 +282,23 @@ class FormListIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldReturnUserNonPublicFormsIfAuthenticatedAsAuthor() {
-        var loggedInUser = mongoTemplate.save(UserTestDataFactory.create());
-        var otherUser = mongoTemplate.save(UserTestDataFactory.create());
+        val loggedInUser = mongoTemplate.save(UserTestDataFactory.create());
+        val otherUser = mongoTemplate.save(UserTestDataFactory.create());
 
-        mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC, otherUser.getId()));
-        mongoTemplate.save(FormTestDataFactory.create(FormStatus.CLOSED, loggedInUser.getId()));
-        mongoTemplate.save(FormTestDataFactory.create(FormStatus.CLOSED, otherUser.getId()));
+        mongoTemplate.save(FormTestDataFactory.createWithDefaults()
+                .status(FormStatus.PUBLIC)
+                .authorId(otherUser.getId())
+                .build());
+        mongoTemplate.save(FormTestDataFactory.createWithDefaults()
+                .status(FormStatus.CLOSED)
+                .authorId(loggedInUser.getId())
+                .build());
+        mongoTemplate.save(FormTestDataFactory.createWithDefaults()
+                .status(FormStatus.CLOSED)
+                .authorId(otherUser.getId())
+                .build());
 
-        var token = JwtTestFactory.create(loggedInUser);
+        val token = JwtTestFactory.create(loggedInUser);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
         given().auth()

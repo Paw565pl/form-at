@@ -1,7 +1,7 @@
 package format.backend.formcomment.application.rating.upsert;
 
 import format.backend.formcomment.domain.entity.FormCommentRatingType;
-import java.time.Instant;
+import jakarta.validation.constraints.NotNull;
 
 public record UpsertFormCommentRatingRequestDto(
-        String id, FormCommentRatingType type, Instant createdAt, Instant updatedAt) {}
+        @NotNull(message = "Type cannot be null") FormCommentRatingType type) {}

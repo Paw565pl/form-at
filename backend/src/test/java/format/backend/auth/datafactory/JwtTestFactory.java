@@ -1,11 +1,12 @@
 package format.backend.auth.datafactory;
 
-import format.backend.auth.entity.Role;
-import format.backend.auth.entity.UserEntity;
+import format.backend.auth.Role;
+import format.backend.auth.domain.entity.UserEntity;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import lombok.val;
 import org.springframework.security.oauth2.jwt.Jwt;
 
 public abstract class JwtTestFactory {
@@ -15,8 +16,8 @@ public abstract class JwtTestFactory {
     }
 
     public static Jwt create(UserEntity userEntity, Collection<Role> roles) {
-        var roleValues = roles.stream().map(Role::getValue).toList();
-        var now = Instant.now();
+        val roleValues = roles.stream().map(Role::name).toList();
+        val now = Instant.now();
 
         return Jwt.withTokenValue("mock-token")
                 .header("alg", "HS256")

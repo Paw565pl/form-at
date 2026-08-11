@@ -1,4 +1,4 @@
-package format.backend.form_rating.integration;
+package format.backend.form.rating.integration;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -8,31 +8,32 @@ import static org.mockito.Mockito.when;
 
 import format.backend.auth.datafactory.JwtTestFactory;
 import format.backend.auth.datafactory.UserTestDataFactory;
-import format.backend.auth.entity.UserEntity;
-import format.backend.core.integration.BaseIntegrationTest;
-import format.backend.form.datafactory.FormTestDataFactory;
-import format.backend.form.entity.FormEntity;
-import format.backend.form_rating.datafactory.FormRatingTestDataFactory;
-import format.backend.form_rating.dto.FormRatingRequestDto;
-import format.backend.form_rating.entity.FormRatingEntity;
+import format.backend.auth.domain.entity.UserEntity;
+import format.backend.core.BaseIntegrationTest;
+import format.backend.form.application.rating.upsert.UpsertFormRatingRequestDto;
+import format.backend.form.domain.entity.FormEntity;
+import format.backend.form.domain.entity.FormRatingEntity;
+import format.backend.form.domain.entity.FormTestDataFactory;
+import format.backend.form.rating.datafactory.FormRatingTestDataFactory;
 import io.restassured.http.ContentType;
+import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 
-class FormRatingCreateIntegrationTest extends BaseIntegrationTest {
+final class FormRatingCreateIntegrationTest extends BaseIntegrationTest {
 
     private static final String PATH_PARAM = "formIdOrSlug";
     private static final String PATH = "/api/v1/forms/{%s}/rating".formatted(PATH_PARAM);
 
     @Test
     void shouldReturnUnauthorizedWhenUserIsAnonymous() {
-        var form = mongoTemplate.save(FormTestDataFactory.create());
+        val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults().build());
 
         given().pathParam(PATH_PARAM, form.getId())
                 .contentType(ContentType.JSON)
-                .body(new FormRatingRequestDto(5))
+                .body(new UpsertFormRatingRequestDto(5))
                 .when()
                 .post(PATH)
                 .then()
@@ -41,17 +42,17 @@ class FormRatingCreateIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldReturnBadRequestWhenRatingValueIsOutOfRange() {
-        var user = mongoTemplate.save(UserTestDataFactory.create());
-        var form = mongoTemplate.save(FormTestDataFactory.create());
+        val user = mongoTemplate.save(UserTestDataFactory.create());
+        val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults().build());
 
-        var token = JwtTestFactory.create(user);
+        val token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
         given().auth()
                 .oauth2(token.getTokenValue())
                 .pathParam(PATH_PARAM, form.getId())
                 .contentType(ContentType.JSON)
-                .body(new FormRatingRequestDto(6))
+                .body(new UpsertFormRatingRequestDto(6))
                 .when()
                 .post(PATH)
                 .then()
@@ -61,7 +62,7 @@ class FormRatingCreateIntegrationTest extends BaseIntegrationTest {
                 .oauth2(token.getTokenValue())
                 .pathParam(PATH_PARAM, form.getId())
                 .contentType(ContentType.JSON)
-                .body(new FormRatingRequestDto(0))
+                .body(new UpsertFormRatingRequestDto(0))
                 .when()
                 .post(PATH)
                 .then()
@@ -70,13 +71,13 @@ class FormRatingCreateIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldCreateNewRatingAndIncrementFormCounters() {
-        var user = mongoTemplate.save(UserTestDataFactory.create());
-        var form = mongoTemplate.save(FormTestDataFactory.create());
+        val user = mongoTemplate.save(UserTestDataFactory.create());
+        val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults().build());
 
-        var token = JwtTestFactory.create(user);
+        val token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
-        var request = new FormRatingRequestDto(4);
+        val request = new UpsertFormRatingRequestDto(4);
 
         given().auth()
                 .oauth2(token.getTokenValue())
@@ -87,26 +88,25 @@ class FormRatingCreateIntegrationTest extends BaseIntegrationTest {
                 .post(PATH)
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
-                .body("value", is(request.ratingValue()));
+                .body("value", is(request.value()));
 
         verifyDbState(form, user, request, 4, 1);
     }
 
     @Test
     void shouldUpdateExistingRatingAndAdjustFormRatingsSumDelta() {
-        var user = mongoTemplate.save(UserTestDataFactory.create());
+        val user = mongoTemplate.save(UserTestDataFactory.create());
 
-        var form = mongoTemplate.save(FormTestDataFactory.create());
-        form.setRatingsCount(1L);
-        form.setRatingsSum(3L);
-        mongoTemplate.save(form);
-
+        val form = mongoTemplate.save(mongoTemplate.save(FormTestDataFactory.createWithDefaults()
+                .ratingsCount(1L)
+                .ratingsSum(3L)
+                .build()));
         mongoTemplate.save(FormRatingTestDataFactory.create(form.getId(), user.getId(), 3));
 
-        var token = JwtTestFactory.create(user);
+        val token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
-        var request = new FormRatingRequestDto(5);
+        val request = new UpsertFormRatingRequestDto(5);
 
         given().auth()
                 .oauth2(token.getTokenValue())
@@ -117,26 +117,25 @@ class FormRatingCreateIntegrationTest extends BaseIntegrationTest {
                 .post(PATH)
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
-                .body("value", is(request.ratingValue()));
+                .body("value", is(request.value()));
 
         verifyDbState(form, user, request, 5, 1);
     }
 
     @Test
     void shouldNotModifyFormWhenUpdatingRatingWithExactSameValue() {
-        var user = mongoTemplate.save(UserTestDataFactory.create());
+        val user = mongoTemplate.save(UserTestDataFactory.create());
 
-        var form = mongoTemplate.save(FormTestDataFactory.create());
-        form.setRatingsCount(1L);
-        form.setRatingsSum(5L);
-        mongoTemplate.save(form);
-
+        val form = mongoTemplate.save(mongoTemplate.save(FormTestDataFactory.createWithDefaults()
+                .ratingsCount(1L)
+                .ratingsSum(5L)
+                .build()));
         mongoTemplate.save(FormRatingTestDataFactory.create(form.getId(), user.getId(), 5));
 
-        var token = JwtTestFactory.create(user);
+        val token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
-        var request = new FormRatingRequestDto(5);
+        val request = new UpsertFormRatingRequestDto(5);
 
         given().auth()
                 .oauth2(token.getTokenValue())
@@ -147,7 +146,7 @@ class FormRatingCreateIntegrationTest extends BaseIntegrationTest {
                 .post(PATH)
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
-                .body("value", is(request.ratingValue()));
+                .body("value", is(request.value()));
 
         verifyDbState(form, user, request, 5, 1);
     }
@@ -155,19 +154,19 @@ class FormRatingCreateIntegrationTest extends BaseIntegrationTest {
     private void verifyDbState(
             FormEntity form,
             UserEntity user,
-            FormRatingRequestDto request,
+            UpsertFormRatingRequestDto request,
             long expectedRatingsSum,
             long expectedRatingsCount) {
-        var updatedForm = mongoTemplate.findById(form.getId(), FormEntity.class);
+        val updatedForm = mongoTemplate.findById(form.getId(), FormEntity.class);
         assertThat(updatedForm).isNotNull();
         assertThat(updatedForm.getRatingsSum()).isEqualTo(expectedRatingsSum);
         assertThat(updatedForm.getRatingsCount()).isEqualTo(expectedRatingsCount);
 
-        var formRating = mongoTemplate.findOne(
+        val formRating = mongoTemplate.findOne(
                 Query.query(Criteria.where(FormRatingEntity::getFormId).is(form.getId())), FormRatingEntity.class);
         assertThat(formRating).isNotNull();
         assertThat(formRating.getFormId()).isEqualTo(form.getId());
         assertThat(formRating.getAuthorId()).isEqualTo(user.getId());
-        assertThat(formRating.getValue()).isEqualTo(request.ratingValue());
+        assertThat(formRating.getValue()).isEqualTo(request.value());
     }
 }

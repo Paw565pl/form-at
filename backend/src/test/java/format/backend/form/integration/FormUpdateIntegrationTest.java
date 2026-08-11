@@ -8,18 +8,19 @@ import static org.mockito.Mockito.when;
 
 import format.backend.auth.datafactory.JwtTestFactory;
 import format.backend.auth.datafactory.UserTestDataFactory;
-import format.backend.core.integration.BaseIntegrationTest;
+import format.backend.core.BaseIntegrationTest;
 import format.backend.form.datafactory.FormRequestDtoTestDataFactory;
-import format.backend.form.datafactory.FormTestDataFactory;
-import format.backend.form.entity.FormEntity;
-import format.backend.form.entity.FormStatus;
+import format.backend.form.domain.entity.FormEntity;
+import format.backend.form.domain.entity.FormStatus;
+import format.backend.form.domain.entity.FormTestDataFactory;
 import io.restassured.http.ContentType;
 import java.util.Map;
+import lombok.val;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
-class FormUpdateIntegrationTest extends BaseIntegrationTest {
+final class FormUpdateIntegrationTest extends BaseIntegrationTest {
 
     private static final String PATH_PARAM = "idOrSlug";
     private static final String PATH = "/api/v1/forms/{%s}".formatted(PATH_PARAM);
@@ -37,8 +38,8 @@ class FormUpdateIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldReturnNotFoundWhenFormDoesNotExist() {
-        var user = mongoTemplate.save(UserTestDataFactory.create());
-        var token = JwtTestFactory.create(user);
+        val user = mongoTemplate.save(UserTestDataFactory.create());
+        val token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
         given().auth()
@@ -54,12 +55,15 @@ class FormUpdateIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldReturnForbiddenWhenUserIsNotTheAuthor() {
-        var author = mongoTemplate.save(UserTestDataFactory.create());
-        var nonAuthor = mongoTemplate.save(UserTestDataFactory.create());
+        val author = mongoTemplate.save(UserTestDataFactory.create());
+        val nonAuthor = mongoTemplate.save(UserTestDataFactory.create());
 
-        var form = mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC, author.getId()));
+        val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults()
+                .status(FormStatus.PUBLIC)
+                .authorId(author.getId())
+                .build());
 
-        var token = JwtTestFactory.create(nonAuthor);
+        val token = JwtTestFactory.create(nonAuthor);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
         given().auth()
@@ -75,10 +79,13 @@ class FormUpdateIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldReturnBadRequestWhenRequestIsInvalid() {
-        var user = mongoTemplate.save(UserTestDataFactory.create());
-        var form = mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC, user.getId()));
+        val user = mongoTemplate.save(UserTestDataFactory.create());
+        val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults()
+                .status(FormStatus.PUBLIC)
+                .authorId(user.getId())
+                .build());
 
-        var token = JwtTestFactory.create(user);
+        val token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
         given().auth()
@@ -94,13 +101,16 @@ class FormUpdateIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldReturnBadRequestWhenValidationFails() {
-        var user = mongoTemplate.save(UserTestDataFactory.create());
-        var form = mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC, user.getId()));
+        val user = mongoTemplate.save(UserTestDataFactory.create());
+        val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults()
+                .status(FormStatus.PUBLIC)
+                .authorId(user.getId())
+                .build());
 
-        var token = JwtTestFactory.create(user);
+        val token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
-        var invalidRequestBody = FormRequestDtoTestDataFactory.createWithInvalidQuestionAnswers();
+        val invalidRequestBody = FormRequestDtoTestDataFactory.createWithInvalidQuestionAnswers();
 
         given().auth()
                 .oauth2(token.getTokenValue())
@@ -115,17 +125,21 @@ class FormUpdateIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldReturnConflictWhenUpdatingToAlreadyExistingName() {
-        var user = mongoTemplate.save(UserTestDataFactory.create());
-        var requestBody = FormRequestDtoTestDataFactory.createValidPublic();
+        val user = mongoTemplate.save(UserTestDataFactory.create());
+        val requestBody = FormRequestDtoTestDataFactory.createValidPublic();
 
-        var form = FormTestDataFactory.create(FormStatus.PUBLIC, user.getId());
-        form.setName(requestBody.name());
-        form.setSlug(requestBody.name());
-        mongoTemplate.save(form);
+        mongoTemplate.save(FormTestDataFactory.createWithDefaults()
+                .name(requestBody.name())
+                .slug(requestBody.name())
+                .status(FormStatus.PUBLIC)
+                .authorId(user.getId())
+                .build());
+        val form2 = mongoTemplate.save(FormTestDataFactory.createWithDefaults()
+                .status(FormStatus.PUBLIC)
+                .authorId(user.getId())
+                .build());
 
-        var form2 = mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC, user.getId()));
-
-        var token = JwtTestFactory.create(user);
+        val token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
         given().auth()
@@ -141,16 +155,17 @@ class FormUpdateIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldUpdateFormAndResetSubmissionsCount() {
-        var user = mongoTemplate.save(UserTestDataFactory.create());
+        val user = mongoTemplate.save(UserTestDataFactory.create());
+        val existingForm = mongoTemplate.save(FormTestDataFactory.createWithDefaults()
+                .status(FormStatus.PUBLIC)
+                .submissionsCount(10L)
+                .authorId(user.getId())
+                .build());
 
-        var existingForm = FormTestDataFactory.create(FormStatus.PUBLIC, user.getId());
-        existingForm.setSubmissionsCount(10L);
-        mongoTemplate.save(existingForm);
-
-        var token = JwtTestFactory.create(user);
+        val token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
-        var requestBody = FormRequestDtoTestDataFactory.createValidPublic();
+        val requestBody = FormRequestDtoTestDataFactory.createValidPublic();
 
         given().auth()
                 .oauth2(token.getTokenValue())
@@ -165,10 +180,10 @@ class FormUpdateIntegrationTest extends BaseIntegrationTest {
                 .body("name", is(requestBody.name()))
                 .body("submissionsCount", is(0));
 
-        var savedForms = mongoTemplate.findAll(FormEntity.class);
+        val savedForms = mongoTemplate.findAll(FormEntity.class);
         assertThat(savedForms).hasSize(1);
 
-        var savedForm = savedForms.getFirst();
+        val savedForm = savedForms.getFirst();
         assertThat(savedForm.getAuthorId()).isEqualTo(user.getId());
         assertThat(savedForm.getQuestionsCount())
                 .isEqualTo(requestBody.questions().size());

@@ -1,4 +1,4 @@
-package format.backend.comment.datafactory.integration;
+package format.backend.formcomment.integration;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.hasSize;
@@ -10,15 +10,17 @@ import static org.mockito.Mockito.when;
 
 import format.backend.auth.datafactory.JwtTestFactory;
 import format.backend.auth.datafactory.UserTestDataFactory;
-import format.backend.comment.datafactory.datafactory.CommentTestDataFactory;
-import format.backend.comment_rating.datafactory.CommentRatingTestDataFactory;
-import format.backend.core.integration.BaseIntegrationTest;
-import format.backend.form.datafactory.FormTestDataFactory;
+import format.backend.core.BaseIntegrationTest;
+import format.backend.form.domain.entity.FormTestDataFactory;
+import format.backend.formcomment.datafactory.FormCommentTestDataFactory;
+import format.backend.formcomment.domain.entity.FormCommentRatingType;
+import format.backend.formcomment.rating.datafactory.FormCommentRatingTestDataFactory;
+import lombok.val;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
-class CommentListIntegrationTest extends BaseIntegrationTest {
+final class FormCommentListIntegrationTest extends BaseIntegrationTest {
 
     private static final String PATH_PARAM = "formIdOrSlug";
     private static final String PATH = "/api/v1/forms/{%s}/comments".formatted(PATH_PARAM);
@@ -35,10 +37,10 @@ class CommentListIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldPaginateResults() {
-        var form = mongoTemplate.save(FormTestDataFactory.create());
-        mongoTemplate.save(CommentTestDataFactory.create(form.getId()));
-        mongoTemplate.save(CommentTestDataFactory.create(form.getId()));
-        mongoTemplate.save(CommentTestDataFactory.create(form.getId()));
+        val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults().build());
+        mongoTemplate.save(FormCommentTestDataFactory.create(form.getId()));
+        mongoTemplate.save(FormCommentTestDataFactory.create(form.getId()));
+        mongoTemplate.save(FormCommentTestDataFactory.create(form.getId()));
 
         given().pathParam(PATH_PARAM, form.getId())
                 .queryParam("page", 0)
@@ -54,10 +56,10 @@ class CommentListIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldSortByCreatedAtDescendingByDefault() {
-        var form = mongoTemplate.save(FormTestDataFactory.create());
+        val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults().build());
 
-        var olderComment = mongoTemplate.save(CommentTestDataFactory.create(form.getId()));
-        var newerComment = mongoTemplate.save(CommentTestDataFactory.create(form.getId()));
+        val olderComment = mongoTemplate.save(FormCommentTestDataFactory.create(form.getId()));
+        val newerComment = mongoTemplate.save(FormCommentTestDataFactory.create(form.getId()));
 
         given().pathParam(PATH_PARAM, form.getId())
                 .when()
@@ -70,10 +72,10 @@ class CommentListIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldHaveCorrectAuthorNameWhenAuthorExists() {
-        var form = mongoTemplate.save(FormTestDataFactory.create());
-        var user = mongoTemplate.save(UserTestDataFactory.create());
+        val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults().build());
+        val user = mongoTemplate.save(UserTestDataFactory.create());
 
-        mongoTemplate.save(CommentTestDataFactory.create(form.getId(), user.getId()));
+        mongoTemplate.save(FormCommentTestDataFactory.create(form.getId(), user.getId()));
 
         given().pathParam(PATH_PARAM, form.getId())
                 .when()
@@ -85,8 +87,8 @@ class CommentListIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldHaveCorrectAuthorNameWhenAuthorDoesNotExist() {
-        var form = mongoTemplate.save(FormTestDataFactory.create());
-        mongoTemplate.save(CommentTestDataFactory.create(form.getId()));
+        val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults().build());
+        mongoTemplate.save(FormCommentTestDataFactory.create(form.getId()));
 
         given().pathParam(PATH_PARAM, form.getId())
                 .when()
@@ -98,11 +100,12 @@ class CommentListIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldReturnUserRatingAsNullWhenAnonymousUserRequests() {
-        var form = mongoTemplate.save(FormTestDataFactory.create());
-        var user = mongoTemplate.save(UserTestDataFactory.create());
+        val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults().build());
+        val user = mongoTemplate.save(UserTestDataFactory.create());
 
-        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), user.getId()));
-        mongoTemplate.save(CommentRatingTestDataFactory.create(comment.getId(), user.getId(), true));
+        val comment = mongoTemplate.save(FormCommentTestDataFactory.create(form.getId(), user.getId()));
+        mongoTemplate.save(FormCommentRatingTestDataFactory.create(
+                form.getId(), comment.getId(), user.getId(), FormCommentRatingType.UPVOTE));
 
         given().pathParam(PATH_PARAM, form.getId())
                 .when()
@@ -114,13 +117,14 @@ class CommentListIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldHaveCorrectUserRatingWhenUserIsAuthenticated() {
-        var form = mongoTemplate.save(FormTestDataFactory.create());
-        var loggedUser = mongoTemplate.save(UserTestDataFactory.create());
+        val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults().build());
+        val loggedUser = mongoTemplate.save(UserTestDataFactory.create());
 
-        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId()));
-        mongoTemplate.save(CommentRatingTestDataFactory.create(comment.getId(), loggedUser.getId(), true));
+        val comment = mongoTemplate.save(FormCommentTestDataFactory.create(form.getId()));
+        mongoTemplate.save(FormCommentRatingTestDataFactory.create(
+                form.getId(), comment.getId(), loggedUser.getId(), FormCommentRatingType.UPVOTE));
 
-        var token = JwtTestFactory.create(loggedUser);
+        val token = JwtTestFactory.create(loggedUser);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
         given().auth()

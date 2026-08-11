@@ -1,4 +1,4 @@
-package format.backend.core.integration;
+package format.backend.core;
 
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
@@ -15,11 +15,9 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.mongodb.MongoDBContainer;
-import org.testcontainers.utility.DockerImageName;
+import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.mongodb.MongoDBAtlasLocalContainer;
 
-@Testcontainers
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 public abstract class BaseIntegrationTest {
@@ -37,8 +35,8 @@ public abstract class BaseIntegrationTest {
     protected MongoTemplate mongoTemplate;
 
     @ServiceConnection
-    protected static final MongoDBContainer mongoDBContainer =
-            new MongoDBContainer(DockerImageName.parse("mongo:8-noble"));
+    private static final MongoDBAtlasLocalContainer mongoDBContainer =
+            new MongoDBAtlasLocalContainer("mongodb/mongodb-atlas-local:8.3").waitingFor(Wait.forHealthcheck());
 
     static {
         mongoDBContainer.start();
