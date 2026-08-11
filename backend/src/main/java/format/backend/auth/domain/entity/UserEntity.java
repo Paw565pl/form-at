@@ -34,16 +34,18 @@ public final class UserEntity {
 
     @CreatedDate
     @Field(name = "createdAt")
-    private @Nullable Instant createdAt;
+    private final @Nullable Instant createdAt;
 
     @LastModifiedDate
     @Field(name = "updatedAt")
-    private @Nullable Instant updatedAt;
+    private final @Nullable Instant updatedAt;
 
     @Builder
     public UserEntity(String id, String username, String email) {
         this.id = Objects.requireNonNull(id);
         this.username = Objects.requireNonNull(username);
         this.email = Objects.requireNonNull(email);
+        this.createdAt = null;
+        this.updatedAt = null;
     }
 }
