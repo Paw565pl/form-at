@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class KeycloakJwtConverter implements Converter<Jwt, AbstractAuthenticationToken> {
+class KeycloakJwtConverter implements Converter<Jwt, AbstractAuthenticationToken> {
 
     private final TaskExecutor taskExecutor;
     private final CreateOrUpdateUserHandler createOrUpdateUserHandler;

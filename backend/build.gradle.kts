@@ -68,8 +68,9 @@ repositories {
     mavenCentral()
 }
 
-val otelLogbackAppenderVersion = "2.30.0-alpha"
 val springModulithVersion = "2.1.0"
+val caffeineVersion = "3.2.4"
+val otelLogbackAppenderVersion = "2.30.0-alpha"
 val mapstructVersion = "1.7.0.Beta2"
 val slugifyVersion = "4.0.1"
 val minioSdkVersion = "9.0.3"
@@ -83,6 +84,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security-oauth2-resource-server")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
+    implementation("org.springframework.boot:spring-boot-starter-cache")
+    implementation("com.github.ben-manes.caffeine:caffeine:$caffeineVersion")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-opentelemetry")
     implementation(
