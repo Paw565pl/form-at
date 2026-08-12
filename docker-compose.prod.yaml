@@ -120,7 +120,7 @@ services:
       - "8080:8080"
     environment:
       JAVA_TOOL_OPTIONS: "-Xms512m -Xmx512m -XX:+AlwaysPreTouch"
-      CORS_ALLOWED_ORIGINS: http://localhost:3000
+      APP_CORS_ALLOWED_ORIGINS: http://localhost:3000
       OTEL_EXPORTER_OTLP_HEADERS: x-otlp-api-key=aspiredashboardotlpsecret
     depends_on:
       mongodb:
