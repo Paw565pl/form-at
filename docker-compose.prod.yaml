@@ -39,8 +39,8 @@ services:
         ]
       interval: 30s
       timeout: 10s
+      start_period: 10s
       retries: 3
-      start_period: 5s
 
   rustfs:
     image: rustfs/rustfs:1.0.0-rc.1
@@ -60,8 +60,8 @@ services:
       test: ["CMD", "sh", "-c", "curl -f http://127.0.0.1:9000/health"]
       interval: 30s
       timeout: 10s
+      start_period: 10s
       retries: 3
-      start_period: 5s
 
   keycloak:
     build:
@@ -105,8 +105,8 @@ services:
         ]
       interval: 30s
       timeout: 10s
-      retries: 3
       start_period: 10s
+      retries: 3
     depends_on:
       postgres:
         condition: service_healthy
