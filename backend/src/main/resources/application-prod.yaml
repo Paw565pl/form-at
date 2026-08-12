@@ -39,7 +39,7 @@ management:
 logging:
   level:
     root: error
-    format.backend: info
+    format.backend: warn
 
 app:
   s3:

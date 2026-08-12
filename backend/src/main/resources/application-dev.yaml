@@ -18,19 +18,13 @@ management:
 
 logging:
   level:
-    data: debug
     org:
       springframework:
         data:
           mongodb:
             core:
               MongoTemplate: debug
-            repository:
-              query: debug
-      mongodb:
-        driver:
-          protocol:
-            command: debug
+    format.backend: debug
 
 app:
   cors:

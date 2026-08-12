@@ -7,7 +7,7 @@ management:
 logging:
   level:
     root: error
-    format.backend: debug
+    format.backend: warn
 
 app:
   cors:
