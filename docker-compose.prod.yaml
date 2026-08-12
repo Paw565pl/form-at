@@ -3,8 +3,6 @@ services:
     image: mongodb/mongodb-atlas-local:8.3
     hostname: mongodb
     restart: on-failure
-    ports:
-      - "27017:27017"
     environment:
       MONGODB_INITDB_ROOT_USERNAME: root
       MONGODB_INITDB_ROOT_PASSWORD: password
@@ -28,15 +26,7 @@ services:
       - postgres-data:/var/lib/postgresql
       - ./keycloak/postgres/keycloack-schema-init.sql:/docker-entrypoint-initdb.d/keycloack-schema-init.sql
     healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "pg_isready",
-          "-U",
-          "$$POSTGRES_USER",
-          "-d",
-          "$$POSTGRES_DB",
-        ]
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
       interval: 30s
       timeout: 10s
       start_period: 10s
@@ -57,7 +47,7 @@ services:
     volumes:
       - rustfs-data:/data
     healthcheck:
-      test: ["CMD", "sh", "-c", "curl -f http://127.0.0.1:9000/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:9000/health"]
       interval: 30s
       timeout: 10s
       start_period: 10s
