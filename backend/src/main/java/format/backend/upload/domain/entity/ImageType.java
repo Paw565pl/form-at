@@ -8,13 +8,13 @@ import lombok.val;
 @Getter
 @RequiredArgsConstructor
 public enum ImageType {
-    AVIF("avif", "image/avif");
+    WEBP("webp", "image/webp");
 
     private final String extension;
     private final String contentType;
 
     public static Optional<ImageType> fromExtension(String extension) {
-        if (AVIF.extension.equalsIgnoreCase(extension)) return Optional.of(AVIF);
+        if (WEBP.extension.equalsIgnoreCase(extension)) return Optional.of(WEBP);
         return Optional.empty();
     }
 

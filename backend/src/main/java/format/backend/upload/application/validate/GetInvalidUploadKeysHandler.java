@@ -11,7 +11,7 @@ import io.minio.MinioClient;
 import io.minio.errors.ErrorResponseException;
 import io.minio.errors.MinioException;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -26,6 +26,9 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class GetInvalidUploadKeysHandler {
+
+    private static final byte[] RIFF_HEADER_BYTES = {'R', 'I', 'F', 'F'};
+    private static final byte[] WEBP_HEADER_BYTES = {'W', 'E', 'B', 'P'};
 
     private final MinioClient minioClient;
     private final AsyncTaskExecutor asyncTaskExecutor;
@@ -85,18 +88,16 @@ public class GetInvalidUploadKeysHandler {
                 .bucket(s3Properties.bucket())
                 .object(key)
                 .offset(0L)
-                .length(16L)
+                .length(12L)
                 .build())) {
 
             val header = stream.readAllBytes();
             if (header.length < 12) return Optional.empty();
 
-            val magicBytes = new String(header, 4, 8, StandardCharsets.US_ASCII);
-            if (magicBytes.startsWith("ftypavif") || magicBytes.startsWith("ftypavis")) {
-                return Optional.of(key);
-            } else {
-                return Optional.empty();
-            }
+            val isWebp = Arrays.equals(header, 0, 4, RIFF_HEADER_BYTES, 0, RIFF_HEADER_BYTES.length)
+                    && Arrays.equals(header, 8, 12, WEBP_HEADER_BYTES, 0, WEBP_HEADER_BYTES.length);
+
+            return isWebp ? Optional.of(key) : Optional.empty();
         } catch (ErrorResponseException _) {
             // this is thrown for 404 not found
             return Optional.empty();

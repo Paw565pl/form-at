@@ -7,7 +7,7 @@ import {
 import { QuestionType } from "@/core/types/question";
 import {
   MAX_FILE_SIZE_IN_BYTES,
-  VALID_IMAGE_TYPES,
+  VALID_INPUT_IMAGE_CONTENT_TYPES,
 } from "@/features/form/constants/image";
 import { useTranslations } from "next-intl";
 import * as z from "zod";
@@ -48,7 +48,7 @@ const getQuestionSchema = (t: TranslateError) =>
             size: `${MAX_FILE_SIZE_IN_BYTES / 1024 / 1024} MB`,
           }),
         )
-        .mime([...VALID_IMAGE_TYPES])
+        .mime([...VALID_INPUT_IMAGE_CONTENT_TYPES])
         .or(z.string().trim())
         .optional(),
     })
@@ -118,7 +118,7 @@ export const getFormSchema = (t: TranslateError) =>
             size: `${MAX_FILE_SIZE_IN_BYTES / 1024 / 1024} MB`,
           }),
         )
-        .mime([...VALID_IMAGE_TYPES])
+        .mime([...VALID_INPUT_IMAGE_CONTENT_TYPES])
         .or(z.string().trim())
         .optional(),
       questions: z

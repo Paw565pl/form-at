@@ -30,7 +30,7 @@ import {
   Language,
 } from "@/core/types/form";
 import { QuestionType } from "@/core/types/question";
-import { VALID_IMAGE_TYPES } from "@/features/form/constants/image";
+import { VALID_INPUT_IMAGE_CONTENT_TYPES } from "@/features/form/constants/image";
 import { getFormSchema } from "@/features/form/schemas/form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
@@ -411,7 +411,7 @@ export const FormBaseForm = ({
                       id="thumbnail"
                       aria-invalid={fieldState.invalid}
                       type="file"
-                      accept={VALID_IMAGE_TYPES.join(", ")}
+                      accept={VALID_INPUT_IMAGE_CONTENT_TYPES.join(", ")}
                       onChange={(event) =>
                         onChange(event.target.files && event.target.files[0])
                       }
@@ -776,7 +776,7 @@ export const FormBaseForm = ({
                           id={`questions.${qIdx}.image`}
                           aria-invalid={fieldState.invalid}
                           type="file"
-                          accept={VALID_IMAGE_TYPES.join(", ")}
+                          accept={VALID_INPUT_IMAGE_CONTENT_TYPES.join(", ")}
                           onChange={(event) =>
                             onChange(
                               event.target.files && event.target.files[0],
