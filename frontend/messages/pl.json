@@ -192,7 +192,8 @@
     "updateDialogDescription": "Wszystkie poprzednie odpowiedzi dla tego formularza zostaną usunięte. Ta akcja jest nieodwracalna.",
     "errors": {
       "unexpected": "Wystąpił nieoczekiwany błąd podczas próby edycji formularza.",
-      "formAlreadyExists": "Formularz o tej nazwie już istnieje."
+      "formAlreadyExists": "Formularz o tej nazwie już istnieje.",
+      "uploadQuotaExceeded": "Wyczerpałeś/aś limit przesyłania plików."
     }
   },
   "formDetailsPage": {
