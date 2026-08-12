@@ -134,6 +134,8 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile.prod
+      args:
+        - S3_URL=http://rustfs:9000/uploads
     restart: on-failure
     ports:
       - "3000:3000"
