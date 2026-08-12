@@ -70,7 +70,7 @@ repositories {
 
 val springModulithVersion = "2.1.0"
 val caffeineVersion = "3.2.4"
-val otelLogbackAppenderVersion = "2.30.0-alpha"
+val otelLogbackAppenderVersion = "2.28.1-alpha"
 val mapstructVersion = "1.7.0.Beta2"
 val slugifyVersion = "4.0.1"
 val minioSdkVersion = "9.0.3"
