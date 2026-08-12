@@ -21,6 +21,6 @@ class CleanUploadHistoryJob {
     void execute() {
         val deletedCount = uploadRepository.deleteAllByCreatedAtBefore(
                 Instant.now().minus(uploadProperties.retention().staleUploadsWindow()));
-        log.info("Deleted stale uploads. deletedCount={}", deletedCount);
+        log.debug("Deleted stale uploads. deletedCount={}", deletedCount);
     }
 }
