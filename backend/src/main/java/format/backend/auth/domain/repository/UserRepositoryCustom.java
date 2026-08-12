@@ -4,5 +4,5 @@ import format.backend.auth.domain.entity.UserEntity;
 
 interface UserRepositoryCustom {
 
-    UserEntity createOrUpdate(UserEntity userEntity);
+    void createOrUpdate(UserEntity userEntity);
 }
