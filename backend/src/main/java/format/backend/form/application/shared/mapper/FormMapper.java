@@ -30,9 +30,7 @@ public interface FormMapper {
     }
 
     static @Nullable Double mapRatingAvg(FormEntity formEntity) {
-        return formEntity.getRatingsCount() == 0
-                ? null
-                : (double) formEntity.getRatingsSum() / formEntity.getRatingsCount();
+        return formEntity.getRatingAvg();
     }
 
     @Mapping(target = "thumbnailKey", source = "thumbnailKey")
