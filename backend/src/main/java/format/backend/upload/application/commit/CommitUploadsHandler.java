@@ -83,7 +83,6 @@ public class CommitUploadsHandler {
         val terminal = resultsByStatus.getOrDefault(CopyStatus.TERMINAL_FAILURE, List.of());
         val retryable = resultsByStatus.getOrDefault(CopyStatus.RETRYABLE_FAILURE, List.of());
 
-        // TODO: this code block probably should be a transaction
         if (!succeeded.isEmpty()) {
             val succeededKeys = succeeded.stream().map(CopyResult::sourceKey).toList();
             uploadRepository.updateStatusByTempKeyInAndStatus(
@@ -103,7 +102,6 @@ public class CommitUploadsHandler {
                             .destinationKey(result.destinationKey())
                             .build())));
         }
-        //
     }
 
     private CopyResult copyObject(String sourceKey, String destinationKey) {
