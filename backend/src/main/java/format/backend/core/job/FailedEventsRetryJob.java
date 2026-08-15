@@ -20,5 +20,6 @@ class FailedEventsRetryJob {
         failedEventPublications.resubmit(ResubmissionOptions.defaults()
                 .withBatchSize(100)
                 .withFilter(eventPublication -> eventPublication.getCompletionAttempts() < 5));
+        log.debug("Retried failed event publications.");
     }
 }
