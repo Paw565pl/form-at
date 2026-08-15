@@ -1,6 +1,7 @@
 package format.backend.newupload;
 
 import format.backend.auth.UserClaims;
+import format.backend.newupload.application.commit.CommitUploadsHandler;
 import format.backend.newupload.application.presignedget.CreatePresignedGetUrlHandler;
 import format.backend.newupload.application.validate.GetInvalidUploadKeysHandler;
 import java.util.Optional;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 public class UploadFacade {
 
     private final CreatePresignedGetUrlHandler createPresignedGetUrlHandler;
+    private final CommitUploadsHandler commitUploadsHandler;
     private final GetInvalidUploadKeysHandler getInvalidUploadKeysHandler;
 
     public Optional<String> createPresignedGetUrl(@Nullable String key) {
@@ -22,7 +24,7 @@ public class UploadFacade {
 
     /// marks status of upload keys as COMPLETED
     public void commit(Set<String> keys, UserClaims userClaims) {
-        throw new UnsupportedOperationException();
+        commitUploadsHandler.handle(keys, userClaims);
     }
 
     /// validates input keys and returns invalid ones
