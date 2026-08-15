@@ -19,7 +19,8 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 class DeleteStalePendingUploadsJob {
 
-    private static final Pageable pageable = PageRequest.of(0, 500, Sort.by(Sort.Direction.ASC, UploadEntity::getId));
+    private static final Pageable pageable =
+            PageRequest.of(0, 500, Sort.by(Sort.Direction.ASC, UploadEntity::getCreatedAt));
 
     private final UploadProperties uploadProperties;
     private final UploadRepository uploadRepository;
