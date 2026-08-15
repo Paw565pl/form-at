@@ -2,6 +2,7 @@ package format.backend.newupload;
 
 import format.backend.auth.UserClaims;
 import format.backend.newupload.application.commit.CommitUploadsHandler;
+import format.backend.newupload.application.delete.DeleteUploadsHandler;
 import format.backend.newupload.application.presignedget.CreatePresignedGetUrlHandler;
 import format.backend.newupload.application.validate.GetInvalidUploadKeysHandler;
 import java.util.Optional;
@@ -17,6 +18,7 @@ public class UploadFacade {
     private final CreatePresignedGetUrlHandler createPresignedGetUrlHandler;
     private final CommitUploadsHandler commitUploadsHandler;
     private final GetInvalidUploadKeysHandler getInvalidUploadKeysHandler;
+    private final DeleteUploadsHandler deleteUploadsHandler;
 
     public Optional<String> createPresignedGetUrl(@Nullable String key) {
         return createPresignedGetUrlHandler.handle(key);
@@ -32,7 +34,8 @@ public class UploadFacade {
         return getInvalidUploadKeysHandler.handle(keys, userClaims);
     }
 
-    public long deleteAll(Set<String> keys) {
-        throw new UnsupportedOperationException();
+    /// returns true if all keys were deleted successfully
+    public boolean deleteAll(Set<String> keys) {
+        return deleteUploadsHandler.handle(keys);
     }
 }
