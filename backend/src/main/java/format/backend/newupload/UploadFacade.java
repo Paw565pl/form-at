@@ -34,8 +34,7 @@ public class UploadFacade {
         return getInvalidUploadKeysHandler.handle(keys, userClaims);
     }
 
-    /// returns true if all keys were deleted successfully
-    public boolean deleteAll(Set<String> keys) {
+    public long deleteAll(Set<String> keys) {
         return deleteUploadsHandler.handle(keys);
     }
 }

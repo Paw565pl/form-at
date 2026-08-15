@@ -19,29 +19,29 @@ public class DeleteUploadsHandler {
     private final MinioClient minioClient;
     private final S3Properties s3Properties;
 
-    public boolean handle(Set<String> keys) {
-        if (keys.isEmpty()) return true;
+    public long handle(Set<String> keys) {
+        if (keys.isEmpty()) return 0;
 
         val deleteObjects = keys.stream().map(DeleteRequest.Object::new).toList();
-        val deleteResults = minioClient.removeObjects(RemoveObjectsArgs.builder()
+        val deleteObjectsErrors = minioClient.removeObjects(RemoveObjectsArgs.builder()
                 .bucket(s3Properties.bucket())
                 .objects(deleteObjects)
                 .delayMs(500)
                 .maxRetries(3)
                 .build());
 
-        var isSuccess = true;
-        for (val result : deleteResults) {
+        var deletedCount = keys.size();
+        for (val errorResult : deleteObjectsErrors) {
             try {
-                val error = result.get();
+                val error = errorResult.get();
                 log.warn("Upload delete failed. error={}", error);
             } catch (MinioException e) {
                 log.warn("Upload delete error read failed.", e);
             }
 
-            isSuccess = false;
+            deletedCount--;
         }
 
-        return isSuccess;
+        return deletedCount;
     }
 }
