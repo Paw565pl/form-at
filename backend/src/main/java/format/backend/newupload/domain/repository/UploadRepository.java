@@ -5,6 +5,8 @@ import format.backend.newupload.domain.entity.UploadStatus;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.mongodb.repository.Update;
@@ -12,6 +14,9 @@ import org.springframework.data.mongodb.repository.Update;
 public interface UploadRepository extends MongoRepository<UploadEntity, String> {
 
     List<UploadEntity> findAllByKeyInAndUserIdAndStatus(Collection<String> keys, String userId, UploadStatus status);
+
+    Slice<UploadEntity> findAllByStatusAndCreatedAtAfter(
+            UploadStatus status, Instant createdAtAfter, Pageable pageable);
 
     long countAllByUserIdAndCreatedAtAfter(String userId, Instant createdAtAfter);
 
