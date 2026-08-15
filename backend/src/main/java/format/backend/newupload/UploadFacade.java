@@ -1,6 +1,7 @@
 package format.backend.newupload;
 
 import format.backend.auth.UserClaims;
+import format.backend.newupload.application.presignedget.CreatePresignedGetUrlHandler;
 import java.util.Optional;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
@@ -11,8 +12,10 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UploadFacade {
 
+    private final CreatePresignedGetUrlHandler createPresignedGetUrlHandler;
+
     public Optional<String> createPresignedGetUrl(@Nullable String key) {
-        throw new UnsupportedOperationException();
+        return createPresignedGetUrlHandler.handle(key);
     }
 
     /// marks status of upload keys as COMPLETED
