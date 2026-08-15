@@ -1,0 +1,52 @@
+package format.backend.newupload.application.uploadrequest;
+
+import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.ElementType.TYPE_USE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
+import format.backend.newupload.domain.entity.ImageType;
+import jakarta.validation.Constraint;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+import jakarta.validation.Payload;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+import java.util.Arrays;
+import java.util.stream.Collectors;
+import lombok.val;
+
+@Retention(RUNTIME)
+@Target({FIELD, METHOD, PARAMETER, ANNOTATION_TYPE, TYPE_USE})
+@Constraint(validatedBy = ImageExtensionValidator.class)
+@interface ValidImageExtension {
+
+    String message() default "Invalid extension";
+
+    Class<?>[] groups() default {};
+
+    Class<? extends Payload>[] payload() default {};
+}
+
+final class ImageExtensionValidator implements ConstraintValidator<ValidImageExtension, String> {
+
+    private static final String ERROR_MESSAGE = "File has invalid extension, only %s are allowed"
+            .formatted(Arrays.stream(ImageType.values())
+                    .map(ImageType::getExtension)
+                    .collect(Collectors.joining(", ")));
+
+    @Override
+    public boolean isValid(String value, ConstraintValidatorContext context) {
+        if (value == null) return true;
+
+        val isValid = ImageType.fromFilename(value).isPresent();
+        if (!isValid) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate(ERROR_MESSAGE).addConstraintViolation();
+        }
+
+        return isValid;
+    }
+}
