@@ -16,22 +16,21 @@ import org.springframework.stereotype.Service;
 public class UploadFacade {
 
     private final PresignGetUrlHandler presignGetUrlHandler;
-    private final CommitUploadsHandler commitUploadsHandler;
     private final GetInvalidUploadKeysHandler getInvalidUploadKeysHandler;
+    private final CommitUploadsHandler commitUploadsHandler;
     private final DeleteUploadsHandler deleteUploadsHandler;
 
     public Optional<String> presignGetUrl(@Nullable String key) {
         return presignGetUrlHandler.handle(key);
     }
 
-    /// marks status of PENDING upload keys as COMPLETED
-    public long commit(Set<String> keys, UserClaims userClaims) {
-        return commitUploadsHandler.handle(keys, userClaims);
-    }
-
-    /// validates input keys and returns invalid ones
     public Set<String> getInvalidKeys(Set<String> keys, UserClaims userClaims) {
         return getInvalidUploadKeysHandler.handle(keys, userClaims);
+    }
+
+    /// mark status of PENDING uploads as COMPLETED
+    public long commit(Set<String> keys, UserClaims userClaims) {
+        return commitUploadsHandler.handle(keys, userClaims);
     }
 
     public long deleteAll(Set<String> keys) {
