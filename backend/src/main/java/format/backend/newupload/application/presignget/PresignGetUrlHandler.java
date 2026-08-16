@@ -1,4 +1,4 @@
-package format.backend.newupload.application.presignedget;
+package format.backend.newupload.application.presignget;
 
 import static io.minio.Http.Method.GET;
 
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class CreatePresignedGetUrlHandler {
+public class PresignGetUrlHandler {
 
     private final MinioClient minioClient;
 
