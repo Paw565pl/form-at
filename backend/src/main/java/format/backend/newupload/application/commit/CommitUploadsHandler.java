@@ -13,9 +13,9 @@ public class CommitUploadsHandler {
 
     private final UploadRepository uploadRepository;
 
-    public void handle(Set<String> keys, UserClaims userClaims) {
-        if (keys.isEmpty()) return;
-        uploadRepository.updateStatusByKeyInAndUserIdAndStatus(
+    public long handle(Set<String> keys, UserClaims userClaims) {
+        if (keys.isEmpty()) return 0;
+        return uploadRepository.updateStatusByKeyInAndUserIdAndStatus(
                 keys, userClaims.id(), UploadStatus.PENDING, UploadStatus.COMPLETED);
     }
 }

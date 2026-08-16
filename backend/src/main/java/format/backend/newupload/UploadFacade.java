@@ -24,9 +24,9 @@ public class UploadFacade {
         return presignGetUrlHandler.handle(key);
     }
 
-    /// marks status of upload keys as COMPLETED
-    public void commit(Set<String> keys, UserClaims userClaims) {
-        commitUploadsHandler.handle(keys, userClaims);
+    /// marks status of PENDING upload keys as COMPLETED
+    public long commit(Set<String> keys, UserClaims userClaims) {
+        return commitUploadsHandler.handle(keys, userClaims);
     }
 
     /// validates input keys and returns invalid ones
