@@ -10,6 +10,7 @@ import format.backend.form.domain.exception.FormNotFoundException;
 import format.backend.form.domain.repository.FormRatingRepository;
 import format.backend.form.domain.repository.FormRepository;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -43,7 +44,7 @@ public class DeleteFormHandler {
                         Stream.ofNullable(formEntity.getThumbnailKey()),
                         formEntity.getQuestions().stream().map(QuestionEntity::getImageKey))
                 .filter(Objects::nonNull)
-                .toList();
+                .collect(Collectors.toUnmodifiableSet());
         eventPublisher.publishEvent(new FormDeletedEvent(formId, imageKeys));
     }
 }

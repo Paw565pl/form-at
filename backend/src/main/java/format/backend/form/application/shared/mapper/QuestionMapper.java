@@ -13,7 +13,6 @@ public interface QuestionMapper {
 
     QuestionResponseDto toResponseDto(QuestionEntity questionEntity, @Nullable String image);
 
-    @Mapping(target = "imageKey", source = "imageKey")
     @Mapping(target = "answer", ignore = true)
-    QuestionEntity toEntity(QuestionRequestDto requestDto, @Nullable String imageKey);
+    QuestionEntity toEntity(QuestionRequestDto requestDto);
 }

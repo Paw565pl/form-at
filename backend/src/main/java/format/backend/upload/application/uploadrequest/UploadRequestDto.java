@@ -1,4 +1,4 @@
-package format.backend.newupload.application.uploadrequest;
+package format.backend.upload.application.uploadrequest;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

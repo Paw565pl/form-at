@@ -1,9 +1,9 @@
-package format.backend.newupload.application.presignget;
+package format.backend.upload.application.presignget;
 
 import static io.minio.Http.Method.GET;
 
-import format.backend.newupload.properties.S3Properties;
-import format.backend.newupload.properties.UploadProperties;
+import format.backend.upload.properties.S3Properties;
+import format.backend.upload.properties.UploadProperties;
 import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MinioClient;
 import io.minio.errors.MinioException;

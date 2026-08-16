@@ -1,9 +1,9 @@
-package format.backend.newupload.application.delete;
+package format.backend.upload.application.delete;
 
-import format.backend.newupload.domain.entity.UploadEntity;
-import format.backend.newupload.domain.entity.UploadStatus;
-import format.backend.newupload.domain.repository.UploadRepository;
-import format.backend.newupload.properties.UploadProperties;
+import format.backend.upload.domain.entity.UploadEntity;
+import format.backend.upload.domain.entity.UploadStatus;
+import format.backend.upload.domain.repository.UploadRepository;
+import format.backend.upload.properties.UploadProperties;
 import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

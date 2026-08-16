@@ -33,14 +33,12 @@ public interface FormMapper {
         return formEntity.getRatingAvg();
     }
 
-    @Mapping(target = "thumbnailKey", source = "thumbnailKey")
     @Mapping(target = "questions", source = "questions")
     @Mapping(target = "question", ignore = true)
     FormEntity toEntity(
             FormRequestDto requestDto,
             String slug,
             @Nullable String passwordHash,
-            @Nullable String thumbnailKey,
             List<QuestionEntity> questions,
             String authorId);
 }

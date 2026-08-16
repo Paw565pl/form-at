@@ -5,28 +5,25 @@ import format.backend.upload.domain.entity.UploadStatus;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.mongodb.repository.Update;
 
 public interface UploadRepository extends MongoRepository<UploadEntity, String> {
 
-    List<UploadEntity> findAllByTempKeyInAndUserIdAndStatus(
-            Collection<String> tempKeys, String userId, UploadStatus status);
+    List<UploadEntity> findAllByKeyInAndUserIdAndStatus(Collection<String> keys, String userId, UploadStatus status);
 
-    Optional<UploadEntity> findByTempKeyAndStatus(String tempKey, UploadStatus status);
-
-    @Query("{ 'tempKey': { $in: ?0 }, 'status': ?1 }")
-    @Update("{ '$set': { 'status': ?2 } }")
-    long updateStatusByTempKeyInAndStatus(
-            Collection<String> tempKeys, UploadStatus currentStatus, UploadStatus newStatus);
-
-    @Query("{ 'tempKey': ?0, 'status': ?1 }")
-    @Update("{ '$set': { 'status': ?2 } }")
-    long updateStatusByTempKeyAndStatus(String tempKey, UploadStatus currentStatus, UploadStatus newStatus);
+    Slice<UploadEntity> findAllByStatusAndCreatedAtBefore(
+            UploadStatus status, Instant createdAtBefore, Pageable pageable);
 
     long countAllByUserIdAndCreatedAtAfter(String userId, Instant createdAtAfter);
 
-    long deleteAllByCreatedAtBefore(Instant createdAtBefore);
+    @Query("{ 'key': { $in: ?0 }, 'userId': ?1, 'status': ?2 }")
+    @Update("{ '$set': { 'status': ?3 } }")
+    long updateStatusByKeyInAndUserIdAndStatus(
+            Collection<String> keys, String userId, UploadStatus currentStatus, UploadStatus newStatus);
+
+    long deleteAllByKeyIn(Collection<String> keys);
 }

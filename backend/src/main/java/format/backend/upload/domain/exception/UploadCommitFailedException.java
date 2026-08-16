@@ -1,4 +1,4 @@
-package format.backend.newupload.domain.exception;
+package format.backend.upload.domain.exception;
 
 import format.backend.core.exception.ApplicationException;
 import format.backend.core.exception.ApplicationExceptionType;

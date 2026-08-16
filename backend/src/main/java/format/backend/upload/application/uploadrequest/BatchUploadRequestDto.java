@@ -1,4 +1,4 @@
-package format.backend.upload.application.upload;
+package format.backend.upload.application.uploadrequest;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;

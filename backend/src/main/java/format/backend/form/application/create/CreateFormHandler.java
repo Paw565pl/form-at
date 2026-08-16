@@ -9,25 +9,25 @@ import format.backend.form.application.shared.dto.QuestionRequestDto;
 import format.backend.form.application.shared.mapper.FormMapper;
 import format.backend.form.application.shared.mapper.QuestionMapper;
 import format.backend.form.application.shared.validator.FormImageValidator;
-import format.backend.form.domain.entity.FormEntity;
 import format.backend.form.domain.exception.FormAlreadyExistsException;
 import format.backend.form.domain.repository.FormRepository;
 import format.backend.upload.UploadFacade;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
 
 @Service
-@RequiredArgsConstructor
 public class CreateFormHandler {
 
     private final Slugify slugify;
     private final PasswordEncoder passwordEncoder;
+    private final TransactionTemplate transactionTemplate;
 
     private final UploadFacade uploadFacade;
 
@@ -36,40 +36,54 @@ public class CreateFormHandler {
     private final QuestionMapper questionMapper;
     private final FormImageValidator formImageValidator;
 
+    public CreateFormHandler(
+            Slugify slugify,
+            PasswordEncoder passwordEncoder,
+            PlatformTransactionManager transactionManager,
+            UploadFacade uploadFacade,
+            FormRepository formRepository,
+            FormMapper formMapper,
+            QuestionMapper questionMapper,
+            FormImageValidator formImageValidator) {
+        this.slugify = slugify;
+        this.passwordEncoder = passwordEncoder;
+        this.transactionTemplate = new TransactionTemplate(transactionManager);
+        this.uploadFacade = uploadFacade;
+        this.formRepository = formRepository;
+        this.formMapper = formMapper;
+        this.questionMapper = questionMapper;
+        this.formImageValidator = formImageValidator;
+    }
+
     public FormResponseDto handle(UserClaims userClaims, FormRequestDto requestDto) {
-        val tempKeys = Stream.concat(
+        val requestImageKeys = Stream.concat(
                         Stream.ofNullable(requestDto.thumbnailKey()),
                         requestDto.questions().stream().map(QuestionRequestDto::imageKey))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toUnmodifiableSet());
-        val imageValidationErrors = formImageValidator.validate(userClaims, requestDto, tempKeys);
+        val imageValidationErrors = formImageValidator.validate(userClaims, requestDto, requestImageKeys);
         if (!imageValidationErrors.isEmpty()) throw new ValidationException(imageValidationErrors);
 
         val slug = slugify.slugify(requestDto.name());
         val passwordHash = passwordEncoder.encode(requestDto.password());
-        val thumbnailKey =
-                uploadFacade.resolveDestinationKey(requestDto.thumbnailKey()).orElse(null);
-        val questions = requestDto.questions().stream()
-                .map(q -> questionMapper.toEntity(
-                        q, uploadFacade.resolveDestinationKey(q.imageKey()).orElse(null)))
-                .toList();
+        val questions =
+                requestDto.questions().stream().map(questionMapper::toEntity).toList();
 
-        final FormEntity formEntity;
-        try {
-            formEntity = formRepository.save(
-                    formMapper.toEntity(requestDto, slug, passwordHash, thumbnailKey, questions, userClaims.id()));
-        } catch (DataIntegrityViolationException _) {
-            throw new FormAlreadyExistsException(requestDto.name());
-        }
+        val formEntity = transactionTemplate.execute(_ -> {
+            uploadFacade.commit(requestImageKeys, userClaims);
 
-        uploadFacade.commit(tempKeys);
+            try {
+                return formRepository.save(
+                        formMapper.toEntity(requestDto, slug, passwordHash, questions, userClaims.id()));
+            } catch (DataIntegrityViolationException _) {
+                throw new FormAlreadyExistsException(requestDto.name());
+            }
+        });
 
-        val thumbnail = uploadFacade
-                .createPresignedFileUrl(formEntity.getThumbnailKey())
-                .orElse(null);
+        val thumbnail = uploadFacade.presignGetUrl(formEntity.getThumbnailKey()).orElse(null);
         val questionResponseDtos = formEntity.getQuestions().stream()
                 .map(q -> questionMapper.toResponseDto(
-                        q, uploadFacade.createPresignedFileUrl(q.getImageKey()).orElse(null)))
+                        q, uploadFacade.presignGetUrl(q.getImageKey()).orElse(null)))
                 .toList();
         return formMapper.toResponseDto(formEntity, thumbnail, questionResponseDtos, null, userClaims.username());
     }

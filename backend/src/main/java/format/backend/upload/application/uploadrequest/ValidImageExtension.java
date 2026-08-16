@@ -1,4 +1,4 @@
-package format.backend.newupload.application.uploadrequest;
+package format.backend.upload.application.uploadrequest;
 
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.FIELD;
@@ -7,7 +7,7 @@ import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.ElementType.TYPE_USE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-import format.backend.newupload.domain.entity.ImageType;
+import format.backend.upload.domain.entity.ImageType;
 import jakarta.validation.Constraint;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

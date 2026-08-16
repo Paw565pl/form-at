@@ -42,8 +42,8 @@ public class GetInvalidUploadKeysHandler {
             MinioClient minioClient,
             @Qualifier("applicationTaskExecutor") AsyncTaskExecutor asyncTaskExecutor,
             S3Properties s3Properties,
-            UploadRepository uploadRepository,
-            UploadProperties uploadProperties) {
+            UploadProperties uploadProperties,
+            UploadRepository uploadRepository) {
         this.minioClient = minioClient;
         this.asyncTaskExecutor = asyncTaskExecutor;
         this.s3Properties = s3Properties;
@@ -51,32 +51,34 @@ public class GetInvalidUploadKeysHandler {
         this.getObjectSemaphore = new Semaphore(uploadProperties.concurrency().maxGetOperations(), true);
     }
 
-    public Set<String> handle(Set<String> tempKeys, UserClaims userClaims) {
-        if (tempKeys.isEmpty()) return Set.of();
+    public Set<String> handle(Set<String> keys, UserClaims userClaims) {
+        if (keys.isEmpty()) return Set.of();
 
         val validDbKeys =
-                uploadRepository
-                        .findAllByTempKeyInAndUserIdAndStatus(tempKeys, userClaims.id(), UploadStatus.PENDING)
-                        .stream()
-                        .map(UploadEntity::getTempKey)
+                uploadRepository.findAllByKeyInAndUserIdAndStatus(keys, userClaims.id(), UploadStatus.PENDING).stream()
+                        .map(UploadEntity::getKey)
                         .collect(Collectors.toUnmodifiableSet());
-        if (tempKeys.size() != validDbKeys.size()) {
-            return tempKeys.stream().filter(key -> !validDbKeys.contains(key)).collect(Collectors.toUnmodifiableSet());
+        if (keys.size() != validDbKeys.size()) {
+            return keys.stream().filter(key -> !validDbKeys.contains(key)).collect(Collectors.toUnmodifiableSet());
         }
 
-        val validateObjectFutures = tempKeys.stream()
-                .map(key -> asyncTaskExecutor.submitCompletable(() -> validateObject(key)))
+        val validateObjectHeaderFutures = keys.stream()
+                .map(key -> asyncTaskExecutor.submitCompletable(() -> validateObjectHeader(key)))
                 .toList();
-        val validKeys = validateObjectFutures.stream()
+        val validKeys = validateObjectHeaderFutures.stream()
                 .map(CompletableFuture::join)
                 .flatMap(Optional::stream)
                 .collect(Collectors.toUnmodifiableSet());
 
-        return tempKeys.stream().filter(key -> !validKeys.contains(key)).collect(Collectors.toUnmodifiableSet());
+        if (keys.size() != validKeys.size()) {
+            return keys.stream().filter(key -> !validKeys.contains(key)).collect(Collectors.toUnmodifiableSet());
+        }
+
+        return Set.of();
     }
 
-    /// Returns input key if object is valid
-    private Optional<String> validateObject(String key) {
+    /// returns key if object is valid
+    private Optional<String> validateObjectHeader(String key) {
         try {
             getObjectSemaphore.acquire();
         } catch (InterruptedException _) {
@@ -84,14 +86,13 @@ public class GetInvalidUploadKeysHandler {
             return Optional.empty();
         }
 
-        try (val stream = minioClient.getObject(GetObjectArgs.builder()
+        try (val responseStream = minioClient.getObject(GetObjectArgs.builder()
                 .bucket(s3Properties.bucket())
                 .object(key)
                 .offset(0L)
                 .length(12L)
                 .build())) {
-
-            val header = stream.readAllBytes();
+            val header = responseStream.readAllBytes();
             if (header.length < 12) return Optional.empty();
 
             val isWebp = Arrays.equals(header, 0, 4, RIFF_HEADER_BYTES, 0, RIFF_HEADER_BYTES.length)

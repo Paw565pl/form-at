@@ -1,13 +1,13 @@
-package format.backend.newupload.application.uploadrequest;
+package format.backend.upload.application.uploadrequest;
 
 import com.github.slugify.Slugify;
 import format.backend.auth.UserClaims;
-import format.backend.newupload.domain.entity.ImageType;
-import format.backend.newupload.domain.entity.UploadEntity;
-import format.backend.newupload.domain.exception.UserUploadRateLimitExceededException;
-import format.backend.newupload.domain.repository.UploadRepository;
-import format.backend.newupload.properties.S3Properties;
-import format.backend.newupload.properties.UploadProperties;
+import format.backend.upload.domain.entity.ImageType;
+import format.backend.upload.domain.entity.UploadEntity;
+import format.backend.upload.domain.exception.UserUploadRateLimitExceededException;
+import format.backend.upload.domain.repository.UploadRepository;
+import format.backend.upload.properties.S3Properties;
+import format.backend.upload.properties.UploadProperties;
 import io.minio.MinioClient;
 import io.minio.PostPolicy;
 import io.minio.errors.MinioException;

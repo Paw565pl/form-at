@@ -39,12 +39,10 @@ public class RetrieveFormHandler {
                         || userClaims.roles().contains(Role.ADMIN));
         if (formEntity.getStatus() == FormStatus.PRIVATE && !isAuthorOrAdmin) throw new ForbiddenException();
 
-        val thumbnail = uploadFacade
-                .createPresignedFileUrl(formEntity.getThumbnailKey())
-                .orElse(null);
+        val thumbnail = uploadFacade.presignGetUrl(formEntity.getThumbnailKey()).orElse(null);
         val questionResponseDtos = formEntity.getQuestions().stream()
                 .map(q -> questionMapper.toResponseDto(
-                        q, uploadFacade.createPresignedFileUrl(q.getImageKey()).orElse(null)))
+                        q, uploadFacade.presignGetUrl(q.getImageKey()).orElse(null)))
                 .toList();
         val userRating = userClaims != null
                 ? formRatingRepository

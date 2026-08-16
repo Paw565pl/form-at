@@ -17,18 +17,16 @@ class DeleteUploadsOnFormDeletedEventListener {
 
     @ApplicationModuleListener
     void on(FormDeletedEvent event) {
-        if (event.imageKeys().isEmpty()) return;
         log.debug("Deleting form uploads. event={}", event);
 
-        val isSuccess = uploadFacade.delete(event.imageKeys());
+        val deletedCount = uploadFacade.deleteAll(event.imageKeys());
+        val isSuccess = event.imageKeys().size() == deletedCount;
+
         if (isSuccess) {
             log.debug("Successfully deleted form uploads. event={}", event);
         } else {
-            log.warn(
-                    "Deleting {} form uploads failed. event={}",
-                    event.imageKeys().size(),
-                    event);
-            throw new IllegalStateException("Failed to delete uploads.");
+            log.warn("Failed to delete form uploads. event={}", event);
+            throw new IllegalStateException("Failed to delete form uploads.");
         }
     }
 }
