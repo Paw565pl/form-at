@@ -15,7 +15,7 @@ public interface UploadRepository extends MongoRepository<UploadEntity, String> 
 
     List<UploadEntity> findAllByKeyInAndUserIdAndStatus(Collection<String> keys, String userId, UploadStatus status);
 
-    Slice<UploadEntity> findAllByStatusAndCreatedAtAfter(
+    Slice<UploadEntity> findAllByStatusAndCreatedAtBefore(
             UploadStatus status, Instant createdAtAfter, Pageable pageable);
 
     long countAllByUserIdAndCreatedAtAfter(String userId, Instant createdAtAfter);
@@ -24,4 +24,6 @@ public interface UploadRepository extends MongoRepository<UploadEntity, String> 
     @Update("{ '$set': { 'status': ?3 } }")
     long updateStatusByKeyInAndUserIdAndStatus(
             Collection<String> keys, String userId, UploadStatus currentStatus, UploadStatus newStatus);
+
+    long deleteAllByKeyIn(Collection<String> keys);
 }

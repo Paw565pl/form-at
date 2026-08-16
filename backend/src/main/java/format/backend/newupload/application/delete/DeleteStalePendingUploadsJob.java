@@ -29,23 +29,21 @@ class DeleteStalePendingUploadsJob {
     @Scheduled(cron = "0 0 3 * * *")
     void execute() {
         log.debug("Deleting stale uploads.");
-        val stalenessWindow = Instant.now().plus(uploadProperties.expiration().pendingUploads());
+        val stalenessWindow = Instant.now().minus(uploadProperties.expiration().pendingUploads());
 
         var totalDeletedCount = 0L;
         var totalDeleteFailedCount = 0L;
         while (true) {
             val stalePendingUploadKeys = uploadRepository
-                    .findAllByStatusAndCreatedAtAfter(UploadStatus.PENDING, stalenessWindow, pageable)
+                    .findAllByStatusAndCreatedAtBefore(UploadStatus.PENDING, stalenessWindow, pageable)
                     .map(UploadEntity::getKey)
                     .toSet();
-            if (stalePendingUploadKeys.isEmpty()) break;
 
             val deletedCount = deleteUploadsHandler.handle(stalePendingUploadKeys);
             totalDeletedCount += deletedCount;
+            totalDeleteFailedCount += stalePendingUploadKeys.size() - deletedCount;
 
-            if (stalePendingUploadKeys.size() != deletedCount) {
-                totalDeleteFailedCount += stalePendingUploadKeys.size() - deletedCount;
-            }
+            if (deletedCount == 0) break;
         }
 
         log.debug("Deleted {} stale uploads.", totalDeletedCount);
