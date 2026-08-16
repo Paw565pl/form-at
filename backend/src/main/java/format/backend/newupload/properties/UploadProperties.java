@@ -4,6 +4,8 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import java.time.Duration;
+import org.hibernate.validator.constraints.time.DurationMax;
+import org.hibernate.validator.constraints.time.DurationMin;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.util.unit.DataSize;
@@ -19,8 +21,16 @@ public record UploadProperties(
 
     public record Expiration(
             @DefaultValue("10m") @NotNull Duration postPolicy,
-            @DefaultValue("24h") @NotNull Duration presignedGetUrl,
-            @DefaultValue("24h") @NotNull Duration pendingUploads) {}
+
+            @DurationMax(days = 7) @DefaultValue("24h") @NotNull Duration presignedGetUrl,
+
+            @DurationMin(hours = 1) @DefaultValue("24h") @NotNull Duration pendingUploads) {
+        public Expiration {
+            if (postPolicy.toSeconds() >= pendingUploads.toSeconds()) {
+                throw new IllegalArgumentException("pendingUploads must be greater than postPolicy");
+            }
+        }
+    }
 
     public record RateLimit(
             @DefaultValue("1d") @NotNull Duration window,
