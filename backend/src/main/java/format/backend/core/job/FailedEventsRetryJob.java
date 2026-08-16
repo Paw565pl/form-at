@@ -16,12 +16,22 @@ class FailedEventsRetryJob {
     private final FailedEventPublications failedEventPublications;
 
     @Scheduled(cron = "0 */1 * * * *")
-    void retry() {
+    void retryFast() {
         log.debug("Retrying failed event publications.");
         failedEventPublications.resubmit(ResubmissionOptions.defaults()
                 .withBatchSize(100)
                 .withMinAge(Duration.ofMinutes(1))
                 .withFilter(eventPublication -> eventPublication.getCompletionAttempts() < 5));
         log.debug("Retried failed event publications.");
+    }
+
+    @Scheduled(cron = "0 0 3 * * *")
+    void retrySlow() {
+        log.debug("Retrying old failed event publications.");
+        failedEventPublications.resubmit(ResubmissionOptions.defaults()
+                .withBatchSize(100)
+                .withMinAge(Duration.ofMinutes(1))
+                .withFilter(eventPublication -> eventPublication.getCompletionAttempts() >= 5));
+        log.debug("Retried old failed event publications.");
     }
 }
