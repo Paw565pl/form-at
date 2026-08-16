@@ -29,8 +29,8 @@ public class UploadFacade {
     }
 
     /// mark status of PENDING uploads as COMPLETED
-    public long commit(Set<String> keys, UserClaims userClaims) {
-        return commitUploadsHandler.handle(keys, userClaims);
+    public void commit(Set<String> keys, UserClaims userClaims) {
+        commitUploadsHandler.handle(keys, userClaims);
     }
 
     public long deleteAll(Set<String> keys) {
