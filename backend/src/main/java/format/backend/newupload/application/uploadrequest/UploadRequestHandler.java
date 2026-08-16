@@ -52,7 +52,7 @@ public class UploadRequestHandler {
 
         for (var i = 0; i < requestFilesCount; i++) {
             val safeFilename = createSafeFilename(requestDto.files().get(i).filename());
-            val key = createKey(userClaims, safeFilename);
+            val key = "%s/%s/%s".formatted(userClaims.id(), UUID.randomUUID(), safeFilename);
             uploadEntities.add(
                     UploadEntity.builder().key(key).userId(userClaims.id()).build());
 
@@ -96,9 +96,5 @@ public class UploadRequestHandler {
 
         val extensionWithDot = trimmedFilename.substring(lastDotIndex).toLowerCase(Locale.ROOT);
         return safeFilenameWithoutExtension + extensionWithDot;
-    }
-
-    private static String createKey(UserClaims userClaims, String filename) {
-        return "%s/%s/%s".formatted(userClaims.id(), UUID.randomUUID(), filename);
     }
 }
