@@ -16,7 +16,6 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -51,15 +50,15 @@ public class UploadRequestHandler {
         val uploadRequestResponseDtos = new ArrayList<Map<String, String>>(requestFilesCount);
 
         for (var i = 0; i < requestFilesCount; i++) {
-            val safeFilename = createSafeFilename(requestDto.files().get(i).filename());
+            val originalFilename = requestDto.files().get(i).filename();
+            val imageType = ImageType.fromFilename(originalFilename)
+                    .orElseThrow(() ->
+                            new IllegalStateException("Could not resolve ImageType for filename: " + originalFilename));
+            val safeFilename = createSafeFilename(originalFilename, imageType.getExtension());
             val key = "%s/%s/%s".formatted(userClaims.id(), UUID.randomUUID(), safeFilename);
             uploadEntities.add(
                     UploadEntity.builder().key(key).userId(userClaims.id()).build());
 
-            val contentType = ImageType.fromFilename(safeFilename)
-                    .orElseThrow(() ->
-                            new IllegalStateException("Could not resolve ImageType for filename: " + safeFilename))
-                    .getContentType();
             val postPolicy = new PostPolicy(
                     s3Properties.bucket(),
                     Instant.now()
@@ -70,7 +69,7 @@ public class UploadRequestHandler {
             postPolicy.addEqualsCondition("x-amz-meta-filename", safeFilename);
             postPolicy.addEqualsCondition("x-amz-meta-user-id", userClaims.id());
             postPolicy.addEqualsCondition("key", key);
-            postPolicy.addEqualsCondition(HttpHeaders.CONTENT_TYPE, contentType);
+            postPolicy.addEqualsCondition(HttpHeaders.CONTENT_TYPE, imageType.getContentType());
 
             try {
                 uploadRequestResponseDtos.add(minioClient.getPresignedPostFormData(postPolicy));
@@ -84,7 +83,7 @@ public class UploadRequestHandler {
         return Collections.unmodifiableList(uploadRequestResponseDtos);
     }
 
-    private String createSafeFilename(String filename) {
+    private String createSafeFilename(String filename, String extension) {
         val trimmedFilename = filename.trim();
         val lastDotIndex = trimmedFilename.lastIndexOf('.');
 
@@ -92,9 +91,6 @@ public class UploadRequestHandler {
         val filenameSlug = slugify.slugify(filenameWithoutExtension);
         val safeFilenameWithoutExtension = filenameSlug.isBlank() ? "file" : filenameSlug;
 
-        if (lastDotIndex <= 0) return safeFilenameWithoutExtension;
-
-        val extensionWithDot = trimmedFilename.substring(lastDotIndex).toLowerCase(Locale.ROOT);
-        return safeFilenameWithoutExtension + extensionWithDot;
+        return "%s.%s".formatted(safeFilenameWithoutExtension, extension);
     }
 }
