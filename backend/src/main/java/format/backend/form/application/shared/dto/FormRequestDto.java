@@ -1,6 +1,5 @@
 package format.backend.form.application.shared.dto;
 
-import format.backend.core.validator.DurationRange;
 import format.backend.form.application.shared.validator.ValidForm;
 import format.backend.form.domain.entity.FormLanguage;
 import format.backend.form.domain.entity.FormShuffleVariant;
@@ -12,6 +11,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.Duration;
 import java.util.List;
+import org.hibernate.validator.constraints.time.DurationMax;
+import org.hibernate.validator.constraints.time.DurationMin;
 import org.jspecify.annotations.Nullable;
 
 @ValidForm
@@ -30,7 +31,8 @@ public record FormRequestDto(
 
         @Size(min = 3, max = 500, message = "ThanksMessage must be between 3 and 500 characters long") @Nullable String thanksMessage,
 
-        @DurationRange(min = "PT1M", max = "PT2H", message = "EstimatedDuration must be between 1 minute and 2 hours")
+        @DurationMin(minutes = 1, message = "EstimatedDuration must be at least 1 minute")
+        @DurationMax(hours = 2, message = "EstimatedDuration must be at most 2 hours")
         @NotNull(message = "EstimatedDuration cannot be null") Duration estimatedDuration,
 
         @Size(min = 50, max = 300, message = "Thumbnail key must be between 50 and 300 characters long") @Nullable String thumbnailKey,
