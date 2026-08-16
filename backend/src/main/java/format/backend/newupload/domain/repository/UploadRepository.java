@@ -16,7 +16,7 @@ public interface UploadRepository extends MongoRepository<UploadEntity, String> 
     List<UploadEntity> findAllByKeyInAndUserIdAndStatus(Collection<String> keys, String userId, UploadStatus status);
 
     Slice<UploadEntity> findAllByStatusAndCreatedAtBefore(
-            UploadStatus status, Instant createdAtAfter, Pageable pageable);
+            UploadStatus status, Instant createdAtBefore, Pageable pageable);
 
     long countAllByUserIdAndCreatedAtAfter(String userId, Instant createdAtAfter);
 
