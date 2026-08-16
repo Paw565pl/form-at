@@ -75,7 +75,7 @@ public class UploadRequestHandler {
             try {
                 uploadRequestResponseDtos.add(minioClient.getPresignedPostFormData(postPolicy));
             } catch (MinioException e) {
-                log.error("Creating post form data for upload failed.", e);
+                log.warn("Creating post form data for upload failed.", e);
                 throw new RuntimeException(e);
             }
         }
