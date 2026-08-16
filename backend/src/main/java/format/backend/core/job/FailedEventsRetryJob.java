@@ -1,5 +1,6 @@
 package format.backend.core.job;
 
+import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.modulith.events.FailedEventPublications;
@@ -19,6 +20,7 @@ class FailedEventsRetryJob {
         log.debug("Retrying failed event publications.");
         failedEventPublications.resubmit(ResubmissionOptions.defaults()
                 .withBatchSize(100)
+                .withMinAge(Duration.ofMinutes(1))
                 .withFilter(eventPublication -> eventPublication.getCompletionAttempts() < 5));
         log.debug("Retried failed event publications.");
     }
