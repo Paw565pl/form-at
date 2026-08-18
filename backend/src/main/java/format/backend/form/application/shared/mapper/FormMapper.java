@@ -11,6 +11,7 @@ import org.jspecify.annotations.Nullable;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
+import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface FormMapper {
@@ -41,4 +42,12 @@ public interface FormMapper {
             @Nullable String passwordHash,
             List<QuestionEntity> questions,
             String authorId);
+
+    @Mapping(target = "questions", ignore = true)
+    @Mapping(target = "authorId", ignore = true)
+    FormEntity updateEntity(
+            @MappingTarget FormEntity formEntity,
+            FormRequestDto requestDto,
+            String slug,
+            @Nullable String passwordHash);
 }

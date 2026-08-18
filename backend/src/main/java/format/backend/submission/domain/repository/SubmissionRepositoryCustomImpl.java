@@ -1,7 +1,9 @@
 package format.backend.submission.domain.repository;
 
+import format.backend.submission.domain.entity.SubmissionAnswerEntity;
 import format.backend.submission.domain.entity.SubmissionEntity;
 import java.util.ArrayList;
+import java.util.Collection;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.data.domain.Page;
@@ -14,6 +16,7 @@ import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 import org.springframework.data.mongodb.core.aggregation.ArrayOperators;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 
 @RequiredArgsConstructor
 class SubmissionRepositoryCustomImpl implements SubmissionRepositoryCustom {
@@ -45,5 +48,22 @@ class SubmissionRepositoryCustomImpl implements SubmissionRepositoryCustom {
                 .getMappedResults();
 
         return new PageImpl<>(submissions, pageable, total);
+    }
+
+    @Override
+    public long deleteAnswersByFormIdAndQuestionIdIn(String formId, Collection<String> questionIds) {
+        val formIdQuery =
+                Query.query(Criteria.where(SubmissionEntity::getFormId).is(formId));
+        val pull = new Update()
+                .pull(
+                        SubmissionEntity::getAnswers,
+                        Criteria.where(SubmissionAnswerEntity::getQuestionId).in(questionIds));
+        mongoTemplate.updateMulti(formIdQuery, pull, SubmissionEntity.class);
+
+        val emptyAnswersQuery = Query.query(Criteria.where(SubmissionEntity::getFormId)
+                .is(formId)
+                .and(SubmissionEntity::getAnswers)
+                .size(0));
+        return mongoTemplate.remove(emptyAnswersQuery, SubmissionEntity.class).getDeletedCount();
     }
 }

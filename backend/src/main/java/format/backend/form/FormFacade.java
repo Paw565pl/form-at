@@ -46,12 +46,16 @@ public class FormFacade {
                 .build();
     }
 
+    public void updateSubmissionsCount(String id, long delta) {
+        formRepository.updateSubmissionsCount(id, delta);
+    }
+
     public void incrementSubmissionsCount(String id) {
-        formRepository.updateSubmissionsCount(id, 1);
+        updateSubmissionsCount(id, 1);
     }
 
     public void decrementSubmissionsCount(String id) {
-        formRepository.updateSubmissionsCount(id, -1);
+        updateSubmissionsCount(id, -1);
     }
 
     public long count() {

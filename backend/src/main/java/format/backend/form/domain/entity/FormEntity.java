@@ -7,6 +7,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -152,7 +154,7 @@ public final class FormEntity {
         this.saveSubmissions = Objects.requireNonNull(saveSubmissions);
         this.showAnswersFeedback = Objects.requireNonNull(showAnswersFeedback);
         this.questions = new ArrayList<>(Objects.requireNonNull(questions));
-        this.questionsCount = questions.size();
+        this.questionsCount = this.questions.size();
         this.submissionsCount = 0;
         this.ratingsCount = 0;
         this.ratingsSum = 0;
@@ -161,8 +163,6 @@ public final class FormEntity {
         this.updatedAt = null;
         this.version = 0;
     }
-
-    // TODO: remove needless methods: add and delete probably
 
     public Duration getEstimatedDuration() {
         return Duration.ofSeconds(estimatedDurationSeconds);
@@ -176,26 +176,31 @@ public final class FormEntity {
         return Collections.unmodifiableList(questions);
     }
 
-    public void addQuestion(QuestionEntity question) {
-        questions.add(question);
-        questionsCount = questions.size();
-    }
+    /// returns invalidated question ids
+    public Set<String> updateQuestions(List<QuestionEntity> questions) {
+        val unmatchedQuestions = new ArrayList<>(this.questions);
+        val newQuestions = new ArrayList<QuestionEntity>(questions.size());
 
-    public void addAllQuestions(Collection<QuestionEntity> questions) {
-        this.questions.addAll(questions);
-        questionsCount = this.questions.size();
-    }
+        for (val question : questions) {
+            unmatchedQuestions.stream()
+                    .filter(question::hasSameContentAs)
+                    .findFirst()
+                    .ifPresentOrElse(
+                            matchedQuestion -> {
+                                unmatchedQuestions.remove(matchedQuestion);
+                                newQuestions.add(matchedQuestion);
+                            },
+                            () -> newQuestions.add(question));
+        }
 
-    public boolean removeQuestion(QuestionEntity question) {
-        val didDelete = questions.removeIf(q -> Objects.equals(q.getId(), question.getId()));
-        if (didDelete) questionsCount = questions.size();
+        val invalidatedQuestionIds =
+                unmatchedQuestions.stream().map(QuestionEntity::getId).collect(Collectors.toUnmodifiableSet());
 
-        return didDelete;
-    }
+        this.questions.clear();
+        this.questions.addAll(newQuestions);
+        this.questionsCount = this.questions.size();
 
-    public void clearQuestions() {
-        questions.clear();
-        questionsCount = 0;
+        return invalidatedQuestionIds;
     }
 
     public @Nullable Double getRatingAvg() {

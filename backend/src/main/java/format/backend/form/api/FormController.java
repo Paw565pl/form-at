@@ -14,6 +14,7 @@ import format.backend.form.application.list.ListFormsResponseDto;
 import format.backend.form.application.retrieve.RetrieveFormHandler;
 import format.backend.form.application.shared.dto.FormRequestDto;
 import format.backend.form.application.shared.dto.FormResponseDto;
+import format.backend.form.application.update.UpdateFormHandler;
 import format.backend.form.domain.repository.FormListCriteria;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -39,6 +41,7 @@ class FormController {
     private final RetrieveFormHandler retrieveHandler;
     private final AccessPrivateFormHandler accessPrivateHandler;
     private final CreateFormHandler createHandler;
+    private final UpdateFormHandler updateFormHandler;
     private final DeleteFormHandler deleteHandler;
 
     @GetMapping
@@ -68,7 +71,14 @@ class FormController {
         return createHandler.handle(userClaims, requestDto);
     }
 
-    // TODO: update
+    @IsAuthenticated
+    @PutMapping("/{idOrSlug}")
+    FormResponseDto update(
+            @AuthenticationPrincipal UserClaims userClaims,
+            @PathVariable String idOrSlug,
+            @Valid @RequestBody FormRequestDto requestDto) {
+        return updateFormHandler.handle(userClaims, idOrSlug, requestDto);
+    }
 
     @IsAuthenticated
     @DeleteMapping("/{idOrSlug}")

@@ -29,4 +29,9 @@ public final class AnswerEntity {
         this.content = Objects.requireNonNull(content);
         this.isCorrect = Objects.requireNonNull(isCorrect);
     }
+
+    /// compare content ignoring id
+    public boolean hasSameContentAs(AnswerEntity other) {
+        return Objects.equals(this.content, other.content) && Objects.equals(this.isCorrect, other.isCorrect);
+    }
 }

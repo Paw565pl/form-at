@@ -33,7 +33,11 @@ public final class SubmissionsStatisticsEntity {
         private final Map<String, Long> answers;
     }
 
-    public static String getPath(String questionId, String answerId) {
+    public static String getQuestionPath(String questionId) {
+        return "questions.%s".formatted(questionId);
+    }
+
+    public static String getQuestionAnswerPath(String questionId, String answerId) {
         return "questions.%s.answers.%s".formatted(questionId, answerId);
     }
 }

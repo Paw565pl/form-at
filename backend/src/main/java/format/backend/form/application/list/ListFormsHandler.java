@@ -26,6 +26,6 @@ public class ListFormsHandler {
         return formRepository
                 .findAll(userId, criteria, pageable)
                 .map(f -> formMapper.toResponseDto(
-                        f, uploadFacade.createPresignedFileUrl(f.thumbnailKey()).orElse(null)));
+                        f, uploadFacade.presignGetUrl(f.thumbnailKey()).orElse(null)));
     }
 }

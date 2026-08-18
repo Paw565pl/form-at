@@ -23,6 +23,7 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 @AllArgsConstructor(access = AccessLevel.PROTECTED, onConstructor_ = @PersistenceCreator)
 @CompoundIndex(def = "{'formId': 1, 'authorId': 1}", partialFilter = "{'authorId': {'$type': 'string'}}", unique = true)
 @CompoundIndex(def = "{'formId': 1, '_id': -1}")
+@CompoundIndex(def = "{'formId': 1, 'answers.questionId': 1}")
 @Document(collection = "submissions")
 public final class SubmissionEntity {
 
