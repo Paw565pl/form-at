@@ -3,7 +3,7 @@ package format.backend.upload;
 import format.backend.auth.UserClaims;
 import format.backend.upload.application.commit.CommitUploadsHandler;
 import format.backend.upload.application.delete.DeleteUploadsHandler;
-import format.backend.upload.application.presignget.PresignGetUrlHandler;
+import format.backend.upload.application.presignget.PresignUploadGetUrlHandler;
 import format.backend.upload.application.validate.GetInvalidUploadKeysHandler;
 import java.util.Optional;
 import java.util.Set;
@@ -15,13 +15,13 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UploadFacade {
 
-    private final PresignGetUrlHandler presignGetUrlHandler;
+    private final PresignUploadGetUrlHandler presignUploadGetUrlHandler;
     private final GetInvalidUploadKeysHandler getInvalidUploadKeysHandler;
     private final CommitUploadsHandler commitUploadsHandler;
     private final DeleteUploadsHandler deleteUploadsHandler;
 
     public Optional<String> presignGetUrl(@Nullable String key) {
-        return presignGetUrlHandler.handle(key);
+        return presignUploadGetUrlHandler.handle(key);
     }
 
     public Set<String> getInvalidKeys(Set<String> keys, UserClaims userClaims) {
