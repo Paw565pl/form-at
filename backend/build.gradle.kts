@@ -6,7 +6,7 @@ plugins {
     java
     id("org.springframework.boot") version "4.1.0"
     id("io.spring.dependency-management") version "1.1.7"
-    id("com.diffplug.spotless") version "8.9.0"
+    id("com.diffplug.spotless") version "8.10.0"
     id("name.remal.sonarlint") version "7.1.6"
     id("net.ltgt.errorprone") version "5.1.0"
 }
@@ -32,9 +32,11 @@ spotless {
     lineEndings = LineEnding.UNIX
 
     java {
+        shortenFullyQualifiedTypes()
         importOrder()
         removeUnusedImports()
         forbidWildcardImports()
+        forbidModuleImports()
         cleanthat()
         palantirJavaFormat("2.97.0").formatJavadoc(true)
         trimTrailingWhitespace()
