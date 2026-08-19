@@ -2,6 +2,7 @@ package format.backend.form.integration;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -27,7 +28,6 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import lombok.val;
-import org.awaitility.Awaitility;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -141,25 +141,25 @@ final class FormDeleteIntegrationTest extends BaseIntegrationTest {
                         Query.query(Criteria.where(FormRatingEntity::getFormId).is(form.getId())),
                         FormRatingEntity.class))
                 .isZero();
-        Awaitility.waitAtMost(Duration.ofSeconds(10))
+        await().atMost(Duration.ofSeconds(10))
                 .untilAsserted(() -> assertThat(mongoTemplate.count(
                                 Query.query(Criteria.where(SubmissionEntity::getFormId)
                                         .is(form.getId())),
                                 SubmissionEntity.class))
                         .isZero());
-        Awaitility.waitAtMost(Duration.ofSeconds(10))
+        await().atMost(Duration.ofSeconds(10))
                 .untilAsserted(() -> assertThat(mongoTemplate.count(
                                 Query.query(Criteria.where(SubmissionsStatisticsEntity::getFormId)
                                         .is(form.getId())),
                                 SubmissionsStatisticsEntity.class))
                         .isZero());
-        Awaitility.waitAtMost(Duration.ofSeconds(10))
+        await().atMost(Duration.ofSeconds(10))
                 .untilAsserted(() -> assertThat(mongoTemplate.count(
                                 Query.query(Criteria.where(FormCommentEntity::getFormId)
                                         .is(form.getId())),
                                 FormCommentEntity.class))
                         .isZero());
-        Awaitility.waitAtMost(Duration.ofSeconds(10))
+        await().atMost(Duration.ofSeconds(10))
                 .untilAsserted(() -> assertThat(mongoTemplate.count(
                                 Query.query(Criteria.where(FormCommentRatingEntity::getCommentId)
                                         .is(comment.getId())),

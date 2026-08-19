@@ -1,6 +1,7 @@
 package format.backend.form.integration;
 
 import static io.restassured.RestAssured.given;
+import static org.awaitility.Awaitility.await;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -14,7 +15,6 @@ import format.backend.form.domain.entity.FormStatus;
 import format.backend.form.domain.entity.FormTestDataFactory;
 import java.time.Duration;
 import lombok.val;
-import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
@@ -63,7 +63,7 @@ final class FormListIntegrationTest extends BaseIntegrationTest {
         mongoTemplate.save(
                 FormTestDataFactory.createWithDefaults().name("dog form").build());
 
-        Awaitility.waitAtMost(Duration.ofSeconds(10))
+        await().atMost(Duration.ofSeconds(10))
                 .untilAsserted(() -> given().queryParam("searchQuery", "cat")
                         .when()
                         .get(PATH)
@@ -170,7 +170,7 @@ final class FormListIntegrationTest extends BaseIntegrationTest {
                 .name("target target form")
                 .build());
 
-        Awaitility.waitAtMost(Duration.ofSeconds(10))
+        await().atMost(Duration.ofSeconds(10))
                 .untilAsserted(() -> given().queryParam("searchQuery", "target form")
                         .when()
                         .get(PATH)
