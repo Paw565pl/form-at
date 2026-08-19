@@ -33,7 +33,7 @@ services:
       retries: 3
 
   rustfs:
-    image: rustfs/rustfs:1.0.0-rc.1
+    image: rustfs/rustfs:1.0.0-rc.2
     restart: on-failure
     ports:
       - "9000:9000"
