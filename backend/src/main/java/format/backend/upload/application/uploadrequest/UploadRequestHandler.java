@@ -16,7 +16,6 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +35,7 @@ public class UploadRequestHandler {
     private final UploadProperties uploadProperties;
     private final UploadRepository uploadRepository;
 
-    public List<Map<String, String>> handle(UserClaims userClaims, BatchUploadRequestDto requestDto) {
+    public List<UploadRequestResponseDto> handle(UserClaims userClaims, BatchUploadRequestDto requestDto) {
         val userUploadsCountInCheckWindow = uploadRepository.countAllByUserIdAndCreatedAtAfter(
                 userClaims.id(),
                 Instant.now().minus(uploadProperties.rateLimit().window()));
@@ -47,15 +46,15 @@ public class UploadRequestHandler {
         }
 
         val uploadEntities = new ArrayList<UploadEntity>(requestFilesCount);
-        val uploadRequestResponseDtos = new ArrayList<Map<String, String>>(requestFilesCount);
+        val uploadRequestResponseDtos = new ArrayList<UploadRequestResponseDto>(requestFilesCount);
 
         for (var i = 0; i < requestFilesCount; i++) {
             val originalFilename = requestDto.files().get(i).filename();
             val imageType = ImageType.fromFilename(originalFilename)
                     .orElseThrow(() ->
                             new IllegalStateException("Could not resolve ImageType for filename: " + originalFilename));
-            val safeFilename = createSafeFilename(originalFilename, imageType.getExtension());
-            val key = "%s/%s/%s".formatted(userClaims.id(), UUID.randomUUID(), safeFilename);
+            val filename = createSafeFilename(originalFilename, imageType.getExtension());
+            val key = "%s/%s/%s".formatted(userClaims.id(), UUID.randomUUID(), filename);
             uploadEntities.add(
                     UploadEntity.builder().key(key).userId(userClaims.id()).build());
 
@@ -66,13 +65,20 @@ public class UploadRequestHandler {
                             .atZone(ZoneOffset.UTC));
             postPolicy.addContentLengthRangeCondition(
                     1, uploadProperties.maxSize().toBytes());
-            postPolicy.addEqualsCondition("x-amz-meta-filename", safeFilename);
+            postPolicy.addEqualsCondition("x-amz-meta-filename", filename);
             postPolicy.addEqualsCondition("x-amz-meta-user-id", userClaims.id());
             postPolicy.addEqualsCondition("key", key);
             postPolicy.addEqualsCondition(HttpHeaders.CONTENT_TYPE, imageType.getContentType());
 
             try {
-                uploadRequestResponseDtos.add(minioClient.getPresignedPostFormData(postPolicy));
+                val formData = minioClient.getPresignedPostFormData(postPolicy);
+                uploadRequestResponseDtos.add(UploadRequestResponseDto.builder()
+                        .formData(formData)
+                        .filename(filename)
+                        .userId(userClaims.id())
+                        .key(key)
+                        .contentType(imageType.getContentType())
+                        .build());
             } catch (MinioException e) {
                 log.warn("Creating post form data for upload failed.", e);
                 throw new RuntimeException(e);
