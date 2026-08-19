@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-class DeleteSubmissionsAnswersOnFormQuestionsInvalidatedEventListener {
+class DeleteSubmissionsOnFormQuestionsInvalidatedEventListener {
 
     private final FormFacade formFacade;
 
