@@ -23,7 +23,6 @@ public record UploadRequestResponseDto(
     private static final String X_AMZ_SIGNATURE = "x-amz-signature";
     private static final String X_AMZ_ALGORITHM = "x-amz-algorithm";
     private static final String X_AMZ_CREDENTIAL = "x-amz-credential";
-    private static final String POLICY = "policy";
     private static final String X_AMZ_META_FILENAME = "x-amz-meta-filename";
     private static final String X_AMZ_META_USER_ID = "x-amz-meta-user-id";
 
@@ -35,7 +34,7 @@ public record UploadRequestResponseDto(
                 Objects.requireNonNull(formData.get(X_AMZ_SIGNATURE)),
                 Objects.requireNonNull(formData.get(X_AMZ_ALGORITHM)),
                 Objects.requireNonNull(formData.get(X_AMZ_CREDENTIAL)),
-                Objects.requireNonNull(formData.get(POLICY)),
+                Objects.requireNonNull(formData.get("policy")),
                 filename,
                 userId,
                 key,
