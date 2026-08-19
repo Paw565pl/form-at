@@ -281,11 +281,12 @@ export const FormBaseForm = ({
                     </SelectTrigger>
                     <SelectContent>
                       {Object.values(FormStatus)
-                        .filter(
-                          (status) =>
-                            !formDataDefaultValues.name &&
-                            status !== FormStatus.Closed,
-                        )
+                        .filter((status) => {
+                          const isEditing = !!formDataDefaultValues.name;
+                          if (isEditing) return true;
+
+                          return status !== FormStatus.Closed;
+                        })
                         .map((status) => (
                           <SelectItem key={status} value={status}>
                             {t(`formStatuses.${status}`)}
