@@ -4,8 +4,12 @@ import format.backend.submission.domain.entity.SubmissionAnswerEntity;
 import format.backend.submission.domain.entity.SubmissionEntity;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.bson.Document;
+import org.bson.types.ObjectId;
+import org.springframework.data.core.TypedPropertyPath;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -54,10 +58,11 @@ class SubmissionRepositoryCustomImpl implements SubmissionRepositoryCustom {
     public long deleteAnswersByFormIdAndQuestionIdIn(String formId, Collection<String> questionIds) {
         val formIdQuery =
                 Query.query(Criteria.where(SubmissionEntity::getFormId).is(formId));
-        val pull = new Update()
-                .pull(
-                        SubmissionEntity::getAnswers,
-                        Criteria.where(SubmissionAnswerEntity::getQuestionId).in(questionIds));
+        val questionObjectsIds = questionIds.stream().map(ObjectId::new).collect(Collectors.toUnmodifiableSet());
+        val pullCondition = new Document(
+                TypedPropertyPath.of(SubmissionAnswerEntity::getQuestionId).toDotPath(),
+                new Document("$in", questionObjectsIds));
+        val pull = new Update().pull(SubmissionEntity::getAnswers, pullCondition);
         mongoTemplate.updateMulti(formIdQuery, pull, SubmissionEntity.class);
 
         val emptyAnswersQuery = Query.query(Criteria.where(SubmissionEntity::getFormId)
