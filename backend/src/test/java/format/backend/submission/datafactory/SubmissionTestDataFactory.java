@@ -9,7 +9,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.val;
 
-public abstract class SubmissionTestDataFactory {
+public final class SubmissionTestDataFactory {
+
+    private SubmissionTestDataFactory() {}
 
     public static SubmissionEntity create(String formId, String authorId, List<SubmissionAnswerEntity> answers) {
         return SubmissionEntity.builder()

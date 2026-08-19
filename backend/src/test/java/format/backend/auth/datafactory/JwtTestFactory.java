@@ -9,7 +9,9 @@ import java.util.Map;
 import lombok.val;
 import org.springframework.security.oauth2.jwt.Jwt;
 
-public abstract class JwtTestFactory {
+public final class JwtTestFactory {
+
+    private JwtTestFactory() {}
 
     public static Jwt create(UserEntity userEntity) {
         return create(userEntity, List.of());

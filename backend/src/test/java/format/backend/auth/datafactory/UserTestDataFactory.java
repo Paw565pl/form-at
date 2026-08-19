@@ -4,7 +4,9 @@ import format.backend.auth.domain.entity.UserEntity;
 import java.util.UUID;
 import lombok.val;
 
-public abstract class UserTestDataFactory {
+public final class UserTestDataFactory {
+
+    private UserTestDataFactory() {}
 
     public static UserEntity create() {
         val uuid = UUID.randomUUID().toString();

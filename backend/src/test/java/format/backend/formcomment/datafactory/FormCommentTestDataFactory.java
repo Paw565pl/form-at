@@ -3,7 +3,9 @@ package format.backend.formcomment.datafactory;
 import format.backend.auth.datafactory.UserTestDataFactory;
 import format.backend.formcomment.domain.entity.FormCommentEntity;
 
-public abstract class FormCommentTestDataFactory {
+public final class FormCommentTestDataFactory {
+
+    private FormCommentTestDataFactory() {}
 
     public static FormCommentEntity create(String formId) {
         return create(formId, UserTestDataFactory.create().getId());

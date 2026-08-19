@@ -9,7 +9,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.val;
 
-public abstract class SubmissionRequestDtoTestDataFactory {
+public final class SubmissionRequestDtoTestDataFactory {
+
+    private SubmissionRequestDtoTestDataFactory() {}
 
     public static SubmissionRequestDto createValid(FormEntity form) {
         val answers = form.getQuestions().stream()

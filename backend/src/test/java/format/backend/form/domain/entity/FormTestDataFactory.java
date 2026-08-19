@@ -7,7 +7,9 @@ import java.util.UUID;
 import lombok.Builder;
 import org.jspecify.annotations.Nullable;
 
-public abstract class FormTestDataFactory {
+public final class FormTestDataFactory {
+
+    private FormTestDataFactory() {}
 
     @Builder(builderMethodName = "createWithDefaults")
     public static FormEntity create(

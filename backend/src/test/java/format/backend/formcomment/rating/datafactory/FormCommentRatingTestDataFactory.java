@@ -4,7 +4,9 @@ import format.backend.formcomment.domain.entity.FormCommentRatingEntity;
 import format.backend.formcomment.domain.entity.FormCommentRatingType;
 import lombok.Builder;
 
-public abstract class FormCommentRatingTestDataFactory {
+public final class FormCommentRatingTestDataFactory {
+
+    private FormCommentRatingTestDataFactory() {}
 
     @Builder(builderMethodName = "createWithDefaults")
     public static FormCommentRatingEntity create(

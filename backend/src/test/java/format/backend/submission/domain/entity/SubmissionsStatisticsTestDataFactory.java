@@ -8,11 +8,16 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.val;
 
-public abstract class SubmissionsStatisticsTestDataFactory {
+public final class SubmissionsStatisticsTestDataFactory {
+
+    private SubmissionsStatisticsTestDataFactory() {}
 
     public static SubmissionsStatisticsEntity create(
-            String formId, Map<String, SubmissionsStatisticsEntity.Statistics> questions) {
-        return new SubmissionsStatisticsEntity(formId, questions);
+            String formId, Map<String, Map<String, Long>> answersCountByQuestionId) {
+        val statisticsByQuestionId = answersCountByQuestionId.entrySet().stream()
+                .map(entry -> Map.entry(entry.getKey(), new SubmissionsStatisticsEntity.Statistics(entry.getValue())))
+                .collect(Collectors.toUnmodifiableMap(Map.Entry::getKey, Map.Entry::getValue));
+        return new SubmissionsStatisticsEntity(formId, statisticsByQuestionId);
     }
 
     public static SubmissionsStatisticsEntity createInitializedWithSubmission(
@@ -36,6 +41,6 @@ public abstract class SubmissionsStatisticsTestDataFactory {
             questionsMap.put(question.getId(), new SubmissionsStatisticsEntity.Statistics(answersMap));
         }
 
-        return create(form.getId(), questionsMap);
+        return new SubmissionsStatisticsEntity(form.getId(), questionsMap);
     }
 }

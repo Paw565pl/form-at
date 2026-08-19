@@ -10,7 +10,9 @@ import java.time.Duration;
 import java.util.List;
 import lombok.val;
 
-public abstract class FormRequestDtoTestDataFactory {
+public final class FormRequestDtoTestDataFactory {
+
+    private FormRequestDtoTestDataFactory() {}
 
     public static FormRequestDto createValidPublic() {
         return createValid(FormStatus.PUBLIC, null);
