@@ -4,7 +4,7 @@ meta {
   seq: 1
 }
 
-post {
+put {
   url: {{baseUrl}}/api/v1/forms/:formIdOrSlug/rating
   body: json
   auth: inherit
@@ -16,7 +16,7 @@ params:path {
 
 body:json {
   {
-    "ratingValue": 5
+    "value": 5
   }
 }
 
