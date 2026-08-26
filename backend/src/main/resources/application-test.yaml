@@ -1,19 +1,21 @@
-logging:
-  level:
-    root: error
-
 management:
   otlp:
     metrics:
       export:
         enabled: false
 
-cors:
-  allowed-origins: "*"
+logging:
+  level:
+    root: error
+    format.backend: warn
 
-s3:
-  url: http://rustfs:9000
-  region: eu-central-1
-  access-key: rustfsadmin
-  secret-key: rustfsadmin
-  bucket: uploads
+app:
+  cors:
+    allowed-origins: "*"
+
+  s3:
+    url: http://rustfs:9000
+    region: eu-central-1
+    access-key: rustfsadmin
+    secret-key: rustfsadmin
+    bucket: uploads

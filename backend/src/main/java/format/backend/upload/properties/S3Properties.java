@@ -1,19 +1,19 @@
 package format.backend.upload.properties;
 
 import jakarta.validation.constraints.NotBlank;
-import org.jspecify.annotations.NonNull;
+import org.hibernate.validator.constraints.URL;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
 @Validated
-@ConfigurationProperties("s3")
+@ConfigurationProperties("app.s3")
 public record S3Properties(
-        @NotBlank @NonNull String url,
+        @URL @NotBlank String url,
 
-        @NotBlank @NonNull String region,
+        @NotBlank String region,
 
-        @NotBlank @NonNull String accessKey,
+        @NotBlank String accessKey,
 
-        @NotBlank @NonNull String secretKey,
+        @NotBlank String secretKey,
 
-        @NotBlank @NonNull String bucket) {}
+        @NotBlank String bucket) {}

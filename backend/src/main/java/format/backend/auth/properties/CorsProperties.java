@@ -7,7 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
 @Validated
-@ConfigurationProperties("cors")
+@ConfigurationProperties("app.cors")
 public record CorsProperties(
         @NotEmpty List<@NotBlank String> allowedHeaders,
 

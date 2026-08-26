@@ -9,15 +9,16 @@ import static org.mockito.Mockito.when;
 
 import format.backend.auth.datafactory.JwtTestFactory;
 import format.backend.auth.datafactory.UserTestDataFactory;
-import format.backend.core.integration.BaseIntegrationTest;
-import format.backend.form.datafactory.FormTestDataFactory;
-import format.backend.form.entity.FormStatus;
-import format.backend.form_rating.datafactory.FormRatingTestDataFactory;
+import format.backend.core.BaseIntegrationTest;
+import format.backend.form.domain.entity.FormStatus;
+import format.backend.form.domain.entity.FormTestDataFactory;
+import format.backend.form.rating.datafactory.FormRatingTestDataFactory;
+import lombok.val;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
-class FormRetrieveIntegrationTest extends BaseIntegrationTest {
+final class FormRetrieveIntegrationTest extends BaseIntegrationTest {
 
     private static final String PATH_PARAM = "idOrSlug";
     private static final String PATH = "/api/v1/forms/{%s}".formatted(PATH_PARAM);
@@ -33,7 +34,7 @@ class FormRetrieveIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldFindById() {
-        var form = mongoTemplate.save(FormTestDataFactory.create());
+        val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults().build());
 
         given().pathParam(PATH_PARAM, form.getId())
                 .when()
@@ -51,7 +52,7 @@ class FormRetrieveIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldFindBySlug() {
-        var form = mongoTemplate.save(FormTestDataFactory.create());
+        val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults().build());
 
         given().pathParam(PATH_PARAM, form.getSlug())
                 .when()
@@ -68,18 +69,23 @@ class FormRetrieveIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    void shouldReturnUnauthorizedWhenAccessingClosedFormAnonymously() {
-        var form = mongoTemplate.save(FormTestDataFactory.create(FormStatus.CLOSED));
-        given().pathParam(PATH_PARAM, form.getId()).when().get(PATH).then().statusCode(HttpStatus.UNAUTHORIZED.value());
+    void shouldReturnNotFoundWhenAccessingClosedFormAnonymously() {
+        val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults()
+                .status(FormStatus.CLOSED)
+                .build());
+        given().pathParam(PATH_PARAM, form.getId()).when().get(PATH).then().statusCode(HttpStatus.NOT_FOUND.value());
     }
 
     @Test
-    void shouldReturnForbiddenWhenAccessingClosedFormAsNonAuthor() {
-        var author = mongoTemplate.save(UserTestDataFactory.create());
-        var nonAuthor = mongoTemplate.save(UserTestDataFactory.create());
-        var form = mongoTemplate.save(FormTestDataFactory.create(FormStatus.CLOSED, author.getId()));
+    void shouldReturnNotFoundWhenAccessingClosedFormAsNonAuthor() {
+        val author = mongoTemplate.save(UserTestDataFactory.create());
+        val nonAuthor = mongoTemplate.save(UserTestDataFactory.create());
+        val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults()
+                .status(FormStatus.CLOSED)
+                .authorId(author.getId())
+                .build());
 
-        var token = JwtTestFactory.create(nonAuthor);
+        val token = JwtTestFactory.create(nonAuthor);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
         given().auth()
@@ -88,15 +94,18 @@ class FormRetrieveIntegrationTest extends BaseIntegrationTest {
                 .when()
                 .get(PATH)
                 .then()
-                .statusCode(HttpStatus.FORBIDDEN.value());
+                .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
     @Test
     void shouldReturnOkWhenAccessingClosedFormAsAuthor() {
-        var author = mongoTemplate.save(UserTestDataFactory.create());
-        var form = mongoTemplate.save(FormTestDataFactory.create(FormStatus.CLOSED, author.getId()));
+        val author = mongoTemplate.save(UserTestDataFactory.create());
+        val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults()
+                .status(FormStatus.CLOSED)
+                .authorId(author.getId())
+                .build());
 
-        var token = JwtTestFactory.create(author);
+        val token = JwtTestFactory.create(author);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
         given().auth()
@@ -111,7 +120,9 @@ class FormRetrieveIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldReturnOkWhenAccessingPublicFormAnonymously() {
-        var form = mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC));
+        val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults()
+                .status(FormStatus.PUBLIC)
+                .build());
 
         given().pathParam(PATH_PARAM, form.getId())
                 .when()
@@ -123,7 +134,9 @@ class FormRetrieveIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldReturnOkWhenAccessingUnpublicFormAnonymously() {
-        var form = mongoTemplate.save(FormTestDataFactory.create(FormStatus.UNPUBLIC));
+        val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults()
+                .status(FormStatus.UNPUBLIC)
+                .build());
 
         given().pathParam(PATH_PARAM, form.getId())
                 .when()
@@ -135,7 +148,9 @@ class FormRetrieveIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldReturnFormWithoutUserRatingForAnonymousUser() {
-        var form = mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC));
+        val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults()
+                .status(FormStatus.PUBLIC)
+                .build());
 
         given().pathParam(PATH_PARAM, form.getId())
                 .when()
@@ -147,11 +162,13 @@ class FormRetrieveIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldReturnFormWithUserRatingWhenAuthenticatedUserRatedIt() {
-        var user = mongoTemplate.save(UserTestDataFactory.create());
-        var form = mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC));
-        var rating = mongoTemplate.save(FormRatingTestDataFactory.create(form.getId(), user.getId(), 5));
+        val user = mongoTemplate.save(UserTestDataFactory.create());
+        val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults()
+                .status(FormStatus.PUBLIC)
+                .build());
+        val rating = mongoTemplate.save(FormRatingTestDataFactory.create(form.getId(), user.getId(), 5));
 
-        var token = JwtTestFactory.create(user);
+        val token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
         given().auth()

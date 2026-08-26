@@ -1,7 +1,6 @@
 package format.backend.core.validator;
 
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
-import static java.lang.annotation.ElementType.CONSTRUCTOR;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.PARAMETER;
@@ -17,22 +16,22 @@ import java.lang.annotation.Target;
 import org.bson.types.ObjectId;
 
 @Retention(RUNTIME)
-@Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
-@Constraint(validatedBy = ObjectIdValidator.class)
+@Target({FIELD, METHOD, PARAMETER, ANNOTATION_TYPE, TYPE_USE})
+@Constraint(validatedBy = ValidObjectIdValidator.class)
 public @interface ValidObjectId {
-    String message() default "Invalid ObjectId format";
+
+    String message() default "Invalid id";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
 }
 
-class ObjectIdValidator implements ConstraintValidator<ValidObjectId, String> {
+final class ValidObjectIdValidator implements ConstraintValidator<ValidObjectId, String> {
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         if (value == null) return true;
-
         return ObjectId.isValid(value);
     }
 }

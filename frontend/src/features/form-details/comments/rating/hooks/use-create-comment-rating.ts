@@ -26,7 +26,7 @@ export const useCreateCommentRating = (
       "create",
     ],
     mutationFn: async (request) => {
-      const { data } = await apiService.post<CommentRatingResponseDto>(
+      const { data } = await apiService.put<CommentRatingResponseDto>(
         `/api/v1/forms/${formIdOrSlug}/comments/${commentId}/rating`,
         request,
       );

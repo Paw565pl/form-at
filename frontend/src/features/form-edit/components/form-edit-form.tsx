@@ -49,6 +49,8 @@ export const FormEditForm = ({ slug }: FormEditFormProps) => {
           const errorResponse = error.response?.data as ErrorResponseDto;
           if (errorResponse.code === "FORM_ALREADY_EXISTS") {
             toast.error(t("errors.formAlreadyExists"));
+          } else if (errorResponse.code === "USER_UPLOAD_RATE_LIMIT_EXCEEDED") {
+            toast.error(t("errors.uploadQuotaExceeded"));
           } else {
             toast.error(t("errors.unexpected"));
           }

@@ -177,7 +177,8 @@
     "submitting": "Submitting",
     "errors": {
       "unexpected": "An unexpected error occurred while trying to create the form.",
-      "formAlreadyExists": "Form with this name already exists."
+      "formAlreadyExists": "Form with this name already exists.",
+      "uploadQuotaExceeded": "You have exceeded the upload quota."
     }
   },
   "formEditPage": {
@@ -191,7 +192,8 @@
     "updateDialogDescription": "All prior submissions for this form will be deleted. This action cannot be undone.",
     "errors": {
       "unexpected": "An unexpected error occurred while trying to edit the form.",
-      "formAlreadyExists": "Form with this name already exists."
+      "formAlreadyExists": "Form with this name already exists.",
+      "uploadQuotaExceeded": "You have exceeded the upload quota."
     }
   },
   "formDetailsPage": {

@@ -1,12 +1,13 @@
-name: Build Frontend
+name: Frontend build
 run-name: ${{ github.actor }} is building frontend
 on:
   pull_request:
     paths:
       - "frontend/**"
+      - ".github/workflows/frontend-build.yaml"
 
 jobs:
-  build-and-test:
+  frontend-build:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     defaults:
@@ -14,29 +15,26 @@ jobs:
         working-directory: ./frontend
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v6
+      - name: Install pnpm and node
+        uses: pnpm/setup@v2
         with:
-          package_json_file: ./frontend/package.json
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: "24"
-          cache: pnpm
+          runtime: node@26
+          cache: true
+          install: false
+          package-json-file: ./frontend/package.json
           cache-dependency-path: ./frontend/pnpm-lock.yaml
 
       - name: Cache Next.js build output
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ${{ github.workspace }}/frontend/.next/cache
           key: ${{ runner.os }}-nextjs-${{ hashFiles('frontend/pnpm-lock.yaml') }}-${{ hashFiles('frontend/**/*.js', 'frontend/**/*.jsx', 'frontend/**/*.ts', 'frontend/**/*.tsx') }}
           restore-keys: ${{ runner.os }}-nextjs-${{ hashFiles('frontend/pnpm-lock.yaml') }}-
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Check formatting with Prettier
         run: pnpm format:check

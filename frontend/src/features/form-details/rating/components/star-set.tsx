@@ -45,7 +45,7 @@ export const StarSet = ({
       });
     } else {
       createRating(
-        { ratingValue: newRating },
+        { value: newRating },
         {
           onError: () => {
             toast.error(t("ratingError"));

@@ -31,7 +31,7 @@ export const FormListItem = ({ form, showAuthor = false }: FormCardProps) => {
               <h1 className="font-medium">{form.name}</h1>
               <span className="text-muted-foreground text-sm">
                 {form.authorName
-                  ? `${t("by", { name: form.authorName })}`
+                  ? t("by", { name: form.authorName })
                   : t("byUnknown")}
               </span>
             </>

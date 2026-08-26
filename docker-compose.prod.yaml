@@ -1,19 +1,19 @@
 services:
   mongodb:
-    image: mongo:8-noble
+    image: mongodb/mongodb-atlas-local:8.3
+    hostname: mongodb
     restart: on-failure
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: password
-      MONGO_INITDB_DATABASE: format
+      MONGODB_INITDB_ROOT_USERNAME: root
+      MONGODB_INITDB_ROOT_PASSWORD: password
+      MONGODB_INITDB_DATABASE: format
+      DO_NOT_TRACK: 1
+      MONGOT_LOG_FILE: /dev/stdout
+      RUNNER_LOG_FILE: /dev/stdout
     volumes:
       - mongodb-data:/data/db
-    healthcheck:
-      test: mongosh --eval 'db.adminCommand("ping").ok' --username $$MONGO_INITDB_ROOT_USERNAME --password $$MONGO_INITDB_ROOT_PASSWORD
-      interval: 1m30s
-      timeout: 30s
-      retries: 5
-      start_period: 30s
+      - mongot-data:/data/mongot
+      - mongo-config:/data/configdb
 
   postgres:
     image: postgres:18-alpine
@@ -26,22 +26,14 @@ services:
       - postgres-data:/var/lib/postgresql
       - ./keycloak/postgres/keycloack-schema-init.sql:/docker-entrypoint-initdb.d/keycloack-schema-init.sql
     healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "pg_isready",
-          "-U",
-          "$$POSTGRES_USER",
-          "-d",
-          "$$POSTGRES_DB",
-        ]
-      interval: 1m30s
-      timeout: 30s
-      retries: 5
-      start_period: 30s
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 30s
+      timeout: 10s
+      start_period: 10s
+      retries: 3
 
   rustfs:
-    image: rustfs/rustfs:1.0.0-beta.8
+    image: rustfs/rustfs:1.0.0-rc.2
     restart: on-failure
     ports:
       - "9000:9000"
@@ -55,11 +47,11 @@ services:
     volumes:
       - rustfs-data:/data
     healthcheck:
-      test: ["CMD", "sh", "-c", "curl -f http://127.0.0.1:9000/health"]
-      interval: 1m30s
-      timeout: 30s
-      retries: 5
-      start_period: 30s
+      test: ["CMD", "curl", "-f", "http://localhost:9000/health"]
+      interval: 30s
+      timeout: 10s
+      start_period: 10s
+      retries: 3
 
   keycloak:
     build:
@@ -99,12 +91,12 @@ services:
       test:
         [
           "CMD-SHELL",
-          "{ printf 'HEAD /health/ready HTTP/1.0\r\n\r\n' >&0; grep 'HTTP/1.0 200'; } 0<>/dev/tcp/localhost/9000",
+          "{ printf 'HEAD /health HTTP/1.0\r\n\r\n' >&0; grep 'HTTP/1.0 200'; } 0<>/dev/tcp/localhost/9000",
         ]
-      interval: 1m30s
-      timeout: 30s
-      retries: 5
-      start_period: 30s
+      interval: 30s
+      timeout: 10s
+      start_period: 10s
+      retries: 3
     depends_on:
       postgres:
         condition: service_healthy
@@ -117,15 +109,9 @@ services:
     ports:
       - "8080:8080"
     environment:
-      JAVA_TOOL_OPTIONS: -XX:+UseZGC
-      CORS_ALLOWED_ORIGINS: http://localhost:3000
+      JAVA_TOOL_OPTIONS: "-Xms512m -Xmx512m -XX:+AlwaysPreTouch"
+      APP_CORS_ALLOWED_ORIGINS: http://localhost:3000
       OTEL_EXPORTER_OTLP_HEADERS: x-otlp-api-key=aspiredashboardotlpsecret
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
-      interval: 1m30s
-      timeout: 30s
-      retries: 5
-      start_period: 30s
     depends_on:
       mongodb:
         condition: service_healthy
@@ -138,17 +124,13 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile.prod
+      args:
+        - S3_URL=http://rustfs:9000/uploads
     restart: on-failure
     ports:
       - "3000:3000"
     env_file:
       - ./frontend/.env.local
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
-      interval: 1m30s
-      timeout: 30s
-      retries: 5
-      start_period: 30s
     depends_on:
       backend:
         condition: service_healthy
@@ -167,5 +149,7 @@ services:
 
 volumes:
   mongodb-data:
+  mongot-data:
+  mongo-config:
   postgres-data:
   rustfs-data:

@@ -9,7 +9,7 @@ interface BatchUploadRequestDto {
   }[];
 }
 
-interface UploadPayloadDto {
+interface UploadRequestResponseDto {
   readonly "X-Amz-Date": string;
   readonly "x-amz-signature": string;
   readonly "x-amz-algorithm": string;
@@ -32,143 +32,140 @@ type UploadResult =
       readonly error: Error;
     };
 
-class UploadService {
-  private readonly TARGET_EXTENSION = "avif";
-  private readonly TARGET_CONTENT_TYPE = `image/${this.TARGET_EXTENSION}`;
+const MAX_WIDTH = 1400;
+const TARGET_EXTENSION = "webp";
+const TARGET_CONTENT_TYPE = `image/${TARGET_EXTENSION}`;
 
-  private readonly s3Client = axios.create({
-    baseURL:
-      typeof window === "undefined"
-        ? serverEnv.S3_URL
-        : getClientEnv("NEXT_PUBLIC_S3_URL"),
-    timeout: 0,
+const compressImageFile = async (file: File): Promise<File> => {
+  const originalBitmap = await createImageBitmap(file, {
+    imageOrientation: "from-image",
   });
 
-  public async upload(
-    files: File[],
-    onProgress?: (percent: number) => void,
-  ): Promise<UploadResult> {
-    if (files.length === 0) {
-      return { isSuccess: true, filesToKeys: new Map() };
-    }
+  const needsResize = originalBitmap.width > MAX_WIDTH;
+  const resizedBitmap = needsResize
+    ? await createImageBitmap(originalBitmap, {
+        resizeWidth: MAX_WIDTH,
+        resizeQuality: "high",
+        imageOrientation: "from-image",
+      })
+    : originalBitmap;
+  if (needsResize) originalBitmap.close();
+
+  const canvas = new OffscreenCanvas(resizedBitmap.width, resizedBitmap.height);
+  const bitmaprenderer = canvas.getContext("bitmaprenderer");
+
+  if (bitmaprenderer) {
+    bitmaprenderer.transferFromImageBitmap(resizedBitmap);
+  } else {
+    const ctx2d = canvas.getContext("2d");
+    ctx2d?.drawImage(resizedBitmap, 0, 0);
+    resizedBitmap.close();
+  }
+
+  const blob = await canvas.convertToBlob({
+    type: TARGET_CONTENT_TYPE,
+    quality: 0.8,
+  });
+
+  if (blob.type !== TARGET_CONTENT_TYPE) {
+    throw new Error(`could not convert blob to ${TARGET_EXTENSION}`);
+  }
+
+  const trimmedFilename = file.name.trim();
+  const lastDotIndex = trimmedFilename.lastIndexOf(".");
+  const filenameWithoutExtension =
+    lastDotIndex > 0
+      ? trimmedFilename.substring(0, lastDotIndex)
+      : trimmedFilename;
+  const finalFilename = `${filenameWithoutExtension}.${TARGET_EXTENSION}`;
+
+  return new File([blob], finalFilename, {
+    type: TARGET_CONTENT_TYPE,
+  });
+};
+
+const s3Client = axios.create({
+  baseURL:
+    typeof window === "undefined"
+      ? serverEnv.S3_URL
+      : getClientEnv("NEXT_PUBLIC_S3_URL"),
+  timeout: 0,
+});
+
+const upload = async (
+  files: File[],
+  onProgress?: (percent: number) => void,
+): Promise<UploadResult> => {
+  if (files.length === 0) {
+    return { isSuccess: true, filesToKeys: new Map() };
+  }
+
+  try {
     const compressedFiles = await Promise.all(
-      files.map((f) => this.compressImageFile(f)),
+      files.map((f) => compressImageFile(f)),
     );
 
-    const totalBytes = compressedFiles.reduce((acc, f) => acc + f.size, 0);
+    const totalBytes = compressedFiles.reduce(
+      (acc, file) => acc + file.size,
+      0,
+    );
     const uploadedBytesPerFile = new Array<number>(compressedFiles.length).fill(
       0,
     );
     onProgress?.(0);
 
-    try {
-      const uploadRequestDto: BatchUploadRequestDto = {
-        files: compressedFiles.map((f) => ({ filename: f.name })),
+    const uploadRequestDto: BatchUploadRequestDto = {
+      files: compressedFiles.map((file) => ({ filename: file.name })),
+    };
+    const { data: uploadsMetadata } = await apiService.post<
+      UploadRequestResponseDto[]
+    >("/api/v1/upload/request", uploadRequestDto);
+
+    if (uploadsMetadata.length !== compressedFiles.length) {
+      return {
+        isSuccess: false,
+        error: new Error("mismatch of files and upload keys"),
       };
-      const { data: uploadsMetadata } = await apiService.post<
-        UploadPayloadDto[]
-      >("/api/v1/upload/request", uploadRequestDto);
+    }
 
-      if (uploadsMetadata.length !== compressedFiles.length) {
-        return {
-          isSuccess: false,
-          error: new Error("mismatch of files and upload keys"),
-        };
-      }
+    const uploadsFormData: FormData[] = uploadsMetadata.map(
+      (uploadMetadata, index) => {
+        const formData = new FormData();
+        Object.entries(uploadMetadata).forEach(([key, value]) =>
+          formData.append(key, value),
+        );
 
-      const uploadsFormData: FormData[] = uploadsMetadata
-        .map((uploadMetadata, index) => {
-          const formData = new FormData();
-          Object.entries(uploadMetadata).forEach(([key, value]) =>
-            formData.append(key, value),
+        const file = compressedFiles[index] as File;
+        formData.append("file", file);
+
+        return formData;
+      },
+    );
+    for (let i = 0; i < uploadsFormData.length; i++) {
+      await s3Client.post("", uploadsFormData[i], {
+        onUploadProgress(event) {
+          if (!onProgress || !event.total) return;
+
+          uploadedBytesPerFile[i] = event.loaded;
+          const totalUploaded = uploadedBytesPerFile.reduce(
+            (acc, uploadedBytes) => acc + uploadedBytes,
+            0,
           );
 
-          const file = compressedFiles[index];
-          if (!file) return formData;
-
-          formData.append("file", file);
-          return formData;
-        })
-        .filter((f) => f.has("file"));
-      for (let i = 0; i < uploadsFormData.length; i++) {
-        await this.s3Client.post("", uploadsFormData[i], {
-          onUploadProgress(event) {
-            if (!onProgress || !event.total) return;
-
-            uploadedBytesPerFile[i] = event.loaded;
-            const totalUploaded = uploadedBytesPerFile.reduce(
-              (acc, uploadedBytes) => acc + uploadedBytes,
-              0,
-            );
-
-            const percent = Math.round((totalUploaded * 100) / totalBytes);
-            onProgress(percent);
-          },
-        });
-      }
-
-      const filesToKeys = new Map(
-        files.map((file, index) => [
-          file,
-          uploadsMetadata[index]?.key as string,
-        ]),
-      );
-      return { isSuccess: true, filesToKeys };
-    } catch (e) {
-      const error = Error.isError(e) ? e : new Error("unknown s3 upload error");
-      return { isSuccess: false, error };
+          const percent = Math.round((totalUploaded * 100) / totalBytes);
+          onProgress(percent);
+        },
+      });
     }
+
+    const filesToKeys = new Map(
+      files.map((file, index) => [file, uploadsMetadata[index]?.key as string]),
+    );
+    return { isSuccess: true, filesToKeys };
+  } catch (e) {
+    const error = e instanceof Error ? e : new Error("unknown s3 upload error");
+    return { isSuccess: false, error };
   }
+};
 
-  private async compressImageFile(file: File): Promise<File> {
-    const src = URL.createObjectURL(file);
-
-    try {
-      const image = new Image();
-      image.src = src;
-
-      await new Promise((resolve, reject) => {
-        image.onload = () => resolve(null);
-        image.onerror = (e) => reject(e);
-      });
-
-      const width = Math.min(image.width, 1400);
-      const resizedBitmap = await createImageBitmap(image, {
-        resizeWidth: width,
-      });
-      const canvas = new OffscreenCanvas(
-        resizedBitmap.width,
-        resizedBitmap.height,
-      );
-
-      const bitmaprenderer = canvas.getContext("bitmaprenderer");
-      if (bitmaprenderer) {
-        bitmaprenderer.transferFromImageBitmap(resizedBitmap);
-      } else {
-        const ctx2d = canvas.getContext("2d");
-        ctx2d?.drawImage(resizedBitmap, 0, 0);
-      }
-
-      const blob = await canvas.convertToBlob({
-        type: this.TARGET_CONTENT_TYPE,
-        quality: 0.8,
-      });
-
-      const trimmedFilename = file.name.trim();
-      const lastDotIndex = trimmedFilename.lastIndexOf(".");
-      const filenameWithoutExtension =
-        lastDotIndex > 0
-          ? trimmedFilename.substring(0, lastDotIndex)
-          : trimmedFilename;
-      const finalFilename = `${filenameWithoutExtension}.${this.TARGET_EXTENSION}`;
-
-      return new File([blob], finalFilename, {
-        type: this.TARGET_CONTENT_TYPE,
-      });
-    } finally {
-      URL.revokeObjectURL(src);
-    }
-  }
-}
-
-export const uploadService = new UploadService();
+export const uploadService = { upload } as const;

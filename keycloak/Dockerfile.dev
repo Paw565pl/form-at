@@ -14,7 +14,7 @@ RUN --mount=type=cache,target=/root/.local/share/pnpm/store \
     pnpm install --frozen-lockfile && \
     pnpm build-keycloak-theme
 
-FROM quay.io/keycloak/keycloak:26.6
+FROM quay.io/keycloak/keycloak:26.7
 
 COPY --from=theme-builder /theme/dist_keycloak/theme.jar /opt/keycloak/providers/
 

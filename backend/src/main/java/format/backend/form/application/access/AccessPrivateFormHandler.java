@@ -1,0 +1,66 @@
+package format.backend.form.application.access;
+
+import format.backend.auth.UserClaims;
+import format.backend.auth.UserDto;
+import format.backend.auth.UserFacade;
+import format.backend.form.application.shared.dto.FormResponseDto;
+import format.backend.form.application.shared.mapper.FormMapper;
+import format.backend.form.application.shared.mapper.QuestionMapper;
+import format.backend.form.domain.entity.FormRatingEntity;
+import format.backend.form.domain.entity.FormStatus;
+import format.backend.form.domain.exception.FormNotFoundException;
+import format.backend.form.domain.exception.InvalidFormPasswordException;
+import format.backend.form.domain.repository.FormRatingRepository;
+import format.backend.form.domain.repository.FormRepository;
+import format.backend.upload.UploadFacade;
+import java.util.Objects;
+import lombok.RequiredArgsConstructor;
+import lombok.val;
+import org.jspecify.annotations.Nullable;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+
+@Component
+@RequiredArgsConstructor
+public class AccessPrivateFormHandler {
+
+    private final PasswordEncoder passwordEncoder;
+
+    private final UserFacade userFacade;
+    private final UploadFacade uploadFacade;
+
+    private final FormRepository formRepository;
+    private final FormRatingRepository formRatingRepository;
+    private final FormMapper formMapper;
+    private final QuestionMapper questionMapper;
+
+    public FormResponseDto handle(
+            @Nullable UserClaims userClaims, String idOrSlug, AccessPrivateFormRequestDto requestDto) {
+        val formEntity = formRepository.findByIdOrSlug(idOrSlug).orElseThrow(() -> new FormNotFoundException(idOrSlug));
+
+        if (formEntity.getStatus() != FormStatus.PRIVATE) throw new InvalidFormPasswordException();
+        if (!passwordEncoder.matches(requestDto.password(), formEntity.getPasswordHash())) {
+            throw new InvalidFormPasswordException();
+        }
+
+        val thumbnail = uploadFacade.presignGetUrl(formEntity.getThumbnailKey()).orElse(null);
+        val questionResponseDtos = formEntity.getQuestions().stream()
+                .map(q -> questionMapper.toResponseDto(
+                        q, uploadFacade.presignGetUrl(q.getImageKey()).orElse(null)))
+                .toList();
+        val userRating = userClaims != null
+                ? formRatingRepository
+                        .findByFormIdAndAuthorId(Objects.requireNonNull(formEntity.getId()), userClaims.id())
+                        .map(FormRatingEntity::getValue)
+                        .orElse(null)
+                : null;
+        val authorName = formEntity.getAuthorId() != null
+                ? userFacade
+                        .retrieveById(formEntity.getAuthorId())
+                        .map(UserDto::username)
+                        .orElse(null)
+                : null;
+
+        return formMapper.toResponseDto(formEntity, thumbnail, questionResponseDtos, userRating, authorName);
+    }
+}

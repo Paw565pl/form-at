@@ -1,17 +1,20 @@
 package format.backend.submission.datafactory;
 
-import format.backend.form.entity.AnswerEntity;
-import format.backend.form.entity.FormEntity;
-import format.backend.submission.dto.SubmissionAnswerRequestDto;
-import format.backend.submission.dto.SubmissionRequestDto;
+import format.backend.form.domain.entity.AnswerEntity;
+import format.backend.form.domain.entity.FormEntity;
+import format.backend.submission.application.shared.dto.SubmissionAnswerRequestDto;
+import format.backend.submission.application.shared.dto.SubmissionRequestDto;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.val;
 
-public abstract class SubmissionRequestDtoTestDataFactory {
+public final class SubmissionRequestDtoTestDataFactory {
+
+    private SubmissionRequestDtoTestDataFactory() {}
 
     public static SubmissionRequestDto createValid(FormEntity form) {
-        var answers = form.getQuestions().stream()
+        val answers = form.getQuestions().stream()
                 .map(question -> switch (question.getType()) {
                     case OPEN -> new SubmissionAnswerRequestDto(question.getId(), Set.of(), "open answer text");
                     case SINGLE_CHOICE ->
@@ -34,8 +37,8 @@ public abstract class SubmissionRequestDtoTestDataFactory {
 
     public static SubmissionRequestDto createValidWithOverriddenAnswer(
             FormEntity form, SubmissionAnswerRequestDto overrideAnswer) {
-        var validRequest = createValid(form);
-        var modifiedAnswers = validRequest.answers().stream()
+        val validRequest = createValid(form);
+        val modifiedAnswers = validRequest.answers().stream()
                 .map(a -> a.questionId().equals(overrideAnswer.questionId()) ? overrideAnswer : a)
                 .toList();
 

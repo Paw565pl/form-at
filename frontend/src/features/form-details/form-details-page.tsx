@@ -24,7 +24,6 @@ export const FormDetailsPage = async ({
     getFetchFormDetailsQueryOptions(slug).queryKey,
   );
   const isPrivateForm =
-    publicFormQueryState?.error?.status === HttpStatusCode.Unauthorized ||
     publicFormQueryState?.error?.status === HttpStatusCode.Forbidden;
 
   const component = isPrivateForm ? (

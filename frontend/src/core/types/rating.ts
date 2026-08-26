@@ -6,5 +6,5 @@ export interface FormRatingResponseDto {
 }
 
 export interface FormRatingRequestDto {
-  readonly ratingValue: number;
+  readonly value: number;
 }

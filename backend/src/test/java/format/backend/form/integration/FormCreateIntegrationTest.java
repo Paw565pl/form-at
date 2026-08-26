@@ -10,22 +10,23 @@ import static org.mockito.Mockito.when;
 
 import format.backend.auth.datafactory.JwtTestFactory;
 import format.backend.auth.datafactory.UserTestDataFactory;
-import format.backend.auth.entity.UserEntity;
-import format.backend.core.integration.BaseIntegrationTest;
+import format.backend.auth.domain.entity.UserEntity;
+import format.backend.core.BaseIntegrationTest;
+import format.backend.form.application.shared.dto.FormRequestDto;
+import format.backend.form.application.shared.dto.QuestionRequestDto;
 import format.backend.form.datafactory.FormRequestDtoTestDataFactory;
-import format.backend.form.datafactory.FormTestDataFactory;
-import format.backend.form.dto.FormRequestDto;
-import format.backend.form.dto.QuestionRequestDto;
-import format.backend.form.entity.FormEntity;
-import format.backend.form.entity.FormStatus;
-import format.backend.form.entity.QuestionType;
+import format.backend.form.domain.entity.FormEntity;
+import format.backend.form.domain.entity.FormStatus;
+import format.backend.form.domain.entity.FormTestDataFactory;
+import format.backend.form.domain.entity.QuestionType;
 import io.restassured.http.ContentType;
 import java.util.List;
 import java.util.Map;
+import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
-class FormCreateIntegrationTest extends BaseIntegrationTest {
+final class FormCreateIntegrationTest extends BaseIntegrationTest {
 
     private static final String PATH = "/api/v1/forms";
 
@@ -41,8 +42,8 @@ class FormCreateIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldReturnBadRequestWhenRequestIsInvalid() {
-        var user = mongoTemplate.save(UserTestDataFactory.create());
-        var token = JwtTestFactory.create(user);
+        val user = mongoTemplate.save(UserTestDataFactory.create());
+        val token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
         given().auth()
@@ -57,12 +58,12 @@ class FormCreateIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldReturnBadRequestWhenNoRequiredQuestions() {
-        var user = mongoTemplate.save(UserTestDataFactory.create());
-        var token = JwtTestFactory.create(user);
+        val user = mongoTemplate.save(UserTestDataFactory.create());
+        val token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
-        var optionalQuestion = new QuestionRequestDto("question", QuestionType.OPEN, null, false, List.of());
-        var request = FormRequestDtoTestDataFactory.create(
+        val optionalQuestion = new QuestionRequestDto("question", QuestionType.OPEN, null, false, List.of());
+        val request = FormRequestDtoTestDataFactory.create(
                 FormStatus.PUBLIC, null, List.of(optionalQuestion, optionalQuestion, optionalQuestion));
 
         given().auth()
@@ -77,11 +78,11 @@ class FormCreateIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldReturnBadRequestWhenMissingCorrectAnswer() {
-        var user = mongoTemplate.save(UserTestDataFactory.create());
-        var token = JwtTestFactory.create(user);
+        val user = mongoTemplate.save(UserTestDataFactory.create());
+        val token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
-        var requestBody = FormRequestDtoTestDataFactory.createWithInvalidQuestionAnswers();
+        val requestBody = FormRequestDtoTestDataFactory.createWithInvalidQuestionAnswers();
 
         given().auth()
                 .oauth2(token.getTokenValue())
@@ -95,11 +96,11 @@ class FormCreateIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldReturnBadRequestWhenPrivateFormWithoutPassword() {
-        var user = mongoTemplate.save(UserTestDataFactory.create());
-        var token = JwtTestFactory.create(user);
+        val user = mongoTemplate.save(UserTestDataFactory.create());
+        val token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
-        var requestBody = FormRequestDtoTestDataFactory.createValidPrivate(null);
+        val requestBody = FormRequestDtoTestDataFactory.createValidPrivate(null);
 
         given().auth()
                 .oauth2(token.getTokenValue())
@@ -113,15 +114,14 @@ class FormCreateIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldReturnConflictWhenFormSlugAlreadyExists() {
-        var user = mongoTemplate.save(UserTestDataFactory.create());
-        var token = JwtTestFactory.create(user);
+        val user = mongoTemplate.save(UserTestDataFactory.create());
+        val token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
-        var requestBody = FormRequestDtoTestDataFactory.createValidPublic();
-
-        var existingForm = FormTestDataFactory.create();
-        existingForm.setSlug(requestBody.name());
-        mongoTemplate.save(existingForm);
+        val requestBody = FormRequestDtoTestDataFactory.createValidPublic();
+        mongoTemplate.save(FormTestDataFactory.createWithDefaults()
+                .slug(requestBody.name())
+                .build());
 
         given().auth()
                 .oauth2(token.getTokenValue())
@@ -135,11 +135,11 @@ class FormCreateIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldCreatePublic() {
-        var user = mongoTemplate.save(UserTestDataFactory.create());
-        var token = JwtTestFactory.create(user);
+        val user = mongoTemplate.save(UserTestDataFactory.create());
+        val token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
-        var requestBody = FormRequestDtoTestDataFactory.createValidPublic();
+        val requestBody = FormRequestDtoTestDataFactory.createValidPublic();
 
         given().auth()
                 .oauth2(token.getTokenValue())
@@ -164,11 +164,11 @@ class FormCreateIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldCreatePrivate() {
-        var user = mongoTemplate.save(UserTestDataFactory.create());
-        var token = JwtTestFactory.create(user);
+        val user = mongoTemplate.save(UserTestDataFactory.create());
+        val token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
-        var requestBody = FormRequestDtoTestDataFactory.createValidPrivate("password");
+        val requestBody = FormRequestDtoTestDataFactory.createValidPrivate("password");
 
         given().auth()
                 .oauth2(token.getTokenValue())
@@ -188,10 +188,10 @@ class FormCreateIntegrationTest extends BaseIntegrationTest {
     }
 
     private void verifyDbState(UserEntity user, FormRequestDto requestBody) {
-        var savedForms = mongoTemplate.findAll(FormEntity.class);
+        val savedForms = mongoTemplate.findAll(FormEntity.class);
         assertThat(savedForms).hasSize(1);
 
-        var savedForm = savedForms.getFirst();
+        val savedForm = savedForms.getFirst();
         assertThat(savedForm.getAuthorId()).isEqualTo(user.getId());
         assertThat(savedForm.getQuestionsCount())
                 .isEqualTo(requestBody.questions().size());

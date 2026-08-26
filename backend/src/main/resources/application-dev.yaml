@@ -10,34 +10,29 @@ spring:
           jwk-set-uri: http://keycloak:7000/realms/form-at/protocol/openid-connect/certs
           audiences: ["spring-boot-backend"]
 
-logging:
-  level:
-    data: debug
-    org:
-      springframework:
-        data:
-          mongodb:
-            core:
-              MongoTemplate: debug
-            repository:
-              query: debug
-      mongodb:
-        driver:
-          protocol:
-            command: debug
-
 management:
   otlp:
     metrics:
       export:
         enabled: false
 
-cors:
-  allowed-origins: "*"
+logging:
+  level:
+    org:
+      springframework:
+        data:
+          mongodb:
+            core:
+              MongoTemplate: debug
+    format.backend: debug
 
-s3:
-  url: http://rustfs:9000
-  region: eu-central-1
-  access-key: rustfsadmin
-  secret-key: rustfsadmin
-  bucket: uploads
+app:
+  cors:
+    allowed-origins: "*"
+
+  s3:
+    url: http://rustfs:9000
+    region: eu-central-1
+    access-key: rustfsadmin
+    secret-key: rustfsadmin
+    bucket: uploads

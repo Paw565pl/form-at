@@ -2,35 +2,39 @@ package format.backend.form.integration;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
+import format.backend.auth.Role;
 import format.backend.auth.datafactory.JwtTestFactory;
 import format.backend.auth.datafactory.UserTestDataFactory;
-import format.backend.auth.entity.Role;
-import format.backend.comment.datafactory.datafactory.CommentTestDataFactory;
-import format.backend.comment.entity.CommentEntity;
-import format.backend.comment_rating.datafactory.CommentRatingTestDataFactory;
-import format.backend.comment_rating.entity.CommentRatingEntity;
-import format.backend.core.integration.BaseIntegrationTest;
-import format.backend.form.datafactory.FormTestDataFactory;
-import format.backend.form.entity.FormEntity;
-import format.backend.form.entity.FormStatus;
-import format.backend.form_rating.datafactory.FormRatingTestDataFactory;
-import format.backend.form_rating.entity.FormRatingEntity;
+import format.backend.core.BaseIntegrationTest;
+import format.backend.form.domain.entity.FormEntity;
+import format.backend.form.domain.entity.FormRatingEntity;
+import format.backend.form.domain.entity.FormStatus;
+import format.backend.form.domain.entity.FormTestDataFactory;
+import format.backend.form.rating.datafactory.FormRatingTestDataFactory;
+import format.backend.formcomment.datafactory.FormCommentTestDataFactory;
+import format.backend.formcomment.domain.entity.FormCommentEntity;
+import format.backend.formcomment.domain.entity.FormCommentRatingEntity;
+import format.backend.formcomment.domain.entity.FormCommentRatingType;
+import format.backend.formcomment.rating.datafactory.FormCommentRatingTestDataFactory;
 import format.backend.submission.datafactory.SubmissionTestDataFactory;
-import format.backend.submission.datafactory.SubmissionsStatisticsTestDataFactory;
-import format.backend.submission.entity.SubmissionEntity;
-import format.backend.submission.entity.SubmissionsStatisticsEntity;
+import format.backend.submission.domain.entity.SubmissionEntity;
+import format.backend.submission.domain.entity.SubmissionsStatisticsEntity;
+import format.backend.submission.domain.entity.SubmissionsStatisticsTestDataFactory;
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
+import lombok.val;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 
-class FormDeleteIntegrationTest extends BaseIntegrationTest {
+final class FormDeleteIntegrationTest extends BaseIntegrationTest {
 
     private static final String PATH_PARAM = "idOrSlug";
     private static final String PATH = "/api/v1/forms/{%s}".formatted(PATH_PARAM);
@@ -46,8 +50,8 @@ class FormDeleteIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldReturnNotFoundWhenFormDoesNotExist() {
-        var user = mongoTemplate.save(UserTestDataFactory.create());
-        var token = JwtTestFactory.create(user);
+        val user = mongoTemplate.save(UserTestDataFactory.create());
+        val token = JwtTestFactory.create(user);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
         given().auth()
@@ -61,12 +65,15 @@ class FormDeleteIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldReturnForbiddenWhenUserIsNeitherOwnerNorAdmin() {
-        var owner = mongoTemplate.save(UserTestDataFactory.create());
-        var otherUser = mongoTemplate.save(UserTestDataFactory.create());
+        val owner = mongoTemplate.save(UserTestDataFactory.create());
+        val otherUser = mongoTemplate.save(UserTestDataFactory.create());
 
-        var form = mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC, owner.getId()));
+        val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults()
+                .status(FormStatus.PUBLIC)
+                .authorId(owner.getId())
+                .build());
 
-        var token = JwtTestFactory.create(otherUser);
+        val token = JwtTestFactory.create(otherUser);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
         given().auth()
@@ -80,12 +87,15 @@ class FormDeleteIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldDeleteFormWhenUserIsAdmin() {
-        var owner = mongoTemplate.save(UserTestDataFactory.create());
-        var admin = mongoTemplate.save(UserTestDataFactory.create());
+        val owner = mongoTemplate.save(UserTestDataFactory.create());
+        val admin = mongoTemplate.save(UserTestDataFactory.create());
 
-        var form = mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC, owner.getId()));
+        val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults()
+                .status(FormStatus.PUBLIC)
+                .authorId(owner.getId())
+                .build());
 
-        var token = JwtTestFactory.create(admin, List.of(Role.ADMIN));
+        val token = JwtTestFactory.create(admin, List.of(Role.ADMIN));
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
         given().auth()
@@ -101,17 +111,21 @@ class FormDeleteIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void shouldDeleteFormAndAllRelatedDataWhenUserIsOwner() {
-        var owner = mongoTemplate.save(UserTestDataFactory.create());
-        var form = mongoTemplate.save(FormTestDataFactory.create(FormStatus.PUBLIC, owner.getId()));
+        val owner = mongoTemplate.save(UserTestDataFactory.create());
+        val form = mongoTemplate.save(FormTestDataFactory.createWithDefaults()
+                .status(FormStatus.PUBLIC)
+                .authorId(owner.getId())
+                .build());
 
         mongoTemplate.save(FormRatingTestDataFactory.create(form.getId(), owner.getId(), 5));
         mongoTemplate.save(SubmissionTestDataFactory.create(form.getId(), owner.getId(), List.of()));
         mongoTemplate.save(SubmissionsStatisticsTestDataFactory.create(form.getId(), Map.of()));
 
-        var comment = mongoTemplate.save(CommentTestDataFactory.create(form.getId(), owner.getId()));
-        mongoTemplate.save(CommentRatingTestDataFactory.create(comment.getId(), owner.getId(), true));
+        val comment = mongoTemplate.save(FormCommentTestDataFactory.create(form.getId(), owner.getId()));
+        mongoTemplate.save(FormCommentRatingTestDataFactory.create(
+                form.getId(), comment.getId(), owner.getId(), FormCommentRatingType.UPVOTE));
 
-        var token = JwtTestFactory.create(owner);
+        val token = JwtTestFactory.create(owner);
         when(jwtDecoder.decode(anyString())).thenReturn(token);
 
         given().auth()
@@ -127,22 +141,29 @@ class FormDeleteIntegrationTest extends BaseIntegrationTest {
                         Query.query(Criteria.where(FormRatingEntity::getFormId).is(form.getId())),
                         FormRatingEntity.class))
                 .isZero();
-        assertThat(mongoTemplate.count(
-                        Query.query(Criteria.where(SubmissionEntity::getFormId).is(form.getId())),
-                        SubmissionEntity.class))
-                .isZero();
-        assertThat(mongoTemplate.count(
-                        Query.query(Criteria.where(SubmissionsStatisticsEntity::getFormId)
-                                .is(form.getId())),
-                        SubmissionsStatisticsEntity.class))
-                .isZero();
-        assertThat(mongoTemplate.count(
-                        Query.query(Criteria.where(CommentEntity::getFormId).is(form.getId())), CommentEntity.class))
-                .isZero();
-        assertThat(mongoTemplate.count(
-                        Query.query(Criteria.where(CommentRatingEntity::getCommentId)
-                                .is(comment.getId())),
-                        CommentRatingEntity.class))
-                .isZero();
+        await().atMost(Duration.ofSeconds(10))
+                .untilAsserted(() -> assertThat(mongoTemplate.count(
+                                Query.query(Criteria.where(SubmissionEntity::getFormId)
+                                        .is(form.getId())),
+                                SubmissionEntity.class))
+                        .isZero());
+        await().atMost(Duration.ofSeconds(10))
+                .untilAsserted(() -> assertThat(mongoTemplate.count(
+                                Query.query(Criteria.where(SubmissionsStatisticsEntity::getFormId)
+                                        .is(form.getId())),
+                                SubmissionsStatisticsEntity.class))
+                        .isZero());
+        await().atMost(Duration.ofSeconds(10))
+                .untilAsserted(() -> assertThat(mongoTemplate.count(
+                                Query.query(Criteria.where(FormCommentEntity::getFormId)
+                                        .is(form.getId())),
+                                FormCommentEntity.class))
+                        .isZero());
+        await().atMost(Duration.ofSeconds(10))
+                .untilAsserted(() -> assertThat(mongoTemplate.count(
+                                Query.query(Criteria.where(FormCommentRatingEntity::getCommentId)
+                                        .is(comment.getId())),
+                                FormCommentRatingEntity.class))
+                        .isZero());
     }
 }

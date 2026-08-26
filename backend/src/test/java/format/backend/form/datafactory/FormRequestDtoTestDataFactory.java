@@ -1,15 +1,18 @@
 package format.backend.form.datafactory;
 
-import format.backend.form.dto.AnswerRequestDto;
-import format.backend.form.dto.FormRequestDto;
-import format.backend.form.dto.QuestionRequestDto;
-import format.backend.form.entity.FormStatus;
-import format.backend.form.entity.Language;
-import format.backend.form.entity.QuestionType;
+import format.backend.form.application.shared.dto.AnswerRequestDto;
+import format.backend.form.application.shared.dto.FormRequestDto;
+import format.backend.form.application.shared.dto.QuestionRequestDto;
+import format.backend.form.domain.entity.FormLanguage;
+import format.backend.form.domain.entity.FormStatus;
+import format.backend.form.domain.entity.QuestionType;
 import java.time.Duration;
 import java.util.List;
+import lombok.val;
 
-public abstract class FormRequestDtoTestDataFactory {
+public final class FormRequestDtoTestDataFactory {
+
+    private FormRequestDtoTestDataFactory() {}
 
     public static FormRequestDto createValidPublic() {
         return createValid(FormStatus.PUBLIC, null);
@@ -20,7 +23,7 @@ public abstract class FormRequestDtoTestDataFactory {
     }
 
     public static FormRequestDto createValid(FormStatus status, String password) {
-        var validQuestion = new QuestionRequestDto(
+        val validQuestion = new QuestionRequestDto(
                 "question",
                 QuestionType.SINGLE_CHOICE,
                 null,
@@ -31,7 +34,7 @@ public abstract class FormRequestDtoTestDataFactory {
     }
 
     public static FormRequestDto createWithInvalidQuestionAnswers() {
-        var invalidQuestion = new QuestionRequestDto(
+        val invalidQuestion = new QuestionRequestDto(
                 "question",
                 QuestionType.SINGLE_CHOICE,
                 null,
@@ -45,7 +48,7 @@ public abstract class FormRequestDtoTestDataFactory {
         return new FormRequestDto(
                 "form",
                 null,
-                Language.EN,
+                FormLanguage.EN,
                 status,
                 password,
                 null,
