@@ -6,9 +6,9 @@ plugins {
     java
     id("org.springframework.boot") version "4.1.1"
     id("io.spring.dependency-management") version "1.1.7"
-    id("com.diffplug.spotless") version "8.10.0"
+    id("com.diffplug.spotless") version "8.10.1"
     id("name.remal.sonarlint") version "7.1.6"
-    id("net.ltgt.errorprone") version "5.1.0"
+    id("net.ltgt.errorprone") version "5.1.1"
 }
 
 if (project.hasProperty("aot")) {
@@ -78,7 +78,7 @@ val slugifyVersion = "4.0.1"
 val minioSdkVersion = "9.0.3"
 val restassuredVersion = "6.0.1"
 val errorProneCoreVersion = "2.50.0"
-val nullawayVersion = "0.13.8"
+val nullawayVersion = "0.14.1"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
