@@ -22,7 +22,7 @@ export const ThemeSwitcher = () => {
 
   if (!isMounted) {
     return (
-      <Button size="icon-sm" variant="outline">
+      <Button size="icon-sm" variant="outline" disabled>
         <ICONS.lightMode />
       </Button>
     );
@@ -37,11 +37,9 @@ export const ThemeSwitcher = () => {
           aria-label={isResolvedThemeDark ? t("lightMode") : t("darkMode")}
           variant="outline"
           size="icon-sm"
-          onClick={() =>
-            setTheme((previousTheme) =>
-              previousTheme === "dark" ? "light" : "dark",
-            )
-          }
+          onClick={() => {
+            setTheme(isResolvedThemeDark ? "light" : "dark");
+          }}
         >
           {isResolvedThemeDark ? <ICONS.lightMode /> : <ICONS.darkMode />}
         </Button>

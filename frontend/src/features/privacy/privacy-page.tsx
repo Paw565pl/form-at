@@ -3,21 +3,22 @@ import { getFormatter, getTranslations } from "next-intl/server";
 
 const LAST_UPDATED_DATE = new Date(2026, 5, 22);
 
+const sections = [
+  "introduction",
+  "collection",
+  "processing",
+  "sharing",
+  "cookies",
+  "retention",
+  "security",
+  "rights",
+  "access",
+  "updates",
+] as const;
+
 export const PrivacyPage = async () => {
   const t = await getTranslations("privacyPage");
   const format = await getFormatter();
-  const sections = [
-    "introduction",
-    "collection",
-    "processing",
-    "sharing",
-    "cookies",
-    "retention",
-    "security",
-    "rights",
-    "access",
-    "updates",
-  ] as const;
 
   return (
     <section id="privacy" className="px-5 py-10 lg:px-30">

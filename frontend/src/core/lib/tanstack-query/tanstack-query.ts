@@ -1,6 +1,6 @@
 import {
   defaultShouldDehydrateQuery,
-  isServer,
+  environmentManager,
   QueryClient,
 } from "@tanstack/react-query";
 import { HttpStatusCode, isAxiosError } from "axios";
@@ -52,18 +52,16 @@ const makeQueryClient = () => {
   });
 };
 
-let browserQueryClient: QueryClient | undefined = undefined;
+let browserQueryClient: QueryClient | null = null;
 
 export const getQueryClient = () => {
-  if (isServer) {
-    // Server: always make a new query client
-    return makeQueryClient();
-  } else {
-    // Browser: make a new query client if we don't already have one
-    // This is very important, so we don't re-make a new client if React
-    // suspends during the initial render. This may not be needed if we
-    // have a suspense boundary BELOW the creation of the query client
-    if (!browserQueryClient) browserQueryClient = makeQueryClient();
-    return browserQueryClient;
-  }
+  // Server: always make a new query client
+  if (environmentManager.isServer()) return makeQueryClient();
+
+  // Browser: make a new query client if we don't already have one
+  // This is very important, so we don't re-make a new client if React
+  // suspends during the initial render. This may not be needed if we
+  // have a suspense boundary BELOW the creation of the query client
+  browserQueryClient ??= makeQueryClient();
+  return browserQueryClient;
 };
