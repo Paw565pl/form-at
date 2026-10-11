@@ -17,14 +17,13 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: Install pnpm and node
-        uses: pnpm/setup@v2
+      - name: Install node and pnpm
+        uses: pnpm/setup@v3
         with:
           runtime: node@26
           cache: true
           install: false
-          package-json-file: ./keycloak/keycloak-theme/package.json
-          cache-dependency-path: ./keycloak/keycloak-theme/pnpm-lock.yaml
+          working-directory: ./keycloak/keycloak-theme
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --ignore-scripts
