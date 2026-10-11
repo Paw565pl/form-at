@@ -112,21 +112,20 @@ class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     ResponseEntity<ApplicationProblemDetail> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
-        val errors =
-                switch (e.getCause()) {
-                    case InvalidFormatException ex
-                    when ex.getTargetType().isEnum() && !ex.getPath().isEmpty() -> {
-                        val fieldName = ex.getPath().stream()
-                                .map(reference -> reference.getIndex() != -1
-                                        ? "[%s].".formatted(reference.getIndex())
-                                        : reference.getPropertyName())
-                                .collect(Collectors.joining());
-                        val message = createEnumValidationError(ex.getTargetType());
+        val errors = switch (e.getCause()) {
+            case InvalidFormatException ex
+            when ex.getTargetType().isEnum() && !ex.getPath().isEmpty() -> {
+                val fieldName = ex.getPath().stream()
+                        .map(reference -> reference.getIndex() != -1
+                                ? "[%s].".formatted(reference.getIndex())
+                                : reference.getPropertyName())
+                        .collect(Collectors.joining());
+                val message = createEnumValidationError(ex.getTargetType());
 
-                        yield Map.of(fieldName, List.of(message));
-                    }
-                    case null, default -> null;
-                };
+                yield Map.of(fieldName, List.of(message));
+            }
+            case null, default -> null;
+        };
         val problemDetail = ApplicationProblemDetail.builder()
                 .status(HttpStatus.UNPROCESSABLE_CONTENT)
                 .detail("Malformed or missing request body")
@@ -194,16 +193,15 @@ class GlobalExceptionHandler {
 
     @ExceptionHandler(ApplicationException.class)
     ResponseEntity<ApplicationProblemDetail> handleApplicationException(ApplicationException e) {
-        val status =
-                switch (e.getType()) {
-                    case BAD_REQUEST -> HttpStatus.BAD_REQUEST;
-                    case UNAUTHORIZED -> HttpStatus.UNAUTHORIZED;
-                    case FORBIDDEN -> HttpStatus.FORBIDDEN;
-                    case NOT_FOUND -> HttpStatus.NOT_FOUND;
-                    case CONFLICT -> HttpStatus.CONFLICT;
-                    case TOO_MANY_REQUESTS -> HttpStatus.TOO_MANY_REQUESTS;
-                    case INTERNAL_ERROR -> HttpStatus.INTERNAL_SERVER_ERROR;
-                };
+        val status = switch (e.getType()) {
+            case BAD_REQUEST -> HttpStatus.BAD_REQUEST;
+            case UNAUTHORIZED -> HttpStatus.UNAUTHORIZED;
+            case FORBIDDEN -> HttpStatus.FORBIDDEN;
+            case NOT_FOUND -> HttpStatus.NOT_FOUND;
+            case CONFLICT -> HttpStatus.CONFLICT;
+            case TOO_MANY_REQUESTS -> HttpStatus.TOO_MANY_REQUESTS;
+            case INTERNAL_ERROR -> HttpStatus.INTERNAL_SERVER_ERROR;
+        };
         val problemDetail = ApplicationProblemDetail.builder()
                 .status(status)
                 .detail(e.getMessage())
