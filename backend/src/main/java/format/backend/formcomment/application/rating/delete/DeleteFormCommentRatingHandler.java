@@ -32,11 +32,10 @@ public class DeleteFormCommentRatingHandler {
 
         formCommentRatingRepository.deleteById(Objects.requireNonNull(formCommentRatingEntity.getId()));
 
-        val ratingScoreDelta =
-                switch (formCommentRatingEntity.getType()) {
-                    case UPVOTE -> -1;
-                    case DOWNVOTE -> 1;
-                };
+        val ratingScoreDelta = switch (formCommentRatingEntity.getType()) {
+            case UPVOTE -> -1;
+            case DOWNVOTE -> 1;
+        };
         formCommentRepository.updateRatingScore(validFormCommentId, ratingScoreDelta);
     }
 }

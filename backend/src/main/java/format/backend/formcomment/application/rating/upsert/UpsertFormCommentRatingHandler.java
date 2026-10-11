@@ -44,11 +44,10 @@ public class UpsertFormCommentRatingHandler {
             existingFormCommentRatingEntity.setType(newRatingType);
             val updatedFormCommentRatingEntity = formCommentRatingRepository.save(existingFormCommentRatingEntity);
 
-            val ratingScoreDelta =
-                    switch (newRatingType) {
-                        case UPVOTE -> 2;
-                        case DOWNVOTE -> -2;
-                    };
+            val ratingScoreDelta = switch (newRatingType) {
+                case UPVOTE -> 2;
+                case DOWNVOTE -> -2;
+            };
             formCommentRepository.updateRatingScore(validFormCommentId, ratingScoreDelta);
 
             return formCommentRatingMapper.toResponseDto(updatedFormCommentRatingEntity);
@@ -56,11 +55,10 @@ public class UpsertFormCommentRatingHandler {
 
         val formCommentRatingEntity = formCommentRatingRepository.save(
                 formCommentRatingMapper.toEntity(requestDto, formId, validFormCommentId, userClaims.id()));
-        val ratingScoreDelta =
-                switch (requestDto.type()) {
-                    case UPVOTE -> 1;
-                    case DOWNVOTE -> -1;
-                };
+        val ratingScoreDelta = switch (requestDto.type()) {
+            case UPVOTE -> 1;
+            case DOWNVOTE -> -1;
+        };
         formCommentRepository.updateRatingScore(validFormCommentId, ratingScoreDelta);
 
         return formCommentRatingMapper.toResponseDto(formCommentRatingEntity);

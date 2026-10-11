@@ -6,9 +6,10 @@ plugins {
     java
     id("org.springframework.boot") version "4.1.1"
     id("io.spring.dependency-management") version "1.1.7"
-    id("com.diffplug.spotless") version "8.10.1"
-    id("name.remal.sonarlint") version "7.1.6"
+    id("com.diffplug.spotless") version "8.10.4"
+    id("name.remal.sonarlint") version "7.2.0"
     id("net.ltgt.errorprone") version "5.1.1"
+    id("io.github.ben-manes.versions") version "0.65.0"
 }
 
 if (project.hasProperty("aot")) {
@@ -38,7 +39,7 @@ spotless {
         forbidWildcardImports()
         forbidModuleImports()
         cleanthat()
-        palantirJavaFormat("2.97.0").formatJavadoc(true)
+        palantirJavaFormat("2.102.0").formatJavadoc(true)
         trimTrailingWhitespace()
         leadingTabsToSpaces()
         endWithNewline()
@@ -47,7 +48,7 @@ spotless {
 
     kotlinGradle { ktfmt().kotlinlangStyle() }
 
-    val prettierVersion = "3.9.6"
+    val prettierVersion = "3.9.10"
 
     yaml {
         target("**/*.yaml")
@@ -71,14 +72,14 @@ repositories {
 }
 
 val springModulithVersion = "2.1.0"
-val caffeineVersion = "3.2.4"
+val caffeineVersion = "3.3.0"
 val otelLogbackAppenderVersion = "2.28.1-alpha"
 val mapstructVersion = "1.7.0.Beta2"
 val slugifyVersion = "4.0.1"
 val minioSdkVersion = "9.0.3"
-val restassuredVersion = "6.0.1"
+val restassuredVersion = "6.1.0"
 val errorProneCoreVersion = "2.50.0"
-val nullawayVersion = "0.14.1"
+val nullawayVersion = "0.14.2"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
@@ -91,7 +92,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-opentelemetry")
     implementation(
-        "io.opentelemetry.instrumentation:opentelemetry-logback-appender-1.0:$otelLogbackAppenderVersion"
+        "io.opentelemetry.instrumentation:opentelemetry-logback-appender-1.0:$otelLogbackAppenderVersion",
     )
     implementation("org.springframework.modulith:spring-modulith-starter-core")
     implementation("org.springframework.modulith:spring-modulith-starter-mongodb")
@@ -109,7 +110,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
     testImplementation("org.springframework.boot:spring-boot-starter-security-test")
     testImplementation(
-        "org.springframework.boot:spring-boot-starter-security-oauth2-resource-server-test"
+        "org.springframework.boot:spring-boot-starter-security-oauth2-resource-server-test",
     )
     testImplementation("org.springframework.boot:spring-boot-starter-validation-test")
     testImplementation("org.springframework.boot:spring-boot-starter-data-mongodb-test")
@@ -135,7 +136,7 @@ dependencyManagement {
 
 tasks.withType<JavaCompile> {
     options.compilerArgs.addAll(
-        listOf("-Xlint:all,-processing,-serial,-classfile,-rawtypes,-unchecked", "-Werror")
+        listOf("-Xlint:all,-processing,-serial,-classfile,-rawtypes,-unchecked", "-Werror"),
     )
 
     options.errorprone {
