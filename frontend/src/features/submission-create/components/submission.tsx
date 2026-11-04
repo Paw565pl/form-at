@@ -33,7 +33,7 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 
-type FormData = z.infer<ReturnType<typeof getSubmissionSchema>>;
+type FormData = z.output<ReturnType<typeof getSubmissionSchema>>;
 
 interface SubmissionProps {
   readonly formDetails: FormDetailResponseDto;

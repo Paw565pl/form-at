@@ -18,6 +18,7 @@ export default defineConfig(
   tseslint.configs.stylistic,
   tanstackQueryPlugin.configs["flat/recommended"],
   eslintPluginZod.configs.recommended,
+  eslintPluginZod.configs.stylistic,
   {
     plugins: {
       "no-relative-import-paths": noRelativeImportPaths,

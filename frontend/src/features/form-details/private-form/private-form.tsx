@@ -24,7 +24,7 @@ import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import * as z from "zod";
 
-type PrivateFormData = z.infer<ReturnType<typeof getPrivateFormSchema>>;
+type PrivateFormData = z.output<ReturnType<typeof getPrivateFormSchema>>;
 
 interface PrivateFormProps {
   readonly formIdOrSlug: string;

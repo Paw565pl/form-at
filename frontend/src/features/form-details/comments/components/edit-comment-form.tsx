@@ -20,7 +20,7 @@ interface EditCommentProps {
   readonly onCancel: () => void;
 }
 
-type CommentFormData = z.infer<ReturnType<typeof getCommentSchema>>;
+type CommentFormData = z.output<ReturnType<typeof getCommentSchema>>;
 
 export const EditCommentForm = ({
   formIdOrSlug,

@@ -40,7 +40,7 @@ import { ComponentType, useEffect, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
 
-type FormData = z.infer<ReturnType<typeof getFormSchema>>;
+type FormData = z.output<ReturnType<typeof getFormSchema>>;
 
 export interface FormBaseFormSubmitComponentProps {
   readonly isPending: boolean;
