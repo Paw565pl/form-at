@@ -34,6 +34,7 @@ const getQuestionSchema = (t: TranslateError) =>
         .max(200, t("errors.questionContentMax", { count: "200" })),
       type: z.enum(QuestionType),
       isRequired: z.boolean(),
+      // eslint-disable-next-line zod/prefer-tuple-over-array-length
       answers: z
         .array(getAnswerSchema(t))
         .max(6, t("errors.answersCountMax", { count: "6" })),
@@ -121,6 +122,7 @@ export const getFormSchema = (t: TranslateError) =>
         .mime([...VALID_INPUT_IMAGE_CONTENT_TYPES])
         .or(z.string().trim())
         .optional(),
+      // eslint-disable-next-line zod/prefer-tuple-over-array-length
       questions: z
         .array(getQuestionSchema(t))
         .min(3, t("errors.questionsCountMin", { count: "3" }))

@@ -4,12 +4,12 @@ import net.ltgt.gradle.errorprone.errorprone
 
 plugins {
     java
-    id("org.springframework.boot") version "4.1.1"
+    id("org.springframework.boot") version "4.1.2"
     id("io.spring.dependency-management") version "1.1.7"
-    id("com.diffplug.spotless") version "8.10.4"
+    id("com.diffplug.spotless") version "8.11.0"
     id("name.remal.sonarlint") version "7.2.0"
-    id("net.ltgt.errorprone") version "5.1.1"
-    id("io.github.ben-manes.versions") version "0.65.0"
+    id("net.ltgt.errorprone") version "5.2.0"
+    id("io.github.ben-manes.versions") version "0.67.0"
 }
 
 if (project.hasProperty("aot")) {
@@ -71,15 +71,15 @@ repositories {
     mavenCentral()
 }
 
-val springModulithVersion = "2.1.0"
-val caffeineVersion = "3.3.0"
+val springModulithVersion = "2.1.2"
+val caffeineVersion = "3.3.1"
 val otelLogbackAppenderVersion = "2.28.1-alpha"
 val mapstructVersion = "1.7.0.Beta2"
 val slugifyVersion = "4.0.1"
-val minioSdkVersion = "9.0.3"
-val restassuredVersion = "6.1.0"
-val errorProneCoreVersion = "2.50.0"
-val nullawayVersion = "0.14.2"
+val minioSdkVersion = "9.0.4"
+val restassuredVersion = "6.3.0"
+val errorProneCoreVersion = "2.52.0"
+val nullawayVersion = "0.14.3"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webmvc")

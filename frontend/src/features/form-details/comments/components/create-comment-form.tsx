@@ -12,7 +12,7 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 
-type CommentFormData = z.infer<ReturnType<typeof getCommentSchema>>;
+type CommentFormData = z.output<ReturnType<typeof getCommentSchema>>;
 
 interface CreateCommentFormProps {
   readonly formIdOrSlug: string;
